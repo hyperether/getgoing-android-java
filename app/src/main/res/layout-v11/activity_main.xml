@@ -10,8 +10,9 @@
         android:src="@drawable/walk_normal"
         android:paddingLeft="20dip"
         android:paddingRight="80dip"
+        android:contentDescription="@string/app_name"
         style="?android:attr/borderlessButtonStyle"
-        />
+        android:cropToPadding="false" />
 
 
     <ImageButton
@@ -20,6 +21,7 @@
         android:src="@drawable/run_normal"
         android:paddingLeft="20dip"
         android:paddingRight="80dip"
+        android:contentDescription="@string/app_name"
         style="?android:attr/borderlessButtonStyle"/>
 
     <ImageButton
@@ -28,6 +30,7 @@
         android:src="@drawable/ride_normal"
         android:paddingLeft="20dip"
         android:paddingRight="80dip"
+        android:contentDescription="@string/app_name"
         style="?android:attr/borderlessButtonStyle"/>
 
 
