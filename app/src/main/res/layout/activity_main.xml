@@ -22,6 +22,7 @@
         android:paddingRight="60dip"
         android:contentDescription="@string/app_name"
         android:background="@android:color/transparent"
+
         />
 
 
