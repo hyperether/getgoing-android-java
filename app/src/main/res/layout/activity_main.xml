@@ -12,10 +12,9 @@
         android:paddingLeft="80dip"
         android:paddingRight="60dip"/>
 
-    <ImageButton
+    <Button
         android:layout_width="wrap_content"
         android:layout_height="80dp"
-        android:src="@drawable/run_normal"
         android:paddingLeft="80dip"
         android:paddingRight="60dip"
         android:contentDescription="@string/app_name"
@@ -23,16 +22,14 @@
         android:background="@android:color/transparent"
          />
 
-    <ImageButton
+    <Button
         android:layout_width="wrap_content"
         android:layout_height="80dp"
-        android:src="@drawable/ride_normal"
         android:paddingLeft="80dip"
         android:paddingRight="60dip"
         android:contentDescription="@string/app_name"
         android:background="@android:color/transparent"
         android:drawableTop="@drawable/button3_custom" />
-
 
 </TableLayout>
 
