@@ -20,8 +20,9 @@
         android:paddingLeft="80dip"
         android:paddingRight="60dip"
         android:contentDescription="@string/app_name"
+        android:drawableTop="@drawable/button2_custom"
         android:background="@android:color/transparent"
-        android:drawableTop="@drawable/button2_custom" />
+         />
 
     <ImageButton
         android:layout_width="wrap_content"
