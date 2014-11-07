@@ -1,8 +1,7 @@
 <TableLayout
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    >
+    xmlns:android="http://schemas.android.com/apk/res/android" >
 
     <ImageButton
         android:layout_width="wrap_content"
@@ -12,7 +11,7 @@
         android:paddingRight="60dip"
         android:contentDescription="@string/app_name"
         android:background="@android:color/transparent"
-        />
+        android:drawableTop="@drawable/button1_custom"/>
 
     <ImageButton
         android:layout_width="wrap_content"
@@ -22,9 +21,7 @@
         android:paddingRight="60dip"
         android:contentDescription="@string/app_name"
         android:background="@android:color/transparent"
-
-        />
-
+        android:drawableTop="@drawable/button2_custom" />
 
     <ImageButton
         android:layout_width="wrap_content"
@@ -34,6 +31,13 @@
         android:paddingRight="60dip"
         android:contentDescription="@string/app_name"
         android:background="@android:color/transparent"
-        />
+        android:drawableTop="@drawable/button3_custom" />
+
+
 </TableLayout>
+
+
+
+
+
 
