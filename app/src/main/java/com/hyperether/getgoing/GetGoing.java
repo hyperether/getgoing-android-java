@@ -1,12 +1,12 @@
 package com.hyperether.getgoing;
 
-import android.support.v7.app.ActionBarActivity;
+import android.app.Activity;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
 
 
-public class GetGoing extends ActionBarActivity {
+public class GetGoing extends Activity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
