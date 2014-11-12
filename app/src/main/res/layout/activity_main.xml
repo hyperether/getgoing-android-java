@@ -30,8 +30,8 @@
         android:contentDescription="@string/app_name"
         android:drawableTop="@drawable/button3_custom"
         android:paddingLeft="100dip"
-        android:paddingRight="60dip"
-         />
+        android:paddingRight="60dip" />
+
 
 </TableLayout>
 
