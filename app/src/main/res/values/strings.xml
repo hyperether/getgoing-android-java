@@ -4,6 +4,10 @@
     <string name="app_name">GetGoing</string>
     <string name="hello_world">Hello world!</string>
     <string name="action_settings">Settings</string>
+    <string name="button1_normal">walk</string>
+    <string name="button2_normal">run</string>
+    <string name="button3_normal">ride</string>
+
 
 </resources>
 
