@@ -2,68 +2,77 @@
     android:layout_width="fill_parent"
     android:layout_height="fill_parent">
 
-    <LinearLayout
+    <RelativeLayout
         android:layout_weight="1">
 
         <ImageButton
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_weight="2"
+            android:id="@+id/walk_button"
+            android:src="@drawable/button1_custom"
             android:background="@android:color/transparent"
             android:contentDescription="@string/app_name"
-            android:src="@drawable/button1_custom" />
+            android:layout_width="wrap_content"
+            android:layout_height="fill_parent"
+            android:layout_alignParentLeft="true"
+            android:layout_marginLeft="@dimen/activity_horizontal_margin"/>
 
         <TextView
-            android:layout_width="wrap_content"
+            android:layout_width="fill_parent"
             android:layout_height="wrap_content"
-            android:layout_gravity="center_vertical"
-            android:layout_marginRight="@dimen/activity_horizontal_margin"
             android:text="@string/button1_normal"
-            android:textSize="52sp"
-            />
-    </LinearLayout>
+            android:textSize="45sp"
+            android:layout_toRightOf="@+id/walk_button"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="@dimen/activity_horizontal_margin"/>
 
-    <LinearLayout
+    </RelativeLayout>
+
+    <RelativeLayout
         android:layout_weight="1">
 
         <ImageButton
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_weight="0.5"
+            android:id="@+id/run_button"
+            android:src="@drawable/button2_custom"
             android:background="@android:color/transparent"
             android:contentDescription="@string/app_name"
-            android:src="@drawable/button2_custom" />
+            android:layout_width="wrap_content"
+            android:layout_height="fill_parent"
+            android:layout_alignParentLeft="true"
+            android:layout_marginLeft="@dimen/activity_horizontal_margin"/>
 
         <TextView
-            android:layout_width="wrap_content"
+            android:layout_width="fill_parent"
             android:layout_height="wrap_content"
-            android:layout_gravity="center_vertical"
-            android:layout_marginRight="@dimen/activity_horizontal_margin"
             android:text="@string/button2_normal"
-            android:textSize="52sp"/>
+            android:textSize="45sp"
+            android:layout_toRightOf="@+id/run_button"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="@dimen/activity_horizontal_margin"/>
 
-    </LinearLayout>
+    </RelativeLayout>
 
-    <LinearLayout
+    <RelativeLayout
         android:layout_weight="1">
 
-    <ImageButton
-        android:layout_width="0dp"
-        android:layout_height="match_parent"
-        android:layout_weight="0.5"
-        android:background="@android:color/transparent"
-        android:contentDescription="@string/app_name"
-        android:src="@drawable/button3_custom" />
+        <ImageButton
+            android:id="@+id/ride_button"
+            android:src="@drawable/button3_custom"
+            android:background="@android:color/transparent"
+            android:contentDescription="@string/app_name"
+            android:layout_width="wrap_content"
+            android:layout_height="fill_parent"
+            android:layout_alignParentLeft="true"
+            android:layout_marginLeft="@dimen/activity_horizontal_margin"/>
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center_vertical"
-        android:layout_marginRight="@dimen/activity_horizontal_margin"
-        android:text="@string/button3_normal"
-        android:textSize="52sp"/>
+        <TextView
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/button3_normal"
+            android:textSize="45sp"
+            android:layout_toRightOf="@+id/ride_button"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="@dimen/activity_horizontal_margin"/>
 
-    </LinearLayout>
+    </RelativeLayout>
 
 </TableLayout>
 
