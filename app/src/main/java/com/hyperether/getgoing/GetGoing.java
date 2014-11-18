@@ -1,28 +1,40 @@
 package com.hyperether.getgoing;
 
 import android.app.Activity;
+import android.content.DialogInterface;
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.ImageButton;
 
+
+import com.hyperether.getgoing.location.ShowLocation;
 
 public class GetGoing extends Activity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
+        setContentView(R.layout.activity_main);}
 
-        /*
-        Zadatak:
-        1. pronadji image buttone po id-u iz xml-a
-        2. dodeli svakom od njih onClickListener
-        3. u metodi onClick pozovi novu stranicu ShowLocation.class preko Intent-a i startActivity(...) metode
-        4. Ta nova stranica ShowLocation.class je napravljena da ucitava show_location.xml
-        5. Kad kliknes na dugme prebacice te na novi layout
+    ImageButton  imgButton;
 
-         */
+    public void addButtonListener() {
+        imgButton = (ImageButton) findViewById(R.id.walk_button);
+        OnClickListener ibListener=new OnClickListener();
+        imgButton = (ImageButton) findViewById(R.id.run_button);
+        OnClickListener new OnClickListener();
+        imgButton = (ImageButton) findViewById(R.id.ride_button);
+        OnClickListener ibListener3=new OnClickListener() {
 
+    @Override
+     public void onClick(View view) {
+     startActivity(ShowLocation.class);
+                 }
+
+       };
     }
 
     @Override
@@ -42,5 +54,6 @@ public class GetGoing extends Activity {
             return true;
         }
         return super.onOptionsItemSelected(item);
+
     }
 }

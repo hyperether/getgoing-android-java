@@ -7,6 +7,11 @@
     <string name="button1_normal">walk</string>
     <string name="button2_normal">run</string>
     <string name="button3_normal">ride</string>
+    <string name="clock_image">clock</string>
+    <string name="speed_image">speed</string>
+    <string name="fire_image">fire</string>
+    <string name="avg_speed_image">avg_speed</string>
+    <string name="road_image">road</string>
 
 
 </resources>

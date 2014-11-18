@@ -5,7 +5,8 @@
     android:layout_height="fill_parent"
     android:descendantFocusability="beforeDescendants"
     android:focusableInTouchMode="true"
-    android:orientation="vertical">
+    android:orientation="vertical"
+    android:id="@+id/map">
 
     <RelativeLayout
         android:layout_width="match_parent"
@@ -14,16 +15,150 @@
         <Button
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="New Button"
-            android:id="@+id/button" />
+            android:id="@+id/start_final_pritisnuto"
+            android:background="@android:color/transparent"
+            android:drawableTop="@drawable/start_final_pritisnuto"
+            android:layout_marginLeft="16dp"/>
 
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/save_button"
+            android:background="@android:color/transparent"
+            android:drawableTop="@drawable/save"
+            android:layout_toRightOf="@id/start_final_pritisnuto"
+            android:layout_marginLeft="16dp"/>
+
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/reset_button"
+            android:background="@android:color/transparent"
+            android:drawableTop="@drawable/reset"
+            android:layout_toRightOf="@id/save_button"
+            android:layout_marginLeft="16dp"/>
 
     </RelativeLayout>
 
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" >
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:contentDescription="@string/clock_image"
+            android:id="@+id/clock"
+            android:background="@android:color/transparent"
+            android:src="@drawable/clock"
+            android:layout_marginLeft="8dp"/>
+
+        <Chronometer
+            android:layout_height="wrap_content"
+            android:layout_width="wrap_content"
+            android:layout_toRightOf="@+id/clock"
+            android:textSize="20sp"
+            android:id="@+id/time_chronometer"
+            android:format="00:00:00"
+            android:paddingLeft="@dimen/activity_horizontal_margin"/>
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:contentDescription="@string/speed_image"
+            android:id="@+id/speed"
+            android:background="@android:color/transparent"
+            android:src="@drawable/speed"
+            android:layout_toRightOf="@+id/time_chronometer"
+            android:paddingLeft="@dimen/activity_horizontal_margin"
+            android:layout_marginLeft="16dp"/>
+
+        <Chronometer
+            android:layout_height="wrap_content"
+            android:layout_width="wrap_content"
+            android:layout_toRightOf="@+id/speed"
+            android:textSize="20sp"
+            android:id="@+id/speed_chronometer"
+            android:format="0:00m/s"
+            android:paddingLeft="@dimen/activity_horizontal_margin"/>
+
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" >
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:contentDescription="@string/fire_image"
+            android:id="@+id/fire"
+            android:background="@android:color/transparent"
+            android:src="@drawable/fire"
+            android:layout_marginLeft="8dp"/>
+
+        <Chronometer
+            android:layout_height="wrap_content"
+            android:layout_width="wrap_content"
+            android:id="@+id/kcal_chronometer"
+            android:textSize="20sp"
+            android:format="0:00kcal"
+            android:layout_toRightOf="@+id/fire"
+            android:paddingLeft="@dimen/activity_horizontal_margin"/>
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:contentDescription="@string/avg_speed_image"
+            android:id="@+id/avg_speed_nobg_full"
+            android:background="@android:color/transparent"
+            android:src="@drawable/avg_speed_nobg_full"
+            android:layout_toRightOf="@+id/kcal_chronometer"
+            android:paddingLeft="@dimen/activity_horizontal_margin"
+            android:layout_marginLeft="16dp" />
+
+        <Chronometer
+            android:layout_height="wrap_content"
+            android:layout_width="wrap_content"
+            android:id="@+id/avg_speed_chronometer"
+            android:textSize="20sp"
+            android:format="0:00m/s"
+            android:layout_toRightOf="@+id/avg_speed_nobg_full"
+            android:paddingLeft="@dimen/activity_horizontal_margin"/>
+
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" >
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:contentDescription="@string/road_image"
+            android:id="@+id/road"
+            android:background="@android:color/transparent"
+            android:src="@drawable/road"
+            android:layout_marginLeft="8dp" />
+
+        <Chronometer
+            android:layout_height="wrap_content"
+            android:layout_width="wrap_content"
+            android:id="@+id/road_chronometer"
+            android:textSize="20sp"
+            android:format="0:00m"
+            android:layout_toRightOf="@+id/road"
+            android:paddingLeft="@dimen/activity_horizontal_margin" />
+
+    </RelativeLayout>
     <fragment
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:name="android.app.ListFragment"
-        android:id="@+id/fragment" />
+        android:id="@+id/fragment"
+        tools:layout="@layout/show_location" />
+
+
+
 
 </LinearLayout>
