@@ -1,14 +1,12 @@
 package com.hyperether.getgoing;
 
 import android.app.Activity;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageButton;
-
 
 import com.hyperether.getgoing.location.ShowLocation;
 
@@ -17,24 +15,26 @@ public class GetGoing extends Activity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);}
-
-    ImageButton  imgButton;
+        setContentView(R.layout.activity_main);
+        addButtonListener();
+    }
 
     public void addButtonListener() {
+        ImageButton imgButton;
         imgButton = (ImageButton) findViewById(R.id.walk_button);
-        OnClickListener ibListener=new OnClickListener();
-        imgButton = (ImageButton) findViewById(R.id.run_button);
-        OnClickListener new OnClickListener();
-        imgButton = (ImageButton) findViewById(R.id.ride_button);
-        OnClickListener ibListener3=new OnClickListener() {
+        imgButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(getApplicationContext(), ShowLocation.class);
+                startActivity(intent);
+            }
+        });
 
-    @Override
-     public void onClick(View view) {
-     startActivity(ShowLocation.class);
-                 }
-
-       };
+        ImageButton imgButton2;
+        ImageButton imgButton3;
+        /*
+        dodati za preostalu dugmad
+         */
     }
 
     @Override
