@@ -4,72 +4,83 @@
 
     <RelativeLayout android:layout_weight="1">
 
-        <ImageButton
+        <Button
             android:id="@+id/walk_button"
             android:layout_width="wrap_content"
             android:layout_height="fill_parent"
-            android:layout_alignParentLeft="true"
-            android:layout_marginLeft="@dimen/activity_horizontal_margin"
             android:background="@android:color/transparent"
             android:contentDescription="@string/app_name"
-            android:src="@drawable/button1_custom" />
+            android:drawableLeft="@drawable/button1_custom"
+            android:drawableStart="@drawable/button1_custom"
+            android:paddingEnd="@dimen/activity_horizontal_margin"
+            android:paddingLeft="100dp"
+            android:paddingRight="@dimen/activity_horizontal_margin"
+            android:paddingStart="@dimen/activity_horizontal_margin" />
 
         <TextView
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:layout_centerVertical="true"
             android:layout_marginLeft="@dimen/activity_horizontal_margin"
-            android:layout_toRightOf="@+id/walk_button"
+            android:layout_marginStart="@dimen/activity_horizontal_margin"
+            android:layout_toEndOf="@id/walk_button"
+            android:layout_toRightOf="@id/walk_button"
             android:text="@string/button1_normal"
             android:textSize="45sp" />
-
     </RelativeLayout>
 
     <RelativeLayout android:layout_weight="1">
 
-        <ImageButton
+        <Button
             android:id="@+id/run_button"
             android:layout_width="wrap_content"
             android:layout_height="fill_parent"
-            android:layout_alignParentLeft="true"
-            android:layout_marginLeft="@dimen/activity_horizontal_margin"
             android:background="@android:color/transparent"
             android:contentDescription="@string/app_name"
-            android:onClick="DoIt"
-            android:src="@drawable/button2_custom" />
+            android:drawableLeft="@drawable/button2_custom"
+            android:drawableStart="@drawable/button2_custom"
+            android:paddingEnd="@dimen/activity_horizontal_margin"
+            android:paddingLeft="100dp"
+            android:paddingRight="@dimen/activity_horizontal_margin"
+            android:paddingStart="@dimen/activity_horizontal_margin" />
 
         <TextView
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:layout_centerVertical="true"
             android:layout_marginLeft="@dimen/activity_horizontal_margin"
-            android:layout_toRightOf="@+id/run_button"
+            android:layout_marginStart="@dimen/activity_horizontal_margin"
+            android:layout_toEndOf="@id/run_button"
+            android:layout_toRightOf="@id/run_button"
             android:text="@string/button2_normal"
             android:textSize="45sp" />
-
     </RelativeLayout>
 
     <RelativeLayout android:layout_weight="1">
 
-        <ImageButton
+        <Button
             android:id="@+id/ride_button"
             android:layout_width="wrap_content"
             android:layout_height="fill_parent"
-            android:layout_alignParentLeft="true"
-            android:layout_marginLeft="@dimen/activity_horizontal_margin"
             android:background="@android:color/transparent"
             android:contentDescription="@string/app_name"
-            android:src="@drawable/button3_custom" />
+            android:drawableLeft="@drawable/button3_custom"
+            android:drawableStart="@drawable/button3_custom"
+            android:paddingEnd="@dimen/activity_horizontal_margin"
+            android:paddingLeft="100dp"
+            android:paddingRight="@dimen/activity_horizontal_margin"
+            android:paddingStart="@dimen/activity_horizontal_margin" />
 
         <TextView
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:layout_centerVertical="true"
             android:layout_marginLeft="@dimen/activity_horizontal_margin"
-            android:layout_toRightOf="@+id/ride_button"
+            android:layout_marginStart="@dimen/activity_horizontal_margin"
+            android:layout_toEndOf="@id/ride_button"
+            android:layout_toRightOf="@id/ride_button"
             android:text="@string/button3_normal"
             android:textSize="45sp" />
-
     </RelativeLayout>
 
 </TableLayout>

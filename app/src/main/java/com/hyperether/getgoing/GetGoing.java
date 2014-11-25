@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.Button;
 import android.widget.ImageButton;
 
 import com.hyperether.getgoing.location.ShowLocation;
@@ -20,9 +21,9 @@ public class GetGoing extends Activity {
     }
 
     public void addButtonListener() {
-        ImageButton imgButton;
-        imgButton = (ImageButton) findViewById(R.id.walk_button);
-        imgButton.setOnClickListener(new View.OnClickListener() {
+        Button Button;
+        Button = (Button) findViewById(R.id.walk_button);
+        Button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(getApplicationContext(), ShowLocation.class);

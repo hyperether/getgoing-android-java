@@ -7,15 +7,15 @@
     android:focusableInTouchMode="true"
     android:orientation="vertical">
 
-    <RelativeLayout
-        android:layout_width="match_parent"
+    <LinearLayout
+        android:layout_width="fill_parent"
         android:layout_height="wrap_content">
 
         <Button
             android:id="@+id/start_final_pritisnuto"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="16dp"
+            android:layout_weight="1"
             android:background="@android:color/transparent"
             android:drawableTop="@drawable/start_final_pritisnuto" />
 
@@ -23,8 +23,7 @@
             android:id="@+id/save_button"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="16dp"
-            android:layout_toRightOf="@id/start_final_pritisnuto"
+            android:layout_weight="1"
             android:background="@android:color/transparent"
             android:drawableTop="@drawable/save" />
 
@@ -32,22 +31,20 @@
             android:id="@+id/reset_button"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="16dp"
-            android:layout_toRightOf="@id/save_button"
+            android:layout_weight="1"
             android:background="@android:color/transparent"
             android:drawableTop="@drawable/reset" />
+    </LinearLayout>
 
-    </RelativeLayout>
-
-    <RelativeLayout
-        android:layout_width="match_parent"
+    <LinearLayout
+        android:layout_width="fill_parent"
         android:layout_height="wrap_content">
 
         <ImageView
             android:id="@+id/clock"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="8dp"
+            android:layout_weight="0.1"
             android:background="@android:color/transparent"
             android:contentDescription="@string/clock_image"
             android:src="@drawable/clock" />
@@ -56,42 +53,41 @@
             android:id="@+id/time_chronometer"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_toRightOf="@+id/clock"
+            android:layout_weight="0.1"
             android:format="00:00:00"
-            android:paddingLeft="@dimen/activity_horizontal_margin"
-            android:textSize="20sp" />
+            android:textSize="20sp"
+            android:textStyle="bold"
+
+            />
 
         <ImageView
             android:id="@+id/speed"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="16dp"
-            android:layout_toRightOf="@+id/time_chronometer"
+            android:layout_weight="0.1"
             android:background="@android:color/transparent"
             android:contentDescription="@string/speed_image"
-            android:paddingLeft="@dimen/activity_horizontal_margin"
             android:src="@drawable/speed" />
 
         <Chronometer
             android:id="@+id/speed_chronometer"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_toRightOf="@+id/speed"
+            android:layout_weight="0.1"
             android:format="0:00m/s"
-            android:paddingLeft="@dimen/activity_horizontal_margin"
-            android:textSize="20sp" />
+            android:textSize="20sp"
+            android:textStyle="bold" />
+    </LinearLayout>
 
-    </RelativeLayout>
-
-    <RelativeLayout
-        android:layout_width="match_parent"
+    <LinearLayout
+        android:layout_width="fill_parent"
         android:layout_height="wrap_content">
 
         <ImageView
             android:id="@+id/fire"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="8dp"
+            android:layout_weight="0.1"
             android:background="@android:color/transparent"
             android:contentDescription="@string/fire_image"
             android:src="@drawable/fire" />
@@ -100,42 +96,40 @@
             android:id="@+id/kcal_chronometer"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_toRightOf="@+id/fire"
+            android:layout_weight="0.1"
             android:format="0:00kcal"
-            android:paddingLeft="@dimen/activity_horizontal_margin"
-            android:textSize="20sp" />
+            android:textSize="20sp"
+            android:textStyle="bold" />
 
         <ImageView
-            android:id="@+id/avg_speed_nobg_full"
+            android:id="@+id/avg_speed_nobg_full_chronometer"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="16dp"
-            android:layout_toRightOf="@+id/kcal_chronometer"
+            android:layout_weight="0.1"
             android:background="@android:color/transparent"
             android:contentDescription="@string/avg_speed_image"
-            android:paddingLeft="@dimen/activity_horizontal_margin"
             android:src="@drawable/avg_speed_nobg_full" />
 
         <Chronometer
             android:id="@+id/avg_speed_chronometer"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_toRightOf="@+id/avg_speed_nobg_full"
+            android:layout_weight="0.1"
             android:format="0:00m/s"
-            android:paddingLeft="@dimen/activity_horizontal_margin"
-            android:textSize="20sp" />
+            android:textSize="20sp"
+            android:textStyle="bold" />
 
-    </RelativeLayout>
+    </LinearLayout>
 
-    <RelativeLayout
-        android:layout_width="match_parent"
+    <LinearLayout
+        android:layout_width="fill_parent"
         android:layout_height="wrap_content">
 
         <ImageView
             android:id="@+id/road"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="8dp"
+            android:layout_weight="0.03"
             android:background="@android:color/transparent"
             android:contentDescription="@string/road_image"
             android:src="@drawable/road" />
@@ -144,11 +138,11 @@
             android:id="@+id/road_chronometer"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_toRightOf="@+id/road"
+            android:layout_weight="0.2"
             android:format="0:00m"
-            android:paddingLeft="@dimen/activity_horizontal_margin"
-            android:textSize="20sp" />
+            android:textSize="20sp"
+            android:textStyle="bold" />
 
-    </RelativeLayout>
+    </LinearLayout>
 
 </LinearLayout>
