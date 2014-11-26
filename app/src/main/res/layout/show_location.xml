@@ -129,7 +129,7 @@
             android:id="@+id/road"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_weight="0.03"
+            android:layout_weight="0.1"
             android:background="@android:color/transparent"
             android:contentDescription="@string/road_image"
             android:src="@drawable/road" />
@@ -138,10 +138,30 @@
             android:id="@+id/road_chronometer"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_weight="0.2"
+            android:layout_weight="0.1"
             android:format="0:00m"
             android:textSize="20sp"
             android:textStyle="bold" />
+
+        <ImageView
+            android:id="@+id/road2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="0.1"
+            android:background="@android:color/transparent"
+            android:contentDescription="@string/road_image"
+            android:src="@drawable/road"
+            android:visibility="invisible"
+            />
+        <Chronometer
+            android:id="@+id/road2_chronometer"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="0.1"
+            android:format="0:00m/s"
+            android:textSize="20sp"
+            android:textStyle="bold"
+            android:visibility="invisible"/>
 
     </LinearLayout>
 

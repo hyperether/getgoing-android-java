@@ -4,6 +4,7 @@
 
     <RelativeLayout android:layout_weight="1">
 
+
         <Button
             android:id="@+id/walk_button"
             android:layout_width="wrap_content"
@@ -13,7 +14,7 @@
             android:drawableLeft="@drawable/button1_custom"
             android:drawableStart="@drawable/button1_custom"
             android:paddingEnd="@dimen/activity_horizontal_margin"
-            android:paddingLeft="100dp"
+            android:paddingLeft="50dp"
             android:paddingRight="@dimen/activity_horizontal_margin"
             android:paddingStart="@dimen/activity_horizontal_margin" />
 
@@ -40,7 +41,7 @@
             android:drawableLeft="@drawable/button2_custom"
             android:drawableStart="@drawable/button2_custom"
             android:paddingEnd="@dimen/activity_horizontal_margin"
-            android:paddingLeft="100dp"
+            android:paddingLeft="50dp"
             android:paddingRight="@dimen/activity_horizontal_margin"
             android:paddingStart="@dimen/activity_horizontal_margin" />
 
@@ -67,7 +68,7 @@
             android:drawableLeft="@drawable/button3_custom"
             android:drawableStart="@drawable/button3_custom"
             android:paddingEnd="@dimen/activity_horizontal_margin"
-            android:paddingLeft="100dp"
+            android:paddingLeft="50dp"
             android:paddingRight="@dimen/activity_horizontal_margin"
             android:paddingStart="@dimen/activity_horizontal_margin" />
 
