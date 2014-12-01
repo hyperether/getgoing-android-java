@@ -55,7 +55,7 @@
             android:layout_height="wrap_content"
             android:layout_weight="0.1"
             android:format="00:00:00"
-            android:textSize="20sp"
+            android:textSize="@dimen/text_size"
             android:textStyle="bold"
 
             />
