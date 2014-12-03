@@ -7,7 +7,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
-import android.widget.ImageButton;
+
 
 import com.hyperether.getgoing.location.ShowLocation;
 
@@ -31,8 +31,7 @@ public class GetGoing extends Activity {
             }
         });
 
-        ImageButton imgButton2;
-        ImageButton imgButton3;
+
         /*
         dodati za preostalu dugmad
          */
