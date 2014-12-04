@@ -5,7 +5,7 @@ import android.os.Bundle;
 
 import com.hyperether.getgoing.R;
 
-public class ShowLocation extends Activity{
+public class ShowLocation extends Activity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
 

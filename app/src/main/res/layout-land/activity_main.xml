@@ -8,8 +8,7 @@
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:layout_weight="0.3"
-        android:gravity="center_vertical"
-       >
+        android:gravity="center_vertical">
 
         <Button
             android:id="@+id/walk_button"
@@ -29,8 +28,7 @@
             android:textSize="@dimen/button_text_size"
             android:layout_toRightOf="@+id/walk_button"
             android:layout_toEndOf="@+id/walk_button"
-            android:layout_centerVertical="true"
-            />
+            android:layout_centerVertical="true" />
     </RelativeLayout>
 
     <RelativeLayout
@@ -38,8 +36,7 @@
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:layout_weight="0.3"
-        android:gravity="center_vertical"
-       >
+        android:gravity="center_vertical">
 
         <Button
             android:id="@+id/run_button"
@@ -59,8 +56,7 @@
             android:textSize="@dimen/button_text_size"
             android:layout_toRightOf="@+id/run_button"
             android:layout_toEndOf="@+id/run_button"
-            android:layout_centerVertical="true"
-            />
+            android:layout_centerVertical="true" />
     </RelativeLayout>
 
     <RelativeLayout
@@ -68,8 +64,7 @@
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:layout_weight="0.3"
-        android:gravity="center_vertical"
-        >
+        android:gravity="center_vertical">
 
         <Button
             android:id="@+id/ride_button"
@@ -80,7 +75,7 @@
             android:drawableLeft="@drawable/button3_custom"
             android:drawableStart="@drawable/button3_custom"
             android:layout_centerVertical="true"
-            android:layout_centerHorizontal="true"/>
+            android:layout_centerHorizontal="true" />
 
         <TextView
             android:layout_width="fill_parent"
@@ -89,7 +84,7 @@
             android:textSize="@dimen/button_text_size"
             android:layout_toRightOf="@+id/ride_button"
             android:layout_toEndOf="@+id/ride_button"
-            android:layout_centerVertical="true"/>
+            android:layout_centerVertical="true" />
     </RelativeLayout>
 
 </LinearLayout>

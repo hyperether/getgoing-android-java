@@ -8,7 +8,6 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 
-
 import com.hyperether.getgoing.location.ShowLocation;
 
 public class GetGoing extends Activity {
@@ -21,9 +20,9 @@ public class GetGoing extends Activity {
     }
 
     public void addButtonListener() {
-        Button Button;
-        Button = (Button) findViewById(R.id.walk_button);
-        Button.setOnClickListener(new View.OnClickListener() {
+        Button buttonWalk;
+        buttonWalk = (Button) findViewById(R.id.walk_button);
+        buttonWalk.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(getApplicationContext(), ShowLocation.class);
@@ -35,6 +34,12 @@ public class GetGoing extends Activity {
         /*
         dodati za preostalu dugmad
          */
+        Button buttonRun;
+
+
+        Button buttonRide;
+
+
     }
 
     @Override
