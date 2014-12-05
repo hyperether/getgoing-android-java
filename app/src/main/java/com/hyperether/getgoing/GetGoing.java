@@ -30,14 +30,26 @@ public class GetGoing extends Activity {
             }
         });
 
-
-        /*
-        dodati za preostalu dugmad
-         */
-        Button buttonRun;
-
-
         Button buttonRide;
+        buttonRide = (Button) findViewById(R.id.ride_button);
+        buttonRide.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(getApplicationContext(), ShowLocation.class);
+                startActivity(intent);
+            }
+        });
+
+        Button buttonRun;
+        buttonRun = (Button) findViewById(R.id.run_button);
+        buttonRun.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(getApplicationContext(), ShowLocation.class);
+                startActivity(intent);
+            }
+        });
+
 
 
     }
