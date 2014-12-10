@@ -1,0 +1,146 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:layout_marginEnd="@dimen/settings_vertical_margin"
+    android:layout_marginLeft="@dimen/settings_vertical_margin"
+    android:layout_marginRight="@dimen/settings_vertical_margin"
+    android:layout_marginStart="@dimen/settings_vertical_margin"
+    android:orientation="vertical"
+  >
+
+    <LinearLayout
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        >
+
+
+
+        <ImageView
+            android:id="@+id/measure_image"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@android:color/transparent"
+            android:contentDescription="@string/measure_image"
+            android:src="@drawable/measure" />
+
+        <TextView
+            android:id="@+id/measure_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/measure_image"
+            android:layout_gravity="center_vertical"
+            android:textSize="@dimen/settings_text_size" />
+
+
+        <Spinner
+            android:id="@+id/metric_spinner"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:prompt="@string/spinner_title"
+
+            />
+
+
+    </LinearLayout>
+
+    <EditText
+        android:id="@+id/editText"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+
+    <LinearLayout
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+  >
+
+        <ImageView
+            android:id="@+id/teg_image"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@android:color/transparent"
+            android:src="@drawable/teg" />
+
+        <TextView
+            android:id="@+id/weight_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:paddingRight="@dimen/activity_vertical_margin"
+            android:text="@string/teg_image"
+            android:textSize="@dimen/settings_text_size" />
+
+        <NumberPicker
+            android:id="@+id/weight_picker"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            />
+
+        <ImageView
+            android:id="@+id/strelica_gore_weight"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+           android:background="@android:color/transparent"
+            android:src="@drawable/strelica_gore_pressed" />
+
+        <ImageView
+            android:id="@+id/strelica_dole_weight"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+           android:background="@android:color/transparent"
+            android:src="@drawable/strelica_dole_pressed" />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center">
+
+    <ImageView
+            android:id="@+id/age_image"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:background="@android:color/transparent"
+            android:src="@drawable/age"
+           />
+
+        <TextView
+            android:id="@+id/age_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:text="@string/age_image"
+            android:textSize="@dimen/settings_text_size"
+            android:paddingRight="40dp"/>
+
+      <NumberPicker
+            android:id="@+id/age_picker"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            />
+
+        <ImageView
+            android:id="@+id/strelica_gore"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@android:color/transparent"
+            android:src="@drawable/strelica_gore_pressed" />
+
+        <ImageView
+            android:id="@+id/strelica_dole"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@android:color/transparent"
+            android:src="@drawable/strelica_dole_pressed" />
+
+    </LinearLayout>
+
+
+    <Button
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/button_accept" />
+
+</LinearLayout>

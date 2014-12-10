@@ -12,6 +12,12 @@
     <string name="fire_image">fire</string>
     <string name="avg_speed_image">avg_speed</string>
     <string name="road_image">road</string>
+    <string name="measure_image">Measure</string>
+    <string name="spinner_title">Metric</string>
+    <string name="teg_image">Weight</string>
+    <string name="age_image">Age</string>
+    <string name="button_accept">Accept</string>
+
 
 
 </resources>
