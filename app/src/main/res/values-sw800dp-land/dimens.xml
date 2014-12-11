@@ -6,7 +6,7 @@
     <dimen name="text_size">25sp</dimen>
     <dimen name="button_text_size">40sp</dimen>
     <dimen name="spinner_horizontal_margin">50sp</dimen>
-    <dimen name="spinner_vertical_margin">450sp</dimen>
+    <dimen name="spinner_vertical_margin">400sp</dimen>
     <dimen name="settings_vertical_margin">20sp</dimen>
     <dimen name="settings_horizontal_margin">80sp</dimen>
     <dimen name="settings_text_size">25sp</dimen>

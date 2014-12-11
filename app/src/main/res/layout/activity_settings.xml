@@ -5,11 +5,13 @@
     android:gravity="center"
     android:orientation="vertical">
 
-    <LinearLayout
+    <RelativeLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginLeft="@dimen/spinner_vertical_margin_port"
         android:layout_marginStart="@dimen/spinner_vertical_margin_port"
+        android:layout_marginRight="@dimen/spinner_vertical_margin_port"
+        android:layout_marginEnd="@dimen/spinner_vertical_margin_port"
         android:paddingBottom="@dimen/spinner_horizontal_margin_port">
 
         <ImageView
@@ -18,15 +20,17 @@
             android:layout_height="wrap_content"
             android:background="@android:color/transparent"
             android:contentDescription="@string/measure_image"
-            android:src="@drawable/measure" />
+            android:src="@drawable/measure"
+            android:layout_centerVertical="true"
+           />
 
         <TextView
             android:id="@+id/measure_text"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_gravity="center_vertical"
-            android:paddingEnd="@dimen/settings_space"
-            android:paddingRight="@dimen/settings_space"
+            android:layout_centerVertical="true"
+            android:layout_toRightOf="@+id/measure_image"
+            android:layout_toEndOf="@+id/measure_image"
             android:text="@string/measure_image"
             android:textColor="#000"
             android:textSize="@dimen/settings_text_size" />
@@ -35,14 +39,21 @@
             android:id="@+id/metric_spinner"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:prompt="@string/spinner_title" />
+            android:layout_toRightOf="@+id/measure_text"
+            android:layout_toEndOf="@+id/measure_text"
+            android:layout_centerVertical="true"
 
-    </LinearLayout>
+              />
 
-    <LinearLayout
+    </RelativeLayout>
+
+    <RelativeLayout
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:gravity="center"
+        android:layout_marginLeft="@dimen/spinner_vertical_margin_port"
+        android:layout_marginStart="@dimen/spinner_vertical_margin_port"
+        android:layout_marginRight="@dimen/spinner_vertical_margin_port"
+        android:layout_marginEnd="@dimen/spinner_vertical_margin_port"
         android:paddingBottom="@dimen/spinner_horizontal_margin_port">
 
         <ImageView
@@ -51,14 +62,17 @@
             android:layout_height="wrap_content"
             android:background="@android:color/transparent"
             android:contentDescription="@string/teg_image"
-            android:src="@drawable/teg" />
+            android:src="@drawable/teg"
+            android:layout_centerVertical="true"
+            />
 
         <TextView
             android:id="@+id/weight_text"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:paddingEnd="@dimen/activity_vertical_margin"
-            android:paddingRight="@dimen/activity_vertical_margin"
+            android:layout_toRightOf="@+id/teg_image"
+            android:layout_toEndOf="@+id/teg_image"
+            android:layout_centerVertical="true"
             android:text="@string/teg_image"
             android:textColor="#000"
             android:textSize="@dimen/settings_text_size" />
@@ -66,14 +80,20 @@
         <NumberPicker
             android:id="@+id/weight_picker"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content" />
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_alignParentEnd="true"
+            />
 
-    </LinearLayout>
+    </RelativeLayout>
 
-    <LinearLayout
+    <RelativeLayout
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:gravity="center"
+        android:layout_marginLeft="@dimen/spinner_vertical_margin_port"
+        android:layout_marginStart="@dimen/spinner_vertical_margin_port"
+        android:layout_marginRight="@dimen/spinner_vertical_margin_port"
+        android:layout_marginEnd="@dimen/spinner_vertical_margin_port"
         android:paddingBottom="@dimen/spinner_horizontal_margin_port">
 
         <ImageView
@@ -82,39 +102,39 @@
             android:layout_height="wrap_content"
             android:background="@android:color/transparent"
             android:contentDescription="@string/age_image"
-            android:src="@drawable/age" />
+            android:src="@drawable/age"
+            android:layout_centerVertical="true"/>
 
         <TextView
             android:id="@+id/age_text"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:paddingEnd="@dimen/settings_space"
-            android:paddingRight="@dimen/settings_space"
+            android:layout_toRightOf="@+id/age_image"
+            android:layout_toEndOf="@+id/age_image"
             android:text="@string/age_image"
             android:textColor="#000"
-            android:textSize="@dimen/settings_text_size" />
+            android:textSize="@dimen/settings_text_size"
+            android:layout_centerVertical="true"/>
 
         <NumberPicker
             android:id="@+id/age_picker"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content" />
+            android:layout_height="wrap_content"
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentRight="true"
+            />
 
-    </LinearLayout>
+    </RelativeLayout>
 
-    <LinearLayout
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginEnd="@dimen/accept_vertical_margin_port"
-        android:layout_marginLeft="@dimen/accept_vertical_margin_port"
-        android:layout_marginRight="@dimen/accept_vertical_margin_port"
-        android:layout_marginStart="@dimen/accept_vertical_margin_port">
-
-        <Button
+   <Button
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:text="@string/button_accept"
-            android:textColor="#000" />
+            android:textColor="#000"
+            android:layout_marginEnd="@dimen/spinner_vertical_margin_port"
+            android:layout_marginLeft="@dimen/spinner_vertical_margin_port"
+            android:layout_marginRight="@dimen/spinner_vertical_margin_port"
+            android:layout_marginStart="@dimen/spinner_vertical_margin_port"/>
 
-    </LinearLayout>
 
 </LinearLayout>
