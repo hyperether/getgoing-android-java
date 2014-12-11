@@ -1,16 +1,19 @@
-<?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
+    android:orientation="vertical"
     android:gravity="center"
-    android:orientation="vertical">
+    >
 
     <LinearLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginLeft="@dimen/spinner_vertical_margin_port"
-        android:layout_marginStart="@dimen/spinner_vertical_margin_port"
-        android:paddingBottom="@dimen/spinner_horizontal_margin_port">
+        android:layout_marginBottom="@dimen/spinner_horizontal_margin"
+        android:layout_marginLeft="@dimen/spinner_vertical_margin"
+        android:layout_marginStart="@dimen/spinner_vertical_margin"
+        android:layout_marginRight="@dimen/spinner_vertical_margin"
+        android:layout_marginEnd="@dimen/spinner_vertical_margin"
+        android:layout_marginTop="@dimen/spinner_horizontal_margin">
 
         <ImageView
             android:id="@+id/measure_image"
@@ -24,12 +27,12 @@
             android:id="@+id/measure_text"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_gravity="center_vertical"
-            android:paddingEnd="@dimen/settings_space"
-            android:paddingRight="@dimen/settings_space"
             android:text="@string/measure_image"
-            android:textColor="#000"
-            android:textSize="@dimen/settings_text_size" />
+            android:layout_gravity="center_vertical"
+            android:textSize="@dimen/settings_text_size"
+            android:paddingRight="@dimen/settings_space"
+            android:paddingEnd="@dimen/settings_space"
+            android:textColor="#000" />
 
         <Spinner
             android:id="@+id/metric_spinner"
@@ -40,81 +43,73 @@
     </LinearLayout>
 
     <LinearLayout
-        android:layout_width="fill_parent"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:gravity="center"
-        android:paddingBottom="@dimen/spinner_horizontal_margin_port">
+        android:gravity="center">
 
         <ImageView
             android:id="@+id/teg_image"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:background="@android:color/transparent"
-            android:contentDescription="@string/teg_image"
-            android:src="@drawable/teg" />
+            android:src="@drawable/teg"
+            android:contentDescription="@string/teg_image"/>
 
         <TextView
             android:id="@+id/weight_text"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:paddingEnd="@dimen/activity_vertical_margin"
             android:paddingRight="@dimen/activity_vertical_margin"
+            android:paddingEnd="@dimen/activity_vertical_margin"
             android:text="@string/teg_image"
-            android:textColor="#000"
-            android:textSize="@dimen/settings_text_size" />
+            android:textSize="@dimen/settings_text_size"
+            android:textColor="#000"/>
 
         <NumberPicker
             android:id="@+id/weight_picker"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content" />
+            android:layout_height="wrap_content"/>
 
-    </LinearLayout>
-
-    <LinearLayout
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:gravity="center"
-        android:paddingBottom="@dimen/spinner_horizontal_margin_port">
-
-        <ImageView
+         <ImageView
             android:id="@+id/age_image"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:background="@android:color/transparent"
-            android:contentDescription="@string/age_image"
-            android:src="@drawable/age" />
+            android:src="@drawable/age"/>
 
         <TextView
             android:id="@+id/age_text"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:paddingEnd="@dimen/settings_space"
-            android:paddingRight="@dimen/settings_space"
             android:text="@string/age_image"
-            android:textColor="#000"
-            android:textSize="@dimen/settings_text_size" />
+            android:textSize="@dimen/settings_text_size"
+            android:paddingRight="@dimen/activity_vertical_margin"
+            android:paddingEnd="@dimen/activity_vertical_margin"
+            android:textColor="#000"/>
 
         <NumberPicker
             android:id="@+id/age_picker"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content" />
+            android:layout_height="wrap_content"/>
 
     </LinearLayout>
 
     <LinearLayout
         android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:gravity="center"
+        android:paddingLeft="@dimen/accept_vertical_margin"
+        android:paddingRight="@dimen/accept_vertical_margin"
+        android:paddingBottom="@dimen/activity_horizontal_margin">
+
+    <Button
+        android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:layout_marginEnd="@dimen/accept_vertical_margin_port"
-        android:layout_marginLeft="@dimen/accept_vertical_margin_port"
-        android:layout_marginRight="@dimen/accept_vertical_margin_port"
-        android:layout_marginStart="@dimen/accept_vertical_margin_port">
+        android:text="@string/button_accept"
+        android:textColor="#000"
+        android:textSize="@dimen/accept_button_size"
+        />
 
-        <Button
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:text="@string/button_accept"
-            android:textColor="#000" />
-
-    </LinearLayout>
+</LinearLayout>
 
 </LinearLayout>
