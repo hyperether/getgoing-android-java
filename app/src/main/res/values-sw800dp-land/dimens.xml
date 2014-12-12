@@ -11,6 +11,5 @@
     <dimen name="spinner_vertical_margin">250sp</dimen>
     <dimen name="settings_vertical_margin">20sp</dimen>
     <dimen name="settings_horizontal_margin">80sp</dimen>
-    <dimen name="settings_text_size">35sp</dimen>
     <dimen name="accept_vertical_margin">500sp</dimen>
 </resources>
