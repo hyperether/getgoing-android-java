@@ -1,17 +1,20 @@
 <resources>
     <!-- Default screen margins, per the Android Design guidelines. -->
     <dimen name="activity_horizontal_margin">16dp</dimen>
-    <dimen name="activity_vertical_margin">16dp</dimen>
+    <dimen name="activity_vertical_margin">20dp</dimen>
+    <dimen name="activity_vertical_margin_port">40dp</dimen>
     <dimen name="location_horizontal_margin">16dp</dimen>
     <dimen name="text_size">20sp</dimen>
     <dimen name="button_text_size">40sp</dimen>
+    <dimen name="settings_text_size">30sp</dimen>
     <dimen name="settings_vertical_margin">50sp</dimen>
     <dimen name="settings_horizontal_margin">80sp</dimen>
-    <dimen name="spinner_vertical_margin">200sp</dimen>
-    <dimen name="spinner_vertical_margin_port">100sp</dimen>
-    <dimen name="spinner_horizontal_margin">30sp</dimen>
-    <dimen name="spinner_horizontal_margin_port">30sp</dimen>
+    <dimen name="spinner_vertical_margin">150sp</dimen>
+    <dimen name="spinner_vertical_margin_port">75sp</dimen>
+    <dimen name="spinner_horizontal_margin">40sp</dimen>
+    <dimen name="spinner_horizontal_margin_port">20sp</dimen>
     <dimen name="accept_vertical_margin">300sp</dimen>
     <dimen name="accept_vertical_margin_port">150sp</dimen>
+    <dimen name="accept_button_size">25sp</dimen>
 
 </resources>

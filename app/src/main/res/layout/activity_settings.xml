@@ -2,35 +2,44 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
+    android:layout_marginBottom="@dimen/spinner_horizontal_margin_port"
+    android:layout_marginTop="@dimen/spinner_horizontal_margin_port"
     android:gravity="center"
     android:orientation="vertical">
 
     <RelativeLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginLeft="@dimen/spinner_vertical_margin_port"
-        android:layout_marginStart="@dimen/spinner_vertical_margin_port"
-        android:layout_marginRight="@dimen/spinner_vertical_margin_port"
+        android:layout_marginBottom="@dimen/spinner_horizontal_margin_port"
         android:layout_marginEnd="@dimen/spinner_vertical_margin_port"
+        android:layout_marginLeft="@dimen/spinner_vertical_margin_port"
+        android:layout_marginRight="@dimen/spinner_vertical_margin_port"
+        android:layout_marginStart="@dimen/spinner_vertical_margin_port"
+        android:layout_marginTop="@dimen/spinner_horizontal_margin_port"
         android:paddingBottom="@dimen/spinner_horizontal_margin_port">
 
         <ImageView
             android:id="@+id/measure_image"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true"
+            android:layout_centerVertical="true"
             android:background="@android:color/transparent"
             android:contentDescription="@string/measure_image"
-            android:src="@drawable/measure"
-            android:layout_centerVertical="true"
-           />
+            android:paddingEnd="@dimen/activity_vertical_margin_port"
+            android:paddingRight="@dimen/activity_vertical_margin_port"
+            android:src="@drawable/measure" />
 
         <TextView
             android:id="@+id/measure_text"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerVertical="true"
-            android:layout_toRightOf="@+id/measure_image"
             android:layout_toEndOf="@+id/measure_image"
+            android:layout_toRightOf="@+id/measure_image"
+            android:paddingEnd="@dimen/activity_vertical_margin_port"
+            android:paddingRight="@dimen/activity_vertical_margin_port"
             android:text="@string/measure_image"
             android:textColor="#000"
             android:textSize="@dimen/settings_text_size" />
@@ -39,40 +48,45 @@
             android:id="@+id/metric_spinner"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_toRightOf="@+id/measure_text"
-            android:layout_toEndOf="@+id/measure_text"
             android:layout_centerVertical="true"
+            android:layout_toEndOf="@+id/measure_text"
+            android:layout_toRightOf="@+id/measure_text"
 
-              />
+            />
 
     </RelativeLayout>
 
     <RelativeLayout
-        android:layout_width="fill_parent"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginLeft="@dimen/spinner_vertical_margin_port"
-        android:layout_marginStart="@dimen/spinner_vertical_margin_port"
-        android:layout_marginRight="@dimen/spinner_vertical_margin_port"
+        android:layout_marginBottom="@dimen/spinner_horizontal_margin_port"
         android:layout_marginEnd="@dimen/spinner_vertical_margin_port"
+        android:layout_marginLeft="@dimen/spinner_vertical_margin_port"
+        android:layout_marginRight="@dimen/spinner_vertical_margin_port"
+        android:layout_marginStart="@dimen/spinner_vertical_margin_port"
+        android:layout_marginTop="@dimen/spinner_horizontal_margin_port"
         android:paddingBottom="@dimen/spinner_horizontal_margin_port">
 
         <ImageView
             android:id="@+id/teg_image"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true"
+            android:layout_centerVertical="true"
             android:background="@android:color/transparent"
             android:contentDescription="@string/teg_image"
-            android:src="@drawable/teg"
-            android:layout_centerVertical="true"
-            />
+            android:paddingEnd="@dimen/activity_vertical_margin_port"
+            android:paddingRight="@dimen/activity_vertical_margin_port"
+            android:src="@drawable/teg" />
 
         <TextView
             android:id="@+id/weight_text"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_toRightOf="@+id/teg_image"
-            android:layout_toEndOf="@+id/teg_image"
             android:layout_centerVertical="true"
+            android:layout_toEndOf="@+id/teg_image"
+            android:layout_toRightOf="@+id/teg_image"
             android:text="@string/teg_image"
             android:textColor="#000"
             android:textSize="@dimen/settings_text_size" />
@@ -81,8 +95,10 @@
             android:id="@+id/weight_picker"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignParentRight="true"
             android:layout_alignParentEnd="true"
+            android:layout_alignParentRight="true"
+
+
             />
 
     </RelativeLayout>
@@ -90,31 +106,37 @@
     <RelativeLayout
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:layout_marginLeft="@dimen/spinner_vertical_margin_port"
-        android:layout_marginStart="@dimen/spinner_vertical_margin_port"
-        android:layout_marginRight="@dimen/spinner_vertical_margin_port"
+        android:layout_marginBottom="@dimen/spinner_horizontal_margin_port"
         android:layout_marginEnd="@dimen/spinner_vertical_margin_port"
+        android:layout_marginLeft="@dimen/spinner_vertical_margin_port"
+        android:layout_marginRight="@dimen/spinner_vertical_margin_port"
+        android:layout_marginStart="@dimen/spinner_vertical_margin_port"
+        android:layout_marginTop="@dimen/spinner_horizontal_margin_port"
         android:paddingBottom="@dimen/spinner_horizontal_margin_port">
 
         <ImageView
             android:id="@+id/age_image"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true"
+            android:layout_centerVertical="true"
             android:background="@android:color/transparent"
             android:contentDescription="@string/age_image"
-            android:src="@drawable/age"
-            android:layout_centerVertical="true"/>
+            android:paddingEnd="@dimen/activity_vertical_margin_port"
+            android:paddingRight="@dimen/activity_vertical_margin_port"
+            android:src="@drawable/age" />
 
         <TextView
             android:id="@+id/age_text"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_toRightOf="@+id/age_image"
+            android:layout_centerVertical="true"
             android:layout_toEndOf="@+id/age_image"
+            android:layout_toRightOf="@+id/age_image"
             android:text="@string/age_image"
             android:textColor="#000"
-            android:textSize="@dimen/settings_text_size"
-            android:layout_centerVertical="true"/>
+            android:textSize="@dimen/settings_text_size" />
 
         <NumberPicker
             android:id="@+id/age_picker"
@@ -122,19 +144,23 @@
             android:layout_height="wrap_content"
             android:layout_alignParentEnd="true"
             android:layout_alignParentRight="true"
+
             />
 
     </RelativeLayout>
 
-   <Button
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:text="@string/button_accept"
-            android:textColor="#000"
-            android:layout_marginEnd="@dimen/spinner_vertical_margin_port"
-            android:layout_marginLeft="@dimen/spinner_vertical_margin_port"
-            android:layout_marginRight="@dimen/spinner_vertical_margin_port"
-            android:layout_marginStart="@dimen/spinner_vertical_margin_port"/>
+    <Button
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="@dimen/spinner_horizontal_margin_port"
+        android:layout_marginEnd="@dimen/spinner_vertical_margin_port"
+        android:layout_marginLeft="@dimen/spinner_vertical_margin_port"
+        android:layout_marginRight="@dimen/spinner_vertical_margin_port"
+        android:layout_marginStart="@dimen/spinner_vertical_margin_port"
+        android:layout_marginTop="@dimen/spinner_horizontal_margin_port"
+        android:text="@string/button_accept"
+        android:textColor="#000"
+        android:textSize="@dimen/accept_button_size" />
 
 
 </LinearLayout>
