@@ -51,6 +51,7 @@
             android:layout_centerVertical="true"
             android:layout_toEndOf="@+id/measure_text"
             android:layout_toRightOf="@+id/measure_text"
+            android:prompt="@string/metric_spinner"
 
             />
 

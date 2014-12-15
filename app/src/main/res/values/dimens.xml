@@ -14,4 +14,7 @@
     <dimen name="spinner_horizontal_margin">10sp</dimen>
     <dimen name="spinner_horizontal_margin_port">10sp</dimen>
     <dimen name="accept_button_size">15sp</dimen>
+    <dimen name="date_padding">15sp</dimen>
+    <dimen name="element_padding">8sp</dimen>
+    <dimen name="element_text_size">15sp</dimen>
 </resources>

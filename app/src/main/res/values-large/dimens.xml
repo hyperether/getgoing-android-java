@@ -13,8 +13,10 @@
     <dimen name="spinner_vertical_margin_port">75sp</dimen>
     <dimen name="spinner_horizontal_margin">40sp</dimen>
     <dimen name="spinner_horizontal_margin_port">20sp</dimen>
-    <dimen name="accept_vertical_margin">300sp</dimen>
     <dimen name="accept_vertical_margin_port">150sp</dimen>
     <dimen name="accept_button_size">25sp</dimen>
+    <dimen name="date_padding">15sp</dimen>
+    <dimen name="element_padding">15sp</dimen>
+    <dimen name="element_text_size">20sp</dimen>
 
 </resources>

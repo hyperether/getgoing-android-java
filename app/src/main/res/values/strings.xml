@@ -17,8 +17,16 @@
     <string name="teg_image">Weight</string>
     <string name="age_image">Age</string>
     <string name="button_accept">Accept</string>
+    <string name="date">15.12.2014.</string>
+    <string name="time">09:03:48</string>
+    <string name="energy">Energy 0.06 kcal</string>
 
-
+    <string name="metric_spinner">Metric</string>
+    <string-array name="measure_units" translatable="false" >
+        <item>Metric</item>
+        <item>Imperial</item>
+        <item>US</item>
+   </string-array>
 </resources>
 
 

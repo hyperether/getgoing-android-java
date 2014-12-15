@@ -12,4 +12,7 @@
     <dimen name="spinner_horizontal_margin_port">0sp</dimen>
     <dimen name="settings_text_size">10sp</dimen>
     <dimen name="accept_vertical_margin">150sp</dimen>
+    <dimen name="date_padding">8sp</dimen>
+    <dimen name="element_padding">12sp</dimen>
+    <dimen name="element_text_size">16sp</dimen>
 </resources>
