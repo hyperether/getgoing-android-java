@@ -20,13 +20,38 @@
     <string name="date">15.12.2014.</string>
     <string name="time">09:03:48</string>
     <string name="energy">Energy 0.06 kcal</string>
-
     <string name="metric_spinner">Metric</string>
-    <string-array name="measure_units" translatable="false" >
+
+    <string name="SettingsActivityTitle" translatable="false">Settings</string>
+    <string name="ShowMap" translatable="false">Map</string>
+    <string name="action_reset_settings" translatable="false">Reset</string>
+    <string name="action_stats" translatable="false">Statistics</string>
+    <string name="exploration_mode" translatable="false">Exploration mode</string>
+    <string name="walker_text" translatable="false"> Walk</string>
+    <string name="runner_text" translatable="false"> Run</string>
+    <string name="rider_text" translatable="false"> Ride</string>
+    <string name="buttonConfirmSettings" translatable="false"> Accept</string>
+    <string name="start" translatable="false"> Start</string>
+    <string name="stop" translatable="false"> Stop</string>
+    <string name="reset" translatable="false"> Reset</string>
+    <string name="setting1" translatable="false"> Measure</string>
+    <string name="setting2" translatable="false"> Weight</string>
+    <string name="setting3" translatable="false"> Age</string>
+    <string name="dialog_set_number" translatable="false">Set</string>
+    <string name="dialog_cancel" translatable="false">Cancel</string>
+    <string name="dialog_picker_title" translatable="false">Choose a number</string>
+    <string name="descImageViewEmpty" translatable="false"></string>
+    <string name="dialog_message" translatable="false">No saved data. Press OK to continue.</string>
+    <string name="confirm" translatable="false">OK</string>
+    <string name="tag" translatable="false">Activity image</string>
+    <string name="energy_spent" translatable="false">Energy spent</string>
+    <string name="delete_message" translatable="false">Delete record</string>
+
+    <string-array name="measure_units" translatable="false">
         <item>Metric</item>
         <item>Imperial</item>
         <item>US</item>
-   </string-array>
+    </string-array>
 </resources>
 
 

@@ -169,4 +169,10 @@
 
     </LinearLayout>
 
+    <fragment
+        android:id="@+id/show_map_page"
+        class="com.google.android.gms.maps.SupportMapFragment"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content" />
+
 </LinearLayout>
