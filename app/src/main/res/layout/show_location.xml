@@ -9,7 +9,8 @@
 
     <LinearLayout
         android:layout_width="fill_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:paddingTop="@dimen/activity_horizontal_margin">
 
         <Button
             android:id="@+id/start_final_pritisnuto"

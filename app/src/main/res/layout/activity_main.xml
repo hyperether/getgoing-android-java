@@ -19,7 +19,9 @@
             android:background="@android:color/transparent"
             android:contentDescription="@string/app_name"
             android:drawableLeft="@drawable/button1_custom"
-            android:drawableStart="@drawable/button1_custom" />
+            android:drawableStart="@drawable/button1_custom"
+            android:paddingEnd="@dimen/element_padding"
+            android:paddingRight="@dimen/element_padding" />
 
         <TextView
             android:layout_width="wrap_content"
@@ -47,7 +49,9 @@
             android:background="@android:color/transparent"
             android:contentDescription="@string/app_name"
             android:drawableLeft="@drawable/button2_custom"
-            android:drawableStart="@drawable/button2_custom" />
+            android:drawableStart="@drawable/button2_custom"
+            android:paddingEnd="@dimen/element_padding"
+            android:paddingRight="@dimen/element_padding" />
 
         <TextView
             android:layout_width="wrap_content"
@@ -63,8 +67,7 @@
         android:id="@+id/ride_layout"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:layout_weight="0.3"
-        >
+        android:layout_weight="0.3">
 
         <Button
             android:id="@+id/ride_button"
@@ -75,7 +78,9 @@
             android:background="@android:color/transparent"
             android:contentDescription="@string/app_name"
             android:drawableLeft="@drawable/button3_custom"
-            android:drawableStart="@drawable/button3_custom" />
+            android:drawableStart="@drawable/button3_custom"
+            android:paddingEnd="@dimen/element_padding"
+            android:paddingRight="@dimen/element_padding" />
 
         <TextView
             android:layout_width="fill_parent"

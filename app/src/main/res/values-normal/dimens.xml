@@ -15,7 +15,7 @@
     <dimen name="accept_button_size">15sp</dimen>
     <dimen name="date_padding">5dp</dimen>
     <dimen name="date_padding_land">20dp</dimen>
-    <dimen name="element_padding">15dp</dimen>
+    <dimen name="element_padding">25dp</dimen>
     <dimen name="element_padding_land">35dp</dimen>
     <dimen name="element_text_size">16sp</dimen>
     <dimen name="element_text_size_land">18sp</dimen>

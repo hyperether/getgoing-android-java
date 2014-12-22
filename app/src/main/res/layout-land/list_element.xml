@@ -14,7 +14,7 @@
         android:contentDescription="@string/app_name"
         android:paddingEnd="@dimen/element_padding_land"
         android:paddingRight="@dimen/element_padding_land"
-        android:src="@drawable/walk_normal" />
+        android:src="@drawable/walk" />
 
     <LinearLayout
         android:id="@+id/statistic_layout"
