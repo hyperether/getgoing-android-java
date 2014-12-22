@@ -7,16 +7,19 @@
     <dimen name="text_size">20sp</dimen>
     <dimen name="button_text_size">40sp</dimen>
     <dimen name="settings_text_size">30sp</dimen>
-    <dimen name="settings_vertical_margin">50sp</dimen>
-    <dimen name="settings_horizontal_margin">80sp</dimen>
-    <dimen name="spinner_vertical_margin">150sp</dimen>
-    <dimen name="spinner_vertical_margin_port">75sp</dimen>
-    <dimen name="spinner_horizontal_margin">40sp</dimen>
-    <dimen name="spinner_horizontal_margin_port">20sp</dimen>
-    <dimen name="accept_vertical_margin_port">150sp</dimen>
+    <dimen name="settings_vertical_margin">50dp</dimen>
+    <dimen name="settings_horizontal_margin">80dp</dimen>
+    <dimen name="spinner_vertical_margin">150dp</dimen>
+    <dimen name="spinner_vertical_margin_port">75dp</dimen>
+    <dimen name="spinner_horizontal_margin">40dp</dimen>
+    <dimen name="spinner_horizontal_margin_port">20dp</dimen>
+    <dimen name="accept_vertical_margin_port">150dp</dimen>
     <dimen name="accept_button_size">25sp</dimen>
-    <dimen name="date_padding">15sp</dimen>
-    <dimen name="element_padding">15sp</dimen>
-    <dimen name="element_text_size">20sp</dimen>
+    <dimen name="date_padding">15dp</dimen>
+    <dimen name="date_padding_land">20dp</dimen>
+    <dimen name="element_padding">15dp</dimen>
+    <dimen name="element_padding_land">45dp</dimen>
+    <dimen name="element_text_size">25sp</dimen>
+    <dimen name="element_text_size_land">30sp</dimen>
 
 </resources>

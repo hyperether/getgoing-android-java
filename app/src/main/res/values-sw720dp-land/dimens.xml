@@ -5,5 +5,7 @@
     <dimen name="location_horizontal_margin">16dp</dimen>
     <dimen name="text_size">55sp</dimen>
     <dimen name="button_text_size">40sp</dimen>
-
+    <dimen name="date_padding_land">35dp</dimen>
+    <dimen name="element_padding_land">100dp</dimen>
+    <dimen name="element_text_size">30sp</dimen>
 </resources>
