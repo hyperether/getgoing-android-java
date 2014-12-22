@@ -21,7 +21,7 @@
             android:drawableLeft="@drawable/button1_custom"
             android:drawableStart="@drawable/button1_custom"
             android:paddingEnd="@dimen/element_padding_land"
-            android:paddingRight="@dimen/element_padding_land"/>
+            android:paddingRight="@dimen/element_padding_land" />
 
         <TextView
             android:layout_width="wrap_content"
@@ -51,7 +51,7 @@
             android:drawableLeft="@drawable/button2_custom"
             android:drawableStart="@drawable/button2_custom"
             android:paddingEnd="@dimen/element_padding_land"
-            android:paddingRight="@dimen/element_padding_land"/>
+            android:paddingRight="@dimen/element_padding_land" />
 
         <TextView
             android:layout_width="wrap_content"
@@ -81,7 +81,7 @@
             android:drawableLeft="@drawable/button3_custom"
             android:drawableStart="@drawable/button3_custom"
             android:paddingEnd="@dimen/element_padding_land"
-            android:paddingRight="@dimen/element_padding_land"/>
+            android:paddingRight="@dimen/element_padding_land" />
 
         <TextView
             android:layout_width="fill_parent"
