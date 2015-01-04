@@ -162,7 +162,7 @@ public class ShowData extends ListActivity {
 
                 textDate = (TextView) convertView.findViewById(R.id.textDate);
                 textEnergy = (TextView) convertView.findViewById(R.id.textEnergy);
-                image = (ImageView) convertView.findViewById(R.id.icon);
+                image = (ImageView) convertView.findViewById(R.id.walk_layout);
                 button = (Button) convertView.findViewById(R.id.delete);
 
                 holder.textDate = textDate;
