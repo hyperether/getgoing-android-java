@@ -152,7 +152,7 @@ public class ShowData extends ListActivity {
             TextView textDate;
             TextView textEnergy;
             ImageView image;
-            Button button;
+
 
             if (convertView == null) {
                 convertView = LayoutInflater.from(context)
@@ -163,12 +163,12 @@ public class ShowData extends ListActivity {
                 textDate = (TextView) convertView.findViewById(R.id.textDate);
                 textEnergy = (TextView) convertView.findViewById(R.id.textEnergy);
                 image = (ImageView) convertView.findViewById(R.id.walk_layout);
-                button = (Button) convertView.findViewById(R.id.delete);
+                image = (ImageView) convertView.findViewById(R.id.delete_layout);
 
                 holder.textDate = textDate;
                 holder.textEnergy = textEnergy;
                 holder.image = image;
-                holder.button = button;
+
                 //holder.position = position;
 
                 holder.button.setOnClickListener(delButtonListener);
@@ -180,7 +180,7 @@ public class ShowData extends ListActivity {
                 textDate = holder.textDate;
                 textEnergy = holder.textEnergy;
                 image = holder.image;
-                button = holder.button;
+
             }
 
             DbRoute route = myRoutes.get(position);
