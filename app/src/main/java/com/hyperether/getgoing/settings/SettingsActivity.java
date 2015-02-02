@@ -43,24 +43,39 @@ public class SettingsActivity extends Activity implements OnItemSelectedListener
         spinner.setAdapter(spinnerArrayAdapter);
         spinner.setOnItemSelectedListener(this);
 
-//		mNumberPickerA = (NumberPicker) findViewById(R.id.numberPicker1);
-//		mNumberPickerW = (NumberPicker) findViewById(R.id.numberPicker2);
-//
-//		mNumberPickerW.setOnChangeListener(new OnChangedListener() {
-//			@Override
-//			public void onChanged(NumberPicker picker, int oldVal, int newVal) {
-//				// TODO Auto-generated method stub
-//				cbDataFrameLocal.setWeight(newVal);
-//			}
-//		});
-//
-//		mNumberPickerA.setOnChangeListener(new OnChangedListener() {
-//			@Override
-//			public void onChanged(NumberPicker picker, int oldVal, int newVal) {
-//				// TODO Auto-generated method stub
-//				cbDataFrameLocal.setAge(newVal);
-//			}
-//		});
+        mNumberPickerA = (NumberPicker) findViewById(R.id.age_picker);
+        mNumberPickerW = (NumberPicker) findViewById(R.id.weight_picker);
+
+        String[] nums = new String[20];
+        for (int i = 0; i < nums.length; i++)
+            nums[i] = Integer.toString(i);
+
+        mNumberPickerW.setMinValue(1);
+        mNumberPickerW.setMaxValue(150);
+        mNumberPickerW.setWrapSelectorWheel(false);
+        mNumberPickerW.setDisplayedValues(nums);
+        mNumberPickerW.setValue(1);
+
+        mNumberPickerW.setOnValueChangedListener(new NumberPicker.OnValueChangeListener() {
+            @Override
+            public void onValueChange(NumberPicker picker, int oldVal, int newVal) {
+                mNumberPickerW.setValue(newVal);
+                cbDataFrameLocal.setWeight(newVal);
+            }
+        });
+
+        mNumberPickerA.setMinValue(1);
+        mNumberPickerA.setMaxValue(100);
+        mNumberPickerA.setWrapSelectorWheel(false);
+        mNumberPickerA.setDisplayedValues(nums);
+        mNumberPickerA.setValue(1);
+
+        mNumberPickerA.setOnValueChangedListener(new NumberPicker.OnValueChangeListener() {
+            @Override
+            public void onValueChange(NumberPicker picker, int oldVal, int newVal) {
+                cbDataFrameLocal.setAge(newVal);
+            }
+        });
 
         buttonConfirmSettings = (Button) findViewById(R.id.buttonConfirmSettings);
         buttonConfirmSettings.setOnClickListener(new View.OnClickListener() {
