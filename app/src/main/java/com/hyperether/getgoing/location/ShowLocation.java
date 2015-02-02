@@ -12,7 +12,6 @@ import android.graphics.Color;
 import android.location.Location;
 import android.os.Bundle;
 import android.os.Parcelable;
-import android.support.v4.app.FragmentActivity;
 import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.View;
@@ -28,7 +27,7 @@ import com.google.android.gms.location.LocationClient;
 import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
-import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.MapFragment;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
@@ -50,7 +49,7 @@ import java.util.Locale;
 import java.util.Timer;
 import java.util.TimerTask;
 
-public class ShowLocation extends FragmentActivity implements
+public class ShowLocation extends Activity implements
         GooglePlayServicesClient.ConnectionCallbacks,
         GooglePlayServicesClient.OnConnectionFailedListener,
         com.google.android.gms.location.LocationListener {
@@ -214,7 +213,7 @@ public class ShowLocation extends FragmentActivity implements
         if (mLocationClient.isConnected()) {
             stopUpdates();
         }
-		/*
+        /*
 		 * After disconnect() is called, the client is
 		 * considered "dead".
 		 */
@@ -627,7 +626,7 @@ public class ShowLocation extends FragmentActivity implements
         // Display the connection status
         Toast.makeText(this, "Connected", Toast.LENGTH_SHORT).show();
 
-        mMap = ((SupportMapFragment) getSupportFragmentManager()
+        mMap = ((MapFragment) getFragmentManager()
                 .findFragmentById(R.id.show_map_page)).getMap();
 
         // If Google Play Services is available

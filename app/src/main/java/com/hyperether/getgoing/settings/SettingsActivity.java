@@ -1,12 +1,14 @@
 package com.hyperether.getgoing.settings;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemSelectedListener;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.NumberPicker;
 import android.widget.Spinner;
@@ -32,15 +34,15 @@ public class SettingsActivity extends Activity implements OnItemSelectedListener
         Bundle b = getIntent().getExtras();
         cbDataFrameLocal = b.getParcelable("searchKey");
 
-//		spinner = (Spinner) findViewById(R.id.spinnerChooseCriteria);
-//		ArrayAdapter<CharSequence> spinnerArrayAdapter = ArrayAdapter.createFromResource(
-//				this, R.array.measure_units, R.layout.settings_spinner);
-//		// Specify the layout to use when the list of choices appears
-//		spinnerArrayAdapter.setDropDownViewResource(R.layout.settings_spinner);
-//		// Apply the adapter to the spinner
-//		spinner.setAdapter(spinnerArrayAdapter);
-//		spinner.setOnItemSelectedListener(this);
-//
+        spinner = (Spinner) findViewById(R.id.metric_spinner);
+        ArrayAdapter<CharSequence> spinnerArrayAdapter = ArrayAdapter.createFromResource(
+                this, R.array.measure_units, R.layout.settings_spinner);
+        // Specify the layout to use when the list of choices appears
+        spinnerArrayAdapter.setDropDownViewResource(R.layout.settings_spinner);
+        // Apply the adapter to the spinner
+        spinner.setAdapter(spinnerArrayAdapter);
+        spinner.setOnItemSelectedListener(this);
+
 //		mNumberPickerA = (NumberPicker) findViewById(R.id.numberPicker1);
 //		mNumberPickerW = (NumberPicker) findViewById(R.id.numberPicker2);
 //
@@ -59,18 +61,18 @@ public class SettingsActivity extends Activity implements OnItemSelectedListener
 //				cbDataFrameLocal.setAge(newVal);
 //			}
 //		});
-//
-//		buttonConfirmSettings = (Button) findViewById(R.id.buttonConfirmSettings);
-//		buttonConfirmSettings.setOnClickListener(new OnClickListener() {
-//
-//			@Override
-//			public void onClick(View v) {
-//				Intent resultIntent = new Intent();
-//				resultIntent.putExtra("dataKey", cbDataFrameLocal);
-//				setResult(Activity.RESULT_OK, resultIntent);
-//				finish();
-//			}
-//		});
+
+        buttonConfirmSettings = (Button) findViewById(R.id.buttonConfirmSettings);
+        buttonConfirmSettings.setOnClickListener(new View.OnClickListener() {
+
+            @Override
+            public void onClick(View v) {
+                Intent resultIntent = new Intent();
+                resultIntent.putExtra("dataKey", cbDataFrameLocal);
+                setResult(Activity.RESULT_OK, resultIntent);
+                finish();
+            }
+        });
     }
 
     /*
@@ -93,22 +95,20 @@ public class SettingsActivity extends Activity implements OnItemSelectedListener
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        /*
+
         int itemId = item.getItemId();
-		if (itemId == R.id.action_reset_settings) {
-			cbDataFrameLocal.setAge(0);
-			cbDataFrameLocal.setWeight(0);
-			cbDataFrameLocal.setMeasurementSystemId(0);
-			Intent resultIntent = new Intent();
-			resultIntent.putExtra("dataKey", cbDataFrameLocal);
-			setResult(Activity.RESULT_OK, resultIntent);
-			finish();
-			return true;
-		} else {
-			return super.onOptionsItemSelected(item);
-		}
-		*/
-        return super.onOptionsItemSelected(item);
+        if (itemId == R.id.action_reset_settings) {
+            cbDataFrameLocal.setAge(0);
+            cbDataFrameLocal.setWeight(0);
+            cbDataFrameLocal.setMeasurementSystemId(0);
+            Intent resultIntent = new Intent();
+            resultIntent.putExtra("dataKey", cbDataFrameLocal);
+            setResult(Activity.RESULT_OK, resultIntent);
+            finish();
+            return true;
+        } else {
+            return super.onOptionsItemSelected(item);
+        }
     }
 
     @Override
