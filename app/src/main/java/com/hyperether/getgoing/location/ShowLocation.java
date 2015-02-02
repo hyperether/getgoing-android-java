@@ -214,7 +214,7 @@ public class ShowLocation extends Activity implements
             stopUpdates();
         }
         /*
-		 * After disconnect() is called, the client is
+         * After disconnect() is called, the client is
 		 * considered "dead".
 		 */
         mLocationClient.disconnect();
@@ -821,14 +821,14 @@ public class ShowLocation extends Activity implements
     }
 
     private void initLayoutDinamically() {
-//        button_start = (Button) findViewById(R.id.buttonStart);
-//        button_start.setOnClickListener(mButtonStartListener);
-//        button_pause = (Button) findViewById(R.id.buttonPause);
-//        button_pause.setOnClickListener(mButtonPauseListener);
-//        button_rst = (Button) findViewById(R.id.buttonReset);
-//        button_rst.setOnClickListener(mButtonResetListener);
-//        button_save = (Button) findViewById(R.id.buttonSave);
-//        button_save.setOnClickListener(mButtonSaveListener);
+        button_start = (Button) findViewById(R.id.start_button);
+        button_start.setOnClickListener(mButtonStartListener);
+        button_pause = (Button) findViewById(R.id.end_button);
+        button_pause.setOnClickListener(mButtonPauseListener);
+        button_rst = (Button) findViewById(R.id.reset_button);
+        button_rst.setOnClickListener(mButtonResetListener);
+        button_save = (Button) findViewById(R.id.save_button);
+        button_save.setOnClickListener(mButtonSaveListener);
 //
 //        showTime = (EditText) findViewById(R.id.showTime);
 //        showCalories = (EditText) findViewById(R.id.showCalories);
