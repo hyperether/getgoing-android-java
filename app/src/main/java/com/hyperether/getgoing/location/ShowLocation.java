@@ -17,7 +17,7 @@ import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
-import android.widget.EditText;
+import android.widget.Chronometer;
 import android.widget.Toast;
 
 import com.google.android.gms.common.ConnectionResult;
@@ -101,7 +101,8 @@ public class ShowLocation extends Activity implements
 
     // U/I variables
     private Button button_start, button_pause, button_rst, button_save;
-    private EditText showTime, showCalories, showDistance, showVelocity, showVelocityAvg;
+    private Chronometer showTime, showCalories, showDistance;
+    private Chronometer showVelocity, showVelocityAvg;
 
     // Time variables
     private String timeString;    // current duration of a walk
@@ -233,8 +234,8 @@ public class ShowLocation extends Activity implements
 
     @Override
     protected void onResume() {
-		/*
-		 * Get any previous setting for location updates
+        /*
+         * Get any previous setting for location updates
 		 * Gets "false" if an error occurs
 		 */
         if (mPrefs.contains("KEY_UPDATES_ON")) {
@@ -829,12 +830,12 @@ public class ShowLocation extends Activity implements
         button_rst.setOnClickListener(mButtonResetListener);
         button_save = (Button) findViewById(R.id.save_button);
         button_save.setOnClickListener(mButtonSaveListener);
-//
-//        showTime = (EditText) findViewById(R.id.showTime);
-//        showCalories = (EditText) findViewById(R.id.showCalories);
-//        showDistance = (EditText) findViewById(R.id.showDistance);
-//        showVelocity = (EditText) findViewById(R.id.showVelocity);
-//        showVelocityAvg = (EditText) findViewById(R.id.showVelocityAvg);
+
+        showTime = (Chronometer) findViewById(R.id.showTime);
+        showCalories = (Chronometer) findViewById(R.id.showCalories);
+        showDistance = (Chronometer) findViewById(R.id.showDistance);
+        showVelocity = (Chronometer) findViewById(R.id.showVelocity);
+        showVelocityAvg = (Chronometer) findViewById(R.id.showVelocityAvg);
 
         DisplayMetrics metrics = new DisplayMetrics();
         getWindowManager().getDefaultDisplay().getMetrics(metrics);

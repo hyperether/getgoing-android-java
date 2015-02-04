@@ -29,14 +29,14 @@
             android:layout_alignParentLeft="true"
             android:layout_alignParentStart="true"
             android:background="@android:color/transparent"
-            android:drawableTop="@drawable/stop_pressed" />
+            android:drawableTop="@drawable/stop_pressed"
+            android:visibility="invisible" />
 
         <Button
             android:id="@+id/save_button"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_toEndOf="@+id/start_button"
-            android:layout_toRightOf="@+id/start_button"
+            android:layout_centerHorizontal="true"
             android:background="@android:color/transparent"
             android:drawableTop="@drawable/save_pressed" />
 
@@ -44,8 +44,7 @@
             android:id="@+id/reset_button"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_toEndOf="@+id/save_button"
-            android:layout_toRightOf="@+id/save_button"
+            android:layout_alignParentRight="true"
             android:background="@android:color/transparent"
             android:drawableTop="@drawable/reset_pressed" />
     </RelativeLayout>
@@ -65,15 +64,13 @@
             android:src="@drawable/clock" />
 
         <Chronometer
-            android:id="@+id/time_chronometer"
+            android:id="@+id/showTime"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="0.1"
             android:format="00:00:00"
             android:textSize="@dimen/text_size"
-            android:textStyle="bold"
-
-            />
+            android:textStyle="bold" />
 
         <ImageView
             android:id="@+id/speed"
@@ -85,7 +82,7 @@
             android:src="@drawable/speed" />
 
         <Chronometer
-            android:id="@+id/speed_chronometer"
+            android:id="@+id/showVelocity"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="0.1"
@@ -109,7 +106,7 @@
             android:src="@drawable/fire" />
 
         <Chronometer
-            android:id="@+id/kcal_chronometer"
+            android:id="@+id/showCalories"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="0.1"
@@ -127,7 +124,7 @@
             android:src="@drawable/avg_speed_nobg_full" />
 
         <Chronometer
-            android:id="@+id/avg_speed_chronometer"
+            android:id="@+id/showVelocityAvg"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="0.1"
@@ -152,7 +149,7 @@
             android:src="@drawable/road" />
 
         <Chronometer
-            android:id="@+id/road_chronometer"
+            android:id="@+id/showDistance"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="0.1"
