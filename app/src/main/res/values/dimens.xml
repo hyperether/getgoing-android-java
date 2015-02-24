@@ -20,5 +20,8 @@
     <dimen name="element_padding_land">35dp</dimen>
     <dimen name="element_text_size">15sp</dimen>
     <dimen name="element_text_size_land">20sp</dimen>
+    <dimen name="location_padding1">15dp</dimen>
+    <dimen name="location_padding2">60dp</dimen>
+    <dimen name="location_margins">60dp</dimen>
 
 </resources>

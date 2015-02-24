@@ -15,4 +15,7 @@
     <dimen name="date_padding">20dp</dimen>
     <dimen name="element_padding">60dp</dimen>
     <dimen name="element_text_size">25sp</dimen>
+    <dimen name="location_padding1">15dp</dimen>
+    <dimen name="location_padding2">60dp</dimen>
+    <dimen name="location_margins">80dp</dimen>
 </resources>
