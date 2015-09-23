@@ -76,5 +76,4 @@ public class DbRoute {
     public void setActivity_id(int activity_id) {
         this.activity_id = activity_id;
     }
-
 }

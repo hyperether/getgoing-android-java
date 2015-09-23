@@ -63,7 +63,8 @@ public class KalmanLatLong {
             lat = lat_measurement;
             lng = lng_measurement;
 
-            DecimalFormat df = new DecimalFormat("#.########");      // limiting output values to 8 decimal places
+            DecimalFormat df = new DecimalFormat(
+                    "#.########");      // limiting output values to 8 decimal places
             lat = Double.valueOf(df.format(lat));
             lng = Double.valueOf(df.format(lng));
 
@@ -92,7 +93,8 @@ public class KalmanLatLong {
             lat += K * (lat_measurement - lat);
             lng += K * (lng_measurement - lng);
 
-            DecimalFormat df = new DecimalFormat("#.########");      // limiting output values to 8 decimal places
+            DecimalFormat df = new DecimalFormat(
+                    "#.########");      // limiting output values to 8 decimal places
             lat = Double.valueOf(df.format(lat));
             lng = Double.valueOf(df.format(lng));
 

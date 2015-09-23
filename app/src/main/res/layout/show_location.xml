@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/map"
-    android:layout_width="fill_parent"
-    android:layout_height="fill_parent"
-    android:descendantFocusability="beforeDescendants"
-    android:focusableInTouchMode="true"
-    android:orientation="vertical">
+<LinearLayout android:id="@+id/map"
+              xmlns:android="http://schemas.android.com/apk/res/android"
+              android:layout_width="fill_parent"
+              android:layout_height="fill_parent"
+              android:descendantFocusability="beforeDescendants"
+              android:focusableInTouchMode="true"
+              android:orientation="vertical">
 
     <RelativeLayout
         android:layout_width="fill_parent"
@@ -20,7 +20,7 @@
             android:layout_alignParentLeft="true"
             android:layout_alignParentStart="true"
             android:background="@android:color/transparent"
-            android:drawableTop="@drawable/start_pressed" />
+            android:drawableTop="@drawable/start_pressed"/>
 
         <Button
             android:id="@+id/end_button"
@@ -30,7 +30,7 @@
             android:layout_alignParentStart="true"
             android:background="@android:color/transparent"
             android:drawableTop="@drawable/stop_pressed"
-            android:visibility="invisible" />
+            android:visibility="invisible"/>
 
         <Button
             android:id="@+id/save_button"
@@ -38,15 +38,16 @@
             android:layout_height="wrap_content"
             android:layout_centerHorizontal="true"
             android:background="@android:color/transparent"
-            android:drawableTop="@drawable/save_pressed" />
+            android:drawableTop="@drawable/save_pressed"/>
 
         <Button
             android:id="@+id/reset_button"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_alignParentEnd="true"
             android:layout_alignParentRight="true"
             android:background="@android:color/transparent"
-            android:drawableTop="@drawable/reset_pressed" />
+            android:drawableTop="@drawable/reset_pressed"/>
     </RelativeLayout>
 
     <RelativeLayout
@@ -66,7 +67,7 @@
             android:contentDescription="@string/clock_image"
             android:paddingEnd="@dimen/location_padding1"
             android:paddingRight="@dimen/location_padding1"
-            android:src="@drawable/clock" />
+            android:src="@drawable/clock"/>
 
         <Chronometer
             android:id="@+id/showTime"
@@ -79,7 +80,7 @@
             android:paddingEnd="@dimen/location_padding2"
             android:paddingRight="@dimen/location_padding2"
             android:textSize="@dimen/text_size"
-            android:textStyle="bold" />
+            android:textStyle="bold"/>
 
         <ImageView
             android:id="@+id/speed"
@@ -91,7 +92,7 @@
             android:contentDescription="@string/speed_image"
             android:paddingEnd="@dimen/location_padding1"
             android:paddingRight="@dimen/location_padding1"
-            android:src="@drawable/speed" />
+            android:src="@drawable/speed"/>
 
         <Chronometer
             android:id="@+id/showVelocity"
@@ -102,7 +103,7 @@
             android:layout_centerVertical="true"
             android:format="0:00m/s"
             android:textSize="@dimen/text_size"
-            android:textStyle="bold" />
+            android:textStyle="bold"/>
     </RelativeLayout>
 
     <RelativeLayout
@@ -122,7 +123,7 @@
             android:contentDescription="@string/fire_image"
             android:paddingEnd="@dimen/location_padding1"
             android:paddingRight="@dimen/location_padding1"
-            android:src="@drawable/fire" />
+            android:src="@drawable/fire"/>
 
         <Chronometer
             android:id="@+id/showCalories"
@@ -135,7 +136,7 @@
             android:paddingEnd="@dimen/location_padding2"
             android:paddingRight="@dimen/location_padding2"
             android:textSize="@dimen/text_size"
-            android:textStyle="bold" />
+            android:textStyle="bold"/>
 
         <ImageView
             android:id="@+id/avg_speed_nobg_full_chronometer"
@@ -147,7 +148,7 @@
             android:contentDescription="@string/avg_speed_image"
             android:paddingEnd="@dimen/location_padding1"
             android:paddingRight="@dimen/location_padding1"
-            android:src="@drawable/avg_speed_nobg_full" />
+            android:src="@drawable/avg_speed_nobg_full"/>
 
         <Chronometer
             android:id="@+id/showVelocityAvg"
@@ -158,8 +159,7 @@
             android:layout_centerVertical="true"
             android:format="0:00m/s"
             android:textSize="@dimen/text_size"
-            android:textStyle="bold" />
-
+            android:textStyle="bold"/>
     </RelativeLayout>
 
     <RelativeLayout
@@ -167,8 +167,8 @@
         android:layout_height="wrap_content"
         android:layout_marginEnd="@dimen/location_margins"
         android:layout_marginStart="@dimen/location_margins"
-        android:paddingBottom="@dimen/activity_horizontal_margin"
-        android:gravity="center">
+        android:gravity="center"
+        android:paddingBottom="@dimen/activity_horizontal_margin">
 
         <ImageView
             android:id="@+id/road"
@@ -180,7 +180,7 @@
             android:contentDescription="@string/road_image"
             android:paddingEnd="@dimen/location_padding1"
             android:paddingRight="@dimen/location_padding1"
-            android:src="@drawable/road" />
+            android:src="@drawable/road"/>
 
         <Chronometer
             android:id="@+id/showDistance"
@@ -193,7 +193,7 @@
             android:paddingEnd="@dimen/location_padding2"
             android:paddingRight="@dimen/location_padding2"
             android:textSize="@dimen/text_size"
-            android:textStyle="bold" />
+            android:textStyle="bold"/>
 
         <ImageView
             android:id="@+id/road2"
@@ -204,7 +204,7 @@
             android:background="@android:color/transparent"
             android:contentDescription="@string/road_image"
             android:src="@drawable/road"
-            android:visibility="invisible" />
+            android:visibility="invisible"/>
 
         <Chronometer
             android:id="@+id/road2_chronometer"
@@ -215,14 +215,12 @@
             android:format="0:00m/s"
             android:textSize="@dimen/text_size"
             android:textStyle="bold"
-            android:visibility="invisible" />
-
+            android:visibility="invisible"/>
     </RelativeLayout>
 
     <fragment
         android:id="@+id/show_map_page"
         class="com.google.android.gms.maps.MapFragment"
         android:layout_width="fill_parent"
-        android:layout_height="wrap_content" />
-
+        android:layout_height="wrap_content"/>
 </LinearLayout>

@@ -78,9 +78,8 @@ public class LocationManagerHandler implements LocationListener {
     }
 
     /**
-     * Function to show Location service alert dialog On pressing Settings
-     * button will lunch Settings Options On pressing Enter location will lunch
-     * input Text dialog
+     * Function to show Location service alert dialog On pressing Settings button will lunch
+     * Settings Options On pressing Enter location will lunch input Text dialog
      */
 
     public void showSettingsAlert() {
@@ -94,7 +93,8 @@ public class LocationManagerHandler implements LocationListener {
         // alertDialog.setView(getCurrentFocus());
         // Setting Dialog Message
         alertDialog
-                .setMessage("Looks like you have GPS turned off. Turn it on in Settings, or cancel.");// or
+                .setMessage(
+                        "Looks like you have GPS turned off. Turn it on in Settings, or cancel.");// or
         // enter
         // location.");
 
@@ -155,6 +155,5 @@ public class LocationManagerHandler implements LocationListener {
         // TODO Auto-generated method stub
         locationUpdated = true;
     }
-
 }
 

@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="fill_parent"
-    android:layout_height="fill_parent"
-    android:descendantFocusability="beforeDescendants"
-    android:focusableInTouchMode="true"
-    android:orientation="vertical">
+              android:layout_width="fill_parent"
+              android:layout_height="fill_parent"
+              android:descendantFocusability="beforeDescendants"
+              android:focusableInTouchMode="true"
+              android:orientation="vertical">
 
     <RelativeLayout
         android:layout_width="match_parent"
@@ -14,38 +14,43 @@
             android:id="@+id/showCalories"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_alignEnd="@+id/showTime"
             android:layout_alignRight="@+id/showTime"
             android:layout_below="@+id/showTime"
+            android:layout_toEndOf="@+id/imageView2"
             android:layout_toRightOf="@+id/imageView2"
             android:clickable="false"
             android:cursorVisible="false"
             android:focusable="false"
             android:focusableInTouchMode="false"
             android:inputType="text"
-            android:textStyle="bold" />
+            android:textStyle="bold"/>
 
         <EditText
             android:id="@+id/showDistance"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_alignEnd="@+id/showCalories"
             android:layout_alignLeft="@+id/showCalories"
             android:layout_alignRight="@+id/showCalories"
+            android:layout_alignStart="@+id/showCalories"
             android:layout_below="@+id/showCalories"
             android:clickable="false"
             android:cursorVisible="false"
             android:focusable="false"
             android:focusableInTouchMode="false"
             android:inputType="text"
-            android:textStyle="bold" />
+            android:textStyle="bold"/>
 
         <ImageView
             android:id="@+id/imageView2"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true"
             android:layout_below="@+id/showTime"
             android:contentDescription="@string/descImageViewEmpty"
-            android:src="@drawable/fire" />
+            android:src="@drawable/fire"/>
 
         <ImageView
             android:id="@+id/imageView3"
@@ -53,8 +58,9 @@
             android:layout_height="wrap_content"
             android:layout_alignTop="@+id/showDistance"
             android:layout_toLeftOf="@+id/showDistance"
+            android:layout_toStartOf="@+id/showDistance"
             android:contentDescription="@string/descImageViewEmpty"
-            android:src="@drawable/road" />
+            android:src="@drawable/road"/>
 
         <ImageView
             android:id="@+id/imageView1"
@@ -62,14 +68,16 @@
             android:layout_height="wrap_content"
             android:layout_alignTop="@+id/showTime"
             android:layout_toLeftOf="@+id/showTime"
+            android:layout_toStartOf="@+id/showTime"
             android:contentDescription="@string/descImageViewEmpty"
-            android:src="@drawable/clock" />
+            android:src="@drawable/clock"/>
 
         <EditText
             android:id="@+id/showTime"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentTop="true"
+            android:layout_toEndOf="@+id/imageView2"
             android:layout_toRightOf="@+id/imageView2"
             android:clickable="false"
             android:cursorVisible="false"
@@ -77,14 +85,12 @@
             android:focusable="false"
             android:focusableInTouchMode="false"
             android:inputType="text"
-            android:textStyle="bold" />
-
+            android:textStyle="bold"/>
     </RelativeLayout>
 
     <fragment
         android:id="@+id/show_map_page"
+        class="com.google.android.gms.maps.SupportMapFragment"
         android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        class="com.google.android.gms.maps.SupportMapFragment" />
-
+        android:layout_height="wrap_content"/>
 </LinearLayout>

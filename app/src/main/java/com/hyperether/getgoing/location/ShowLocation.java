@@ -261,7 +261,8 @@ public class ShowLocation extends Activity implements
         savedInstanceState.putDouble("kcalCumulative", kcalCumulative);
         savedInstanceState.putLong("timeCumulative", timeCumulative);
         savedInstanceState.putString("currentDateandTime", currentDateandTime);
-        savedInstanceState.putParcelableArrayList("mRoute", (ArrayList<? extends Parcelable>) mRoute);
+        savedInstanceState
+                .putParcelableArrayList("mRoute", (ArrayList<? extends Parcelable>) mRoute);
 
         super.onSaveInstanceState(savedInstanceState);
     }
@@ -287,7 +288,8 @@ public class ShowLocation extends Activity implements
         public void onClick(View v) {
             startTracking();
             if (timeFlg) {
-                currentDateandTime = sdf.format(new Date()); // Get date and time on which the tracking started
+                currentDateandTime =
+                        sdf.format(new Date()); // Get date and time on which the tracking started
                 timeFlg = false;
             }
         }
@@ -359,11 +361,11 @@ public class ShowLocation extends Activity implements
         mProgramRunning = false;
 
 		/*
-		 * TODO: ovo treba jos testirati. Razlog: ako se pauzira merenje i
+         * TODO: ovo treba jos testirati. Razlog: ako se pauzira merenje i
 		 * ode daleko pa ponovo ukljuci, nastace greska.
 		 */
-		/*
-		 * ovo bi trebalo da ga natera da ponovo inicijalizuje lat_old i da ignorise racunanje
+        /*
+         * ovo bi trebalo da ga natera da ponovo inicijalizuje lat_old i da ignorise racunanje
 		 * posle prvog update-a. treba probati.
 		 */
         nodeIndex = 0;
@@ -408,7 +410,8 @@ public class ShowLocation extends Activity implements
                             latitude = kalman.get_lat();
                             longitude = kalman.get_lng();
 
-                            double distance = gps2m(latitude, longitude, latitude_old, longitude_old);
+                            double distance =
+                                    gps2m(latitude, longitude, latitude_old, longitude_old);
                             if (!Double.isNaN(distance)) {
                                 distanceCumulative += distance;
                                 distanceDelta += distance;
@@ -418,14 +421,18 @@ public class ShowLocation extends Activity implements
                                 //brzina je srednja vrednost izmerene i ocitane brzine
                                 velocity = (mCurrentLocation.getSpeed() + (distance / time)) / 2;
 
-                                kcalCurrent = calcCal.calculate(distance, velocity, cbDataFrameLocal, weight);
+                                kcalCurrent =
+                                        calcCal.calculate(distance, velocity, cbDataFrameLocal,
+                                                weight);
                                 kcalCumulative += kcalCurrent;
 
                                 if (distanceDelta > NODE_ADD_DISTANCE) {
                                     distanceDelta = 0;
                                     // add new point to the route
                                     // node and route database _ids are intentionally 0
-                                    DbNode tmp = new DbNode(0, latitude, longitude, (float) velocity, nodeIndex++, 0);
+                                    DbNode tmp =
+                                            new DbNode(0, latitude, longitude, (float) velocity,
+                                                    nodeIndex++, 0);
                                     mRoute.add(tmp); // add the initial location to the route
                                 }
                             } else {
@@ -451,15 +458,16 @@ public class ShowLocation extends Activity implements
                 }
             });
         }
-    }
+    };
 
-    ;
-
-    private void showData(String timeString, double distance, double kcal, double vel, double velAvg) {
+    private void showData(String timeString, double distance, double kcal, double vel,
+                          double velAvg) {
         showTime.setText(timeString);
         showCalories.setText(String.format("%.02f kcal", kcal));
-        if (cbDataFrameLocal.getMeasurementSystemId() == 1 || cbDataFrameLocal.getMeasurementSystemId() == 2)
-            showDistance.setText(String.format("%.02f ft", distance * 3.281)); // present data in feet
+        if (cbDataFrameLocal.getMeasurementSystemId() == 1 ||
+                cbDataFrameLocal.getMeasurementSystemId() == 2)
+            showDistance
+                    .setText(String.format("%.02f ft", distance * 3.281)); // present data in feet
         else
             showDistance.setText(String.format("%.02f m", distance));
 
@@ -488,8 +496,7 @@ public class ShowLocation extends Activity implements
     }
 
     /**
-     * Show a dialog returned by Google Play services for the
-     * connection error code
+     * Show a dialog returned by Google Play services for the connection error code
      *
      * @param errorCode An error code returned from onConnectionFailed
      */
@@ -699,7 +706,8 @@ public class ShowLocation extends Activity implements
         MarkerOptions mOpt = new MarkerOptions()
                 .position(new LatLng(dLat, dLong))
                 .icon(BitmapDescriptorFactory
-                        .fromResource(R.drawable.marker))        // Here is the map marker image set up
+                        .fromResource(
+                                R.drawable.marker))        // Here is the map marker image set up
                 .snippet("Your current location").title("You are here");
         mMap.addMarker(mOpt);
         mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(
@@ -799,7 +807,9 @@ public class ShowLocation extends Activity implements
 		/*
 		 * Store the general route data in the DB
 		 * */
-        route = datasource.createRoute(timeCumulative, kcalCumulative, distanceCumulative, currentDateandTime, velocityAvg, cbDataFrameLocal.getProfileId());
+        route = datasource
+                .createRoute(timeCumulative, kcalCumulative, distanceCumulative, currentDateandTime,
+                        velocityAvg, cbDataFrameLocal.getProfileId());
 
 		/*
 		 * Debugging only!!!
@@ -817,7 +827,8 @@ public class ShowLocation extends Activity implements
         Iterator<DbNode> it = nodeList.iterator();
         while (it.hasNext()) {
             currentNode = it.next();
-            datasource.createNode(currentNode.getLatitude(), currentNode.getLongitude(), currentNode.getVelocity(), currentNode.getIndex(), route.getId());
+            datasource.createNode(currentNode.getLatitude(), currentNode.getLongitude(),
+                    currentNode.getVelocity(), currentNode.getIndex(), route.getId());
         }
     }
 

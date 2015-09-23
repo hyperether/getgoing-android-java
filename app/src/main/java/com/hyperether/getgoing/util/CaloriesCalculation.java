@@ -18,7 +18,8 @@ public class CaloriesCalculation {
         double energySpent = 0;
         int i;
 
-        if (cbDataFrameLocal.getMeasurementSystemId() == 1 || cbDataFrameLocal.getMeasurementSystemId() == 2)
+        if (cbDataFrameLocal.getMeasurementSystemId() == 1 ||
+                cbDataFrameLocal.getMeasurementSystemId() == 2)
             weight = weight * 0.4536; //convert weght to metric system for calculations;
 
         if (cbDataFrameLocal.getProfileId() == 1 || cbDataFrameLocal.getProfileId() == 2) {

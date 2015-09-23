@@ -83,15 +83,12 @@ public class GetGoing extends Activity {
                 callMeteringActivity(RUN_ID);
             }
         });
-
-
     }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.get_going, menu);
-
         return super.onCreateOptionsMenu(menu);
     }
 

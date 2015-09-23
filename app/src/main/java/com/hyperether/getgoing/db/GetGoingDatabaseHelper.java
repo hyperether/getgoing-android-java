@@ -45,7 +45,8 @@ public class GetGoingDatabaseHelper extends SQLiteOpenHelper {
             + " double not null, " + COLUMN_VELOCITY
             + " float not null, " + COLUMN_NUMBER
             + " integer not null, " + COLUMN_ROUTE_ID
-            + " integer not null, FOREIGN KEY(" + COLUMN_ROUTE_ID + ") REFERENCES route(" + COLUMN_ID + "));";
+            + " integer not null, FOREIGN KEY(" + COLUMN_ROUTE_ID + ") REFERENCES route(" +
+            COLUMN_ID + "));";
 
 
     public GetGoingDatabaseHelper(Context context) {
@@ -68,5 +69,4 @@ public class GetGoingDatabaseHelper extends SQLiteOpenHelper {
         db.execSQL("DROP TABLE IF EXISTS " + TABLE_ROUTE);
         onCreate(db);
     }
-
 }

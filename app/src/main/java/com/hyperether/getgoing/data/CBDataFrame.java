@@ -65,17 +65,18 @@ public class CBDataFrame implements Parcelable {
         out.writeInt(this.age);
     }
 
-    public static final Parcelable.Creator<CBDataFrame> CREATOR = new Parcelable.Creator<CBDataFrame>() {
-        @Override
-        public CBDataFrame createFromParcel(Parcel in) {
-            return new CBDataFrame(in);
-        }
+    public static final Parcelable.Creator<CBDataFrame> CREATOR =
+            new Parcelable.Creator<CBDataFrame>() {
+                @Override
+                public CBDataFrame createFromParcel(Parcel in) {
+                    return new CBDataFrame(in);
+                }
 
-        @Override
-        public CBDataFrame[] newArray(int size) {
-            return new CBDataFrame[size];
-        }
-    };
+                @Override
+                public CBDataFrame[] newArray(int size) {
+                    return new CBDataFrame[size];
+                }
+            };
 
     public CBDataFrame(Parcel in) {
         this.profileId = in.readInt();
@@ -88,5 +89,4 @@ public class CBDataFrame implements Parcelable {
     public CBDataFrame() {
 
     }
-
 }

@@ -48,7 +48,8 @@ public class ShowRoute extends FragmentActivity {
 
         Bundle extras = getIntent().getExtras();
         if (extras != null) {
-            Long route_id = extras.getLong("ROUTE_ID"); // get the id of the route that should be drawn
+            Long route_id =
+                    extras.getLong("ROUTE_ID"); // get the id of the route that should be drawn
 
             route = datasource.getRoute(route_id); // get the route
             nodes = datasource.getRouteNodes(route_id);    // Get all nodes for this route
@@ -64,7 +65,6 @@ public class ShowRoute extends FragmentActivity {
                 drawRoute(nodes); // draw the route obtained from database
             }
         }
-
     }
 
     /*
@@ -168,7 +168,8 @@ public class ShowRoute extends FragmentActivity {
         long minutes = (seconds % 3600) / 60;
         seconds = seconds % 60;
 
-        return twoDigitString(hours) + " : " + twoDigitString(minutes) + " : " + twoDigitString(seconds);
+        return twoDigitString(hours) + " : " + twoDigitString(minutes) + " : " +
+                twoDigitString(seconds);
     }
 
     /*

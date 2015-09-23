@@ -14,11 +14,14 @@ public class GetGoingDataSource {
     private SQLiteDatabase database;
     private GetGoingDatabaseHelper dbHelper;
     private String[] allRouteColumns = {GetGoingDatabaseHelper.COLUMN_ID,
-            GetGoingDatabaseHelper.COLUMN_DURATION, GetGoingDatabaseHelper.COLUMN_ENERGY, GetGoingDatabaseHelper.COLUMN_LENGTH,
-            GetGoingDatabaseHelper.COLUMN_DATE, GetGoingDatabaseHelper.COLUMN_AVGSPEED, GetGoingDatabaseHelper.COLUMN_ACTIVITYID};
+            GetGoingDatabaseHelper.COLUMN_DURATION, GetGoingDatabaseHelper.COLUMN_ENERGY,
+            GetGoingDatabaseHelper.COLUMN_LENGTH,
+            GetGoingDatabaseHelper.COLUMN_DATE, GetGoingDatabaseHelper.COLUMN_AVGSPEED,
+            GetGoingDatabaseHelper.COLUMN_ACTIVITYID};
 
     private String[] allNodeColumns = {GetGoingDatabaseHelper.COLUMN_ID,
-            GetGoingDatabaseHelper.COLUMN_LATITUDE, GetGoingDatabaseHelper.COLUMN_LONGITUDE, GetGoingDatabaseHelper.COLUMN_VELOCITY,
+            GetGoingDatabaseHelper.COLUMN_LATITUDE, GetGoingDatabaseHelper.COLUMN_LONGITUDE,
+            GetGoingDatabaseHelper.COLUMN_VELOCITY,
             GetGoingDatabaseHelper.COLUMN_NUMBER, GetGoingDatabaseHelper.COLUMN_ROUTE_ID};
 
     public GetGoingDataSource(Context context) {
@@ -36,7 +39,8 @@ public class GetGoingDataSource {
     /**
      * Create a route
      */
-    public DbRoute createRoute(long duration, double energy, double length, String date, double avgspeed, int activity_id) {
+    public DbRoute createRoute(long duration, double energy, double length, String date,
+                               double avgspeed, int activity_id) {
 
         ContentValues values = new ContentValues();
         values.put(GetGoingDatabaseHelper.COLUMN_DURATION, duration);
@@ -45,7 +49,6 @@ public class GetGoingDataSource {
         values.put(GetGoingDatabaseHelper.COLUMN_DATE, date);
         values.put(GetGoingDatabaseHelper.COLUMN_AVGSPEED, avgspeed);
         values.put(GetGoingDatabaseHelper.COLUMN_ACTIVITYID, activity_id);
-
 
         long insertId = database.insert(GetGoingDatabaseHelper.TABLE_ROUTE, null, values);
 
@@ -107,7 +110,8 @@ public class GetGoingDataSource {
 
         // Get the cursor to route with a particular id
         Cursor cursor = database.query(GetGoingDatabaseHelper.TABLE_ROUTE,
-                allRouteColumns, GetGoingDatabaseHelper.COLUMN_ID + " = " + route_id, null, null, null, null);
+                allRouteColumns, GetGoingDatabaseHelper.COLUMN_ID + " = " + route_id, null, null,
+                null, null);
 
         cursor.moveToFirst();
         DbRoute route = cursorToRoute(cursor);
@@ -129,7 +133,8 @@ public class GetGoingDataSource {
     /**
      * Create a node
      */
-    public DbNode createNode(double latitude, double longitude, float velocity, long number, long route_id) {
+    public DbNode createNode(double latitude, double longitude, float velocity, long number,
+                             long route_id) {
 
         ContentValues values = new ContentValues();
         values.put(GetGoingDatabaseHelper.COLUMN_LATITUDE, latitude);
@@ -213,7 +218,8 @@ public class GetGoingDataSource {
      * Database cursor to node converting function
      */
     private DbNode cursorToNode(Cursor cursor) {
-        DbNode node = new DbNode(cursor.getLong(0), cursor.getDouble(1), cursor.getDouble(2), cursor.getFloat(3)
+        DbNode node = new DbNode(cursor.getLong(0), cursor.getDouble(1), cursor.getDouble(2),
+                cursor.getFloat(3)
                 , cursor.getLong(4), cursor.getLong(5));
 
         return node;

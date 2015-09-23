@@ -11,7 +11,6 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
-import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -98,7 +97,8 @@ public class ShowData extends ListActivity {
 
         private final Context context;
 
-        DecimalFormat df = new DecimalFormat("#.##");      // limiting output values to 8 decimal places
+        DecimalFormat df = new DecimalFormat("#.##");
+        // limiting output values to 8 decimal places
 
         View lastClickedRow = null;
 
@@ -117,8 +117,8 @@ public class ShowData extends ListActivity {
         }
 
         /**
-         * getItem(int) in Adapter returns Object but we can override
-         * it to DbRoute thanks to Java return type covariance
+         * getItem(int) in Adapter returns Object but we can override it to DbRoute thanks to Java
+         * return type covariance
          */
         @Override
         public Object getItem(int position) {
@@ -126,8 +126,8 @@ public class ShowData extends ListActivity {
         }
 
         /**
-         * getItemId() is often useless, I think this should be the default
-         * implementation in BaseAdapter
+         * getItemId() is often useless, I think this should be the default implementation in
+         * BaseAdapter
          */
         @Override
         public long getItemId(int position) {
@@ -138,8 +138,8 @@ public class ShowData extends ListActivity {
         public class ViewHolder {
             public TextView textDate;
             public TextView textEnergy;
-            public ImageView image;
-            public Button button;
+            public ImageView imageViewAction;
+            public ImageView imageViewDelete;
             public long route_id;
         }
 
@@ -151,7 +151,8 @@ public class ShowData extends ListActivity {
 
             TextView textDate;
             TextView textEnergy;
-            ImageView image;
+            ImageView imageViewAction;
+            ImageView imageViewDelete;
 
 
             if (convertView == null) {
@@ -162,16 +163,17 @@ public class ShowData extends ListActivity {
 
                 textDate = (TextView) convertView.findViewById(R.id.textDate);
                 textEnergy = (TextView) convertView.findViewById(R.id.textEnergy);
-                image = (ImageView) convertView.findViewById(R.id.walk_layout);
-                image = (ImageView) convertView.findViewById(R.id.delete_layout);
+                imageViewAction = (ImageView) convertView.findViewById(R.id.walk_layout);
+                imageViewDelete = (ImageView) convertView.findViewById(R.id.delete_layout);
 
                 holder.textDate = textDate;
                 holder.textEnergy = textEnergy;
-                holder.image = image;
+                holder.imageViewAction = imageViewAction;
+                holder.imageViewDelete = imageViewDelete;
 
                 //holder.position = position;
 
-                holder.button.setOnClickListener(delButtonListener);
+                holder.imageViewDelete.setOnClickListener(delButtonListener);
 
                 convertView.setTag(holder);
             } else {
@@ -179,8 +181,8 @@ public class ShowData extends ListActivity {
 
                 textDate = holder.textDate;
                 textEnergy = holder.textEnergy;
-                image = holder.image;
-
+                imageViewAction = holder.imageViewAction;
+                imageViewDelete = holder.imageViewDelete;
             }
 
             DbRoute route = myRoutes.get(position);
@@ -196,13 +198,13 @@ public class ShowData extends ListActivity {
 
             switch (route.getActivity_id()) {
                 case 1:
-                    image.setImageResource(R.drawable.walk);
+                    imageViewAction.setImageResource(R.drawable.walk);
                     break;
                 case 2:
-                    image.setImageResource(R.drawable.run);
+                    imageViewAction.setImageResource(R.drawable.run);
                     break;
                 case 3:
-                    image.setImageResource(R.drawable.ride);
+                    imageViewAction.setImageResource(R.drawable.ride);
                 default:
                     break;
             }
@@ -239,7 +241,8 @@ public class ShowData extends ListActivity {
 
         void doPositiveClick(View v) {
             View listElement = (View) v.getParent();    // getting the list element
-            ViewHolder tmpHolder = (ViewHolder) listElement.getTag();    // get the tag for this element
+            ViewHolder tmpHolder =
+                    (ViewHolder) listElement.getTag();    // get the tag for this element
             long id = tmpHolder.route_id;        // where the position of this element is stored
 
             datasource.deleteRouteById(id);  // delete the route with all nodes attached to it

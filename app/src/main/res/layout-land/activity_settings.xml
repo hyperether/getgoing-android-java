@@ -1,10 +1,10 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="fill_parent"
-    android:layout_height="fill_parent"
-    android:layout_marginBottom="@dimen/spinner_horizontal_margin"
-    android:layout_marginTop="@dimen/spinner_horizontal_margin"
-    android:gravity="center"
-    android:orientation="vertical">
+              android:layout_width="fill_parent"
+              android:layout_height="fill_parent"
+              android:layout_marginBottom="@dimen/spinner_horizontal_margin"
+              android:layout_marginTop="@dimen/spinner_horizontal_margin"
+              android:gravity="center"
+              android:orientation="vertical">
 
     <RelativeLayout
         android:layout_width="wrap_content"
@@ -24,7 +24,7 @@
             android:contentDescription="@string/measure_image"
             android:paddingEnd="@dimen/activity_vertical_margin"
             android:paddingRight="@dimen/activity_vertical_margin"
-            android:src="@drawable/measure" />
+            android:src="@drawable/measure"/>
 
         <TextView
             android:id="@+id/measure_text"
@@ -38,7 +38,7 @@
             android:paddingRight="@dimen/spinner_vertical_margin"
             android:text="@string/measure_image"
             android:textColor="#000"
-            android:textSize="@dimen/settings_text_size" />
+            android:textSize="@dimen/settings_text_size"/>
 
         <Spinner
             android:id="@+id/metric_spinner"
@@ -46,8 +46,7 @@
             android:layout_height="wrap_content"
             android:layout_centerVertical="true"
             android:layout_toEndOf="@+id/measure_text"
-            android:layout_toRightOf="@+id/measure_text" />
-
+            android:layout_toRightOf="@+id/measure_text"/>
     </RelativeLayout>
 
     <RelativeLayout
@@ -70,7 +69,7 @@
             android:contentDescription="@string/teg_image"
             android:paddingEnd="@dimen/activity_vertical_margin"
             android:paddingRight="@dimen/activity_vertical_margin"
-            android:src="@drawable/teg" />
+            android:src="@drawable/teg"/>
 
         <TextView
             android:id="@+id/weight_text"
@@ -83,14 +82,14 @@
             android:paddingRight="@dimen/activity_vertical_margin"
             android:text="@string/teg_image"
             android:textColor="#000"
-            android:textSize="@dimen/settings_text_size" />
+            android:textSize="@dimen/settings_text_size"/>
 
         <NumberPicker
             android:id="@+id/weight_picker"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_toEndOf="@+id/weight_text"
-            android:layout_toRightOf="@+id/weight_text" />
+            android:layout_toRightOf="@+id/weight_text"/>
 
         <ImageView
             android:id="@+id/age_image"
@@ -101,7 +100,7 @@
             android:layout_toStartOf="@+id/age_text"
             android:background="@android:color/transparent"
             android:contentDescription="@string/age_image"
-            android:src="@drawable/age" />
+            android:src="@drawable/age"/>
 
         <TextView
             android:id="@+id/age_text"
@@ -114,17 +113,15 @@
             android:paddingRight="@dimen/activity_vertical_margin"
             android:text="@string/age_image"
             android:textColor="#000"
-            android:textSize="@dimen/settings_text_size" />
+            android:textSize="@dimen/settings_text_size"/>
 
         <NumberPicker
             android:id="@+id/age_picker"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentEnd="true"
-            android:layout_alignParentRight="true" />
-
+            android:layout_alignParentRight="true"/>
     </RelativeLayout>
-
 
     <Button
         android:layout_width="fill_parent"
@@ -136,7 +133,5 @@
         android:layout_marginTop="@dimen/spinner_horizontal_margin"
         android:text="@string/button_accept"
         android:textColor="#000"
-        android:textSize="@dimen/accept_button_size" />
-
-
+        android:textSize="@dimen/accept_button_size"/>
 </LinearLayout>

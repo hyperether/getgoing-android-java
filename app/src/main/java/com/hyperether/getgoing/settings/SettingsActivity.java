@@ -46,7 +46,7 @@ public class SettingsActivity extends Activity implements OnItemSelectedListener
         mNumberPickerA = (NumberPicker) findViewById(R.id.age_picker);
         mNumberPickerW = (NumberPicker) findViewById(R.id.weight_picker);
 
-        String[] nums = new String[20];
+        String[] nums = new String[150];
         for (int i = 0; i < nums.length; i++)
             nums[i] = Integer.toString(i);
 
