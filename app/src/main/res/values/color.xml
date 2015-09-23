@@ -1,4 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <color name="black">#000000</color>
+    <color name="settings_font">#5D777B</color>
+    <color name="settings_view_first_line">#7F969A</color>
+    <color name="settings_view_second_line">#D1D8D9</color>
+    <color name="settings_btn_accept_bgd">#067389</color>
+    <color name="settings_btn_accept_font">#CFE1E5</color>
+
+
     </resources>

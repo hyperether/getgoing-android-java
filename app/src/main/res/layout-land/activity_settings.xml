@@ -59,7 +59,7 @@
         android:layout_marginTop="@dimen/spinner_horizontal_margin">
 
         <ImageView
-            android:id="@+id/teg_image"
+            android:id="@+id/weight_image"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentLeft="true"
@@ -76,8 +76,8 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerVertical="true"
-            android:layout_toEndOf="@+id/teg_image"
-            android:layout_toRightOf="@+id/teg_image"
+            android:layout_toEndOf="@+id/weight_image"
+            android:layout_toRightOf="@+id/weight_image"
             android:paddingEnd="@dimen/activity_vertical_margin"
             android:paddingRight="@dimen/activity_vertical_margin"
             android:text="@string/teg_image"
