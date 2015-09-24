@@ -5,7 +5,6 @@
     android:layout_marginBottom="@dimen/spinner_horizontal_margin_port"
     android:layout_marginTop="@dimen/spinner_horizontal_margin_port">
 
-
     <RelativeLayout
         android:id="@+id/metric_layout"
         android:layout_width="fill_parent"
@@ -227,5 +226,5 @@
         android:paddingTop="20dp"
         android:text="@string/button_accept"
         android:textColor="@color/settings_btn_accept_font"
-        android:textSize="@dimen/accept_button_size" />
+        android:textSize="@dimen/settings_accept_button_size" />
 </RelativeLayout>
