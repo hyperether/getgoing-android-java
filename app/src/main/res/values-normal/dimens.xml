@@ -11,7 +11,7 @@
     <dimen name="spinner_horizontal_margin">0dp</dimen>
     <dimen name="spinner_horizontal_margin_port">5dp</dimen>
     <dimen name="settings_horizontal_margin">0dp</dimen>
-    <dimen name="settings_text_size">20sp</dimen>
+    <dimen name="settings_text_size">15sp</dimen>
     <dimen name="accept_button_size">15sp</dimen>
     <dimen name="date_padding">5dp</dimen>
     <dimen name="date_padding_land">20dp</dimen>
@@ -22,4 +22,7 @@
     <dimen name="location_padding1">15dp</dimen>
     <dimen name="location_padding2">60dp</dimen>
     <dimen name="location_margins">30dp</dimen>
+
+    <dimen name="settings_txt_margin_left">15dp</dimen>
+    <dimen name="settings_txt_age_margin_left">30dp</dimen>
 </resources>
