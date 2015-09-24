@@ -43,8 +43,8 @@ public class SettingsActivity extends Activity implements OnItemSelectedListener
         spinner.setAdapter(spinnerArrayAdapter);
         spinner.setOnItemSelectedListener(this);
 
-        mNumberPickerA = (NumberPicker) findViewById(R.id.age_picker);
-        mNumberPickerW = (NumberPicker) findViewById(R.id.weight_picker);
+        mNumberPickerA = (NumberPicker) findViewById(R.id.age_picker_up);
+        mNumberPickerW = (NumberPicker) findViewById(R.id.weight_picker_up);
 
         String[] nums = new String[150];
         for (int i = 0; i < nums.length; i++)
