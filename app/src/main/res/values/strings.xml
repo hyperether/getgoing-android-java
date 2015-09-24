@@ -46,7 +46,8 @@
     <string name="tag" translatable="false">Activity image</string>
     <string name="energy_spent" translatable="false">Energy spent</string>
     <string name="delete_message" translatable="false">Delete record</string>
-
+    <string name="settings_img_up">Picker up</string>
+    <string name="settings_img_down">Picker down</string>
     <string-array name="measure_units" translatable="false">
         <item>Metric</item>
         <item>Imperial</item>

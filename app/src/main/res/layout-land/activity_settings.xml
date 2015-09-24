@@ -85,7 +85,7 @@
             android:textSize="@dimen/settings_text_size"/>
 
         <NumberPicker
-            android:id="@+id/weight_picker"
+            android:id="@+id/weight_picker_up"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_toEndOf="@+id/weight_text"
@@ -107,8 +107,8 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerVertical="true"
-            android:layout_toLeftOf="@+id/age_picker"
-            android:layout_toStartOf="@+id/age_picker"
+            android:layout_toLeftOf="@+id/age_picker_up"
+            android:layout_toStartOf="@+id/age_picker_up"
             android:paddingEnd="@dimen/activity_vertical_margin"
             android:paddingRight="@dimen/activity_vertical_margin"
             android:text="@string/age_image"
@@ -116,7 +116,7 @@
             android:textSize="@dimen/settings_text_size"/>
 
         <NumberPicker
-            android:id="@+id/age_picker"
+            android:id="@+id/age_picker_up"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentEnd="true"
