@@ -7,7 +7,7 @@ import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.Button;
+import android.widget.ImageButton;
 
 import com.hyperether.getgoing.data.CBDataFrame;
 import com.hyperether.getgoing.db.DbRoute;
@@ -57,8 +57,8 @@ public class GetGoing extends Activity {
     }
 
     public void addButtonListener() {
-        Button buttonWalk;
-        buttonWalk = (Button) findViewById(R.id.walk_button);
+        ImageButton buttonWalk;
+        buttonWalk = (ImageButton) findViewById(R.id.walk_button);
         buttonWalk.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -66,8 +66,8 @@ public class GetGoing extends Activity {
             }
         });
 
-        Button buttonRide;
-        buttonRide = (Button) findViewById(R.id.ride_button);
+        ImageButton buttonRide;
+        buttonRide = (ImageButton) findViewById(R.id.ride_button);
         buttonRide.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -75,8 +75,8 @@ public class GetGoing extends Activity {
             }
         });
 
-        Button buttonRun;
-        buttonRun = (Button) findViewById(R.id.run_button);
+        ImageButton buttonRun;
+        buttonRun = (ImageButton) findViewById(R.id.run_button);
         buttonRun.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

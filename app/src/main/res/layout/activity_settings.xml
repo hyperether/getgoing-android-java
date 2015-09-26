@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="fill_parent"
-    android:layout_height="fill_parent"
-    android:layout_marginBottom="@dimen/spinner_horizontal_margin_port"
-    android:layout_marginTop="@dimen/spinner_horizontal_margin_port">
+                android:layout_width="fill_parent"
+                android:layout_height="fill_parent"
+                android:layout_marginBottom="@dimen/spinner_horizontal_margin_port"
+                android:layout_marginTop="@dimen/spinner_horizontal_margin_port">
 
     <RelativeLayout
         android:id="@+id/metric_layout"
@@ -21,7 +21,7 @@
             android:layout_centerVertical="true"
             android:background="@android:color/transparent"
             android:contentDescription="@string/measure_image"
-            android:src="@drawable/measure" />
+            android:src="@drawable/measure"/>
 
         <TextView
             android:id="@+id/measure_text"
@@ -34,7 +34,7 @@
             android:layout_toRightOf="@+id/measure_image"
             android:text="@string/measure_image"
             android:textColor="@color/settings_font"
-            android:textSize="@dimen/settings_text_size" />
+            android:textSize="@dimen/settings_text_size"/>
 
         <Spinner
             android:id="@+id/metric_spinner"
@@ -43,7 +43,7 @@
             android:layout_alignParentEnd="true"
             android:layout_alignParentRight="true"
             android:layout_centerVertical="true"
-            android:prompt="@string/metric_spinner" />
+            android:prompt="@string/metric_spinner"/>
     </RelativeLayout>
 
     <View
@@ -51,14 +51,14 @@
         android:layout_width="match_parent"
         android:layout_height="1dp"
         android:layout_below="@+id/metric_layout"
-        android:background="@color/settings_view_first_line" />
+        android:background="@color/settings_view_first_line"/>
 
     <View
         android:id="@+id/second_line"
         android:layout_width="match_parent"
         android:layout_height="1dp"
         android:layout_below="@+id/first_line"
-        android:background="@color/settings_view_second_line" />
+        android:background="@color/settings_view_second_line"/>
 
     <RelativeLayout
         android:id="@+id/weight_layout"
@@ -77,7 +77,7 @@
             android:layout_gravity="center_vertical"
             android:background="@android:color/transparent"
             android:contentDescription="@string/teg_image"
-            android:src="@drawable/beam_scale" />
+            android:src="@drawable/beam_scale"/>
 
         <TextView
             android:id="@+id/weight_text"
@@ -90,7 +90,7 @@
             android:layout_toRightOf="@+id/weight_image"
             android:text="@string/teg_image"
             android:textColor="@color/settings_font"
-            android:textSize="@dimen/settings_text_size" />
+            android:textSize="@dimen/settings_text_size"/>
 
         <EditText
             android:id="@+id/edit_weight"
@@ -102,7 +102,7 @@
             android:layout_toLeftOf="@+id/weight_picker_up"
             android:layout_toStartOf="@+id/weight_picker_up"
             android:background="@drawable/selector_custom_border_edit_text"
-            android:inputType="number" />
+            android:inputType="number"/>
 
         <ImageButton
             android:id="@+id/weight_picker_up"
@@ -115,7 +115,7 @@
             android:layout_toStartOf="@+id/weight_picker_down"
             android:background="@android:color/transparent"
             android:contentDescription="@string/settings_img_up"
-            android:src="@drawable/selector_arrow_up" />
+            android:src="@drawable/selector_arrow_up"/>
 
         <ImageButton
             android:id="@+id/weight_picker_down"
@@ -126,7 +126,7 @@
             android:layout_centerVertical="true"
             android:background="@android:color/transparent"
             android:contentDescription="@string/settings_img_down"
-            android:src="@drawable/selector_arrow_down" />
+            android:src="@drawable/selector_arrow_down"/>
     </RelativeLayout>
 
     <RelativeLayout
@@ -147,7 +147,7 @@
             android:layout_marginStart="10dp"
             android:background="@android:color/transparent"
             android:contentDescription="@string/age_image"
-            android:src="@drawable/sandglass" />
+            android:src="@drawable/sandglass"/>
 
         <TextView
             android:id="@+id/age_text"
@@ -160,7 +160,7 @@
             android:layout_toRightOf="@+id/age_image"
             android:text="@string/age_image"
             android:textColor="@color/settings_font"
-            android:textSize="@dimen/settings_text_size" />
+            android:textSize="@dimen/settings_text_size"/>
 
         <EditText
             android:id="@+id/edit_age"
@@ -172,7 +172,7 @@
             android:layout_toLeftOf="@+id/age_picker_up"
             android:layout_toStartOf="@+id/age_picker_up"
             android:background="@drawable/selector_custom_border_edit_text"
-            android:inputType="number" />
+            android:inputType="number"/>
 
         <ImageButton
             android:id="@+id/age_picker_up"
@@ -185,7 +185,7 @@
             android:layout_toStartOf="@+id/age_picker_down"
             android:background="@android:color/transparent"
             android:contentDescription="@string/settings_img_up"
-            android:src="@drawable/selector_arrow_up" />
+            android:src="@drawable/selector_arrow_up"/>
 
         <ImageButton
             android:id="@+id/age_picker_down"
@@ -196,7 +196,7 @@
             android:layout_centerVertical="true"
             android:background="@android:color/transparent"
             android:contentDescription="@string/settings_img_down"
-            android:src="@drawable/selector_arrow_down" />
+            android:src="@drawable/selector_arrow_down"/>
     </RelativeLayout>
 
     <View
@@ -204,13 +204,13 @@
         android:layout_width="match_parent"
         android:layout_height="1dp"
         android:layout_below="@+id/age_layout"
-        android:background="@color/settings_view_first_line" />
+        android:background="@color/settings_view_first_line"/>
 
     <View
         android:layout_width="match_parent"
         android:layout_height="1dp"
         android:layout_below="@+id/third_line"
-        android:background="@color/settings_view_second_line" />
+        android:background="@color/settings_view_second_line"/>
 
     <Button
         android:id="@+id/buttonConfirmSettings"
@@ -226,5 +226,5 @@
         android:paddingTop="20dp"
         android:text="@string/button_accept"
         android:textColor="@color/settings_btn_accept_font"
-        android:textSize="@dimen/settings_accept_button_size" />
+        android:textSize="@dimen/settings_accept_button_size"/>
 </RelativeLayout>

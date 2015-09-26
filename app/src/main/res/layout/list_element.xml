@@ -6,7 +6,7 @@
 
     <ImageView
         android:id="@+id/walk_layout"
-        android:layout_width="wrap_content"
+        android:layout_width="100dp"
         android:layout_height="wrap_content"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"

@@ -10,7 +10,8 @@ import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemSelectedListener;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
-import android.widget.NumberPicker;
+import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.Spinner;
 
 import com.hyperether.getgoing.R;
@@ -21,8 +22,14 @@ public class SettingsActivity extends Activity implements OnItemSelectedListener
     private CBDataFrame cbDataFrameLocal;
     Spinner spinner;
     int iCountAdapterCalls = 0;
-    NumberPicker mNumberPickerW;
-    NumberPicker mNumberPickerA;
+    //    NumberPicker mNumberPickerW;
+//    NumberPicker mNumberPickerA;
+    EditText editTextWeight;
+    ImageButton increaseWeight;
+    ImageButton decreaseWeight;
+    EditText editTextAge;
+    ImageButton increaseAge;
+    ImageButton decreaseAge;
     Button buttonConfirmSettings;
 
     @Override
@@ -43,37 +50,36 @@ public class SettingsActivity extends Activity implements OnItemSelectedListener
         spinner.setAdapter(spinnerArrayAdapter);
         spinner.setOnItemSelectedListener(this);
 
-        mNumberPickerA = (NumberPicker) findViewById(R.id.age_picker_up);
-        mNumberPickerW = (NumberPicker) findViewById(R.id.weight_picker_up);
-
-        String[] nums = new String[150];
-        for (int i = 0; i < nums.length; i++)
-            nums[i] = Integer.toString(i);
-
-        mNumberPickerW.setMinValue(1);
-        mNumberPickerW.setMaxValue(150);
-        mNumberPickerW.setWrapSelectorWheel(false);
-        mNumberPickerW.setDisplayedValues(nums);
-        mNumberPickerW.setValue(1);
-
-        mNumberPickerW.setOnValueChangedListener(new NumberPicker.OnValueChangeListener() {
+        editTextWeight = (EditText) findViewById(R.id.edit_weight);
+        editTextWeight.setText("0");
+        increaseWeight = (ImageButton) findViewById(R.id.weight_picker_up);
+        increaseWeight.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onValueChange(NumberPicker picker, int oldVal, int newVal) {
-                mNumberPickerW.setValue(newVal);
-                cbDataFrameLocal.setWeight(newVal);
+            public void onClick(View v) {
+                setWeight(true);
             }
         });
-
-        mNumberPickerA.setMinValue(1);
-        mNumberPickerA.setMaxValue(100);
-        mNumberPickerA.setWrapSelectorWheel(false);
-        mNumberPickerA.setDisplayedValues(nums);
-        mNumberPickerA.setValue(1);
-
-        mNumberPickerA.setOnValueChangedListener(new NumberPicker.OnValueChangeListener() {
+        decreaseWeight = (ImageButton) findViewById(R.id.weight_picker_down);
+        decreaseWeight.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onValueChange(NumberPicker picker, int oldVal, int newVal) {
-                cbDataFrameLocal.setAge(newVal);
+            public void onClick(View v) {
+                setWeight(false);
+            }
+        });
+        editTextAge = (EditText) findViewById(R.id.edit_age);
+        editTextAge.setText("0");
+        increaseAge = (ImageButton) findViewById(R.id.age_picker_up);
+        increaseAge.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                setAge(true);
+            }
+        });
+        decreaseAge = (ImageButton) findViewById(R.id.age_picker_down);
+        decreaseAge.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                setAge(false);
             }
         });
 
@@ -88,6 +94,38 @@ public class SettingsActivity extends Activity implements OnItemSelectedListener
                 finish();
             }
         });
+    }
+
+    private void setWeight(boolean increase) {
+        int weight;
+        if (!editTextWeight.getText().toString().equals("")) {
+            weight = Integer.parseInt(editTextWeight.getText().toString());
+        } else {
+            weight = 0;
+        }
+        if (increase) {
+            weight++;
+        } else {
+            weight--;
+        }
+        editTextWeight.setText(weight + "");
+        cbDataFrameLocal.setWeight(weight);
+    }
+
+    private void setAge(boolean increase) {
+        int age;
+        if (!editTextAge.getText().toString().equals("")) {
+            age = Integer.parseInt(editTextAge.getText().toString());
+        } else {
+            age = 0;
+        }
+        if (increase) {
+            age++;
+        } else {
+            age--;
+        }
+        editTextAge.setText(age + "");
+        cbDataFrameLocal.setAge(age);
     }
 
     /*

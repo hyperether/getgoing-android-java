@@ -58,6 +58,7 @@
     </LinearLayout>
 
     <LinearLayout
+        android:id="@+id/data_layout"
         android:layout_width="wrap_content"
         android:layout_height="fill_parent"
         android:layout_marginBottom="@dimen/activity_horizontal_margin"
@@ -232,6 +233,8 @@
     <fragment
         android:id="@+id/show_map_page"
         class="com.google.android.gms.maps.MapFragment"
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"/>
+        android:layout_width="wrap_content"
+        android:layout_height="fill_parent"
+        android:layout_toEndOf="@+id/data_layout"
+        android:layout_toRightOf="@+id/data_layout"/>
 </RelativeLayout>

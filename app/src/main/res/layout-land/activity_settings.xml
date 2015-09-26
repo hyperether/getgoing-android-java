@@ -84,12 +84,41 @@
             android:textColor="#000"
             android:textSize="@dimen/settings_text_size"/>
 
-        <NumberPicker
+        <EditText
+            android:id="@+id/edit_weight"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:layout_centerVertical="true"
+            android:layout_marginEnd="@dimen/settings_edit_margin_right"
+            android:layout_marginRight="@dimen/settings_edit_margin_right"
+            android:layout_toEndOf="@+id/weight_text"
+            android:layout_toRightOf="@+id/weight_text"
+            android:background="@drawable/selector_custom_border_edit_text"
+            android:inputType="number"/>
+
+        <ImageButton
             android:id="@+id/weight_picker_up"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_toEndOf="@+id/weight_text"
-            android:layout_toRightOf="@+id/weight_text"/>
+            android:layout_marginEnd="@dimen/settings_arrow_margin_right"
+            android:layout_marginRight="@dimen/settings_arrow_margin_right"
+            android:layout_toEndOf="@+id/edit_weight"
+            android:layout_toRightOf="@+id/edit_weight"
+            android:background="@android:color/transparent"
+            android:contentDescription="@string/settings_img_up"
+            android:src="@drawable/selector_arrow_up"/>
+
+        <ImageButton
+            android:id="@+id/weight_picker_down"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/weight_picker_up"
+            android:layout_marginTop="10dp"
+            android:layout_toEndOf="@+id/edit_weight"
+            android:layout_toRightOf="@+id/edit_weight"
+            android:background="@android:color/transparent"
+            android:contentDescription="@string/settings_img_down"
+            android:src="@drawable/selector_arrow_down"/>
 
         <ImageView
             android:id="@+id/age_image"
@@ -107,23 +136,55 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerVertical="true"
-            android:layout_toLeftOf="@+id/age_picker_up"
-            android:layout_toStartOf="@+id/age_picker_up"
+            android:layout_toLeftOf="@+id/edit_age"
+            android:layout_toStartOf="@+id/edit_age"
             android:paddingEnd="@dimen/activity_vertical_margin"
             android:paddingRight="@dimen/activity_vertical_margin"
             android:text="@string/age_image"
             android:textColor="#000"
             android:textSize="@dimen/settings_text_size"/>
 
-        <NumberPicker
+        <EditText
+            android:id="@+id/edit_age"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:layout_centerVertical="true"
+            android:layout_marginEnd="@dimen/settings_edit_margin_right"
+            android:layout_marginRight="@dimen/settings_edit_margin_right"
+            android:layout_toLeftOf="@+id/age_picker_up"
+            android:layout_toStartOf="@+id/age_picker_up"
+            android:background="@drawable/selector_custom_border_edit_text"
+            android:inputType="number"/>
+
+        <ImageButton
             android:id="@+id/age_picker_up"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentEnd="true"
-            android:layout_alignParentRight="true"/>
+            android:layout_alignParentRight="true"
+            android:layout_marginEnd="@dimen/settings_arrow_margin_right"
+            android:layout_marginRight="@dimen/settings_arrow_margin_right"
+            android:layout_toLeftOf="@+id/age_picker_down"
+            android:layout_toStartOf="@+id/age_picker_down"
+            android:background="@android:color/transparent"
+            android:contentDescription="@string/settings_img_up"
+            android:src="@drawable/selector_arrow_up"/>
+
+        <ImageButton
+            android:id="@+id/age_picker_down"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentRight="true"
+            android:layout_below="@+id/age_picker_up"
+            android:layout_marginTop="10dp"
+            android:background="@android:color/transparent"
+            android:contentDescription="@string/settings_img_down"
+            android:src="@drawable/selector_arrow_down"/>
     </RelativeLayout>
 
     <Button
+        android:id="@+id/buttonConfirmSettings"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:layout_marginEnd="@dimen/spinner_vertical_margin"

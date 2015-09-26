@@ -1,12 +1,12 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="fill_parent"
-    android:layout_height="fill_parent"
-    android:orientation="vertical">
+              android:layout_width="fill_parent"
+              android:layout_height="fill_parent"
+              android:orientation="vertical">
 
     <View
         android:layout_width="match_parent"
         android:layout_height="1dp"
-        android:background="@color/black" />
+        android:background="@color/black"/>
 
     <ImageButton
         android:id="@+id/walk_button"
@@ -16,12 +16,12 @@
         android:background="@android:color/transparent"
         android:contentDescription="@string/button1_normal"
         android:scaleType="fitXY"
-        android:src="@drawable/button1_custom" />
+        android:src="@drawable/button1_custom"/>
 
     <View
         android:layout_width="match_parent"
         android:layout_height="1dp"
-        android:background="@color/black" />
+        android:background="@color/black"/>
 
 
     <ImageButton
@@ -32,12 +32,12 @@
         android:background="@android:color/transparent"
         android:contentDescription="@string/button2_normal"
         android:scaleType="fitXY"
-        android:src="@drawable/button2_custom" />
+        android:src="@drawable/button2_custom"/>
 
     <View
         android:layout_width="match_parent"
         android:layout_height="1dp"
-        android:background="@color/black" />
+        android:background="@color/black"/>
 
     <ImageButton
         android:id="@+id/ride_button"
@@ -47,10 +47,10 @@
         android:background="@android:color/transparent"
         android:contentDescription="@string/button3_normal"
         android:scaleType="fitXY"
-        android:src="@drawable/button3_custom" />
+        android:src="@drawable/button3_custom"/>
 
     <View
         android:layout_width="match_parent"
         android:layout_height="1dp"
-        android:background="@color/black" />
+        android:background="@color/black"/>
 </LinearLayout>
