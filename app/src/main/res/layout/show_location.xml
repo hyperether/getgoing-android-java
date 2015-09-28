@@ -179,7 +179,7 @@
                     android:background="@android:color/transparent"
                     android:contentDescription="@string/speed_image"
                     android:layout_marginBottom="@dimen/location_img_margin_bottom"
-                    android:src="@drawable/speed" />
+                    android:src="@drawable/speedmeter" />
 
                 <Chronometer
                     android:id="@+id/showVelocity"
@@ -190,10 +190,8 @@
                     android:textStyle="bold" />
             </LinearLayout>
 
-
-
             <LinearLayout
-                android:id="@+id/speedmeter_layout"
+                android:id="@+id/avg_speed_layout"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_toEndOf="@+id/speed_layout"
@@ -209,7 +207,7 @@
                     android:layout_marginBottom="@dimen/location_img_margin_bottom"
                     android:background="@android:color/transparent"
                     android:contentDescription="@string/avg_speed_image"
-                    android:src="@drawable/speedmeter" />
+                    android:src="@drawable/avg_speed" />
 
                 <Chronometer
                     android:id="@+id/showVelocityAvg"
@@ -219,6 +217,8 @@
                     android:textSize="@dimen/text_size"
                     android:textStyle="bold" />
             </LinearLayout>
+
+
      </RelativeLayout>
     </RelativeLayout>
 </RelativeLayout>
