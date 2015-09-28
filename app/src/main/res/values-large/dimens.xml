@@ -31,7 +31,7 @@
     <dimen name="settings_layout_margin">20dp</dimen>
     <dimen name="settings_txt_margin_left">30dp</dimen>
     <dimen name="settings_txt_age_margin_left">45dp</dimen>
-    <dimen name="settings_edit_margin_right">35dp</dimen>
+    <dimen name="settings_edit_margin_left">35dp</dimen>
     <dimen name="settings_spinner_width">150dp</dimen>
     <dimen name="settings_text_size">25sp</dimen>
     <dimen name="settings_arrow_margin_right">10dp</dimen>

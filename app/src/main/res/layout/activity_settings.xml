@@ -65,8 +65,7 @@
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:layout_below="@+id/second_line"
-        android:layout_margin="@dimen/settings_layout_margin"
-        android:orientation="horizontal">
+        android:layout_margin="@dimen/settings_layout_margin">
 
         <ImageView
             android:id="@+id/weight_image"
@@ -97,8 +96,8 @@
             android:layout_width="50dp"
             android:layout_height="50dp"
             android:layout_centerVertical="true"
-            android:layout_marginEnd="@dimen/settings_edit_margin_right"
-            android:layout_marginRight="@dimen/settings_edit_margin_right"
+            android:layout_marginEnd="@dimen/settings_edit_margin_left"
+            android:layout_marginRight="@dimen/settings_edit_margin_left"
             android:layout_toLeftOf="@+id/weight_picker_up"
             android:layout_toStartOf="@+id/weight_picker_up"
             android:background="@drawable/selector_custom_border_edit_text"
@@ -167,8 +166,8 @@
             android:layout_width="50dp"
             android:layout_height="50dp"
             android:layout_centerVertical="true"
-            android:layout_marginEnd="@dimen/settings_edit_margin_right"
-            android:layout_marginRight="@dimen/settings_edit_margin_right"
+            android:layout_marginEnd="@dimen/settings_edit_margin_left"
+            android:layout_marginRight="@dimen/settings_edit_margin_left"
             android:layout_toLeftOf="@+id/age_picker_up"
             android:layout_toStartOf="@+id/age_picker_up"
             android:background="@drawable/selector_custom_border_edit_text"

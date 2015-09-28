@@ -8,4 +8,15 @@
     <dimen name="date_padding_land">35dp</dimen>
     <dimen name="element_padding_land">100dp</dimen>
     <dimen name="element_text_size">30sp</dimen>
+
+    <!-- Activity settings -->
+    <dimen name="settings_layout_margin">30dp</dimen>
+    <dimen name="settings_layout_margin_top">20dp</dimen>
+    <dimen name="settings_txt_margin_left">50dp</dimen>
+    <dimen name="settings_edit_margin_left">50dp</dimen>
+    <dimen name="settings_weigth_layout_margin">78dp</dimen>
+
+    <dimen name="settings_age_layout_margin">88dp</dimen>
+    <dimen name="settings_layout_margin_left_right">40dp</dimen>
+    <dimen name="settings_horizontal_margin">80dp</dimen>
 </resources>
