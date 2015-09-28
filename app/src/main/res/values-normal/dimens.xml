@@ -10,20 +10,25 @@
     <dimen name="spinner_vertical_margin_port">30dp</dimen>
     <dimen name="spinner_horizontal_margin">0dp</dimen>
     <dimen name="spinner_horizontal_margin_port">5dp</dimen>
-    <dimen name="settings_horizontal_margin">0dp</dimen>
-    <dimen name="settings_text_size">15sp</dimen>
 
+
+    <!-- List element -->
     <dimen name="date_padding">5dp</dimen>
+    <dimen name="date_margin">5dp</dimen>
     <dimen name="date_padding_land">20dp</dimen>
-    <dimen name="element_padding">25dp</dimen>
+    <dimen name="element_padding">21dp</dimen>
     <dimen name="element_padding_land">35dp</dimen>
     <dimen name="element_text_size">16sp</dimen>
+    <dimen name="element_energy_text_size">25sp</dimen>
     <dimen name="element_text_size_land">18sp</dimen>
+
     <dimen name="location_padding1">15dp</dimen>
     <dimen name="location_padding2">60dp</dimen>
     <dimen name="location_margins">30dp</dimen>
 
+    <!-- Activity settings -->
     <dimen name="settings_txt_margin_left">15dp</dimen>
     <dimen name="settings_txt_age_margin_left">30dp</dimen>
     <dimen name="settings_accept_button_size">20sp</dimen>
+    <dimen name="settings_text_size">15sp</dimen>
 </resources>

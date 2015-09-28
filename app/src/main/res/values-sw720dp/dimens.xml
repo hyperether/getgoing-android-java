@@ -5,13 +5,19 @@
     <dimen name="location_horizontal_margin">16dp</dimen>
     <dimen name="text_size">35sp</dimen>
     <dimen name="button_text_size">40sp</dimen>
-    <dimen name="date_padding">15dp</dimen>
-    <dimen name="element_padding">8dp</dimen>
-    <dimen name="element_text_size">15sp</dimen>
+
+    <!-- List element -->
+    <dimen name="date_padding">25dp</dimen>
+    <dimen name="date_margin">3dp</dimen>
+    <dimen name="element_padding">50dp</dimen>
+    <dimen name="element_text_size">28sp</dimen>
+    <dimen name="element_energy_text_size">38sp</dimen>
+
     <dimen name="location_padding1">15dp</dimen>
     <dimen name="location_padding2">60dp</dimen>
     <dimen name="location_margins">80dp</dimen>
 
+    <!-- Activity settings -->
     <dimen name="settings_layout_margin">60dp</dimen>
     <dimen name="settings_txt_margin_left">75dp</dimen>
     <dimen name="settings_txt_age_margin_left">90dp</dimen>

@@ -19,8 +19,7 @@
     <string name="button_accept">Accept</string>
     <string name="date">15.12.2014.</string>
     <string name="time">09:03:48</string>
-    <string name="energy">Energy 0.06 kcal</string>
-    <string name="metric_spinner">Metric</string>
+      <string name="metric_spinner">Metric</string>
 
     <string name="SettingsActivityTitle" translatable="false">Settings</string>
     <string name="ShowMap" translatable="false">Map</string>

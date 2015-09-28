@@ -14,17 +14,20 @@
     <dimen name="spinner_horizontal_margin_port">20dp</dimen>
     <dimen name="accept_vertical_margin_port">150dp</dimen>
 
-    <dimen name="date_padding">15dp</dimen>
+    <!-- List element -->
+    <dimen name="date_padding">20dp</dimen>
     <dimen name="date_padding_land">20dp</dimen>
     <dimen name="element_padding">35dp</dimen>
     <dimen name="element_padding_land">55dp</dimen>
     <dimen name="element_text_size">20sp</dimen>
+    <dimen name="element_energy_text_size">28sp</dimen>
     <dimen name="element_text_size_land">25sp</dimen>
+
     <dimen name="location_padding1">15dp</dimen>
     <dimen name="location_padding2">60dp</dimen>
     <dimen name="location_margins">60dp</dimen>
 
-
+    <!-- Activity settings -->
     <dimen name="settings_layout_margin">20dp</dimen>
     <dimen name="settings_txt_margin_left">30dp</dimen>
     <dimen name="settings_txt_age_margin_left">45dp</dimen>
