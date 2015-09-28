@@ -13,6 +13,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.Spinner;
+import android.widget.Toast;
 
 import com.hyperether.getgoing.R;
 import com.hyperether.getgoing.data.CBDataFrame;
@@ -85,13 +86,32 @@ public class SettingsActivity extends Activity implements OnItemSelectedListener
 
         buttonConfirmSettings = (Button) findViewById(R.id.buttonConfirmSettings);
         buttonConfirmSettings.setOnClickListener(new View.OnClickListener() {
-
             @Override
             public void onClick(View v) {
-                Intent resultIntent = new Intent();
-                resultIntent.putExtra("dataKey", cbDataFrameLocal);
-                setResult(Activity.RESULT_OK, resultIntent);
-                finish();
+                int weight = 0, age = 0;
+                boolean success = false;
+                if ((!editTextWeight.getText().toString().equals("")) &&
+                        (!editTextAge.getText().toString().equals(""))) {
+                    weight = Integer.parseInt(editTextWeight.getText().toString());
+                    age = Integer.parseInt(editTextAge.getText().toString());
+
+                    if ((weight > 0) && (age > 0)) {
+                        cbDataFrameLocal.setAge(age);
+                        cbDataFrameLocal.setWeight(weight);
+                        success = true;
+                    }
+                }
+
+                if (success) {
+                    Intent resultIntent = new Intent();
+                    resultIntent.putExtra("dataKey", cbDataFrameLocal);
+                    setResult(Activity.RESULT_OK, resultIntent);
+                    finish();
+                } else {
+                    Toast.makeText(SettingsActivity.this,
+                            getString(R.string.settings_insert_weight_age), Toast.LENGTH_SHORT)
+                            .show();
+                }
             }
         });
     }
@@ -109,7 +129,6 @@ public class SettingsActivity extends Activity implements OnItemSelectedListener
             weight--;
         }
         editTextWeight.setText(weight + "");
-        cbDataFrameLocal.setWeight(weight);
     }
 
     private void setAge(boolean increase) {
@@ -125,7 +144,6 @@ public class SettingsActivity extends Activity implements OnItemSelectedListener
             age--;
         }
         editTextAge.setText(age + "");
-        cbDataFrameLocal.setAge(age);
     }
 
     /*
@@ -135,8 +153,8 @@ public class SettingsActivity extends Activity implements OnItemSelectedListener
     protected void onResume() {
         super.onResume();
         spinner.setSelection(cbDataFrameLocal.getMeasurementSystemId());
-//		mNumberPickerA.setCurrent(cbDataFrameLocal.getAge());
-//		mNumberPickerW.setCurrent(cbDataFrameLocal.getWeight());
+        editTextAge.setText(cbDataFrameLocal.getAge() + "");
+        editTextWeight.setText(cbDataFrameLocal.getWeight() + "");
     }
 
     @Override
