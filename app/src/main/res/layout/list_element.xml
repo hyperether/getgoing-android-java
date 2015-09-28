@@ -1,21 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-                android:layout_width="fill_parent"
-                android:layout_height="wrap_content"
-                android:gravity="center_horizontal">
+    android:layout_width="fill_parent"
+    android:layout_height="wrap_content">
 
     <ImageView
         android:id="@+id/walk_layout"
-        android:layout_width="100dp"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
         android:layout_centerVertical="true"
-        android:layout_marginTop="@dimen/element_padding"
         android:contentDescription="@string/app_name"
-        android:paddingEnd="@dimen/element_padding"
-        android:paddingRight="@dimen/element_padding"
-        android:src="@drawable/walk"/>
+        android:src="@drawable/statistic_walk" />
 
     <LinearLayout
         android:id="@+id/statistic_layout"
@@ -26,6 +22,7 @@
         android:layout_toRightOf="@+id/walk_layout"
         android:orientation="vertical"
         android:paddingEnd="@dimen/element_padding"
+        android:paddingLeft="@dimen/element_padding"
         android:paddingRight="@dimen/element_padding">
 
         <LinearLayout
@@ -40,7 +37,7 @@
                 android:paddingRight="@dimen/date_padding"
                 android:text="@string/date"
                 android:textSize="@dimen/element_text_size"
-                android:textStyle="bold"/>
+                android:textStyle="bold" />
 
             <TextView
                 android:id="@+id/textEnergy"
@@ -48,7 +45,7 @@
                 android:layout_height="wrap_content"
                 android:text="@string/time"
                 android:textSize="@dimen/element_text_size"
-                android:textStyle="bold"/>
+                android:textStyle="bold" />
         </LinearLayout>
 
         <TextView
@@ -56,17 +53,16 @@
             android:layout_height="wrap_content"
             android:text="@string/energy"
             android:textSize="@dimen/element_text_size"
-            android:textStyle="bold"/>
+            android:textStyle="bold" />
     </LinearLayout>
 
     <ImageView
         android:id="@+id/delete_layout"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentRight="true"
         android:layout_centerVertical="true"
-        android:layout_marginTop="@dimen/element_padding"
-        android:layout_toEndOf="@+id/statistic_layout"
-        android:layout_toRightOf="@+id/statistic_layout"
-        android:contentDescription="@string/app_name"
-        android:src="@drawable/reset"/>
+         android:contentDescription="@string/app_name"
+        android:src="@drawable/reset" />
 </RelativeLayout>
