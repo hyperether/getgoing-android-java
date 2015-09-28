@@ -833,13 +833,13 @@ public class ShowLocation extends Activity implements
     }
 
     private void initLayoutDinamically() {
-        button_start = (Button) findViewById(R.id.start_button);
+        button_start = (Button) findViewById(R.id.save_button);
         button_start.setOnClickListener(mButtonStartListener);
         button_pause = (Button) findViewById(R.id.end_button);
         button_pause.setOnClickListener(mButtonPauseListener);
-        button_rst = (Button) findViewById(R.id.reset_button);
+        button_rst = (Button) findViewById(R.id.refresh_button);
         button_rst.setOnClickListener(mButtonResetListener);
-        button_save = (Button) findViewById(R.id.save_button);
+        button_save = (Button) findViewById(R.id.start_button);
         button_save.setOnClickListener(mButtonSaveListener);
 
         showTime = (Chronometer) findViewById(R.id.showTime);
