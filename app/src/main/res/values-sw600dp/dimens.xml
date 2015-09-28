@@ -18,7 +18,11 @@
     <dimen name="element_text_size">25sp</dimen>
     <dimen name="element_energy_text_size">35sp</dimen>
 
-    <dimen name="location_margin_left">15dp</dimen>
+    <!-- Show Location -->
+    <dimen name="location_margin_left">30dp</dimen>
+        <dimen name="location_buttons_layout_margin">20dp</dimen>
+    <dimen name="location_buttons_layout_margin_left_right">50dp</dimen>
+    <dimen name="location_text_size">22sp</dimen>
     <dimen name="location_padding2">60dp</dimen>
     <dimen name="location_margins">80dp</dimen>
 
