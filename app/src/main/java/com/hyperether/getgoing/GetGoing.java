@@ -9,6 +9,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageButton;
 
+import com.crashlytics.android.Crashlytics;
 import com.hyperether.getgoing.data.CBDataFrame;
 import com.hyperether.getgoing.db.DbRoute;
 import com.hyperether.getgoing.db.GetGoingDataSource;
@@ -17,6 +18,7 @@ import com.hyperether.getgoing.location.ShowLocation;
 import com.hyperether.getgoing.settings.SettingsActivity;
 import com.hyperether.getgoing.util.FragmentDialog;
 
+import io.fabric.sdk.android.Fabric;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -38,6 +40,7 @@ public class GetGoing extends Activity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        Fabric.with(this, new Crashlytics());
         setContentView(R.layout.activity_main);
         addButtonListener();
 

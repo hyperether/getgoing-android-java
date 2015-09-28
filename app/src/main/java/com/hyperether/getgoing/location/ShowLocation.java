@@ -458,7 +458,7 @@ public class ShowLocation extends Activity implements
                 }
             });
         }
-    };
+    }
 
     private void showData(String timeString, double distance, double kcal, double vel,
                           double velAvg) {
@@ -551,13 +551,13 @@ public class ShowLocation extends Activity implements
         // Decide what to do based on the original request code
         switch (requestCode) {
             case CONNECTION_FAILURE_RESOLUTION_REQUEST:
-			/*
-			 * If the result code is Activity.RESULT_OK, try
+            /*
+             * If the result code is Activity.RESULT_OK, try
 			 * to connect again
 			 */
                 switch (resultCode) {
                     case Activity.RESULT_OK:
-				/*
+                /*
 				 * Try the request again
 				 */
                         break;
