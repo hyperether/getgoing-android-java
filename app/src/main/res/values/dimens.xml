@@ -23,7 +23,9 @@
     <dimen name="element_energy_text_size">18sp</dimen>
     <dimen name="element_text_size_land">20sp</dimen>
 
-    <dimen name="location_padding1">15dp</dimen>
+    <dimen name="location_margin_left">15dp</dimen>
+    <dimen name="location_img_margin_bottom">10dp</dimen>
+    <dimen name="location_statistic_margin">20dp</dimen>
     <dimen name="location_padding2">60dp</dimen>
     <dimen name="location_margins">60dp</dimen>
 

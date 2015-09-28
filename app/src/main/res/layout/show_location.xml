@@ -1,227 +1,224 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/map"
-    xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
     android:descendantFocusability="beforeDescendants"
     android:focusableInTouchMode="true"
     android:orientation="vertical">
 
-    <RelativeLayout
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:gravity="center_horizontal"
-        android:paddingTop="@dimen/activity_horizontal_margin">
-
-        <Button
-            android:id="@+id/start_button"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentLeft="true"
-            android:layout_alignParentStart="true"
-            android:background="@android:color/transparent"
-            android:drawableTop="@drawable/start_pressed"/>
-
-        <Button
-            android:id="@+id/end_button"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentLeft="true"
-            android:layout_alignParentStart="true"
-            android:background="@android:color/transparent"
-            android:drawableTop="@drawable/stop_pressed"
-            android:visibility="invisible"/>
-
-        <Button
-            android:id="@+id/save_button"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_centerHorizontal="true"
-            android:background="@android:color/transparent"
-            android:drawableTop="@drawable/save_pressed"/>
-
-        <Button
-            android:id="@+id/reset_button"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentEnd="true"
-            android:layout_alignParentRight="true"
-            android:background="@android:color/transparent"
-            android:drawableTop="@drawable/reset_pressed"/>
-    </RelativeLayout>
-
-    <RelativeLayout
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginEnd="@dimen/location_margins"
-        android:layout_marginStart="@dimen/location_margins"
-        android:gravity="center">
-
-        <ImageView
-            android:id="@+id/clock"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentLeft="true"
-            android:layout_alignParentStart="true"
-            android:background="@android:color/transparent"
-            android:contentDescription="@string/clock_image"
-            android:paddingEnd="@dimen/location_padding1"
-            android:paddingRight="@dimen/location_padding1"
-            android:src="@drawable/clock"/>
-
-        <Chronometer
-            android:id="@+id/showTime"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_centerVertical="true"
-            android:layout_toEndOf="@+id/clock"
-            android:layout_toRightOf="@+id/clock"
-            android:format="00:00:00"
-            android:paddingEnd="@dimen/location_padding2"
-            android:paddingRight="@dimen/location_padding2"
-            android:textSize="@dimen/text_size"
-            android:textStyle="bold"/>
-
-        <ImageView
-            android:id="@+id/speed"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_toLeftOf="@+id/showVelocity"
-            android:layout_toStartOf="@+id/showVelocity"
-            android:background="@android:color/transparent"
-            android:contentDescription="@string/speed_image"
-            android:paddingEnd="@dimen/location_padding1"
-            android:paddingRight="@dimen/location_padding1"
-            android:src="@drawable/speed"/>
-
-        <Chronometer
-            android:id="@+id/showVelocity"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentEnd="true"
-            android:layout_alignParentRight="true"
-            android:layout_centerVertical="true"
-            android:format="0:00m/s"
-            android:textSize="@dimen/text_size"
-            android:textStyle="bold"/>
-    </RelativeLayout>
-
-    <RelativeLayout
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginEnd="@dimen/location_margins"
-        android:layout_marginStart="@dimen/location_margins"
-        android:gravity="center">
-
-        <ImageView
-            android:id="@+id/fire"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentLeft="true"
-            android:layout_alignParentStart="true"
-            android:background="@android:color/transparent"
-            android:contentDescription="@string/fire_image"
-            android:paddingEnd="@dimen/location_padding1"
-            android:paddingRight="@dimen/location_padding1"
-            android:src="@drawable/fire"/>
-
-        <Chronometer
-            android:id="@+id/showCalories"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_centerVertical="true"
-            android:layout_toEndOf="@+id/fire"
-            android:layout_toRightOf="@+id/fire"
-            android:format="0:00kcal"
-            android:paddingEnd="@dimen/location_padding2"
-            android:paddingRight="@dimen/location_padding2"
-            android:textSize="@dimen/text_size"
-            android:textStyle="bold"/>
-
-        <ImageView
-            android:id="@+id/avg_speed_nobg_full_chronometer"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_toLeftOf="@+id/showVelocityAvg"
-            android:layout_toStartOf="@+id/showVelocityAvg"
-            android:background="@android:color/transparent"
-            android:contentDescription="@string/avg_speed_image"
-            android:paddingEnd="@dimen/location_padding1"
-            android:paddingRight="@dimen/location_padding1"
-            android:src="@drawable/avg_speed_nobg_full"/>
-
-        <Chronometer
-            android:id="@+id/showVelocityAvg"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentEnd="true"
-            android:layout_alignParentRight="true"
-            android:layout_centerVertical="true"
-            android:format="0:00m/s"
-            android:textSize="@dimen/text_size"
-            android:textStyle="bold"/>
-    </RelativeLayout>
-
-    <RelativeLayout
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginEnd="@dimen/location_margins"
-        android:layout_marginStart="@dimen/location_margins"
-        android:gravity="center"
-        android:paddingBottom="@dimen/activity_horizontal_margin">
-
-        <ImageView
-            android:id="@+id/road"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentLeft="true"
-            android:layout_alignParentStart="true"
-            android:background="@android:color/transparent"
-            android:contentDescription="@string/road_image"
-            android:paddingEnd="@dimen/location_padding1"
-            android:paddingRight="@dimen/location_padding1"
-            android:src="@drawable/road"/>
-
-        <Chronometer
-            android:id="@+id/showDistance"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_centerVertical="true"
-            android:layout_toEndOf="@+id/road"
-            android:layout_toRightOf="@+id/road"
-            android:format="0:00m"
-            android:paddingEnd="@dimen/location_padding2"
-            android:paddingRight="@dimen/location_padding2"
-            android:textSize="@dimen/text_size"
-            android:textStyle="bold"/>
-
-        <ImageView
-            android:id="@+id/road2"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_toLeftOf="@+id/road2_chronometer"
-            android:layout_toStartOf="@+id/road2_chronometer"
-            android:background="@android:color/transparent"
-            android:contentDescription="@string/road_image"
-            android:src="@drawable/road"
-            android:visibility="invisible"/>
-
-        <Chronometer
-            android:id="@+id/road2_chronometer"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentEnd="true"
-            android:layout_alignParentRight="true"
-            android:format="0:00m/s"
-            android:textSize="@dimen/text_size"
-            android:textStyle="bold"
-            android:visibility="invisible"/>
-    </RelativeLayout>
-
     <fragment
         android:id="@+id/show_map_page"
         class="com.google.android.gms.maps.MapFragment"
         android:layout_width="fill_parent"
-        android:layout_height="wrap_content"/>
-</LinearLayout>
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true" />
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true">
+
+        <RelativeLayout
+            android:id="@+id/buttons_layout"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentTop="true"
+            android:gravity="center_horizontal"
+            android:paddingTop="@dimen/activity_horizontal_margin">
+
+            <Button
+                android:id="@+id/start_button"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentLeft="true"
+                android:layout_alignParentStart="true"
+                android:background="@android:color/transparent"
+                android:drawableTop="@drawable/start_pressed" />
+
+            <Button
+                android:id="@+id/end_button"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentLeft="true"
+                android:layout_alignParentStart="true"
+                android:background="@android:color/transparent"
+                android:drawableTop="@drawable/stop_pressed"
+                android:visibility="invisible" />
+
+            <Button
+                android:id="@+id/save_button"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerHorizontal="true"
+                android:background="@android:color/transparent"
+                android:drawableTop="@drawable/save_pressed" />
+
+            <Button
+                android:id="@+id/reset_button"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentEnd="true"
+                android:layout_alignParentRight="true"
+                android:background="@android:color/transparent"
+                android:drawableTop="@drawable/reset_pressed" />
+        </RelativeLayout>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_above="@+id/statistic_layout"
+            android:background="@color/location_view_line"/>
+
+        <RelativeLayout
+            android:id="@+id/statistic_layout"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/buttons_layout"
+            android:gravity="center_horizontal"
+            android:layout_marginTop="@dimen/location_statistic_margin"
+            android:layout_marginBottom="@dimen/location_statistic_margin">
+
+
+            <LinearLayout
+                android:id="@+id/clock_layout"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentLeft="true"
+                android:layout_alignParentStart="true"
+                 android:orientation="vertical">
+
+                <ImageView
+                    android:id="@+id/clock"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:background="@android:color/transparent"
+                    android:layout_marginBottom="@dimen/location_img_margin_bottom"
+                    android:contentDescription="@string/clock_image"
+                     android:src="@drawable/clock" />
+
+                <Chronometer
+                    android:id="@+id/showTime"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:format="00:00:00"
+                    android:textSize="@dimen/text_size"
+                    android:textStyle="bold" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/kcal_layout"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_toEndOf="@+id/clock_layout"
+                android:layout_toRightOf="@+id/clock_layout"
+                android:layout_marginLeft="@dimen/location_margin_left"
+                android:layout_marginStart="@dimen/location_margin_left"
+                android:orientation="vertical">
+
+                <ImageView
+                    android:id="@+id/fire"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:background="@android:color/transparent"
+                    android:layout_marginBottom="@dimen/location_img_margin_bottom"
+                    android:contentDescription="@string/fire_image"
+                    android:src="@drawable/fire" />
+
+                <Chronometer
+                    android:id="@+id/showCalories"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:format="0:00kcal"
+                    android:textSize="@dimen/text_size"
+                    android:textStyle="bold" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/road_layout"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_toEndOf="@+id/kcal_layout"
+                android:layout_toRightOf="@+id/kcal_layout"
+                android:layout_marginLeft="@dimen/location_margin_left"
+                android:layout_marginStart="@dimen/location_margin_left"
+                android:orientation="vertical">
+
+                <ImageView
+                    android:id="@+id/road"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:background="@android:color/transparent"
+                    android:contentDescription="@string/road_image"
+                    android:layout_marginBottom="@dimen/location_img_margin_bottom"
+                    android:src="@drawable/road" />
+
+                <Chronometer
+                    android:id="@+id/showDistance"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:format="0:00m"
+                    android:textSize="@dimen/text_size"
+                    android:textStyle="bold" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/speed_layout"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_toEndOf="@+id/road_layout"
+                android:layout_toRightOf="@+id/road_layout"
+                android:layout_marginLeft="@dimen/location_margin_left"
+                android:layout_marginStart="@dimen/location_margin_left"
+                android:orientation="vertical">
+
+                <ImageView
+                    android:id="@+id/speed"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:background="@android:color/transparent"
+                    android:contentDescription="@string/speed_image"
+                    android:layout_marginBottom="@dimen/location_img_margin_bottom"
+                    android:src="@drawable/speed" />
+
+                <Chronometer
+                    android:id="@+id/showVelocity"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:format="0:00m/s"
+                    android:textSize="@dimen/text_size"
+                    android:textStyle="bold" />
+            </LinearLayout>
+
+
+
+            <LinearLayout
+                android:id="@+id/speedmeter_layout"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_toEndOf="@+id/speed_layout"
+                android:layout_toRightOf="@+id/speed_layout"
+                android:layout_marginLeft="@dimen/location_margin_left"
+                android:layout_marginStart="@dimen/location_margin_left"
+                android:orientation="vertical">
+
+                <ImageView
+                    android:id="@+id/avg_speed_nobg_full_chronometer"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="@dimen/location_img_margin_bottom"
+                    android:background="@android:color/transparent"
+                    android:contentDescription="@string/avg_speed_image"
+                    android:src="@drawable/speedmeter" />
+
+                <Chronometer
+                    android:id="@+id/showVelocityAvg"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:format="0:00m/s"
+                    android:textSize="@dimen/text_size"
+                    android:textStyle="bold" />
+            </LinearLayout>
+     </RelativeLayout>
+    </RelativeLayout>
+</RelativeLayout>
