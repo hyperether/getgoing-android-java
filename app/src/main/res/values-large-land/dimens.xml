@@ -1,0 +1,42 @@
+<resources>
+    <!-- Default screen margins, per the Android Design guidelines. -->
+    <dimen name="activity_horizontal_margin">16dp</dimen>
+    <dimen name="activity_vertical_margin">55dp</dimen>
+    <dimen name="location_horizontal_margin">16dp</dimen>
+    <dimen name="text_size">20sp</dimen>
+    <dimen name="button_text_size">40sp</dimen>
+
+    <dimen name="spinner_vertical_margin">150dp</dimen>
+    <dimen name="spinner_horizontal_margin">50dp</dimen>
+
+    <!-- Activity settings -->
+    <dimen name="settings_layout_margin">20dp</dimen>
+    <dimen name="settings_layout_margin_top">10dp</dimen>
+    <dimen name="settings_txt_margin_left">30dp</dimen>
+    <dimen name="settings_edit_margin_left">30dp</dimen>
+    <dimen name="settings_spinner_width">160dp</dimen>
+    <dimen name="settings_weight_layout_margin">30dp</dimen>
+    <dimen name="settings_age_layout_margin">40dp</dimen>
+    <dimen name="settings_txt_age_margin_left">50dp</dimen>
+    <dimen name="settings_layout_margin_left_right">10dp</dimen>
+    <dimen name="settings_accept_button_size">23sp</dimen>
+    <dimen name="settings_text_size">21sp</dimen>
+    <dimen name="settings_arrow_margin_right">0dp</dimen>
+    <dimen name="settings_beam_scale_width">65dp</dimen>
+    <dimen name="settings_beam_scale_height">74dp</dimen>
+    <dimen name="settings_sandglass_width">43dp</dimen>
+    <dimen name="settings_sandglass_height">65dp</dimen>
+    <dimen name="settings_measure_width">65dp</dimen>
+    <dimen name="settings_measure_height">79dp</dimen>
+    <dimen name="settings_arrow_width">57dp</dimen>
+    <dimen name="settings_arrow_height">50dp</dimen>
+    <dimen name="settings_edit_size">50dp</dimen>
+    <dimen name="settings_btn_padding_bottom_top">5dp</dimen>
+    <dimen name="settings_btn_padding_left_right">40dp</dimen>
+
+    <dimen name="accept_vertical_margin">400dp</dimen>
+    <dimen name="date_padding_land">35dp</dimen>
+    <dimen name="element_padding_land">60dp</dimen>
+    <dimen name="element_text_size">30sp</dimen>
+
+</resources>

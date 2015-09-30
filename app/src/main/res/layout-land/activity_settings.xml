@@ -18,12 +18,12 @@
 
         <ImageView
             android:id="@+id/measure_image"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="@dimen/settings_measure_width"
+            android:layout_height="@dimen/settings_measure_height"
             android:layout_alignParentLeft="true"
             android:layout_alignParentStart="true"
-            android:layout_marginLeft="@dimen/settings_weigth_layout_margin"
-            android:layout_marginStart="@dimen/settings_weigth_layout_margin"
+            android:layout_marginLeft="@dimen/settings_weight_layout_margin"
+            android:layout_marginStart="@dimen/settings_weight_layout_margin"
             android:background="@android:color/transparent"
             android:contentDescription="@string/measure_image"
             android:src="@drawable/measure" />
@@ -48,8 +48,8 @@
             android:layout_alignParentEnd="true"
             android:layout_alignParentRight="true"
             android:layout_centerVertical="true"
-            android:layout_marginEnd="@dimen/settings_weigth_layout_margin"
-            android:layout_marginRight="@dimen/settings_weigth_layout_margin"
+            android:layout_marginEnd="@dimen/settings_weight_layout_margin"
+            android:layout_marginRight="@dimen/settings_weight_layout_margin"
             android:prompt="@string/metric_spinner" />
     </RelativeLayout>
 
@@ -75,13 +75,13 @@
 
         <ImageView
             android:id="@+id/weight_image"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="@dimen/settings_beam_scale_width"
+            android:layout_height="@dimen/settings_beam_scale_height"
             android:layout_alignParentLeft="true"
             android:layout_alignParentStart="true"
             android:layout_gravity="center_vertical"
-            android:layout_marginLeft="@dimen/settings_weigth_layout_margin"
-            android:layout_marginStart="@dimen/settings_weigth_layout_margin"
+            android:layout_marginLeft="@dimen/settings_weight_layout_margin"
+            android:layout_marginStart="@dimen/settings_weight_layout_margin"
             android:background="@android:color/transparent"
             android:contentDescription="@string/teg_image"
             android:src="@drawable/beam_scale" />
@@ -101,8 +101,8 @@
 
         <EditText
             android:id="@+id/edit_weight"
-            android:layout_width="50dp"
-            android:layout_height="50dp"
+            android:layout_width="@dimen/settings_edit_size"
+            android:layout_height="@dimen/settings_edit_size"
             android:layout_centerVertical="true"
             android:layout_marginEnd="@dimen/settings_edit_margin_left"
             android:layout_marginRight="@dimen/settings_edit_margin_left"
@@ -113,8 +113,8 @@
 
         <ImageButton
             android:id="@+id/weight_picker_up"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="@dimen/settings_arrow_width"
+            android:layout_height="@dimen/settings_arrow_height"
             android:layout_centerVertical="true"
             android:layout_marginEnd="@dimen/settings_arrow_margin_right"
             android:layout_marginRight="@dimen/settings_arrow_margin_right"
@@ -126,13 +126,13 @@
 
         <ImageButton
             android:id="@+id/weight_picker_down"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="@dimen/settings_arrow_width"
+            android:layout_height="@dimen/settings_arrow_height"
             android:layout_alignParentEnd="true"
             android:layout_alignParentRight="true"
             android:layout_centerVertical="true"
-            android:layout_marginEnd="@dimen/settings_weigth_layout_margin"
-            android:layout_marginRight="@dimen/settings_weigth_layout_margin"
+            android:layout_marginEnd="@dimen/settings_weight_layout_margin"
+            android:layout_marginRight="@dimen/settings_weight_layout_margin"
             android:background="@android:color/transparent"
             android:contentDescription="@string/settings_img_down"
             android:src="@drawable/selector_arrow_down" />
@@ -142,13 +142,13 @@
         android:id="@+id/age_layout"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="@dimen/settings_layout_margin"
+        android:layout_marginBottom="@dimen/settings_layout_margin_top"
         android:layout_marginTop="@dimen/settings_layout_margin_top">
 
         <ImageView
             android:id="@+id/age_image"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="@dimen/settings_sandglass_width"
+            android:layout_height="@dimen/settings_sandglass_height"
             android:layout_alignParentLeft="true"
             android:layout_alignParentStart="true"
             android:layout_centerVertical="true"
@@ -173,8 +173,8 @@
 
         <EditText
             android:id="@+id/edit_age"
-            android:layout_width="50dp"
-            android:layout_height="50dp"
+            android:layout_width="@dimen/settings_edit_size"
+            android:layout_height="@dimen/settings_edit_size"
             android:layout_centerVertical="true"
             android:layout_marginEnd="@dimen/settings_edit_margin_left"
             android:layout_marginRight="@dimen/settings_edit_margin_left"
@@ -185,8 +185,8 @@
 
         <ImageButton
             android:id="@+id/age_picker_up"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="@dimen/settings_arrow_width"
+            android:layout_height="@dimen/settings_arrow_height"
             android:layout_centerVertical="true"
             android:layout_marginEnd="@dimen/settings_arrow_margin_right"
             android:layout_marginRight="@dimen/settings_arrow_margin_right"
@@ -198,13 +198,13 @@
 
         <ImageButton
             android:id="@+id/age_picker_down"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="@dimen/settings_arrow_width"
+            android:layout_height="@dimen/settings_arrow_height"
             android:layout_alignParentEnd="true"
             android:layout_alignParentRight="true"
             android:layout_centerVertical="true"
-            android:layout_marginEnd="@dimen/settings_weigth_layout_margin"
-            android:layout_marginRight="@dimen/settings_weigth_layout_margin"
+            android:layout_marginEnd="@dimen/settings_weight_layout_margin"
+            android:layout_marginRight="@dimen/settings_weight_layout_margin"
             android:background="@android:color/transparent"
             android:contentDescription="@string/settings_img_down"
             android:src="@drawable/selector_arrow_down" />
@@ -226,10 +226,10 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="@dimen/settings_layout_margin"
         android:background="@color/settings_btn_accept_bgd"
-        android:paddingBottom="20dp"
-        android:paddingLeft="60dp"
-        android:paddingRight="60dp"
-        android:paddingTop="20dp"
+        android:paddingBottom="@dimen/settings_btn_padding_bottom_top"
+        android:paddingLeft="@dimen/settings_btn_padding_left_right"
+        android:paddingRight="@dimen/settings_btn_padding_left_right"
+        android:paddingTop="@dimen/settings_btn_padding_bottom_top"
         android:text="@string/button_accept"
         android:textColor="@color/settings_btn_accept_font"
         android:textSize="@dimen/settings_accept_button_size" />

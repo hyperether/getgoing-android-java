@@ -15,10 +15,22 @@
     <dimen name="settings_layout_margin_top">10dp</dimen>
     <dimen name="settings_txt_margin_left">50dp</dimen>
     <dimen name="settings_edit_margin_left">50dp</dimen>
-    <dimen name="settings_weigth_layout_margin">68dp</dimen>
+    <dimen name="settings_weight_layout_margin">68dp</dimen>
     <dimen name="settings_age_layout_margin">78dp</dimen>
     <dimen name="settings_layout_margin_left_right">40dp</dimen>
     <dimen name="settings_horizontal_margin">80dp</dimen>
+    <dimen name="settings_beam_scale_width">75dp</dimen>
+    <dimen name="settings_beam_scale_height">85dp</dimen>
+    <dimen name="settings_sandglass_width">49dp</dimen>
+    <dimen name="settings_sandglass_height">75dp</dimen>
+    <dimen name="settings_measure_width">75dp</dimen>
+    <dimen name="settings_measure_height">91dp</dimen>
+    <dimen name="settings_arrow_width">66dp</dimen>
+    <dimen name="settings_arrow_height">58dp</dimen>
+    <dimen name="settings_edit_size">50dp</dimen>
+    <dimen name="settings_btn_padding_bottom_top">15dp</dimen>
+    <dimen name="settings_btn_padding_left_right">50dp</dimen>
+
     <dimen name="accept_vertical_margin">400dp</dimen>
     <dimen name="date_padding_land">35dp</dimen>
     <dimen name="element_padding_land">60dp</dimen>

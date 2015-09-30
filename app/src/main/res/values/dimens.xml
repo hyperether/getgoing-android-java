@@ -35,7 +35,7 @@
     <!-- Activity settings -->
     <dimen name="settings_layout_margin">20dp</dimen>
     <dimen name="settings_layout_margin_top">10dp</dimen>
-    <dimen name="settings_weigth_layout_margin">60dp</dimen>
+    <dimen name="settings_weight_layout_margin">60dp</dimen>
     <dimen name="settings_txt_margin_left">20dp</dimen>
     <dimen name="settings_txt_age_margin_left">30dp</dimen>
     <dimen name="settings_edit_margin_left">25dp</dimen>
