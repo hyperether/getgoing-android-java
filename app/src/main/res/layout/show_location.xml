@@ -12,9 +12,11 @@
         class="com.google.android.gms.maps.MapFragment"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
+        android:layout_above="@+id/data_layout"
         android:layout_alignParentTop="true" />
 
     <RelativeLayout
+        android:id="@+id/data_layout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true">
@@ -55,8 +57,6 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_centerHorizontal="true"
-                android:layout_toLeftOf="@+id/refresh_button"
-                android:layout_toStartOf="@+id/refresh_button"
                 android:background="@android:color/transparent"
                 android:drawableTop="@drawable/start"
                 android:visibility="invisible" />

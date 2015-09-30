@@ -25,8 +25,8 @@
             android:layout_height="fill_parent"
             android:layout_weight="1"
             android:background="@android:color/transparent"
-            android:drawableLeft="@drawable/start_pressed"
-            android:drawableStart="@drawable/start_pressed"/>
+            android:drawableLeft="@drawable/save"
+            android:drawableStart="@drawable/save"/>
 
         <Button
             android:id="@+id/end_button"
@@ -34,8 +34,8 @@
             android:layout_height="fill_parent"
             android:layout_weight="1"
             android:background="@android:color/transparent"
-            android:drawableLeft="@drawable/stop_pressed"
-            android:drawableStart="@drawable/stop_pressed"
+            android:drawableLeft="@drawable/start"
+            android:drawableStart="@drawable/start"
             android:visibility="gone"/>
 
         <Button
@@ -44,8 +44,8 @@
             android:layout_height="fill_parent"
             android:layout_weight="1"
             android:background="@android:color/transparent"
-            android:drawableLeft="@drawable/save_pressed"
-            android:drawableStart="@drawable/save_pressed"/>
+            android:drawableLeft="@drawable/start"
+            android:drawableStart="@drawable/start"/>
 
         <Button
             android:id="@+id/refresh_button"
@@ -53,8 +53,8 @@
             android:layout_height="fill_parent"
             android:layout_weight="1"
             android:background="@android:color/transparent"
-            android:drawableLeft="@drawable/reset_pressed"
-            android:drawableStart="@drawable/reset_pressed"/>
+            android:drawableLeft="@drawable/refresh"
+            android:drawableStart="@drawable/refresh"/>
     </LinearLayout>
 
     <LinearLayout
