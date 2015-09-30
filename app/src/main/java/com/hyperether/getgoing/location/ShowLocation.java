@@ -21,10 +21,13 @@ import android.widget.Chronometer;
 import android.widget.Toast;
 
 import com.google.android.gms.common.ConnectionResult;
-import com.google.android.gms.common.GooglePlayServicesClient;
 import com.google.android.gms.common.GooglePlayServicesUtil;
-import com.google.android.gms.location.LocationClient;
+import com.google.android.gms.common.api.GoogleApiClient;
+import com.google.android.gms.common.api.GoogleApiClient.ConnectionCallbacks;
+import com.google.android.gms.common.api.GoogleApiClient.OnConnectionFailedListener;
+import com.google.android.gms.drive.Drive;
 import com.google.android.gms.location.LocationRequest;
+import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapFragment;
@@ -50,8 +53,8 @@ import java.util.Timer;
 import java.util.TimerTask;
 
 public class ShowLocation extends Activity implements
-        GooglePlayServicesClient.ConnectionCallbacks,
-        GooglePlayServicesClient.OnConnectionFailedListener,
+        ConnectionCallbacks,
+        OnConnectionFailedListener,
         com.google.android.gms.location.LocationListener {
 
     // Global constants
@@ -85,7 +88,8 @@ public class ShowLocation extends Activity implements
 
     private final ConnectionResult connectionResult = new ConnectionResult(0, null);
 
-    private LocationClient mLocationClient;
+    private GoogleApiClient mGoogleApiClient;
+    //private LocationClient mLocationClient;
     private boolean connectionEstablished = false;
 
     private boolean mUpdatesRequested;
@@ -170,7 +174,15 @@ public class ShowLocation extends Activity implements
          * Create a new location client, using the enclosing class to
 		 * handle callbacks.
 		 */
-        mLocationClient = new LocationClient(this, this, this);
+        //mLocationClient = new LocationClient(this, this, this);
+
+        // Create a GoogleApiClient instance
+        mGoogleApiClient = new GoogleApiClient.Builder(this)
+                .addApi(Drive.API)
+                .addScope(Drive.SCOPE_FILE)
+                .addConnectionCallbacks(this)
+                .addOnConnectionFailedListener(this)
+                .build();
 
         cbDataFrameLocal = new CBDataFrame();
         Bundle b = getIntent().getExtras();
@@ -202,7 +214,8 @@ public class ShowLocation extends Activity implements
     protected void onStart() {
         super.onStart();
         // Connect the client.
-        mLocationClient.connect();
+        //mLocationClient.connect();
+        mGoogleApiClient.connect();
     }
 
     /*
@@ -211,14 +224,15 @@ public class ShowLocation extends Activity implements
     @Override
     protected void onStop() {
         // If the client is connected
-        if (mLocationClient.isConnected()) {
+        if (mGoogleApiClient.isConnected()) {
             stopUpdates();
         }
         /*
          * After disconnect() is called, the client is
 		 * considered "dead".
 		 */
-        mLocationClient.disconnect();
+        //mLocationClient.disconnect();
+        mGoogleApiClient.disconnect();
         datasource.close();
         super.onStop();
     }
@@ -558,7 +572,7 @@ public class ShowLocation extends Activity implements
                 switch (resultCode) {
                     case Activity.RESULT_OK:
                 /*
-				 * Try the request again
+                 * Try the request again
 				 */
                         break;
                 }
@@ -642,7 +656,8 @@ public class ShowLocation extends Activity implements
             connectionEstablished = true;
 
             // Get the current location
-            Location currentLocation = mLocationClient.getLastLocation();
+            Location currentLocation =
+                    LocationServices.FusedLocationApi.getLastLocation(mGoogleApiClient);
             if (currentLocation != null)
                 showLocation(currentLocation.getLatitude(), currentLocation.getLongitude());
 
@@ -657,11 +672,18 @@ public class ShowLocation extends Activity implements
     }
 
     @Override
-    public void onDisconnected() {
+    public void onConnectionSuspended(int i) {
         // Display the connection status
         Toast.makeText(this, "Disconnected. Please re-connect.", Toast.LENGTH_SHORT).show();
         connectionEstablished = false;
     }
+
+//    @Override
+//    public void onDisconnected() {
+//        // Display the connection status
+//        Toast.makeText(this, "Disconnected. Please re-connect.", Toast.LENGTH_SHORT).show();
+//        connectionEstablished = false;
+//    }
 
     @Override
     public void onLocationChanged(Location currentLocation) {
@@ -728,7 +750,9 @@ public class ShowLocation extends Activity implements
         mEditor.commit();
 
         if (connectionEstablished) {
-            mLocationClient.requestLocationUpdates(mLocationRequest, this);
+//            mLocationClient.requestLocationUpdates(mLocationRequest, this);
+            LocationServices.FusedLocationApi
+                    .requestLocationUpdates(mGoogleApiClient, mLocationRequest, this);
         }
     }
 
@@ -741,7 +765,9 @@ public class ShowLocation extends Activity implements
         mEditor.commit();
 
         if (connectionEstablished) {
-            mLocationClient.removeLocationUpdates(this);
+//            mLocationClient.removeLocationUpdates(this);
+            LocationServices.FusedLocationApi.requestLocationUpdates(mGoogleApiClient,
+                    mLocationRequest, this);
         }
     }
 
