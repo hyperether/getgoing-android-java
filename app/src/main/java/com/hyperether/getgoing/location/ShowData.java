@@ -198,13 +198,13 @@ public class ShowData extends ListActivity {
 
             switch (route.getActivity_id()) {
                 case 1:
-                    imageViewAction.setImageResource(R.drawable.walk);
+                    imageViewAction.setImageResource(R.drawable.statistic_walk);
                     break;
                 case 2:
-                    imageViewAction.setImageResource(R.drawable.run);
+                    imageViewAction.setImageResource(R.drawable.statistic_run);
                     break;
                 case 3:
-                    imageViewAction.setImageResource(R.drawable.ride);
+                    imageViewAction.setImageResource(R.drawable.statistic_ride);
                 default:
                     break;
             }
