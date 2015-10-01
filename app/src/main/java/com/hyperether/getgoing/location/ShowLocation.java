@@ -859,13 +859,13 @@ public class ShowLocation extends Activity implements
     }
 
     private void initLayoutDinamically() {
-        button_start = (Button) findViewById(R.id.save_button);
+        button_start = (Button) findViewById(R.id.start_button);
         button_start.setOnClickListener(mButtonStartListener);
         button_pause = (Button) findViewById(R.id.end_button);
         button_pause.setOnClickListener(mButtonPauseListener);
         button_rst = (Button) findViewById(R.id.refresh_button);
         button_rst.setOnClickListener(mButtonResetListener);
-        button_save = (Button) findViewById(R.id.start_button);
+        button_save = (Button) findViewById(R.id.save_button);
         button_save.setOnClickListener(mButtonSaveListener);
 
         showTime = (Chronometer) findViewById(R.id.showTime);
@@ -874,18 +874,18 @@ public class ShowLocation extends Activity implements
         showVelocity = (Chronometer) findViewById(R.id.showVelocity);
         showVelocityAvg = (Chronometer) findViewById(R.id.showVelocityAvg);
 
-        DisplayMetrics metrics = new DisplayMetrics();
-        getWindowManager().getDefaultDisplay().getMetrics(metrics);
-        if (metrics.widthPixels < metrics.heightPixels) {
-            button_start.setWidth(metrics.widthPixels / 3);
-            button_pause.setWidth(metrics.widthPixels / 3);
-            button_rst.setWidth(metrics.widthPixels / 3);
-            button_save.setWidth(metrics.widthPixels / 3);
-        } else {
-            button_start.setHeight(metrics.heightPixels / 3);
-            button_pause.setHeight(metrics.heightPixels / 3);
-            button_rst.setHeight(metrics.heightPixels / 3);
-            button_save.setHeight(metrics.heightPixels / 3);
-        }
+//        DisplayMetrics metrics = new DisplayMetrics();
+//        getWindowManager().getDefaultDisplay().getMetrics(metrics);
+//        if (metrics.widthPixels < metrics.heightPixels) {
+//            button_start.setWidth(metrics.widthPixels / 3);
+//            button_pause.setWidth(metrics.widthPixels / 3);
+//            button_rst.setWidth(metrics.widthPixels / 3);
+//            button_save.setWidth(metrics.widthPixels / 3);
+//        } else {
+//            button_start.setHeight(metrics.heightPixels / 3);
+//            button_pause.setHeight(metrics.heightPixels / 3);
+//            button_rst.setHeight(metrics.heightPixels / 3);
+//            button_save.setHeight(metrics.heightPixels / 3);
+//        }
     }
 }
