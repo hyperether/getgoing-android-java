@@ -72,7 +72,6 @@
         android:layout_marginBottom="@dimen/settings_layout_margin"
         android:layout_marginTop="@dimen/settings_layout_margin_top">
 
-
         <ImageView
             android:id="@+id/weight_image"
             android:layout_width="@dimen/settings_beam_scale_width"
@@ -225,12 +224,6 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="@dimen/settings_layout_margin"
-        android:background="@color/settings_btn_accept_bgd"
-        android:paddingBottom="@dimen/settings_btn_padding_bottom_top"
-        android:paddingLeft="@dimen/settings_btn_padding_left_right"
-        android:paddingRight="@dimen/settings_btn_padding_left_right"
-        android:paddingTop="@dimen/settings_btn_padding_bottom_top"
-        android:text="@string/button_accept"
-        android:textColor="@color/settings_btn_accept_font"
-        android:textSize="@dimen/settings_accept_button_size" />
+        android:background="@android:color/transparent"
+        android:drawableTop="@drawable/accept_pressed_btn" />
 </LinearLayout>
