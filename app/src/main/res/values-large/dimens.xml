@@ -6,7 +6,7 @@
     <dimen name="location_horizontal_margin">16dp</dimen>
     <dimen name="text_size">20sp</dimen>
     <dimen name="button_text_size">40sp</dimen>
-       <dimen name="settings_vertical_margin">50dp</dimen>
+    <dimen name="settings_vertical_margin">50dp</dimen>
     <dimen name="settings_horizontal_margin">80dp</dimen>
     <dimen name="spinner_vertical_margin">150dp</dimen>
     <dimen name="spinner_vertical_margin_port">65dp</dimen>
@@ -15,12 +15,12 @@
     <dimen name="accept_vertical_margin_port">150dp</dimen>
 
     <!-- List element -->
-    <dimen name="date_padding">20dp</dimen>
+    <dimen name="date_padding">10dp</dimen>
     <dimen name="date_padding_land">20dp</dimen>
-    <dimen name="element_padding">35dp</dimen>
+    <dimen name="element_padding">20dp</dimen>
     <dimen name="element_padding_land">55dp</dimen>
-    <dimen name="element_text_size">20sp</dimen>
-    <dimen name="element_energy_text_size">28sp</dimen>
+    <dimen name="element_text_size">18sp</dimen>
+    <dimen name="element_energy_text_size">23sp</dimen>
     <dimen name="element_text_size_land">25sp</dimen>
 
     <dimen name="location_margin_left">15dp</dimen>
