@@ -31,6 +31,8 @@
     <dimen name="location_text_size">16sp</dimen>
     <dimen name="location_padding2">60dp</dimen>
     <dimen name="location_margins">60dp</dimen>
+    <dimen name="location_img_padding">10dp</dimen>
+    <dimen name="location_img_margin_left">15dp</dimen>
 
     <!-- Activity settings -->
     <dimen name="settings_layout_margin">20dp</dimen>
