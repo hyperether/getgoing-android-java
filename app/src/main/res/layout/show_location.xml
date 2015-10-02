@@ -42,7 +42,7 @@
                 android:layout_alignParentLeft="true"
                 android:layout_alignParentStart="true"
                 android:background="@android:color/transparent"
-                android:drawableTop="@drawable/save" />
+                android:drawableTop="@drawable/save_pressed_btn" />
 
             <Button
                 android:id="@+id/start_button"
@@ -50,7 +50,7 @@
                 android:layout_height="wrap_content"
                 android:layout_centerHorizontal="true"
                 android:background="@android:color/transparent"
-                android:drawableTop="@drawable/start" />
+                android:drawableTop="@drawable/start_pressed_btn" />
 
             <Button
                 android:id="@+id/end_button"
@@ -58,7 +58,7 @@
                 android:layout_height="wrap_content"
                 android:layout_centerHorizontal="true"
                 android:background="@android:color/transparent"
-                android:drawableTop="@drawable/start"
+                android:drawableTop="@drawable/stop_pressed_btn"
                 android:visibility="invisible" />
 
             <Button
@@ -68,7 +68,7 @@
                 android:layout_alignParentEnd="true"
                 android:layout_alignParentRight="true"
                 android:background="@android:color/transparent"
-                android:drawableTop="@drawable/refresh" />
+                android:drawableTop="@drawable/refresh_pressed_btn" />
         </RelativeLayout>
 
         <View
@@ -85,7 +85,6 @@
             android:layout_marginBottom="@dimen/location_buttons_layout_margin"
             android:layout_marginTop="@dimen/location_buttons_layout_margin"
             android:gravity="center_horizontal">
-
 
             <LinearLayout
                 android:id="@+id/clock_layout"
