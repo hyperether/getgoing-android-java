@@ -114,7 +114,7 @@
             android:layout_toStartOf="@+id/weight_picker_down"
             android:background="@android:color/transparent"
             android:contentDescription="@string/settings_img_up"
-            android:src="@drawable/selector_arrow_up" />
+            android:src="@drawable/button_arrow_up" />
 
         <ImageButton
             android:id="@+id/weight_picker_down"
@@ -125,7 +125,7 @@
             android:layout_centerVertical="true"
             android:background="@android:color/transparent"
             android:contentDescription="@string/settings_img_down"
-            android:src="@drawable/selector_arrow_down" />
+            android:src="@drawable/button_arrow_down" />
     </RelativeLayout>
 
     <RelativeLayout
@@ -184,7 +184,7 @@
             android:layout_toStartOf="@+id/age_picker_down"
             android:background="@android:color/transparent"
             android:contentDescription="@string/settings_img_up"
-            android:src="@drawable/selector_arrow_up" />
+            android:src="@drawable/button_arrow_up" />
 
         <ImageButton
             android:id="@+id/age_picker_down"
@@ -195,7 +195,7 @@
             android:layout_centerVertical="true"
             android:background="@android:color/transparent"
             android:contentDescription="@string/settings_img_down"
-            android:src="@drawable/selector_arrow_down" />
+            android:src="@drawable/button_arrow_down" />
     </RelativeLayout>
 
     <View
@@ -219,5 +219,5 @@
         android:layout_centerHorizontal="true"
         android:layout_margin="20dp"
         android:background="@android:color/transparent"
-        android:drawableTop="@drawable/accept_pressed_btn" />
+        android:drawableTop="@drawable/button_accept" />
 </RelativeLayout>

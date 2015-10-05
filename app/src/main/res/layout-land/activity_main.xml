@@ -13,7 +13,7 @@
         android:background="@android:color/transparent"
         android:contentDescription="@string/app_name"
         android:scaleType="fitXY"
-        android:src="@drawable/button1_custom" />
+        android:src="@drawable/button_walk" />
 
     <ImageButton
         android:id="@+id/run_button"
@@ -24,7 +24,7 @@
         android:background="@android:color/transparent"
         android:contentDescription="@string/app_name"
         android:scaleType="fitXY"
-        android:src="@drawable/button2_custom" />
+        android:src="@drawable/button_run" />
 
     <ImageButton
         android:id="@+id/ride_button"
@@ -35,7 +35,7 @@
         android:background="@android:color/transparent"
         android:contentDescription="@string/app_name"
         android:scaleType="fitXY"
-        android:src="@drawable/button3_custom" />
+        android:src="@drawable/button_ride" />
 </LinearLayout>
 
 

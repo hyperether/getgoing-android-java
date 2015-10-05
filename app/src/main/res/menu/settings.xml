@@ -3,6 +3,7 @@
 
     <item
         android:id="@+id/action_reset_settings"
+        android:icon="@drawable/button_reset_action_bar"
         android:orderInCategory="100"
         android:showAsAction="ifRoom"
         android:title="@string/action_reset_settings"/>
