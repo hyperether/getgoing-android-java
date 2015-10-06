@@ -76,7 +76,7 @@
             android:background="@android:color/transparent"
             android:contentDescription="@string/app_name"
             android:paddingRight="@dimen/element_padding"
-            android:src="@drawable/reset" />
+            android:src="@drawable/button_reset_statistic" />
     </RelativeLayout>
 
     <View
