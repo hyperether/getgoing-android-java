@@ -4,7 +4,6 @@ import android.app.Activity;
 import android.app.Dialog;
 import android.app.DialogFragment;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentSender;
 import android.content.SharedPreferences;
@@ -13,7 +12,6 @@ import android.graphics.Color;
 import android.location.Location;
 import android.os.Bundle;
 import android.os.Parcelable;
-import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -26,7 +24,6 @@ import com.google.android.gms.common.GooglePlayServicesUtil;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.common.api.GoogleApiClient.ConnectionCallbacks;
 import com.google.android.gms.common.api.GoogleApiClient.OnConnectionFailedListener;
-import com.google.android.gms.drive.Drive;
 import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.maps.CameraUpdateFactory;
@@ -181,8 +178,7 @@ public class ShowLocation extends Activity implements
 
         // Create a GoogleApiClient instance
         mGoogleApiClient = new GoogleApiClient.Builder(this)
-                .addApi(Drive.API)
-                .addScope(Drive.SCOPE_FILE)
+                .addApi(LocationServices.API)
                 .addConnectionCallbacks(this)
                 .addOnConnectionFailedListener(this)
                 .build();
@@ -643,7 +639,6 @@ public class ShowLocation extends Activity implements
     }
 
 
-
     @Override
     public void onConnected(Bundle connectionHint) {
         // Display the connection status
@@ -692,8 +687,8 @@ public class ShowLocation extends Activity implements
         double dLat, dLong;
 
         mCurrentLocation = currentLocation;
-		/* alternativni pristup
-		if (connectionEstablished) {
+        /* alternativni pristup
+        if (connectionEstablished) {
 			mCurrentLocation = mLocationClient.getLastLocation();
 			if(mCurrentLocation != null)
 			{
