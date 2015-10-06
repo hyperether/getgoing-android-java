@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.app.Dialog;
 import android.app.DialogFragment;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentSender;
 import android.content.SharedPreferences;
@@ -141,6 +142,8 @@ public class ShowLocation extends Activity implements
     private SimpleDateFormat sdf;
     private String currentDateandTime;
     private boolean timeFlg = true;
+    private boolean mResolvingError = false;
+    private static final int REQUEST_RESOLVE_ERROR = 1001;
 
     LocationManagerHandler locManager;
 
@@ -215,7 +218,9 @@ public class ShowLocation extends Activity implements
         super.onStart();
         // Connect the client.
         //mLocationClient.connect();
-        mGoogleApiClient.connect();
+        if (!mResolvingError) {
+            mGoogleApiClient.connect();
+        }
     }
 
     /*
@@ -387,6 +392,26 @@ public class ShowLocation extends Activity implements
         firstPass = true;
     }
 
+    @Override
+    public void onConnectionFailed(ConnectionResult connectionResult) {
+        if (mResolvingError) {
+            // Already attempting to resolve an error.
+            return;
+        } else if (connectionResult.hasResolution()) {
+            try {
+                mResolvingError = true;
+                connectionResult.startResolutionForResult(this, REQUEST_RESOLVE_ERROR);
+            } catch (IntentSender.SendIntentException e) {
+                // There was an error with the resolution intent. Try again.
+                mGoogleApiClient.connect();
+            }
+        } else {
+            // Show dialog using GoogleApiAvailability.getErrorDialog()
+            showErrorDialog(connectionResult.getErrorCode());
+            mResolvingError = true;
+        }
+    }
+
     class RefreshData extends TimerTask {
 
         @Override
@@ -553,6 +578,11 @@ public class ShowLocation extends Activity implements
         public Dialog onCreateDialog(Bundle savedInstanceState) {
             return mDialog;
         }
+
+        @Override
+        public void dismiss() {
+            super.dismiss();
+        }
     }
 
     /*
@@ -612,36 +642,7 @@ public class ShowLocation extends Activity implements
         }
     }
 
-    @Override
-    public void onConnectionFailed(ConnectionResult arg0) {
-		/*
-		 * Google Play services can resolve some errors it detects.
-		 * If the error has a resolution, try sending an Intent to
-		 * start a Google Play services activity that can resolve
-		 * error.
-		 */
-        if (connectionResult.hasResolution()) {
-            try {
-                // Start an Activity that tries to resolve the error
-                connectionResult.startResolutionForResult(
-                        this,
-                        CONNECTION_FAILURE_RESOLUTION_REQUEST);
-				/*
-				 * Thrown if Google Play services canceled the original
-				 * PendingIntent
-				 */
-            } catch (IntentSender.SendIntentException e) {
-                // Log the error
-                e.printStackTrace();
-            }
-        } else {
-			/*
-			 * If no resolution is available, display a dialog to the
-			 * user with the error.
-			 */
-            showErrorDialog(connectionResult.getErrorCode());
-        }
-    }
+
 
     @Override
     public void onConnected(Bundle connectionHint) {
