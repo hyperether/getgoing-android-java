@@ -137,6 +137,7 @@ public class ShowData extends ListActivity {
 
         public class ViewHolder {
             public TextView textDate;
+            public TextView textTime;
             public TextView textEnergy;
             public ImageView imageViewAction;
             public ImageView imageViewDelete;
@@ -150,6 +151,7 @@ public class ShowData extends ListActivity {
         public View getView(int position, View convertView, ViewGroup parent) {
 
             TextView textDate;
+            TextView textTime;
             TextView textEnergy;
             ImageView imageViewAction;
             ImageView imageViewDelete;
@@ -162,11 +164,13 @@ public class ShowData extends ListActivity {
                 ViewHolder holder = new ViewHolder();
 
                 textDate = (TextView) convertView.findViewById(R.id.textDate);
+                textTime = (TextView) convertView.findViewById(R.id.textTime);
                 textEnergy = (TextView) convertView.findViewById(R.id.textEnergy);
                 imageViewAction = (ImageView) convertView.findViewById(R.id.walk_layout);
                 imageViewDelete = (ImageView) convertView.findViewById(R.id.delete_layout);
 
                 holder.textDate = textDate;
+                holder.textTime = textTime;
                 holder.textEnergy = textEnergy;
                 holder.imageViewAction = imageViewAction;
                 holder.imageViewDelete = imageViewDelete;
@@ -180,6 +184,7 @@ public class ShowData extends ListActivity {
                 ViewHolder holder = (ViewHolder) convertView.getTag();
 
                 textDate = holder.textDate;
+                textTime = holder.textTime;
                 textEnergy = holder.textEnergy;
                 imageViewAction = holder.imageViewAction;
                 imageViewDelete = holder.imageViewDelete;
