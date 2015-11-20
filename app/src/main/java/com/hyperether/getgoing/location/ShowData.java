@@ -42,7 +42,7 @@ public class ShowData extends ListActivity {
 
     private void populateListView() {
         adapter = new DbRouteAdapter(ShowData.this);
-        adapter.updateRoutes(routes); // populate adapter with routes
+        adapter.updateRoutes(routes, datasource); // populate adapter with routes
         list = (ListView) findViewById(android.R.id.list);
         list.setAdapter(adapter);
     }

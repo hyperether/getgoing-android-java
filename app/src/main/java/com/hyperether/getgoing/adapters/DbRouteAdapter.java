@@ -14,7 +14,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
-import android.widget.ListView;
 import android.widget.TextView;
 
 import com.hyperether.getgoing.R;
@@ -31,9 +30,6 @@ public class DbRouteAdapter extends BaseAdapter {
     private List<DbRoute> myRoutes = Collections.emptyList();
     private final Context context;
     private GetGoingDataSource datasource;
-    private List<DbRoute> routes;
-    private ListView list;
-    private DbRouteAdapter adapter;
 
     DecimalFormat df = new DecimalFormat("#.##");
     // limiting output values to 8 decimal places
@@ -44,8 +40,9 @@ public class DbRouteAdapter extends BaseAdapter {
         this.context = context;
     }
 
-    public void updateRoutes(List<DbRoute> myRoutes) {
+    public void updateRoutes(List<DbRoute> myRoutes, GetGoingDataSource datasource) {
         this.myRoutes = myRoutes;
+        this.datasource = datasource;
         notifyDataSetChanged();
     }
 
@@ -93,7 +90,6 @@ public class DbRouteAdapter extends BaseAdapter {
         TextView textEnergy;
         ImageView imageViewAction;
         ImageView imageViewDelete;
-
 
         if (convertView == null) {
             convertView = LayoutInflater.from(context)
@@ -183,15 +179,18 @@ public class DbRouteAdapter extends BaseAdapter {
     };
 
     void doPositiveClick(View v) {
-        View listElement = (View) v.getParent();    // getting the list element
-        ViewHolder tmpHolder =
-                (ViewHolder) listElement.getTag();    // get the tag for this element
-        long id = tmpHolder.route_id;        // where the position of this element is stored
+        // getting the list element
+        View listElement = (View) v.getParent();
+        // get the tag for this element
+        ViewHolder tmpHolder = (ViewHolder) listElement.getTag();
+        // where the position of this element is stored
+        long id = tmpHolder.route_id;
 
-        datasource.deleteRouteById(id);  // delete the route with all nodes attached to it
+        // delete the route with all nodes attached to it
+        datasource.deleteRouteById(id);
 
-        routes = datasource.getAllRoutes();  // refresh the route list
-        adapter.updateRoutes(routes);
-        adapter.notifyDataSetChanged();        // redraw the list
+        // refresh the route list
+        myRoutes = datasource.getAllRoutes();
+        notifyDataSetChanged();
     }
 }
