@@ -42,6 +42,9 @@ public class GetGoing extends Activity {
         super.onCreate(savedInstanceState);
         Fabric.with(this, new Crashlytics());
         setContentView(R.layout.activity_main);
+        if (getActionBar() != null) {
+            getActionBar().setTitle("");
+        }
         addButtonListener();
 
         cbDataFrameLocal = new CBDataFrame();
