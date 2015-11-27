@@ -8,6 +8,7 @@ import android.content.Intent;
 import android.content.IntentSender;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
+import android.content.pm.ActivityInfo;
 import android.graphics.Color;
 import android.location.Location;
 import android.os.Bundle;
@@ -204,6 +205,8 @@ public class ShowLocation extends Activity implements
         locManager = new LocationManagerHandler(this);
 
         clearData();
+        // disable rotation
+        setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_NOSENSOR);
     }
 
     /*
@@ -263,6 +266,13 @@ public class ShowLocation extends Activity implements
 
         datasource.open();
         super.onResume();
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        // enable rotation
+        setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_SENSOR);
     }
 
     @Override
