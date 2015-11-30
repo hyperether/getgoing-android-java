@@ -25,7 +25,9 @@
             android:name="com.google.android.maps"
             android:required="true"/>
 
-        <activity android:name=".activity.GetGoingActivity">
+        <activity
+            android:name=".activity.GetGoingActivity"
+            android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
 
@@ -38,7 +40,8 @@
             android:windowSoftInputMode="stateHidden"/>
         <activity
             android:name=".activity.ShowLocationActivity"
-            android:label=""/>
+            android:label=""
+            android:screenOrientation="portrait"/>
         <activity
             android:name=".activity.ShowDataActivity"
             android:configChanges="orientation|keyboardHidden|screenSize"
