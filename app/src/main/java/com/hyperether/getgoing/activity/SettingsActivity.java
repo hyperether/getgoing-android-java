@@ -126,7 +126,9 @@ public class SettingsActivity extends Activity implements OnItemSelectedListener
         if (increase) {
             weight++;
         } else {
-            weight--;
+            if (weight > 0) {
+                weight--;
+            }
         }
         editTextWeight.setText(weight + "");
     }
@@ -141,7 +143,9 @@ public class SettingsActivity extends Activity implements OnItemSelectedListener
         if (increase) {
             age++;
         } else {
-            age--;
+            if (age > 0) {
+                age--;
+            }
         }
         editTextAge.setText(age + "");
     }

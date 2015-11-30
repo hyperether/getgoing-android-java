@@ -42,6 +42,7 @@
         <activity
             android:name=".activity.ShowLocationActivity"
             android:icon="@mipmap/ic_logo"
+            android:theme="@style/NoActionBar"
             android:label=""
             android:screenOrientation="portrait"/>
         <activity
@@ -52,6 +53,7 @@
         <activity
             android:name=".activity.ShowRouteActivity"
             android:icon="@mipmap/ic_logo"
+            android:theme="@style/NoActionBar"
             android:label=""/>
 
         <meta-data
