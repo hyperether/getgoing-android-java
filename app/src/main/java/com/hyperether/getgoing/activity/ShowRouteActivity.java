@@ -1,4 +1,4 @@
-package com.hyperether.getgoing.location;
+package com.hyperether.getgoing.activity;
 
 import android.graphics.Color;
 import android.os.Bundle;
@@ -18,7 +18,7 @@ import com.hyperether.getgoing.db.GetGoingDataSource;
 import java.util.Iterator;
 import java.util.List;
 
-public class ShowRoute extends FragmentActivity {
+public class ShowRouteActivity extends FragmentActivity {
 
     private GoogleMap mMap;
 

@@ -1,4 +1,4 @@
-package com.hyperether.getgoing.location;
+package com.hyperether.getgoing.activity;
 
 import android.app.Activity;
 import android.app.Dialog;
@@ -39,6 +39,8 @@ import com.hyperether.getgoing.data.CBDataFrame;
 import com.hyperether.getgoing.db.DbNode;
 import com.hyperether.getgoing.db.DbRoute;
 import com.hyperether.getgoing.db.GetGoingDataSource;
+import com.hyperether.getgoing.location.KalmanLatLong;
+import com.hyperether.getgoing.location.LocationManagerHandler;
 import com.hyperether.getgoing.util.CaloriesCalculation;
 import com.hyperether.getgoing.util.Conversion;
 
@@ -51,7 +53,7 @@ import java.util.Locale;
 import java.util.Timer;
 import java.util.TimerTask;
 
-public class ShowLocation extends Activity implements
+public class ShowLocationActivity extends Activity implements
         ConnectionCallbacks,
         OnConnectionFailedListener,
         com.google.android.gms.location.LocationListener {
@@ -422,7 +424,7 @@ public class ShowLocation extends Activity implements
 
         @Override
         public void run() {
-            ShowLocation.this.runOnUiThread(new Runnable() {
+            ShowLocationActivity.this.runOnUiThread(new Runnable() {
 
                 @Override
                 public void run() {

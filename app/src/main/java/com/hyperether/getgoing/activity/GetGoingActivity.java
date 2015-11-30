@@ -1,4 +1,4 @@
-package com.hyperether.getgoing;
+package com.hyperether.getgoing.activity;
 
 import android.app.Activity;
 import android.content.Intent;
@@ -10,19 +10,17 @@ import android.view.View;
 import android.widget.ImageButton;
 
 import com.crashlytics.android.Crashlytics;
+import com.hyperether.getgoing.R;
 import com.hyperether.getgoing.data.CBDataFrame;
 import com.hyperether.getgoing.db.DbRoute;
 import com.hyperether.getgoing.db.GetGoingDataSource;
-import com.hyperether.getgoing.location.ShowData;
-import com.hyperether.getgoing.location.ShowLocation;
-import com.hyperether.getgoing.settings.SettingsActivity;
 import com.hyperether.getgoing.util.FragmentDialog;
 
 import io.fabric.sdk.android.Fabric;
 import java.util.ArrayList;
 import java.util.List;
 
-public class GetGoing extends Activity {
+public class GetGoingActivity extends Activity {
     private static final int WALK_ID = 1;
     private static final int RUN_ID = 2;
     private static final int RIDE_ID = 3;
@@ -117,7 +115,7 @@ public class GetGoing extends Activity {
                 FragmentDialog dialog = new FragmentDialog();
                 dialog.show(getFragmentManager(), "Data set empty");
             } else {
-                Intent intent = new Intent(GetGoing.this, ShowData.class);
+                Intent intent = new Intent(GetGoingActivity.this, ShowDataActivity.class);
                 startActivity(intent);
             }
             return true;
@@ -167,7 +165,7 @@ public class GetGoing extends Activity {
     }
 
     private void callSettingsActivity() {
-        Intent intent = new Intent(GetGoing.this, SettingsActivity.class);
+        Intent intent = new Intent(GetGoingActivity.this, SettingsActivity.class);
         intent.putExtra("searchKey", this.cbDataFrameLocal);
         startActivityForResult(intent, RESULT_REQUESTED);
     }
@@ -176,7 +174,7 @@ public class GetGoing extends Activity {
         if (getParametersStatus(this.cbDataFrameLocal)) {
             setMeteringActivityRequested(0);
             this.cbDataFrameLocal.setProfileId(id);
-            Intent intent = new Intent(GetGoing.this, ShowLocation.class);
+            Intent intent = new Intent(GetGoingActivity.this, ShowLocationActivity.class);
             intent.putExtra("searchKey", this.cbDataFrameLocal);
             startActivity(intent);
         } else {

@@ -1,4 +1,4 @@
-package com.hyperether.getgoing.settings;
+package com.hyperether.getgoing.activity;
 
 import android.app.Activity;
 import android.content.Intent;

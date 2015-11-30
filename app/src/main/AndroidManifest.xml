@@ -1,7 +1,6 @@
 <manifest
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.hyperether.getgoing">
-
+    package="com.hyperether.getgoing"
+    xmlns:android="http://schemas.android.com/apk/res/android">
 
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
     <uses-permission android:name="android.permission.INTERNET"/>
@@ -26,15 +25,7 @@
             android:name="com.google.android.maps"
             android:required="true"/>
 
-        <meta-data
-            android:name="com.google.android.maps.v2.API_KEY"
-            android:value="AIzaSyDpq_pRHu1SyXMBgyhikC3vPRtunvPPukI"/>
-
-        <meta-data
-            android:name="com.google.android.gms.version"
-            android:value="@integer/google_play_services_version"/>
-
-        <activity android:name="com.hyperether.getgoing.GetGoing">
+        <activity android:name=".activity.GetGoingActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
 
@@ -42,20 +33,27 @@
             </intent-filter>
         </activity>
         <activity
-            android:name="com.hyperether.getgoing.settings.SettingsActivity"
+            android:name=".activity.SettingsActivity"
             android:label=""
             android:windowSoftInputMode="stateHidden"/>
         <activity
-            android:name="com.hyperether.getgoing.location.ShowLocation"
+            android:name=".activity.ShowLocationActivity"
             android:label=""/>
         <activity
-            android:name="com.hyperether.getgoing.location.ShowData"
+            android:name=".activity.ShowDataActivity"
             android:configChanges="orientation|keyboardHidden|screenSize"
             android:label=""/>
         <activity
-            android:name="com.hyperether.getgoing.location.ShowRoute"
+            android:name=".activity.ShowRouteActivity"
             android:configChanges="orientation|keyboardHidden|screenSize"
             android:label=""/>
+
+        <meta-data
+            android:name="com.google.android.maps.v2.API_KEY"
+            android:value="AIzaSyDpq_pRHu1SyXMBgyhikC3vPRtunvPPukI"/>
+        <meta-data
+            android:name="com.google.android.gms.version"
+            android:value="@integer/google_play_services_version"/>
         <meta-data
             android:name="io.fabric.ApiKey"
             android:value="81fce5a0d04d64cd1c08c99cef619efaca994e50"/>
