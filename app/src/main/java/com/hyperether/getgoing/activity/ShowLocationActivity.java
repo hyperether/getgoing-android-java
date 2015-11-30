@@ -207,8 +207,6 @@ public class ShowLocationActivity extends Activity implements
         locManager = new LocationManagerHandler(this);
 
         clearData();
-        // disable rotation
-        setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_NOSENSOR);
     }
 
     /*
@@ -273,8 +271,6 @@ public class ShowLocationActivity extends Activity implements
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        // enable rotation
-        setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_SENSOR);
     }
 
     @Override
@@ -848,7 +844,7 @@ public class ShowLocationActivity extends Activity implements
          * Debugging only!!!
 		 * 
 		 * */
-		/*
+        /*
 		datasource.createNode(50.78007792, 6.15212939, (float) 1.5, 0, route.getId());
 		datasource.createNode(50.78009774, 6.15212161, (float) 2.5, 1, route.getId());
 		datasource.createNode(50.78011194, 6.15201426, (float) 3.5, 2, route.getId());
