@@ -78,6 +78,6 @@
     <View
         android:layout_width="match_parent"
         android:layout_height="1dp"
-        android:layout_below="@+id/walk_layout"
+        android:layout_below="@+id/delete_layout"
         android:background="@color/black"/>
 </RelativeLayout>
