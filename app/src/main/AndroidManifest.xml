@@ -48,7 +48,6 @@
             android:label=""/>
         <activity
             android:name=".activity.ShowRouteActivity"
-            android:configChanges="orientation|keyboardHidden|screenSize"
             android:label=""/>
 
         <meta-data
