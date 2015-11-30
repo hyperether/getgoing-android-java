@@ -835,18 +835,17 @@ public class ShowLocationActivity extends Activity implements
      * Method for storing tracking data into DB
      * */
     private void dbStore(List<DbNode> nodeList) {
-        DbRoute route = null;
         DbNode currentNode = null;
 
 		/*
-		 * Store the general route data in the DB
+         * Store the general route data in the DB
 		 * */
-        route = datasource
+        DbRoute route = datasource
                 .createRoute(timeCumulative, kcalCumulative, distanceCumulative, currentDateandTime,
                         velocityAvg, cbDataFrameLocal.getProfileId());
 
 		/*
-		 * Debugging only!!!
+         * Debugging only!!!
 		 * 
 		 * */
 		/*
@@ -858,11 +857,13 @@ public class ShowLocationActivity extends Activity implements
 		/*
 		 * Store the every node in the DB
 		 * */
-        Iterator<DbNode> it = nodeList.iterator();
-        while (it.hasNext()) {
-            currentNode = it.next();
-            datasource.createNode(currentNode.getLatitude(), currentNode.getLongitude(),
-                    currentNode.getVelocity(), currentNode.getIndex(), route.getId());
+        if (route != null) {
+            Iterator<DbNode> it = nodeList.iterator();
+            while (it.hasNext()) {
+                currentNode = it.next();
+                datasource.createNode(currentNode.getLatitude(), currentNode.getLongitude(),
+                        currentNode.getVelocity(), currentNode.getIndex(), route.getId());
+            }
         }
     }
 

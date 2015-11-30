@@ -41,7 +41,7 @@ public class GetGoingDataSource {
      */
     public DbRoute createRoute(long duration, double energy, double length, String date,
                                double avgspeed, int activity_id) {
-
+        DbRoute newRoute = null;
         ContentValues values = new ContentValues();
         values.put(GetGoingDatabaseHelper.COLUMN_DURATION, duration);
         values.put(GetGoingDatabaseHelper.COLUMN_ENERGY, energy);
@@ -55,10 +55,12 @@ public class GetGoingDataSource {
         Cursor cursor = database.query(GetGoingDatabaseHelper.TABLE_ROUTE,
                 allRouteColumns, GetGoingDatabaseHelper.COLUMN_ID + " = " + insertId, null,
                 null, null, null);
-        cursor.moveToFirst();
-
-        DbRoute newRoute = cursorToRoute(cursor);
-        cursor.close();
+        if (cursor != null) {
+            if (cursor.moveToFirst()) {
+                newRoute = cursorToRoute(cursor);
+            }
+            cursor.close();
+        }
         return newRoute;
     }
 
