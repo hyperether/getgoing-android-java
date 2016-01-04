@@ -2,8 +2,8 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
-    android:layout_marginBottom="@dimen/spinner_horizontal_margin_port"
-    android:layout_marginTop="@dimen/spinner_horizontal_margin_port">
+    android:layout_marginBottom="@dimen/settings_margin_port"
+    android:layout_marginTop="@dimen/settings_margin_port">
 
     <RelativeLayout
         android:id="@+id/metric_layout"
@@ -217,7 +217,7 @@
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
         android:layout_centerHorizontal="true"
-        android:layout_margin="20dp"
+        android:layout_margin="10dp"
         android:background="@android:color/transparent"
         android:drawableTop="@drawable/button_accept" />
 </RelativeLayout>
