@@ -12,7 +12,10 @@
 
     <!-- Activity settings -->
     <dimen name="settings_layout_margin">20dp</dimen>
-    <dimen name="settings_layout_margin_top">10dp</dimen>
+    <dimen name="settings_layout_margin_top">18dp</dimen>
+    <dimen name="settings_layout_weight_margin_top">10dp</dimen>
+    <dimen name="settings_layout_age_margin_top">10dp</dimen>
+    <dimen name="settings_layout_accept_margin">20dp</dimen>
     <dimen name="settings_txt_margin_left">50dp</dimen>
     <dimen name="settings_edit_margin_left">50dp</dimen>
     <dimen name="settings_weight_layout_margin">68dp</dimen>

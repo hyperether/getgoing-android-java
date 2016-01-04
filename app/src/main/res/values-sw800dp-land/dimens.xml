@@ -19,6 +19,9 @@
     <!-- Activity settings -->
     <dimen name="settings_layout_margin">30dp</dimen>
     <dimen name="settings_layout_margin_top">20dp</dimen>
+    <dimen name="settings_layout_weight_margin_top">20dp</dimen>
+    <dimen name="settings_layout_age_margin_top">20dp</dimen>
+    <dimen name="settings_layout_accept_margin">50dp</dimen>
     <dimen name="settings_txt_margin_left">50dp</dimen>
     <dimen name="settings_edit_margin_left">50dp</dimen>
     <dimen name="settings_weight_layout_margin">78dp</dimen>
@@ -33,8 +36,8 @@
     <dimen name="settings_btn_padding_bottom_top">25dp</dimen>
     <dimen name="settings_btn_padding_left_right">65dp</dimen>
     <dimen name="settings_edit_size">60dp</dimen>
-
-    <dimen name="settings_age_layout_margin">88dp</dimen>
+    <dimen name="settings_age_layout_margin">100dp</dimen>
+    <dimen name="settings_txt_age_margin_left">70dp</dimen>
     <dimen name="settings_layout_margin_left_right">40dp</dimen>
     <dimen name="location_img_padding">23dp</dimen>
     <dimen name="location_img_margin_left">20dp</dimen>

@@ -10,14 +10,17 @@
     <dimen name="spinner_horizontal_margin">50dp</dimen>
 
     <!-- Activity settings -->
-    <dimen name="settings_layout_margin">10dp</dimen>
-    <dimen name="settings_layout_margin_top">5dp</dimen>
+    <dimen name="settings_layout_margin">5dp</dimen>
+    <dimen name="settings_layout_margin_top">0dp</dimen>
+    <dimen name="settings_layout_weight_margin_top">5dp</dimen>
+    <dimen name="settings_layout_age_margin_top">5dp</dimen>
+    <dimen name="settings_layout_accept_margin">7dp</dimen>
     <dimen name="settings_txt_margin_left">30dp</dimen>
     <dimen name="settings_edit_margin_left">30dp</dimen>
     <dimen name="settings_spinner_width">160dp</dimen>
     <dimen name="settings_weight_layout_margin">30dp</dimen>
     <dimen name="settings_age_layout_margin">40dp</dimen>
-    <dimen name="settings_txt_age_margin_left">50dp</dimen>
+    <dimen name="settings_txt_age_margin_left">40dp</dimen>
     <dimen name="settings_layout_margin_left_right">10dp</dimen>
     <dimen name="settings_accept_button_size">23sp</dimen>
     <dimen name="settings_text_size">21sp</dimen>
