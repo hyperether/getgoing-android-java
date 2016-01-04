@@ -39,4 +39,5 @@
     <dimen name="settings_accept_button_size">20sp</dimen>
     <dimen name="settings_edit_margin_left">10dp</dimen>
     <dimen name="settings_text_size">17sp</dimen>
+    <dimen name="settings_btn_arrow_size">30dp</dimen>
 </resources>

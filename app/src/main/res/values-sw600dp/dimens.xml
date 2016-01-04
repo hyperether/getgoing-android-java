@@ -35,4 +35,5 @@
     <dimen name="settings_spinner_width">180dp</dimen>
     <dimen name="settings_arrow_margin_right">10dp</dimen>
     <dimen name="settings_accept_button_size">28sp</dimen>
+    <dimen name="settings_btn_arrow_size">40dp</dimen>
 </resources>
