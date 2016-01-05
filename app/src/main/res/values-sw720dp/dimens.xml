@@ -9,7 +9,7 @@
     <!-- List element -->
     <dimen name="date_padding">25dp</dimen>
     <dimen name="date_margin">3dp</dimen>
-    <dimen name="element_padding">50dp</dimen>
+    <dimen name="element_padding">60dp</dimen>
     <dimen name="element_text_size">28sp</dimen>
     <dimen name="element_energy_text_size">38sp</dimen>
 
