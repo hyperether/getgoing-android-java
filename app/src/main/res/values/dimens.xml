@@ -52,4 +52,9 @@
     <dimen name="settings_layout_margin_left_right">10dp</dimen>
     <dimen name="settings_age_layout_margin">10dp</dimen>
     <dimen name="settings_btn_arrow_size">30dp</dimen>
+
+    <!-- Show Route -->
+    <dimen name="route_margin">5dp</dimen>
+    <dimen name="route_margin_top">10dp</dimen>
+    <dimen name="route_img_size">30dp</dimen>
 </resources>

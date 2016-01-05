@@ -40,4 +40,7 @@
     <dimen name="element_text_size">30sp</dimen>
     <dimen name="location_img_padding">20dp</dimen>
     <dimen name="location_img_margin_left">20dp</dimen>
+
+    <!-- Show Route -->
+    <dimen name="route_img_size">50dp</dimen>
 </resources>
