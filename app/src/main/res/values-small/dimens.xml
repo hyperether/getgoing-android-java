@@ -10,5 +10,8 @@
     <dimen name="element_text_size_land">15sp</dimen>
 
     <!-- Activity settings -->
+    <dimen name="settings_layout_margin">7dp</dimen>
     <dimen name="settings_text_size">10sp</dimen>
+    <dimen name="settings_btn_arrow_size">20dp</dimen>
+    <dimen name="settings_spinner_width">160dp</dimen>
 </resources>
