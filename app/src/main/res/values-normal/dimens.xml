@@ -18,6 +18,7 @@
     <dimen name="location_text_size">14sp</dimen>
 
     <!-- Activity settings -->
+    <dimen name="settings_layout_margin">20dp</dimen>
     <dimen name="settings_txt_margin_left">8dp</dimen>
     <dimen name="settings_txt_age_margin_left">16dp</dimen>
     <dimen name="settings_margin_port">20dp</dimen>
