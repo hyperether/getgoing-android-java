@@ -10,8 +10,6 @@
     <color name="settings_grey_field_focus">#9FC5CE</color>
     <color name="settings_edit_gradient_start">#FAFCFB</color>
     <color name="settings_edit_gradient_end">#DBE3E4</color>
-
     <color name="list_element_font">#C3CED1</color>
-
     <color name="location_view_line">#CCD5D7</color>
 </resources>

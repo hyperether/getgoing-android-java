@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-
     <string name="app_name">GetGoing</string>
     <string name="hello_world">Hello world!</string>
     <string name="action_settings">Settings</string>
@@ -13,13 +12,11 @@
     <string name="avg_speed_image">avg_speed</string>
     <string name="road_image">road</string>
     <string name="measure_image">Measure</string>
-    <string name="spinner_title">Metric</string>
     <string name="teg_image">Weight</string>
     <string name="age_image">Age</string>
-    <string name="button_accept">Accept</string>
     <string name="date">15.12.2014.</string>
     <string name="time">09:03:48</string>
-      <string name="metric_spinner">Metric</string>
+    <string name="metric_spinner">Metric</string>
 
     <string name="SettingsActivityTitle" translatable="false">Settings</string>
     <string name="ShowMap" translatable="false">Map</string>

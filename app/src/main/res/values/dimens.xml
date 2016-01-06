@@ -2,16 +2,7 @@
     <!-- Default screen margins, per the Android Design guidelines. -->
     <dimen name="activity_horizontal_margin">16dp</dimen>
     <dimen name="activity_vertical_margin">16dp</dimen>
-    <dimen name="activity_vertical_margin_port">16dp</dimen>
-    <dimen name="location_horizontal_margin">16dp</dimen>
-    <dimen name="button_text_size">40sp</dimen>
     <dimen name="text_size">45sp</dimen>
-
-
-    <dimen name="spinner_vertical_margin">50dp</dimen>
-    <dimen name="spinner_vertical_margin_port">40dp</dimen>
-    <dimen name="spinner_horizontal_margin">10dp</dimen>
-    <dimen name="spinner_horizontal_margin_port">10dp</dimen>
 
     <!-- List element -->
     <dimen name="date_padding">15dp</dimen>
@@ -29,8 +20,6 @@
     <dimen name="location_buttons_layout_margin">20dp</dimen>
     <dimen name="location_buttons_layout_margin_left_right">20dp</dimen>
     <dimen name="location_text_size">16sp</dimen>
-    <dimen name="location_padding2">60dp</dimen>
-    <dimen name="location_margins">60dp</dimen>
     <dimen name="location_img_padding">10dp</dimen>
     <dimen name="location_img_margin_left">15dp</dimen>
 
@@ -48,8 +37,16 @@
     <dimen name="settings_spinner_width">140dp</dimen>
     <dimen name="settings_text_size">30sp</dimen>
     <dimen name="settings_arrow_margin_right">0dp</dimen>
-    <dimen name="settings_accept_button_size">18sp</dimen>
     <dimen name="settings_layout_margin_left_right">10dp</dimen>
+    <dimen name="settings_beam_scale_width">65dp</dimen>
+    <dimen name="settings_beam_scale_height">74dp</dimen>
+    <dimen name="settings_sandglass_width">43dp</dimen>
+    <dimen name="settings_sandglass_height">65dp</dimen>
+    <dimen name="settings_measure_width">65dp</dimen>
+    <dimen name="settings_measure_height">79dp</dimen>
+    <dimen name="settings_arrow_width">44dp</dimen>
+    <dimen name="settings_arrow_height">39dp</dimen>
+    <dimen name="settings_edit_size">40dp</dimen>
     <dimen name="settings_age_layout_margin">10dp</dimen>
     <dimen name="settings_btn_arrow_size">30dp</dimen>
 
