@@ -31,7 +31,8 @@
     <dimen name="settings_measure_height">91dp</dimen>
     <dimen name="settings_arrow_width">66dp</dimen>
     <dimen name="settings_arrow_height">58dp</dimen>
-    <dimen name="settings_edit_size">50dp</dimen>
+    <dimen name="settings_edit_height">50dp</dimen>
+    <dimen name="settings_edit_width">60dp</dimen>
     <dimen name="settings_btn_padding_bottom_top">15dp</dimen>
     <dimen name="settings_btn_padding_left_right">50dp</dimen>
 

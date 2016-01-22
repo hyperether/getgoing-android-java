@@ -11,7 +11,7 @@
         android:layout_alignParentTop="true">
 
         <ImageView
-            android:id="@+id/walk_img"
+            android:id="@+id/walk_image"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentLeft="true"
@@ -25,8 +25,8 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerVertical="true"
-            android:layout_toEndOf="@+id/walk_img"
-            android:layout_toRightOf="@+id/walk_img"
+            android:layout_toEndOf="@+id/walk_image"
+            android:layout_toRightOf="@+id/walk_image"
             android:orientation="vertical"
             android:paddingLeft="@dimen/element_padding"
             android:paddingRight="@dimen/element_padding">

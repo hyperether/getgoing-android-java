@@ -100,7 +100,7 @@ public class DbRouteAdapter extends BaseAdapter {
             textDate = (TextView) convertView.findViewById(R.id.textDate);
             textTime = (TextView) convertView.findViewById(R.id.textTime);
             textEnergy = (TextView) convertView.findViewById(R.id.textEnergy);
-            imageViewAction = (ImageView) convertView.findViewById(R.id.walk_layout);
+            imageViewAction = (ImageView) convertView.findViewById(R.id.walk_image);
             imageViewDelete = (ImageView) convertView.findViewById(R.id.delete_layout);
 
             holder.textDate = textDate;

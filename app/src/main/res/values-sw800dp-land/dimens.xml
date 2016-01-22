@@ -27,7 +27,8 @@
     <dimen name="settings_arrow_height">84dp</dimen>
     <dimen name="settings_btn_padding_bottom_top">25dp</dimen>
     <dimen name="settings_btn_padding_left_right">65dp</dimen>
-    <dimen name="settings_edit_size">60dp</dimen>
+    <dimen name="settings_edit_height">60dp</dimen>
+    <dimen name="settings_edit_width">80dp</dimen>
     <dimen name="settings_age_layout_margin">100dp</dimen>
     <dimen name="settings_txt_age_margin_left">70dp</dimen>
     <dimen name="settings_layout_margin_left_right">40dp</dimen>
