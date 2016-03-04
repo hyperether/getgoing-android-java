@@ -7,8 +7,8 @@ public class KalmanLatLong {
 
     private float Q_metres_per_second;
     private long TimeStamp_milliseconds;
-    private double lat;
-    private double lng;
+    private Double lat;
+    private Double lng;
     private float variance; // P matrix. Negative means object uninitialised.
     // NB: units irrelevant, as long as same units used
     // throughout

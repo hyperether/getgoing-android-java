@@ -135,17 +135,19 @@ public class DbRouteAdapter extends BaseAdapter {
         textDate.setText(d);
         textEnergy.setText(e);
 
-        switch (route.getActivity_id()) {
-            case 1:
-                imageViewAction.setImageResource(R.drawable.statistic_walk);
-                break;
-            case 2:
-                imageViewAction.setImageResource(R.drawable.statistic_run);
-                break;
-            case 3:
-                imageViewAction.setImageResource(R.drawable.statistic_ride);
-            default:
-                break;
+        if (imageViewAction != null) {
+            switch (route.getActivity_id()) {
+                case 1:
+                    imageViewAction.setImageResource(R.drawable.statistic_walk);
+                    break;
+                case 2:
+                    imageViewAction.setImageResource(R.drawable.statistic_run);
+                    break;
+                case 3:
+                    imageViewAction.setImageResource(R.drawable.statistic_ride);
+                default:
+                    break;
+            }
         }
 
         return convertView;
@@ -184,13 +186,15 @@ public class DbRouteAdapter extends BaseAdapter {
         // get the tag for this element
         ViewHolder tmpHolder = (ViewHolder) listElement.getTag();
         // where the position of this element is stored
-        long id = tmpHolder.route_id;
+        if (tmpHolder != null) {
+            long id = tmpHolder.route_id;
 
-        // delete the route with all nodes attached to it
-        datasource.deleteRouteById(id);
+            // delete the route with all nodes attached to it
+            datasource.deleteRouteById(id);
 
-        // refresh the route list
-        myRoutes = datasource.getAllRoutes();
-        notifyDataSetChanged();
+            // refresh the route list
+            myRoutes = datasource.getAllRoutes();
+            notifyDataSetChanged();
+        }
     }
 }

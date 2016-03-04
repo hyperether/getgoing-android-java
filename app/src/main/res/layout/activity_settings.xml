@@ -217,7 +217,7 @@
         android:layout_below="@+id/third_line"
         android:background="@color/settings_view_second_line"/>
 
-    <Button
+    <ImageButton
         android:id="@+id/buttonConfirmSettings"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -225,5 +225,5 @@
         android:layout_centerHorizontal="true"
         android:layout_margin="10dp"
         android:background="@android:color/transparent"
-        android:drawableTop="@drawable/button_accept"/>
+        android:src="@drawable/button_accept"/>
 </RelativeLayout>

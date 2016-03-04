@@ -31,7 +31,7 @@ public class SettingsActivity extends Activity implements OnItemSelectedListener
     EditText editTextAge;
     ImageButton increaseAge;
     ImageButton decreaseAge;
-    Button buttonConfirmSettings;
+    ImageButton buttonConfirmSettings;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -84,7 +84,7 @@ public class SettingsActivity extends Activity implements OnItemSelectedListener
             }
         });
 
-        buttonConfirmSettings = (Button) findViewById(R.id.buttonConfirmSettings);
+        buttonConfirmSettings = (ImageButton) findViewById(R.id.buttonConfirmSettings);
         buttonConfirmSettings.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
