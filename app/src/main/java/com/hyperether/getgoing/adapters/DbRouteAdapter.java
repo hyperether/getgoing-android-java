@@ -182,7 +182,7 @@ public class DbRouteAdapter extends BaseAdapter {
 
     void doPositiveClick(View v) {
         // getting the list element
-        View listElement = (View) v.getParent();
+        View listElement = (View) v.getParent().getParent();
         // get the tag for this element
         ViewHolder tmpHolder = (ViewHolder) listElement.getTag();
         // where the position of this element is stored
