@@ -116,7 +116,11 @@ public class GetGoingDataSource {
                 null, null);
 
         cursor.moveToFirst();
-        DbRoute route = cursorToRoute(cursor);
+        DbRoute route = null;
+        if (cursor.getCount() > 0) {
+            route = cursorToRoute(cursor);
+        }
+
         // make sure to close the cursor
         cursor.close();
         return route;
