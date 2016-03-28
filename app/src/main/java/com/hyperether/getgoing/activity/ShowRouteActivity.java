@@ -1,5 +1,6 @@
 package com.hyperether.getgoing.activity;
 
+import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
@@ -19,6 +20,9 @@ import java.util.Iterator;
 import java.util.List;
 
 public class ShowRouteActivity extends FragmentActivity {
+
+    public static final String PREF_FILE = "CBUserDataPref.txt";
+    private static final int METRIC = 0;
 
     private GoogleMap mMap;
 
@@ -58,6 +62,16 @@ public class ShowRouteActivity extends FragmentActivity {
             showTime.setText(String.format(getDurationString(route.getDuration() / 1000)));
             showCalories.setText(String.format("%.02f kcal", route.getEnergy()));
             showDistance.setText(String.format("%.02f m", route.getLength()));
+
+            SharedPreferences currentSettings = getSharedPreferences(PREF_FILE, 0);
+            int measureUnitId = currentSettings.getInt("measurementSystemId", METRIC);
+
+            if (measureUnitId == 1 || measureUnitId == 2) {
+                // present data in feet
+                showDistance.setText(String.format("%.02f ft", route.getLength() * 3.281));
+            } else {
+                showDistance.setText(String.format("%.02f m", route.getLength()));
+            }
 
             // Go to the position of the first node
             if (nodes.size() != 0) { // if list of nodes empty skip the route drawing
