@@ -28,7 +28,7 @@ public class GetGoingDatabaseHelper extends SQLiteOpenHelper {
     private static final int DATABASE_VERSION = 1;
 
     // Database creation sql statements
-    private static final String DATABASE_CREATE = "create table "
+    private static final String DATABASE_CREATE_TABLE_ROUTE = "create table "
             + TABLE_ROUTE + "(" + COLUMN_ID
             + " integer primary key autoincrement, " + COLUMN_DURATION
             + " integer not null, " + COLUMN_ENERGY
@@ -38,7 +38,7 @@ public class GetGoingDatabaseHelper extends SQLiteOpenHelper {
             + " double not null, " + COLUMN_ACTIVITYID
             + " integer not null );";
 
-    private static final String DATABASE_CREATE2 = "create table "
+    private static final String DATABASE_CREATE_TABLE_NODE = "create table "
             + TABLE_NODE + "(" + COLUMN_ID
             + " integer primary key autoincrement, " + COLUMN_LATITUDE
             + " double not null, " + COLUMN_LONGITUDE
@@ -55,8 +55,8 @@ public class GetGoingDatabaseHelper extends SQLiteOpenHelper {
 
     @Override
     public void onCreate(android.database.sqlite.SQLiteDatabase database) {
-        database.execSQL(DATABASE_CREATE);
-        database.execSQL(DATABASE_CREATE2);
+        database.execSQL(DATABASE_CREATE_TABLE_ROUTE);
+        database.execSQL(DATABASE_CREATE_TABLE_NODE);
 
     }
 
