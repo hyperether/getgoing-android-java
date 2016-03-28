@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout
     android:id="@+id/map"
+    xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
     android:descendantFocusability="beforeDescendants"
@@ -13,7 +14,7 @@
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:layout_above="@+id/data_layout"
-        android:layout_alignParentTop="true" />
+        android:layout_alignParentTop="true"/>
 
     <RelativeLayout
         android:id="@+id/data_layout"
@@ -39,46 +40,63 @@
                 android:id="@+id/save_button"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:paddingLeft="10dp"
-
                 android:layout_alignParentLeft="true"
                 android:layout_alignParentStart="true"
                 android:background="@android:color/transparent"
-                android:drawableTop="@drawable/button_save" />
+                android:drawableTop="@drawable/button_save"
+                android:paddingLeft="10dp"/>
 
             <Button
                 android:id="@+id/start_button"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_centerHorizontal="true"
+                android:layout_marginEnd="5dp"
+                android:layout_marginLeft="5dp"
+                android:layout_marginRight="5dp"
+                android:layout_marginStart="5dp"
+                android:layout_toEndOf="@id/save_button"
+                android:layout_toLeftOf="@+id/refresh_button"
+                android:layout_toRightOf="@id/save_button"
+                android:layout_toStartOf="@+id/refresh_button"
                 android:background="@android:color/transparent"
-                android:drawableTop="@drawable/button_start" />
+                android:drawableTop="@drawable/button_start"
+                android:gravity="center_horizontal"
+                android:src="@drawable/button_start"/>
 
             <Button
                 android:id="@+id/end_button"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_centerHorizontal="true"
+                android:layout_marginEnd="5dp"
+                android:layout_marginLeft="5dp"
+                android:layout_marginRight="5dp"
+                android:layout_marginStart="5dp"
+                android:layout_toEndOf="@id/save_button"
+                android:layout_toLeftOf="@+id/refresh_button"
+                android:layout_toRightOf="@id/save_button"
+                android:layout_toStartOf="@+id/refresh_button"
                 android:background="@android:color/transparent"
                 android:drawableTop="@drawable/button_stop"
-                android:visibility="invisible" />
+                android:visibility="invisible"/>
 
             <Button
                 android:id="@+id/refresh_button"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:paddingRight="10dp"
                 android:layout_alignParentEnd="true"
                 android:layout_alignParentRight="true"
                 android:background="@android:color/transparent"
-                android:drawableTop="@drawable/button_reset" />
+                android:drawableTop="@drawable/button_reset"
+                android:paddingRight="10dp"/>
         </RelativeLayout>
 
         <View
             android:layout_width="match_parent"
             android:layout_height="1dp"
             android:layout_above="@+id/statistic_layout"
-            android:background="@color/location_view_line" />
+            android:background="@color/location_view_line"/>
 
         <RelativeLayout
             android:id="@+id/statistic_layout"
@@ -105,7 +123,7 @@
                     android:layout_marginBottom="@dimen/location_img_margin_bottom"
                     android:background="@android:color/transparent"
                     android:contentDescription="@string/clock_image"
-                    android:src="@drawable/clock" />
+                    android:src="@drawable/clock"/>
 
                 <Chronometer
                     android:id="@+id/showTime"
@@ -113,7 +131,7 @@
                     android:layout_height="wrap_content"
                     android:format="00:00:00"
                     android:textSize="@dimen/location_text_size"
-                    android:textStyle="bold" />
+                    android:textStyle="bold"/>
             </LinearLayout>
 
             <LinearLayout
@@ -134,7 +152,7 @@
                     android:layout_marginBottom="@dimen/location_img_margin_bottom"
                     android:background="@android:color/transparent"
                     android:contentDescription="@string/fire_image"
-                    android:src="@drawable/fire" />
+                    android:src="@drawable/fire"/>
 
                 <Chronometer
                     android:id="@+id/showCalories"
@@ -142,7 +160,7 @@
                     android:layout_height="wrap_content"
                     android:format="0:00kcal"
                     android:textSize="@dimen/location_text_size"
-                    android:textStyle="bold" />
+                    android:textStyle="bold"/>
             </LinearLayout>
 
             <LinearLayout
@@ -163,7 +181,7 @@
                     android:layout_marginBottom="@dimen/location_img_margin_bottom"
                     android:background="@android:color/transparent"
                     android:contentDescription="@string/road_image"
-                    android:src="@drawable/road" />
+                    android:src="@drawable/road"/>
 
                 <Chronometer
                     android:id="@+id/showDistance"
@@ -171,7 +189,7 @@
                     android:layout_height="wrap_content"
                     android:format="0:00m"
                     android:textSize="@dimen/location_text_size"
-                    android:textStyle="bold" />
+                    android:textStyle="bold"/>
             </LinearLayout>
 
             <LinearLayout
@@ -192,7 +210,7 @@
                     android:layout_marginBottom="@dimen/location_img_margin_bottom"
                     android:background="@android:color/transparent"
                     android:contentDescription="@string/speed_image"
-                    android:src="@drawable/speedmeter" />
+                    android:src="@drawable/speedmeter"/>
 
                 <Chronometer
                     android:id="@+id/showVelocity"
@@ -200,7 +218,7 @@
                     android:layout_height="wrap_content"
                     android:format="0:00m/s"
                     android:textSize="@dimen/location_text_size"
-                    android:textStyle="bold" />
+                    android:textStyle="bold"/>
             </LinearLayout>
 
             <LinearLayout
@@ -221,7 +239,7 @@
                     android:layout_marginBottom="@dimen/location_img_margin_bottom"
                     android:background="@android:color/transparent"
                     android:contentDescription="@string/avg_speed_image"
-                    android:src="@drawable/avg_speed" />
+                    android:src="@drawable/avg_speed"/>
 
                 <Chronometer
                     android:id="@+id/showVelocityAvg"
@@ -229,7 +247,7 @@
                     android:layout_height="wrap_content"
                     android:format="0:00m/s"
                     android:textSize="@dimen/location_text_size"
-                    android:textStyle="bold" />
+                    android:textStyle="bold"/>
             </LinearLayout>
         </RelativeLayout>
     </RelativeLayout>
