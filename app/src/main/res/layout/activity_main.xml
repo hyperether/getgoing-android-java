@@ -13,7 +13,6 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_weight="1"
-
         android:background="@android:color/transparent"
         android:contentDescription="@string/button1_normal"
         android:scaleType="fitXY"
@@ -23,7 +22,6 @@
         android:layout_width="match_parent"
         android:layout_height="1dp"
         android:background="@color/black"/>
-
 
     <ImageButton
         android:id="@+id/run_button"
