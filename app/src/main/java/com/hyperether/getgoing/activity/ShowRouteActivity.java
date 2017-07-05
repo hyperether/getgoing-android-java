@@ -8,7 +8,8 @@ import android.widget.EditText;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
-import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.MapFragment;
+import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.PolylineOptions;
 import com.hyperether.getgoing.R;
@@ -19,7 +20,7 @@ import com.hyperether.getgoing.db.GetGoingDataSource;
 import java.util.Iterator;
 import java.util.List;
 
-public class ShowRouteActivity extends FragmentActivity {
+public class ShowRouteActivity extends FragmentActivity implements OnMapReadyCallback {
 
     public static final String PREF_FILE = "CBUserDataPref.txt";
     private static final int METRIC = 0;
@@ -32,7 +33,6 @@ public class ShowRouteActivity extends FragmentActivity {
 
     private List<DbNode> nodes;
     private DbRoute route;
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -47,8 +47,14 @@ public class ShowRouteActivity extends FragmentActivity {
         showCalories = (EditText) findViewById(R.id.showCalories);
         showDistance = (EditText) findViewById(R.id.showDistance);
 
-        mMap = ((SupportMapFragment) getSupportFragmentManager()
-                .findFragmentById(R.id.show_map_page)).getMap();
+        MapFragment mapFragment = (MapFragment) getFragmentManager()
+                .findFragmentById(R.id.show_map_page);
+        mapFragment.getMapAsync(this);
+    }
+
+    @Override
+    public void onMapReady(GoogleMap googleMap) {
+        this.mMap = googleMap;
 
         Bundle extras = getIntent().getExtras();
         if (extras != null) {
@@ -115,7 +121,7 @@ public class ShowRouteActivity extends FragmentActivity {
      */
     public void showLocation(double dLat, double dLong) {
         mMap.clear();
-        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(dLat, dLong), 14));
+        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(dLat, dLong), 17));
     }
 
     /*

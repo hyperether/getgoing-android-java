@@ -8,11 +8,16 @@ import android.content.Intent;
 import android.content.IntentSender;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
-import android.content.pm.ActivityInfo;
+import android.content.pm.PackageManager;
 import android.graphics.Color;
+import android.location.Criteria;
 import android.location.Location;
+import android.location.LocationListener;
+import android.location.LocationManager;
 import android.os.Bundle;
 import android.os.Parcelable;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.ContextCompat;
 import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -27,12 +32,12 @@ import com.google.android.gms.common.api.GoogleApiClient.ConnectionCallbacks;
 import com.google.android.gms.common.api.GoogleApiClient.OnConnectionFailedListener;
 import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.location.LocationServices;
+import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapFragment;
-import com.google.android.gms.maps.model.BitmapDescriptorFactory;
+import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.model.LatLng;
-import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.maps.model.PolylineOptions;
 import com.hyperether.getgoing.R;
 import com.hyperether.getgoing.data.CBDataFrame;
@@ -56,7 +61,8 @@ import java.util.TimerTask;
 public class ShowLocationActivity extends Activity implements
         ConnectionCallbacks,
         OnConnectionFailedListener,
-        com.google.android.gms.location.LocationListener {
+        com.google.android.gms.location.LocationListener,
+        OnMapReadyCallback {
 
     // Global constants
     /*
@@ -65,6 +71,8 @@ public class ShowLocationActivity extends Activity implements
 	 */
     private final static int
             CONNECTION_FAILURE_RESOLUTION_REQUEST = 9000;
+
+    private final static int PERMISSIONS_REQUEST_ACCESS_COARSE_LOCATION = 2;
     // Milliseconds per second
     private static final int MILLISECONDS_PER_SECOND = 1000;
     // Update frequency in seconds
@@ -646,24 +654,18 @@ public class ShowLocationActivity extends Activity implements
         }
     }
 
-
     @Override
     public void onConnected(Bundle connectionHint) {
         // Display the connection status
         Toast.makeText(this, "Connected", Toast.LENGTH_SHORT).show();
 
-        mMap = ((MapFragment) getFragmentManager()
-                .findFragmentById(R.id.show_map_page)).getMap();
+        MapFragment mapFragment = (MapFragment) getFragmentManager()
+                .findFragmentById(R.id.show_map_page);
+        mapFragment.getMapAsync(this);
 
         // If Google Play Services is available
         if (servicesConnected()) {
             connectionEstablished = true;
-
-            // Get the current location
-            Location currentLocation =
-                    LocationServices.FusedLocationApi.getLastLocation(mGoogleApiClient);
-            if (currentLocation != null)
-                showLocation(currentLocation.getLatitude(), currentLocation.getLongitude());
 
             if (mProgramRunning)
                 startTracking();
@@ -673,6 +675,92 @@ public class ShowLocationActivity extends Activity implements
                     startUpdates();
             }
         }
+    }
+
+    @Override
+    public void onMapReady(GoogleMap googleMap) {
+        if (ContextCompat.checkSelfPermission(this, android.Manifest.permission
+                .ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+
+            ActivityCompat.requestPermissions(this,
+                    new String[]{android.Manifest.permission.ACCESS_COARSE_LOCATION},
+                    PERMISSIONS_REQUEST_ACCESS_COARSE_LOCATION);
+        }
+
+        this.mMap = googleMap;
+        initMapComponents(googleMap);
+
+        LocationManager locationManager = (LocationManager)
+                getSystemService(Context.LOCATION_SERVICE);
+        Criteria criteria = new Criteria();
+
+        criteria.setAccuracy(Criteria.ACCURACY_FINE);
+        criteria.setPowerRequirement(Criteria.POWER_LOW);
+
+        String bestProvider = locationManager.getBestProvider(criteria, false);
+        Location location = locationManager.getLastKnownLocation(bestProvider);
+
+        zoomOverCurrentLocation(mMap, location);
+
+        LocationListener locationListener = new LocationListener() {
+            public void onLocationChanged(Location location) {
+                zoomOverCurrentLocation(mMap, location);
+            }
+
+            public void onStatusChanged(String provider, int status, Bundle extras) {
+            }
+
+            public void onProviderEnabled(String provider) {
+            }
+
+            public void onProviderDisabled(String provider) {
+            }
+        };
+
+        locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 1000, 10,
+                locationListener);
+    }
+
+    /**
+     * This method is used for init of map components
+     *
+     * @param googleMap
+     **/
+    private void initMapComponents(GoogleMap googleMap) {
+        googleMap.setMyLocationEnabled(true);
+        googleMap.setTrafficEnabled(true);
+        googleMap.setIndoorEnabled(true);
+        googleMap.setBuildingsEnabled(true);
+        googleMap.getUiSettings().setZoomControlsEnabled(true);
+    }
+
+    /**
+     * This method is used for zooming over user current location or last known location.
+     *
+     * @param googleMap
+     **/
+    private void zoomOverCurrentLocation(GoogleMap googleMap, Location location) {
+        if (location != null) {
+            double latitude = location.getLatitude();
+            double longitude = location.getLongitude();
+
+            CameraUpdate center = CameraUpdateFactory.newLatLng(new LatLng(latitude, longitude));
+            CameraUpdate zoom = CameraUpdateFactory.zoomTo(15);
+
+            googleMap.moveCamera(center);
+            googleMap.animateCamera(zoom);
+        }
+    }
+
+    /**
+     * This method get lat and lng form Location object
+     *
+     * @param loc
+     */
+    private LatLng locationToLatLng(Location loc) {
+        if (loc != null)
+            return new LatLng(loc.getLatitude(), loc.getLongitude());
+        return null;
     }
 
     @Override
@@ -691,7 +779,6 @@ public class ShowLocationActivity extends Activity implements
 
     @Override
     public void onLocationChanged(Location currentLocation) {
-
         double dLat, dLong;
 
         mCurrentLocation = currentLocation;
@@ -720,29 +807,7 @@ public class ShowLocationActivity extends Activity implements
             }
 
             actualPositionValid = true; // put up a flag for the algorithm
-            showLocation(dLat, dLong);
         }
-    }
-
-    /*
-     * This function shows actual coordinates on map
-     */
-    public void showLocation(double dLat, double dLong) {
-        mMap.clear();
-        MarkerOptions mOpt = new MarkerOptions()
-                .position(new LatLng(dLat, dLong))
-                .icon(BitmapDescriptorFactory
-                        .fromResource(
-                                R.drawable.marker))        // Here is the map marker image set up
-                .snippet("Your current location").title("You are here");
-        mMap.addMarker(mOpt);
-        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(
-                dLat, dLong), 14));
-
-        Toast.makeText(
-                getApplicationContext(),
-                "Your Location is - \nLat: " + dLat + "\nLong: "
-                        + dLong, Toast.LENGTH_LONG).show();
     }
 
     /**
@@ -842,10 +907,10 @@ public class ShowLocationActivity extends Activity implements
 
 		/*
          * Debugging only!!!
-		 * 
+		 *
 		 * */
         /*
-		datasource.createNode(50.78007792, 6.15212939, (float) 1.5, 0, route.getId());
+        datasource.createNode(50.78007792, 6.15212939, (float) 1.5, 0, route.getId());
 		datasource.createNode(50.78009774, 6.15212161, (float) 2.5, 1, route.getId());
 		datasource.createNode(50.78011194, 6.15201426, (float) 3.5, 2, route.getId());
 		 */
