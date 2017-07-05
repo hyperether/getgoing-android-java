@@ -1,5 +1,5 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.hyperether.getgoing">
+          package="com.hyperether.getgoing">
 
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
     <uses-permission android:name="android.permission.INTERNET"/>
@@ -58,7 +58,7 @@
 
         <meta-data
             android:name="com.google.android.maps.v2.API_KEY"
-            android:value="AIzaSyDpq_pRHu1SyXMBgyhikC3vPRtunvPPukI"/>
+            android:value="AIzaSyBRAMHwl-f6Agb9iP7wUx5gTuIVjBy5k-Q"/>
         <meta-data
             android:name="com.google.android.gms.version"
             android:value="@integer/google_play_services_version"/>
