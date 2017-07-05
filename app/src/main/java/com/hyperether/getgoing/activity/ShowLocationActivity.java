@@ -26,7 +26,7 @@ import android.widget.Chronometer;
 import android.widget.Toast;
 
 import com.google.android.gms.common.ConnectionResult;
-import com.google.android.gms.common.GooglePlayServicesUtil;
+import com.google.android.gms.common.GoogleApiAvailability;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.common.api.GoogleApiClient.ConnectionCallbacks;
 import com.google.android.gms.common.api.GoogleApiClient.OnConnectionFailedListener;
@@ -154,6 +154,8 @@ public class ShowLocationActivity extends Activity implements
     private static final int REQUEST_RESOLVE_ERROR = 1001;
 
     LocationManagerHandler locManager;
+
+    private GoogleApiAvailability googleApiAvailability = GoogleApiAvailability.getInstance();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -553,20 +555,7 @@ public class ShowLocationActivity extends Activity implements
      */
     private void showErrorDialog(int errorCode) {
         // Get the error dialog from Google Play services
-        Dialog errorDialog = GooglePlayServicesUtil.getErrorDialog(
-                errorCode,
-                this,
-                CONNECTION_FAILURE_RESOLUTION_REQUEST);
-
-        // If Google Play services can provide an error dialog
-        if (errorDialog != null) {
-            // Create a new DialogFragment in which to show the error dialog
-            ErrorDialogFragment errorFragment = new ErrorDialogFragment();
-            // Set the dialog in the DialogFragment
-            errorFragment.setDialog(errorDialog);
-            // Show the error dialog in the DialogFragment
-            errorFragment.show(getFragmentManager(), "Error!");
-        }
+        googleApiAvailability.getErrorDialog(this, errorCode, CONNECTION_FAILURE_RESOLUTION_REQUEST).show();
     }
 
     // Define a DialogFragment that displays the error dialog
@@ -624,7 +613,7 @@ public class ShowLocationActivity extends Activity implements
     private boolean servicesConnected() {
 
         // Check that Google Play services is available
-        int resultCode = GooglePlayServicesUtil.isGooglePlayServicesAvailable(this);
+        int resultCode = googleApiAvailability.isGooglePlayServicesAvailable(this);
         // If Google Play services is available
         if (ConnectionResult.SUCCESS == resultCode) {
             // In debug mode, log the status
@@ -636,20 +625,7 @@ public class ShowLocationActivity extends Activity implements
             // Get the error code
             int errorCode = connectionResult.getErrorCode();
             // Get the error dialog from Google Play services
-            Dialog errorDialog = GooglePlayServicesUtil.getErrorDialog(
-                    errorCode,
-                    this,
-                    CONNECTION_FAILURE_RESOLUTION_REQUEST);
-
-            // If Google Play services can provide an error dialog
-            if (errorDialog != null) {
-                // Create a new DialogFragment for the error dialog
-                ErrorDialogFragment errorFragment = new ErrorDialogFragment();
-                // Set the dialog in the DialogFragment
-                errorFragment.setDialog(errorDialog);
-                // Show the error dialog in the DialogFragment
-                errorFragment.show(getFragmentManager(), "Location Updates");
-            }
+            googleApiAvailability.getErrorDialog(this, errorCode, CONNECTION_FAILURE_RESOLUTION_REQUEST).show();
             return false;
         }
     }
