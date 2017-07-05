@@ -1,11 +1,5 @@
 package com.hyperether.getgoing.adapters;
 
-/**
- * @author dusan
- * <p/>
- * Our custom ArrayAdapter class for showing the route data
- */
-
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -153,7 +147,9 @@ public class DbRouteAdapter extends BaseAdapter {
         return convertView;
     }
 
-    // Monitor for the click on the delete button
+    /**
+     * Monitor for the click on the delete button.
+     */
     private final View.OnClickListener delButtonListener = new View.OnClickListener() {
         @Override
         public void onClick(View v) {
@@ -180,6 +176,9 @@ public class DbRouteAdapter extends BaseAdapter {
         }
     };
 
+    /**
+     * This method handle, positive click on alert dialog.
+     */
     void doPositiveClick(View v) {
         // getting the list element
         View listElement = (View) v.getParent().getParent();

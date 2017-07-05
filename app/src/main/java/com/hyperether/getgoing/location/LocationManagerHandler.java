@@ -81,7 +81,6 @@ public class LocationManagerHandler implements LocationListener {
      * Function to show Location service alert dialog On pressing Settings button will lunch
      * Settings Options On pressing Enter location will lunch input Text dialog
      */
-
     public void showSettingsAlert() {
 
         AlertDialog.Builder alertDialog = new AlertDialog.Builder(mContext);

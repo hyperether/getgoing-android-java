@@ -13,6 +13,14 @@ public class CaloriesCalculation {
             {3.13, 0.00102}, {3.58, 0.00105}, {4.02, 0.00104},
             {4.47, 0.00112}};
 
+    /**
+     * This method calculate burned calories.
+     *
+     * @param dis distance traveled
+     * @param vel velocity
+     * @param cbDataFrameLocal
+     * @param weight user weight
+     */
     public double calculate(double dis, double vel, CBDataFrame cbDataFrameLocal, double weight) {
 
         double energySpent = 0;

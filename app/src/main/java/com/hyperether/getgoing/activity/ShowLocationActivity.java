@@ -317,6 +317,9 @@ public class ShowLocationActivity extends Activity implements
         mRoute = savedInstanceState.getParcelableArrayList("mRoute");
     }
 
+    /**
+     * This method handle button click on Start button.
+     */
     private final OnClickListener mButtonStartListener = new OnClickListener() {
         @Override
         public void onClick(View v) {
@@ -329,6 +332,9 @@ public class ShowLocationActivity extends Activity implements
         }
     };
 
+    /**
+     * This method handle button click on pause button.
+     */
     private final OnClickListener mButtonPauseListener = new OnClickListener() {
         @Override
         public void onClick(View v) {
@@ -336,6 +342,9 @@ public class ShowLocationActivity extends Activity implements
         }
     };
 
+    /**
+     * This method handle button click on save button.
+     */
     private final OnClickListener mButtonSaveListener = new OnClickListener() {
         @Override
         public void onClick(View v) {
@@ -344,6 +353,9 @@ public class ShowLocationActivity extends Activity implements
         }
     };
 
+    /**
+     * This method handle button click on reset button.
+     */
     private final OnClickListener mButtonResetListener = new OnClickListener() {
         @Override
         public void onClick(View v) {
@@ -355,6 +367,9 @@ public class ShowLocationActivity extends Activity implements
         }
     };
 
+    /**
+     * Via this method recorded data is clear..
+     */
     private void clearData() {
         showTime.setBase(SystemClock.elapsedRealtime());
         distanceCumulative = 0;
@@ -369,6 +384,9 @@ public class ShowLocationActivity extends Activity implements
         showData("00 : 00 : 00", 0, 0, 0, 0);
     }
 
+    /**
+     * This method starts timer and enable visibility of pause button.
+     */
     private void startTracking() {
         timer = new Timer();
         timer.schedule(new RefreshData(), 0, 1000);
@@ -386,6 +404,9 @@ public class ShowLocationActivity extends Activity implements
         mProgramRunning = true;
     }
 
+    /**
+     * This method starts timer and enable visibility of start button.
+     */
     private void stopTracking() {
         if (timerStarted) {
             timer.cancel();
@@ -526,6 +547,14 @@ public class ShowLocationActivity extends Activity implements
         }
     }
 
+    /**
+     * This method show measured data.
+     *
+     * @param timeString elapsed time
+     * @param distance passed distance
+     * @param kcal calories burned
+     * @param vel average velocity
+     */
     private void showData(String timeString, double distance, double kcal, double vel,
                           double velAvg) {
         //showTime.setText(timeString);
@@ -541,9 +570,14 @@ public class ShowLocationActivity extends Activity implements
         showVelocityAvg.setText(String.format("%.02f m/s", velAvg));
     }
 
-    /*
-     * This only works if the points are close enough that you can omit that
+    /**
+     * This method only works if the points are close enough that you can omit that
      * earth is not regular shape
+     *
+     * @param lat_a first point lat
+     * @param lng_a first point lng
+     * @param lat_b second point lat
+     * @param lng_b second point lng
      */
     private double gps2m(double lat_a, double lng_a, double lat_b, double lng_b) {
         double pk = 180 / 3.14169;
@@ -713,7 +747,7 @@ public class ShowLocationActivity extends Activity implements
     /**
      * This method is used for init of map components
      *
-     * @param googleMap
+     * @param googleMap google map v2
      **/
     private void initMapComponents(GoogleMap googleMap) {
         googleMap.setMyLocationEnabled(true);
@@ -726,7 +760,7 @@ public class ShowLocationActivity extends Activity implements
     /**
      * This method is used for zooming over user current location or last known location.
      *
-     * @param googleMap
+     * @param googleMap google map v2
      **/
     private void zoomOverCurrentLocation(GoogleMap googleMap, Location location) {
         if (location != null) {
@@ -744,7 +778,7 @@ public class ShowLocationActivity extends Activity implements
     /**
      * This method get lat and lng form Location object
      *
-     * @param loc
+     * @param loc Location location
      */
     private LatLng locationToLatLng(Location loc) {
         if (loc != null)
@@ -829,7 +863,11 @@ public class ShowLocationActivity extends Activity implements
         }
     }
 
-    // Drawing the route
+    /**
+     * This method draws a route.
+     *
+     * @param mRoute list of nodes
+     */
     private void drawRoute(List<DbNode> mRoute) {
         boolean drFirstPass = true;
         DbNode firstNode = null;
@@ -849,7 +887,12 @@ public class ShowLocationActivity extends Activity implements
         }
     }
 
-    // Drawing a segment of the route and coloring it in accordance with the speed
+    /**
+     * This method draws a segment of the route and coloring it in accordance with the speed
+     *
+     * @param firstNode first point of the rout
+     * @param secondNode second point of the rout
+     */
     private void drawSegment(DbNode firstNode, DbNode secondNode) {
 
         // Different speed spans are represented with different colors: green, yellow, orange, red
@@ -881,9 +924,11 @@ public class ShowLocationActivity extends Activity implements
         }
     }
 
-    /*
-     * Method for storing tracking data into DB
-     * */
+    /**
+     * Method for storing tracking data into DB.
+     *
+     * @param nodeList tracked rout
+     */
     private void dbStore(List<DbNode> nodeList) {
         DbNode currentNode = null;
 
@@ -917,6 +962,9 @@ public class ShowLocationActivity extends Activity implements
         }
     }
 
+    /**
+     * Method for initiating layout.
+     */
     private void initLayoutDinamically() {
         button_start = (Button) findViewById(R.id.start_button);
         button_start.setOnClickListener(mButtonStartListener);

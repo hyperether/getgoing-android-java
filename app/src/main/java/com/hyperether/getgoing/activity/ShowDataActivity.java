@@ -40,6 +40,9 @@ public class ShowDataActivity extends ListActivity {
         populateListView();
     }
 
+    /**
+     * This method is for populating list view
+     */
     private void populateListView() {
         adapter = new DbRouteAdapter(ShowDataActivity.this);
         adapter.updateRoutes(routes, datasource); // populate adapter with routes

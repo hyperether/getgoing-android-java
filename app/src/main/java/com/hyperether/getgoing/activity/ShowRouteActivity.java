@@ -116,17 +116,17 @@ public class ShowRouteActivity extends FragmentActivity implements OnMapReadyCal
         super.onResume();
     }
 
-    /*
-     * This function shows actual coordinates on map
+    /**
+     * This function shows actual coordinates on map.
      */
     public void showLocation(double dLat, double dLong) {
         mMap.clear();
         mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(dLat, dLong), 17));
     }
 
-    /*
-     * Drawing the route
-     * */
+    /**
+     * This method draws a route.
+     */
     private void drawRoute(List<DbNode> mRoute) {
         boolean drFirstPass = true;
         DbNode firstNode = null;
@@ -147,9 +147,12 @@ public class ShowRouteActivity extends FragmentActivity implements OnMapReadyCal
         }
     }
 
-    /*
-     * Drawing a segment of the route and coloring it in accordance with the speed
-     * */
+    /**
+     * Drawing a segment of the route and coloring it in accordance with the speed.
+     *
+     * @param firstNode first point of the rout
+     * @param secondNode second point of the rout
+     */
     private void drawSegment(DbNode firstNode, DbNode secondNode) {
         // Different speed spans are represented with different colors: green, yellow, orange, red
         if (secondNode.getVelocity() <= 1) {
@@ -180,9 +183,11 @@ public class ShowRouteActivity extends FragmentActivity implements OnMapReadyCal
         }
     }
 
-    /*
-     * Convert number of milliseconds into form HH:mm:ss
-     * */
+    /**
+     * Convert number of milliseconds into form HH:mm:ss.
+     *
+     * @param seconds elapsed time in seconds
+     */
     private String getDurationString(long seconds) {
         long hours = seconds / 3600;
         long minutes = (seconds % 3600) / 60;
@@ -192,9 +197,11 @@ public class ShowRouteActivity extends FragmentActivity implements OnMapReadyCal
                 twoDigitString(seconds);
     }
 
-    /*
-     * Formatting method for time output
-     * */
+    /**
+     * Formatting method for time output.
+     *
+     * @param number time
+     */
     private String twoDigitString(long number) {
         if (number == 0) {
             return "00";

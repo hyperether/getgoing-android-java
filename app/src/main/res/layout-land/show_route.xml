@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="fill_parent"
-    android:layout_height="fill_parent"
-    android:descendantFocusability="beforeDescendants"
-    android:focusableInTouchMode="true"
-    android:orientation="horizontal">
+              android:layout_width="fill_parent"
+              android:layout_height="fill_parent"
+              android:descendantFocusability="beforeDescendants"
+              android:focusableInTouchMode="true"
+              android:orientation="horizontal">
 
     <RelativeLayout
         android:layout_width="wrap_content"
@@ -28,7 +28,7 @@
                 android:layout_marginLeft="@dimen/route_margin"
                 android:layout_marginStart="@dimen/route_margin"
                 android:contentDescription="@string/descImageViewEmpty"
-                android:src="@drawable/clock" />
+                android:src="@drawable/clock"/>
 
             <EditText
                 android:id="@+id/showTime"
@@ -42,7 +42,7 @@
                 android:focusable="false"
                 android:focusableInTouchMode="false"
                 android:inputType="text"
-                android:textStyle="bold" />
+                android:textStyle="bold"/>
         </LinearLayout>
 
         <LinearLayout
@@ -61,7 +61,7 @@
                 android:layout_marginLeft="@dimen/route_margin"
                 android:layout_marginStart="@dimen/route_margin"
                 android:contentDescription="@string/descImageViewEmpty"
-                android:src="@drawable/fire" />
+                android:src="@drawable/fire"/>
 
             <EditText
                 android:id="@+id/showCalories"
@@ -75,7 +75,7 @@
                 android:focusable="false"
                 android:focusableInTouchMode="false"
                 android:inputType="text"
-                android:textStyle="bold" />
+                android:textStyle="bold"/>
         </LinearLayout>
 
         <LinearLayout
@@ -94,7 +94,7 @@
                 android:layout_marginLeft="@dimen/route_margin"
                 android:layout_marginStart="@dimen/route_margin"
                 android:contentDescription="@string/descImageViewEmpty"
-                android:src="@drawable/road" />
+                android:src="@drawable/road"/>
 
             <EditText
                 android:id="@+id/showDistance"
@@ -108,7 +108,7 @@
                 android:focusable="false"
                 android:focusableInTouchMode="false"
                 android:inputType="text"
-                android:textStyle="bold" />
+                android:textStyle="bold"/>
         </LinearLayout>
     </RelativeLayout>
 

@@ -9,7 +9,6 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemSelectedListener;
 import android.widget.ArrayAdapter;
-import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.Spinner;
@@ -116,6 +115,12 @@ public class SettingsActivity extends Activity implements OnItemSelectedListener
         });
     }
 
+    /**
+     * This method is for setting user weight. Writing direct to edit text field or increasing
+     * and decreasing via buttons.
+     *
+     * @param increase increment body weight
+     */
     private void setWeight(boolean increase) {
         int weight;
         if (!editTextWeight.getText().toString().equals("")) {
@@ -133,6 +138,12 @@ public class SettingsActivity extends Activity implements OnItemSelectedListener
         editTextWeight.setText(weight + "");
     }
 
+    /**
+     * This method is for setting user age. Writing direct to edit text field or increasing
+     * and decreasing via buttons.
+     *
+     * @param increase increment user age
+     */
     private void setAge(boolean increase) {
         int age;
         if (!editTextAge.getText().toString().equals("")) {

@@ -1,8 +1,8 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="fill_parent"
-    android:layout_height="fill_parent"
-    android:gravity="center"
-    android:orientation="vertical">
+              android:layout_width="fill_parent"
+              android:layout_height="fill_parent"
+              android:gravity="center"
+              android:orientation="vertical">
 
     <ImageButton
         android:id="@+id/walk_button"
@@ -13,7 +13,7 @@
         android:background="@android:color/transparent"
         android:contentDescription="@string/app_name"
         android:scaleType="fitXY"
-        android:src="@drawable/button_walk" />
+        android:src="@drawable/button_walk"/>
 
     <ImageButton
         android:id="@+id/run_button"
@@ -24,7 +24,7 @@
         android:background="@android:color/transparent"
         android:contentDescription="@string/app_name"
         android:scaleType="fitXY"
-        android:src="@drawable/button_run" />
+        android:src="@drawable/button_run"/>
 
     <ImageButton
         android:id="@+id/ride_button"
@@ -35,7 +35,7 @@
         android:background="@android:color/transparent"
         android:contentDescription="@string/app_name"
         android:scaleType="fitXY"
-        android:src="@drawable/button_ride" />
+        android:src="@drawable/button_ride"/>
 </LinearLayout>
 
 

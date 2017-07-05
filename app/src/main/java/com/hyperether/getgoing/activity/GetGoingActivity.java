@@ -16,9 +16,10 @@ import com.hyperether.getgoing.db.DbRoute;
 import com.hyperether.getgoing.db.GetGoingDataSource;
 import com.hyperether.getgoing.util.FragmentDialog;
 
-import io.fabric.sdk.android.Fabric;
 import java.util.ArrayList;
 import java.util.List;
+
+import io.fabric.sdk.android.Fabric;
 
 public class GetGoingActivity extends Activity {
     private static final int WALK_ID = 1;
@@ -60,6 +61,9 @@ public class GetGoingActivity extends Activity {
         cbDataFrameLocal.setWeight(weight);
     }
 
+    /**
+     * This method is used for handling button clicks.
+     */
     public void addButtonListener() {
         ImageButton buttonWalk;
         buttonWalk = (ImageButton) findViewById(R.id.walk_button);
@@ -95,7 +99,6 @@ public class GetGoingActivity extends Activity {
         getMenuInflater().inflate(R.menu.get_going, menu);
         return super.onCreateOptionsMenu(menu);
     }
-
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
@@ -164,12 +167,20 @@ public class GetGoingActivity extends Activity {
         return true;
     }
 
+    /**
+     * This method starts SettingsActivity
+     */
     private void callSettingsActivity() {
         Intent intent = new Intent(GetGoingActivity.this, SettingsActivity.class);
         intent.putExtra("searchKey", this.cbDataFrameLocal);
         startActivityForResult(intent, RESULT_REQUESTED);
     }
 
+    /**
+     * This method starts SettingsActivity
+     *
+     * @param id mode id
+     */
     private void callMeteringActivity(int id) {
         if (getParametersStatus(this.cbDataFrameLocal)) {
             setMeteringActivityRequested(0);
@@ -183,6 +194,11 @@ public class GetGoingActivity extends Activity {
         }
     }
 
+    /**
+     * This method set Metering Activity request.
+     *
+     * @param id mode id
+     */
     private void setMeteringActivityRequested(int id) {
         SharedPreferences settings = getSharedPreferences(PREF_FILE, 0);
         SharedPreferences.Editor editor = settings.edit();

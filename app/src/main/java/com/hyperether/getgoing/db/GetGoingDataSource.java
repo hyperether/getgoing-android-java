@@ -37,7 +37,14 @@ public class GetGoingDataSource {
     }
 
     /**
-     * Create a route
+     * Create a route.
+     *
+     * @param duration time of the rout
+     * @param energy calories burned
+     * @param length length of the rout
+     * @param date rout length
+     * @param avgspeed average speed
+     * @param activity_id active activity
      */
     public DbRoute createRoute(long duration, double energy, double length, String date,
                                double avgspeed, int activity_id) {
@@ -65,7 +72,9 @@ public class GetGoingDataSource {
     }
 
     /**
-     * Delete a particular route
+     * Delete a particular route.
+     *
+     * @param route route to delete
      */
     public void deleteRoute(DbRoute route) {
         long id = route.getId();
@@ -75,7 +84,9 @@ public class GetGoingDataSource {
     }
 
     /**
-     * Delete a particular route by id
+     * Delete a particular route by id.
+     *
+     * @param id route id
      */
     public void deleteRouteById(long id) {
         // delete all nodes attached to this route
@@ -86,7 +97,7 @@ public class GetGoingDataSource {
     }
 
     /**
-     * Get all routes from database
+     * Get all routes from database.
      */
     public List<DbRoute> getAllRoutes() {
         List<DbRoute> routes = new ArrayList<DbRoute>();
@@ -106,7 +117,9 @@ public class GetGoingDataSource {
     }
 
     /**
-     * Get route with particular id
+     * Get route with particular id.
+     *
+     * @param route_id route id
      */
     public DbRoute getRoute(long route_id) {
 
@@ -127,7 +140,9 @@ public class GetGoingDataSource {
     }
 
     /**
-     * Database cursor to route converting function
+     * Database cursor to route converting function.
+     *
+     * @param cursor database cursor
      */
     private DbRoute cursorToRoute(Cursor cursor) {
         DbRoute route = new DbRoute(cursor.getLong(0), cursor.getLong(1), cursor.getDouble(2)
@@ -137,7 +152,13 @@ public class GetGoingDataSource {
     }
 
     /**
-     * Create a node
+     * Create a node.
+     *
+     * @param latitude location latitude
+     * @param longitude location longitude
+     * @param velocity user velocity
+     * @param number column number
+     * @param route_id id of rout
      */
     public DbNode createNode(double latitude, double longitude, float velocity, long number,
                              long route_id) {
@@ -162,7 +183,9 @@ public class GetGoingDataSource {
     }
 
     /**
-     * Delete a particular node
+     * Delete a particular node.
+     *
+     * @param node route node
      */
     public void deleteNode(DbNode node) {
         long id = node.getId();
@@ -172,7 +195,9 @@ public class GetGoingDataSource {
     }
 
     /**
-     * Delete all nodes within the requested route
+     * Delete all nodes within the requested route.
+     *
+     * @param route_id id of the route
      */
     public void deleteRouteNodes(long route_id) {
 
@@ -181,7 +206,7 @@ public class GetGoingDataSource {
     }
 
     /**
-     * Get all nodes in the database
+     * Get all nodes in the database.
      */
     public List<DbNode> getAllNodes() {
         List<DbNode> nodes = new ArrayList<DbNode>();
@@ -201,7 +226,9 @@ public class GetGoingDataSource {
     }
 
     /**
-     * Get all nodes contained in the requested route
+     * Get all nodes contained in the requested route.\
+     *
+     * @param route_id id of the route
      */
     public List<DbNode> getRouteNodes(long route_id) {
         List<DbNode> nodes = new ArrayList<DbNode>();
@@ -221,7 +248,9 @@ public class GetGoingDataSource {
     }
 
     /**
-     * Database cursor to node converting function
+     * Database cursor to node converting function.
+     *
+     * @param cursor database cursor
      */
     private DbNode cursorToNode(Cursor cursor) {
         DbNode node = new DbNode(cursor.getLong(0), cursor.getDouble(1), cursor.getDouble(2),

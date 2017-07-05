@@ -1,8 +1,10 @@
 package com.hyperether.getgoing.util;
 
 public class Conversion {
-    /*
+    /**
      * Convert number of milliseconds into form HH:mm:ss
+     *
+     * @param seconds elapsed time
      * */
     public static String getDurationString(long seconds) {
         long hours = seconds / 3600;
@@ -13,8 +15,10 @@ public class Conversion {
                 twoDigitString(seconds);
     }
 
-    /*
+    /**
      * Formatting method for time output
+     *
+     * @param number time
      * */
     public static String twoDigitString(long number) {
         if (number == 0) {
