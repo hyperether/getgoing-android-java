@@ -16,6 +16,7 @@ import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.Bundle;
 import android.os.Parcelable;
+import android.os.SystemClock;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.util.Log;
@@ -355,6 +356,7 @@ public class ShowLocationActivity extends Activity implements
     };
 
     private void clearData() {
+        showTime.setBase(SystemClock.elapsedRealtime());
         distanceCumulative = 0;
         kcalCumulative = 0;
         timeCumulative = 0;
@@ -370,6 +372,10 @@ public class ShowLocationActivity extends Activity implements
     private void startTracking() {
         timer = new Timer();
         timer.schedule(new RefreshData(), 0, 1000);
+
+        showTime.setBase(SystemClock.elapsedRealtime());
+        showTime.start();
+
         timerStarted = true;
 
         button_start.setVisibility(View.GONE);
@@ -384,7 +390,14 @@ public class ShowLocationActivity extends Activity implements
         if (timerStarted) {
             timer.cancel();
             timer.purge();
+
+            showTime.stop();
             timerStarted = false;
+            timeCumulative = SystemClock.elapsedRealtime() - showTime.getBase();
+
+            if (mMap != null) {
+                mMap.clear();
+            }
         }
 
         button_start.setVisibility(View.VISIBLE);
@@ -515,7 +528,7 @@ public class ShowLocationActivity extends Activity implements
 
     private void showData(String timeString, double distance, double kcal, double vel,
                           double velAvg) {
-        showTime.setText(timeString);
+        //showTime.setText(timeString);
         showCalories.setText(String.format("%.02f kcal", kcal));
         if (cbDataFrameLocal.getMeasurementSystemId() == 1 ||
                 cbDataFrameLocal.getMeasurementSystemId() == 2)
@@ -644,7 +657,7 @@ public class ShowLocationActivity extends Activity implements
             connectionEstablished = true;
 
             if (mProgramRunning)
-                startTracking();
+                Toast.makeText(this, "Welcome back", Toast.LENGTH_SHORT).show();
             else {
                 mUpdatesRequested = mPrefs.getBoolean("KEY_UPDATES_ON", false);
                 if (mUpdatesRequested)

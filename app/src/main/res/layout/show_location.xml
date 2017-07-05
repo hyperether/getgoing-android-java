@@ -129,7 +129,7 @@
                     android:id="@+id/showTime"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:format="00:00:00"
+                    android:layout_gravity="center"
                     android:textSize="@dimen/location_text_size"
                     android:textStyle="bold"/>
             </LinearLayout>
