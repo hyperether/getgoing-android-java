@@ -1,9 +1,11 @@
 package com.hyperether.getgoing.activity;
 
+import android.Manifest;
 import android.app.Activity;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.support.v4.app.ActivityCompat;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -36,6 +38,8 @@ public class GetGoingActivity extends Activity {
     private GetGoingDataSource datasource;
     private List<DbRoute> routes;
 
+    private static final int TAG_CODE_PERMISSION_LOCATION = 1;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -47,6 +51,10 @@ public class GetGoingActivity extends Activity {
         addButtonListener();
 
         cbDataFrameLocal = new CBDataFrame();
+
+        ActivityCompat.requestPermissions(this, new String[]{
+                Manifest.permission.ACCESS_FINE_LOCATION,
+                Manifest.permission.ACCESS_COARSE_LOCATION}, TAG_CODE_PERMISSION_LOCATION);
 
         SharedPreferences currentSettings = getSharedPreferences(PREF_FILE, 0);
 

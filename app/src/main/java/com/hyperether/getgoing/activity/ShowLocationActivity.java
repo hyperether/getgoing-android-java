@@ -18,7 +18,6 @@ import android.os.Bundle;
 import android.os.Parcelable;
 import android.os.SystemClock;
 import android.support.v4.app.ActivityCompat;
-import android.support.v4.content.ContextCompat;
 import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -73,7 +72,6 @@ public class ShowLocationActivity extends Activity implements
     private final static int
             CONNECTION_FAILURE_RESOLUTION_REQUEST = 9000;
 
-    private final static int PERMISSIONS_REQUEST_ACCESS_COARSE_LOCATION = 2;
     // Milliseconds per second
     private static final int MILLISECONDS_PER_SECOND = 1000;
     // Update frequency in seconds
@@ -602,7 +600,8 @@ public class ShowLocationActivity extends Activity implements
      */
     private void showErrorDialog(int errorCode) {
         // Get the error dialog from Google Play services
-        googleApiAvailability.getErrorDialog(this, errorCode, CONNECTION_FAILURE_RESOLUTION_REQUEST).show();
+        googleApiAvailability.getErrorDialog(this, errorCode,
+                CONNECTION_FAILURE_RESOLUTION_REQUEST).show();
     }
 
     // Define a DialogFragment that displays the error dialog
@@ -672,7 +671,8 @@ public class ShowLocationActivity extends Activity implements
             // Get the error code
             int errorCode = connectionResult.getErrorCode();
             // Get the error dialog from Google Play services
-            googleApiAvailability.getErrorDialog(this, errorCode, CONNECTION_FAILURE_RESOLUTION_REQUEST).show();
+            googleApiAvailability.getErrorDialog(this, errorCode,
+                    CONNECTION_FAILURE_RESOLUTION_REQUEST).show();
             return false;
         }
     }
@@ -702,42 +702,44 @@ public class ShowLocationActivity extends Activity implements
 
     @Override
     public void onMapReady(GoogleMap googleMap) {
-        if (ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED &&
-                ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
+        if (ActivityCompat.checkSelfPermission(this, android.Manifest.permission
+                .ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED &&
+                ActivityCompat.checkSelfPermission(this, android.Manifest.permission
+                        .ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
+
+            this.mMap = googleMap;
+            initMapComponents(googleMap);
+
+            LocationManager locationManager = (LocationManager)
+                    getSystemService(Context.LOCATION_SERVICE);
+            Criteria criteria = new Criteria();
+
+            criteria.setAccuracy(Criteria.ACCURACY_FINE);
+            criteria.setPowerRequirement(Criteria.POWER_LOW);
+
+            String bestProvider = locationManager.getBestProvider(criteria, false);
+            Location location = locationManager.getLastKnownLocation(bestProvider);
+
+            zoomOverCurrentLocation(mMap, location);
+
+            LocationListener locationListener = new LocationListener() {
+                public void onLocationChanged(Location location) {
+                    zoomOverCurrentLocation(mMap, location);
+                }
+
+                public void onStatusChanged(String provider, int status, Bundle extras) {
+                }
+
+                public void onProviderEnabled(String provider) {
+                }
+
+                public void onProviderDisabled(String provider) {
+                }
+            };
+
+            locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 1000, 10,
+                    locationListener);
         }
-
-        this.mMap = googleMap;
-        initMapComponents(googleMap);
-
-        LocationManager locationManager = (LocationManager)
-                getSystemService(Context.LOCATION_SERVICE);
-        Criteria criteria = new Criteria();
-
-        criteria.setAccuracy(Criteria.ACCURACY_FINE);
-        criteria.setPowerRequirement(Criteria.POWER_LOW);
-
-        String bestProvider = locationManager.getBestProvider(criteria, false);
-        Location location = locationManager.getLastKnownLocation(bestProvider);
-
-        zoomOverCurrentLocation(mMap, location);
-
-        LocationListener locationListener = new LocationListener() {
-            public void onLocationChanged(Location location) {
-                zoomOverCurrentLocation(mMap, location);
-            }
-
-            public void onStatusChanged(String provider, int status, Bundle extras) {
-            }
-
-            public void onProviderEnabled(String provider) {
-            }
-
-            public void onProviderDisabled(String provider) {
-            }
-        };
-
-        locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 1000, 10,
-                locationListener);
     }
 
     /**
@@ -746,11 +748,17 @@ public class ShowLocationActivity extends Activity implements
      * @param googleMap google map v2
      **/
     private void initMapComponents(GoogleMap googleMap) {
-        googleMap.setMyLocationEnabled(true);
-        googleMap.setTrafficEnabled(true);
-        googleMap.setIndoorEnabled(true);
-        googleMap.setBuildingsEnabled(true);
-        googleMap.getUiSettings().setZoomControlsEnabled(true);
+        if (ActivityCompat.checkSelfPermission(this, android.Manifest.permission
+                .ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED &&
+                ActivityCompat.checkSelfPermission(this, android.Manifest.permission
+                        .ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
+
+            googleMap.setMyLocationEnabled(true);
+            googleMap.setTrafficEnabled(true);
+            googleMap.setIndoorEnabled(true);
+            googleMap.setBuildingsEnabled(true);
+            googleMap.getUiSettings().setZoomControlsEnabled(true);
+        }
     }
 
     /**
@@ -839,8 +847,14 @@ public class ShowLocationActivity extends Activity implements
 
         if (connectionEstablished) {
 //            mLocationClient.requestLocationUpdates(mLocationRequest, this);
-            LocationServices.FusedLocationApi
-                    .requestLocationUpdates(mGoogleApiClient, mLocationRequest, this);
+            if (ActivityCompat.checkSelfPermission(this, android.Manifest.permission
+                    .ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED &&
+                    ActivityCompat.checkSelfPermission(this, android.Manifest.permission
+                            .ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
+
+                LocationServices.FusedLocationApi
+                        .requestLocationUpdates(mGoogleApiClient, mLocationRequest, this);
+            }
         }
     }
 
@@ -854,8 +868,14 @@ public class ShowLocationActivity extends Activity implements
 
         if (connectionEstablished) {
 //            mLocationClient.removeLocationUpdates(this);
-            LocationServices.FusedLocationApi.requestLocationUpdates(mGoogleApiClient,
-                    mLocationRequest, this);
+            if (ActivityCompat.checkSelfPermission(this, android.Manifest.permission
+                    .ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED &&
+                    ActivityCompat.checkSelfPermission(this, android.Manifest.permission
+                            .ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
+
+                LocationServices.FusedLocationApi.requestLocationUpdates(mGoogleApiClient,
+                        mLocationRequest, this);
+            }
         }
     }
 
@@ -946,7 +966,7 @@ public class ShowLocationActivity extends Activity implements
 		 */
 
 		/*
-		 * Store the every node in the DB
+         * Store the every node in the DB
 		 * */
         if (route != null) {
             Iterator<DbNode> it = nodeList.iterator();
