@@ -118,6 +118,7 @@ public class ShowLocationActivity extends Activity implements
 
     // Time variables
     private String timeString;    // current duration of a walk
+    private long timeWhenStopped = 0;
     private long timeCumulative = 0;
     private int secondsCumulative = 0;
     private long time = 0; // time between to position updates
@@ -155,6 +156,8 @@ public class ShowLocationActivity extends Activity implements
     LocationManagerHandler locManager;
 
     private GoogleApiAvailability googleApiAvailability = GoogleApiAvailability.getInstance();
+
+    private Boolean alreadyStopped = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -362,6 +365,9 @@ public class ShowLocationActivity extends Activity implements
                 mRoute.clear(); // Delete the route list
             timeFlg = true; // ready for the new round
             clearData();
+            showTime.setBase(SystemClock.elapsedRealtime());
+            timeWhenStopped = 0;
+            alreadyStopped = false;
         }
     };
 
@@ -386,11 +392,16 @@ public class ShowLocationActivity extends Activity implements
      * This method starts timer and enable visibility of pause button.
      */
     private void startTracking() {
+        if (alreadyStopped) {
+            showTime.setBase(SystemClock.elapsedRealtime() + timeWhenStopped);
+        } else {
+            showTime.setBase(SystemClock.elapsedRealtime());
+        }
+
+        showTime.start();
+
         timer = new Timer();
         timer.schedule(new RefreshData(), 0, 1000);
-
-        showTime.setBase(SystemClock.elapsedRealtime());
-        showTime.start();
 
         timerStarted = true;
 
@@ -406,17 +417,15 @@ public class ShowLocationActivity extends Activity implements
      * This method starts timer and enable visibility of start button.
      */
     private void stopTracking() {
+        alreadyStopped = true;
+
         if (timerStarted) {
             timer.cancel();
             timer.purge();
 
+            timeWhenStopped = showTime.getBase() - SystemClock.elapsedRealtime();
             showTime.stop();
             timerStarted = false;
-            timeCumulative = SystemClock.elapsedRealtime() - showTime.getBase();
-
-            if (mMap != null) {
-                mMap.clear();
-            }
         }
 
         button_start.setVisibility(View.VISIBLE);
