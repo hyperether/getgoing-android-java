@@ -47,6 +47,7 @@ import com.hyperether.getgoing.db.GetGoingDataSource;
 import com.hyperether.getgoing.location.KalmanLatLong;
 import com.hyperether.getgoing.location.LocationManagerHandler;
 import com.hyperether.getgoing.util.CaloriesCalculation;
+import com.hyperether.getgoing.util.Constants;
 import com.hyperether.getgoing.util.Conversion;
 
 import java.text.SimpleDateFormat;
@@ -63,31 +64,6 @@ public class ShowLocationActivity extends Activity implements
         OnConnectionFailedListener,
         com.google.android.gms.location.LocationListener,
         OnMapReadyCallback {
-
-    // Global constants
-    /*
-     * Define a request code to send to Google Play services
-	 * This code is returned in Activity.onActivityResult
-	 */
-    private final static int
-            CONNECTION_FAILURE_RESOLUTION_REQUEST = 9000;
-
-    // Milliseconds per second
-    private static final int MILLISECONDS_PER_SECOND = 1000;
-    // Update frequency in seconds
-    public static final int UPDATE_INTERVAL_IN_SECONDS = 5;
-    // Update frequency in milliseconds
-    private static final long UPDATE_INTERVAL =
-            MILLISECONDS_PER_SECOND * UPDATE_INTERVAL_IN_SECONDS;
-    // The fastest update frequency, in seconds
-    private static final int FASTEST_INTERVAL_IN_SECONDS = 5;
-    // A fast frequency ceiling in milliseconds
-    private static final long FASTEST_INTERVAL =
-            MILLISECONDS_PER_SECOND * FASTEST_INTERVAL_IN_SECONDS;
-    // Preference file
-    public static final String PREF_FILE = "CBUserDataPref.txt";
-
-    private static final int NODE_ADD_DISTANCE = 10;
 
     private GoogleMap mMap;
 
@@ -151,7 +127,6 @@ public class ShowLocationActivity extends Activity implements
     private String currentDateandTime;
     private boolean timeFlg = true;
     private boolean mResolvingError = false;
-    private static final int REQUEST_RESOLVE_ERROR = 1001;
 
     LocationManagerHandler locManager;
 
@@ -172,9 +147,9 @@ public class ShowLocationActivity extends Activity implements
         // Use high accuracy
         mLocationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
         // Set the update interval to 5 seconds
-        mLocationRequest.setInterval(UPDATE_INTERVAL);
+        mLocationRequest.setInterval(Constants.UPDATE_INTERVAL);
         // Set the fastest update interval to 1 second
-        mLocationRequest.setFastestInterval(FASTEST_INTERVAL);
+        mLocationRequest.setFastestInterval(Constants.FASTEST_INTERVAL);
 
         // Open the shared preferences
         mPrefs = getSharedPreferences("SharedPreferences", Context.MODE_PRIVATE);
@@ -205,7 +180,7 @@ public class ShowLocationActivity extends Activity implements
         kalman = new KalmanLatLong(3); // Initialise Kalman filter
         calcCal = new CaloriesCalculation();
 
-        SharedPreferences settings = getSharedPreferences(PREF_FILE, 0);
+        SharedPreferences settings = getSharedPreferences(Constants.PREF_FILE, 0);
         weight = settings.getInt("weight", 0);
 
         initLayoutDinamically();
@@ -455,7 +430,7 @@ public class ShowLocationActivity extends Activity implements
         } else if (connectionResult.hasResolution()) {
             try {
                 mResolvingError = true;
-                connectionResult.startResolutionForResult(this, REQUEST_RESOLVE_ERROR);
+                connectionResult.startResolutionForResult(this, Constants.REQUEST_RESOLVE_ERROR);
             } catch (IntentSender.SendIntentException e) {
                 // There was an error with the resolution intent. Try again.
                 mGoogleApiClient.connect();
@@ -520,7 +495,7 @@ public class ShowLocationActivity extends Activity implements
                                                 weight);
                                 kcalCumulative += kcalCurrent;
 
-                                if (distanceDelta > NODE_ADD_DISTANCE) {
+                                if (distanceDelta > Constants.NODE_ADD_DISTANCE) {
                                     distanceDelta = 0;
                                     // add new point to the route
                                     // node and route database _ids are intentionally 0
@@ -610,7 +585,7 @@ public class ShowLocationActivity extends Activity implements
     private void showErrorDialog(int errorCode) {
         // Get the error dialog from Google Play services
         googleApiAvailability.getErrorDialog(this, errorCode,
-                CONNECTION_FAILURE_RESOLUTION_REQUEST).show();
+                Constants.CONNECTION_FAILURE_RESOLUTION_REQUEST).show();
     }
 
     // Define a DialogFragment that displays the error dialog
@@ -650,7 +625,7 @@ public class ShowLocationActivity extends Activity implements
             int requestCode, int resultCode, Intent data) {
         // Decide what to do based on the original request code
         switch (requestCode) {
-            case CONNECTION_FAILURE_RESOLUTION_REQUEST:
+            case Constants.CONNECTION_FAILURE_RESOLUTION_REQUEST:
             /*
              * If the result code is Activity.RESULT_OK, try
 			 * to connect again
@@ -681,7 +656,7 @@ public class ShowLocationActivity extends Activity implements
             int errorCode = connectionResult.getErrorCode();
             // Get the error dialog from Google Play services
             googleApiAvailability.getErrorDialog(this, errorCode,
-                    CONNECTION_FAILURE_RESOLUTION_REQUEST).show();
+                    Constants.CONNECTION_FAILURE_RESOLUTION_REQUEST).show();
             return false;
         }
     }
