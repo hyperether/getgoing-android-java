@@ -1,14 +1,27 @@
 package com.hyperether.getgoing.db;
 
+import android.arch.persistence.room.ColumnInfo;
+import android.arch.persistence.room.Entity;
+import android.arch.persistence.room.PrimaryKey;
 import android.os.Parcel;
 import android.os.Parcelable;
 
+@Entity
 public class DbNode implements Parcelable {
+    @PrimaryKey
+    private int uid;
+
     private long id;
+
+    @ColumnInfo
     private double latitude;
+    @ColumnInfo
     private double longitude;
+    @ColumnInfo
     private float velocity;
+    @ColumnInfo(name = "number")
     private long index; // node index within a particular route
+    @ColumnInfo(name = "route_idroute")
     private long route_id; // foreign key
 
     public DbNode(long id, double latitude, double longitude, float velocity,
