@@ -17,6 +17,7 @@ import com.hyperether.getgoing.location.KalmanLatLong;
 import com.hyperether.getgoing.util.CaloriesCalculation;
 import com.hyperether.getgoing.util.Constants;
 import com.hyperether.getgoing.util.Conversion;
+import com.hyperether.getgoing.util.LogUtil;
 
 import java.util.Timer;
 import java.util.TimerTask;
@@ -75,6 +76,8 @@ public class GPSTrackingService extends Service {
 
         @Override
         public void onLocationChanged(Location location) {
+            LogUtil.getInstance().add(LogUtil.INFO, TAG, "current_loc: " + location, new Exception());
+
             double dLat, dLong;
             double distance = 0;
 
