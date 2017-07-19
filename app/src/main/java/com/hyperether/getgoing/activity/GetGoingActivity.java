@@ -13,6 +13,7 @@ import android.widget.ImageButton;
 
 import com.crashlytics.android.Crashlytics;
 import com.hyperether.getgoing.R;
+import com.hyperether.getgoing.manager.CacheManager;
 import com.hyperether.getgoing.data.CBDataFrame;
 import com.hyperether.getgoing.db.DbRoute;
 import com.hyperether.getgoing.db.GetGoingDataSource;
@@ -193,6 +194,7 @@ public class GetGoingActivity extends Activity {
             setMeteringActivityRequested(0);
             this.cbDataFrameLocal.setProfileId(id);
             Intent intent = new Intent(GetGoingActivity.this, ShowLocationActivity.class);
+            CacheManager.getInstance().setObDataFrameLocal(this.cbDataFrameLocal);
             intent.putExtra("searchKey", this.cbDataFrameLocal);
             startActivity(intent);
         } else {
