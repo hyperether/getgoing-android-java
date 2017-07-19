@@ -40,12 +40,14 @@ import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.PolylineOptions;
 import com.hyperether.getgoing.R;
+import com.hyperether.getgoing.manager.CacheManager;
 import com.hyperether.getgoing.data.CBDataFrame;
 import com.hyperether.getgoing.db.DbNode;
 import com.hyperether.getgoing.db.DbRoute;
 import com.hyperether.getgoing.db.GetGoingDataSource;
 import com.hyperether.getgoing.location.KalmanLatLong;
 import com.hyperether.getgoing.location.LocationManagerHandler;
+import com.hyperether.getgoing.service.GPSTrackingService;
 import com.hyperether.getgoing.util.CaloriesCalculation;
 import com.hyperether.getgoing.util.Constants;
 import com.hyperether.getgoing.util.Conversion;
@@ -78,9 +80,6 @@ public class ShowLocationActivity extends Activity implements
 
     private boolean mUpdatesRequested;
     private boolean mProgramRunning = false;
-
-    // Global variable to hold the current location
-    private Location mCurrentLocation;
 
     private SharedPreferences mPrefs;
     private Editor mEditor;
@@ -243,6 +242,12 @@ public class ShowLocationActivity extends Activity implements
          * Get any previous setting for location updates
 		 * Gets "false" if an error occurs
 		 */
+
+        if (mProgramRunning) {
+            mMap.clear();
+            drawRoute(CacheManager.getInstance().getmRoute());
+        }
+
         if (mPrefs.contains("KEY_UPDATES_ON")) {
             mUpdatesRequested = mPrefs.getBoolean("KEY_UPDATES_ON", false);
             // Otherwise, turn off location updates
@@ -324,8 +329,11 @@ public class ShowLocationActivity extends Activity implements
     private final OnClickListener mButtonSaveListener = new OnClickListener() {
         @Override
         public void onClick(View v) {
-            if (!mRoute.isEmpty())
-                dbStore(mRoute); // Save the current route in DB
+            // Save the current route in DB*/
+            if (!CacheManager.getInstance().getmRoute().isEmpty()) {
+                CacheManager.getInstance().setTimeElapsed(timeString);
+                dbStore(CacheManager.getInstance().getmRoute()); // Save the current route in DB*/
+            }
         }
     };
 
@@ -335,6 +343,12 @@ public class ShowLocationActivity extends Activity implements
     private final OnClickListener mButtonResetListener = new OnClickListener() {
         @Override
         public void onClick(View v) {
+            if (CacheManager.getInstance().getmRoute() != null) {
+                clearCacheData();
+            }
+
+            if (mMap != null) mMap.clear();
+
             stopTracking();
             if (!mRoute.isEmpty())
                 mRoute.clear(); // Delete the route list
@@ -345,6 +359,14 @@ public class ShowLocationActivity extends Activity implements
             alreadyStopped = false;
         }
     };
+
+    private void clearCacheData() {
+        CacheManager.getInstance().clearmRoute();
+        CacheManager.getInstance().setDistanceCumulative(0.0);
+        CacheManager.getInstance().setVelocity(0.0);
+        CacheManager.getInstance().setVelocityAvg(0.0);
+        CacheManager.getInstance().setKcalCumulative(0.0);
+    }
 
     /**
      * Via this method recorded data is clear..
@@ -367,6 +389,8 @@ public class ShowLocationActivity extends Activity implements
      * This method starts timer and enable visibility of pause button.
      */
     private void startTracking() {
+        startService(new Intent(this, GPSTrackingService.class));
+
         if (alreadyStopped) {
             showTime.setBase(SystemClock.elapsedRealtime() + timeWhenStopped);
         } else {
@@ -392,6 +416,8 @@ public class ShowLocationActivity extends Activity implements
      * This method starts timer and enable visibility of start button.
      */
     private void stopTracking() {
+        stopService(new Intent(this, GPSTrackingService.class));
+
         alreadyStopped = true;
 
         if (timerStarted) {
@@ -453,77 +479,18 @@ public class ShowLocationActivity extends Activity implements
                     timeCumulative += 1000;
                     secondsCumulative = (int) (timeCumulative / 1000);
 
-                    timeString = Conversion.getDurationString(secondsCumulative);
+                    mMap.clear();
+                    drawRoute(CacheManager.getInstance().getmRoute());
+                    //TODO: Show data
+                    CacheManager.getInstance().setTimeElapsed(Conversion.getDurationString
+                            (secondsCumulative));
 
-                    time++;
-
-                    if (actualPositionValid) {
-                        actualPositionValid = false; // reset the flag
-                        double dLat = latitude - latitude_old;
-                        double dLon = longitude - longitude_old;
-
-                        if ((dLat != 0) || (dLon != 0)) {
-                            // Carry out the path filtering
-                            if (!isKalmanStateSet) {
-                                kalman.SetState(latitude,
-                                        longitude,
-                                        mCurrentLocation.getAccuracy(),
-                                        timeCumulative);
-                                isKalmanStateSet = true;
-                            }
-
-                            kalman.Process(latitude,
-                                    longitude,
-                                    mCurrentLocation.getAccuracy(),
-                                    timeCumulative);
-                            latitude = kalman.get_lat();
-                            longitude = kalman.get_lng();
-
-                            double distance =
-                                    gps2m(latitude, longitude, latitude_old, longitude_old);
-                            if (!Double.isNaN(distance)) {
-                                distanceCumulative += distance;
-                                distanceDelta += distance;
-
-                                velocityAvg = distanceCumulative / secondsCumulative;
-
-                                //brzina je srednja vrednost izmerene i ocitane brzine
-                                velocity = (mCurrentLocation.getSpeed() + (distance / time)) / 2;
-
-                                kcalCurrent =
-                                        calcCal.calculate(distance, velocity, cbDataFrameLocal,
-                                                weight);
-                                kcalCumulative += kcalCurrent;
-
-                                if (distanceDelta > Constants.NODE_ADD_DISTANCE) {
-                                    distanceDelta = 0;
-                                    // add new point to the route
-                                    // node and route database _ids are intentionally 0
-                                    DbNode tmp =
-                                            new DbNode(0, latitude, longitude, (float) velocity,
-                                                    nodeIndex++, 0);
-                                    mRoute.add(tmp); // add the initial location to the route
-                                }
-                            } else {
-                                velocity = mCurrentLocation.getSpeed();
-                            }
-
-                            drawRoute(mRoute);
-                        }
-                        time = 0; // reset the second counter for calculating velocity
-                    } else {
-                        // is connection broken?
-                        if (!connectionEstablished) {
-                            //mLocationClient.connect();
-                            if (servicesConnected()) {
-                                mUpdatesRequested = mPrefs.getBoolean("KEY_UPDATES_ON", false);
-                                if (mUpdatesRequested)
-                                    startUpdates();
-                            }
-                        }
+                    if (CacheManager.getInstance().getVelocity() != null) {
+                        showData(timeString, CacheManager.getInstance().getDistanceCumulative(),
+                                CacheManager.getInstance().getKcalCumulative(), CacheManager
+                                        .getInstance().getVelocity(), CacheManager.getInstance()
+                                        .getVelocityAvg());
                     }
-
-                    showData(timeString, distanceCumulative, kcalCumulative, velocity, velocityAvg);
                 }
             });
         }
@@ -550,31 +517,6 @@ public class ShowLocationActivity extends Activity implements
 
         showVelocity.setText(String.format("%.02f m/s", vel));
         showVelocityAvg.setText(String.format("%.02f m/s", velAvg));
-    }
-
-    /**
-     * This method only works if the points are close enough that you can omit that
-     * earth is not regular shape
-     *
-     * @param lat_a first point lat
-     * @param lng_a first point lng
-     * @param lat_b second point lat
-     * @param lng_b second point lng
-     */
-    private double gps2m(double lat_a, double lng_a, double lat_b, double lng_b) {
-        double pk = 180 / 3.14169;
-
-        double a1 = lat_a / pk;
-        double a2 = lng_a / pk;
-        double b1 = lat_b / pk;
-        double b2 = lng_b / pk;
-
-        double t1 = Math.cos(a1) * Math.cos(a2) * Math.cos(b1) * Math.cos(b2);
-        double t2 = Math.cos(a1) * Math.sin(a2) * Math.cos(b1) * Math.sin(b2);
-        double t3 = Math.sin(a1) * Math.sin(b1);
-        double tt = Math.acos(t1 + t2 + t3);
-
-        return 6366000 * tt;
     }
 
     /**
@@ -792,8 +734,8 @@ public class ShowLocationActivity extends Activity implements
     public void onLocationChanged(Location currentLocation) {
         double dLat, dLong;
 
-        mCurrentLocation = currentLocation;
-        /* alternativni pristup
+       /* mCurrentLocation = currentLocation;
+       /* alternativni pristup
         if (connectionEstablished) {
 			mCurrentLocation = mLocationClient.getLastLocation();
 			if(mCurrentLocation != null)
@@ -888,6 +830,30 @@ public class ShowLocationActivity extends Activity implements
     }
 
     /**
+     * This method draws a route.
+     *
+     * @param mRoute list of nodes
+     */
+    private void drawRoute(List<Location> mRoute, Boolean bool) {
+        boolean drFirstPass = true;
+        Location firstNode = null;
+        Location secondNode = null;
+
+        // Redraw the whole route
+        Iterator<Location> it = mRoute.iterator();
+        while (it.hasNext()) {
+            if (drFirstPass) {
+                firstNode = secondNode = it.next();
+                drFirstPass = false;
+            } else {
+                firstNode = secondNode;
+                secondNode = it.next();
+            }
+            drawSegment(firstNode, secondNode);
+        }
+    }
+
+    /**
      * This method draws a segment of the route and coloring it in accordance with the speed
      *
      * @param firstNode first point of the rout
@@ -925,6 +891,22 @@ public class ShowLocationActivity extends Activity implements
     }
 
     /**
+     * This method draws a segment of the route and coloring it in accordance with the speed
+     *
+     * @param firstNode first point of the rout
+     * @param secondNode second point of the rout
+     */
+    private void drawSegment(Location firstNode, Location secondNode) {
+        // Drawing the route.
+        mMap.addPolyline(new PolylineOptions().geodesic(true)
+                .add(new LatLng(firstNode.getLatitude(), firstNode.getLongitude()))
+                .add(new LatLng(secondNode.getLatitude(), secondNode.getLongitude()))
+                .width(10)
+                .color(Color.rgb(0, 255, 0)));  // Green color
+
+    }
+
+    /**
      * Method for storing tracking data into DB.
      *
      * @param nodeList tracked rout
@@ -936,8 +918,9 @@ public class ShowLocationActivity extends Activity implements
          * Store the general route data in the DB
 		 * */
         DbRoute route = datasource
-                .createRoute(timeCumulative, kcalCumulative, distanceCumulative, currentDateandTime,
-                        velocityAvg, cbDataFrameLocal.getProfileId());
+                .createRoute(timeCumulative, CacheManager.getInstance().getKcalCumulative(),
+                        CacheManager.getInstance().getDistanceCumulative(), currentDateandTime,
+                        CacheManager.getInstance().getVelocityAvg(), cbDataFrameLocal.getProfileId());
 
 		/*
          * Debugging only!!!
