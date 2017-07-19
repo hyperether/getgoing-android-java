@@ -100,7 +100,7 @@
 
         <RelativeLayout
             android:id="@+id/statistic_layout"
-            android:layout_width="fill_parent"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_below="@+id/buttons_layout"
             android:layout_marginBottom="@dimen/location_buttons_layout_margin"
@@ -246,6 +246,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:format="0:00m/s"
+                    android:maxLines="1"
                     android:textSize="@dimen/location_text_size"
                     android:textStyle="bold"/>
             </LinearLayout>
