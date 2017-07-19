@@ -16,14 +16,12 @@ import com.hyperether.getgoing.R;
 import com.hyperether.getgoing.db.DbNode;
 import com.hyperether.getgoing.db.DbRoute;
 import com.hyperether.getgoing.db.GetGoingDataSource;
+import com.hyperether.getgoing.util.Constants;
 
 import java.util.Iterator;
 import java.util.List;
 
 public class ShowRouteActivity extends FragmentActivity implements OnMapReadyCallback {
-
-    public static final String PREF_FILE = "CBUserDataPref.txt";
-    private static final int METRIC = 0;
 
     private GoogleMap mMap;
 
@@ -69,8 +67,8 @@ public class ShowRouteActivity extends FragmentActivity implements OnMapReadyCal
             showCalories.setText(String.format("%.02f kcal", route.getEnergy()));
             showDistance.setText(String.format("%.02f m", route.getLength()));
 
-            SharedPreferences currentSettings = getSharedPreferences(PREF_FILE, 0);
-            int measureUnitId = currentSettings.getInt("measurementSystemId", METRIC);
+            SharedPreferences currentSettings = getSharedPreferences(Constants.PREF_FILE, 0);
+            int measureUnitId = currentSettings.getInt("measurementSystemId", Constants.METRIC);
 
             if (measureUnitId == 1 || measureUnitId == 2) {
                 // present data in feet

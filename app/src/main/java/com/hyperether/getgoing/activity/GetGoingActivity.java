@@ -13,9 +13,11 @@ import android.widget.ImageButton;
 
 import com.crashlytics.android.Crashlytics;
 import com.hyperether.getgoing.R;
+import com.hyperether.getgoing.manager.CacheManager;
 import com.hyperether.getgoing.data.CBDataFrame;
 import com.hyperether.getgoing.db.DbRoute;
 import com.hyperether.getgoing.db.GetGoingDataSource;
+import com.hyperether.getgoing.util.Constants;
 import com.hyperether.getgoing.util.FragmentDialog;
 
 import java.util.ArrayList;
@@ -24,21 +26,18 @@ import java.util.List;
 import io.fabric.sdk.android.Fabric;
 
 public class GetGoingActivity extends Activity {
+
     private static final int WALK_ID = 1;
     private static final int RUN_ID = 2;
     private static final int RIDE_ID = 3;
-    private static final int METRIC = 0;
     //private static final int IMPERIAL = 1;
     //private static final int US = 2;
-    private static final int RESULT_REQUESTED = 1;
-    public static final String PREF_FILE = "CBUserDataPref.txt";
+
     private CBDataFrame cbDataFrameLocal;
 
     // Database access variables
     private GetGoingDataSource datasource;
     private List<DbRoute> routes;
-
-    private static final int TAG_CODE_PERMISSION_LOCATION = 1;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -54,14 +53,15 @@ public class GetGoingActivity extends Activity {
 
         ActivityCompat.requestPermissions(this, new String[]{
                 Manifest.permission.ACCESS_FINE_LOCATION,
-                Manifest.permission.ACCESS_COARSE_LOCATION}, TAG_CODE_PERMISSION_LOCATION);
+                Manifest.permission.ACCESS_COARSE_LOCATION}, Constants
+                .TAG_CODE_PERMISSION_LOCATION);
 
-        SharedPreferences currentSettings = getSharedPreferences(PREF_FILE, 0);
+        SharedPreferences currentSettings = getSharedPreferences(Constants.PREF_FILE, 0);
 
 		/*
          * default value is metric
 		 */
-        int measureUnitId = currentSettings.getInt("measurementSystemId", METRIC);
+        int measureUnitId = currentSettings.getInt("measurementSystemId", Constants.METRIC);
         cbDataFrameLocal.setMeasurementSystemId(measureUnitId);
         int age = currentSettings.getInt("age", 0);
         cbDataFrameLocal.setAge(age);
@@ -139,12 +139,12 @@ public class GetGoingActivity extends Activity {
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         switch (requestCode) {
-            case (RESULT_REQUESTED):
+            case (Constants.RESULT_REQUESTED):
                 if (resultCode == Activity.RESULT_OK) {
                     if (data.hasExtra("dataKey")) {
                         this.cbDataFrameLocal = data.getParcelableExtra("dataKey");
                         SharedPreferences settings = getSharedPreferences(
-                                PREF_FILE, 0);
+                                Constants.PREF_FILE, 0);
                         SharedPreferences.Editor editor = settings.edit();
                         editor.putInt("measurementSystemId",
                                 this.cbDataFrameLocal.getMeasurementSystemId());
@@ -181,7 +181,7 @@ public class GetGoingActivity extends Activity {
     private void callSettingsActivity() {
         Intent intent = new Intent(GetGoingActivity.this, SettingsActivity.class);
         intent.putExtra("searchKey", this.cbDataFrameLocal);
-        startActivityForResult(intent, RESULT_REQUESTED);
+        startActivityForResult(intent, Constants.RESULT_REQUESTED);
     }
 
     /**
@@ -194,6 +194,7 @@ public class GetGoingActivity extends Activity {
             setMeteringActivityRequested(0);
             this.cbDataFrameLocal.setProfileId(id);
             Intent intent = new Intent(GetGoingActivity.this, ShowLocationActivity.class);
+            CacheManager.getInstance().setObDataFrameLocal(this.cbDataFrameLocal);
             intent.putExtra("searchKey", this.cbDataFrameLocal);
             startActivity(intent);
         } else {
@@ -208,7 +209,7 @@ public class GetGoingActivity extends Activity {
      * @param id mode id
      */
     private void setMeteringActivityRequested(int id) {
-        SharedPreferences settings = getSharedPreferences(PREF_FILE, 0);
+        SharedPreferences settings = getSharedPreferences(Constants.PREF_FILE, 0);
         SharedPreferences.Editor editor = settings.edit();
         editor.putInt("meteringActivityRequestedId", id);
         editor.commit();
