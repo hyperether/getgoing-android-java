@@ -68,7 +68,6 @@ public class SettingsActivity extends Activity implements OnItemSelectedListener
         buttonConfirmSettings.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
                 cbDataFrameLocal.setWeight(weightPicker.getValue());
                 cbDataFrameLocal.setAge(agePicker.getValue());
 
@@ -87,6 +86,8 @@ public class SettingsActivity extends Activity implements OnItemSelectedListener
     protected void onResume() {
         super.onResume();
         spinner.setSelection(cbDataFrameLocal.getMeasurementSystemId());
+        agePicker.setValue(cbDataFrameLocal.getAge());
+        weightPicker.setValue(cbDataFrameLocal.getWeight());
     }
 
     @Override
