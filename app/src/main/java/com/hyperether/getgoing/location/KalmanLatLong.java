@@ -93,10 +93,11 @@ public class KalmanLatLong {
             lat += K * (lat_measurement - lat);
             lng += K * (lng_measurement - lng);
 
-            DecimalFormat df = new DecimalFormat(
-                    "#.########");      // limiting output values to 8 decimal places
-            lat = Double.valueOf(df.format(lat));
-            lng = Double.valueOf(df.format(lng));
+            // limiting output values to 8 decimal places
+            DecimalFormat df = new DecimalFormat("#.########");
+
+            lat = Double.valueOf(df.format(lat).replace(",","."));
+            lng = Double.valueOf(df.format(lng).replace(",","."));
 
             // new Covarariance matrix is (IdentityMatrix - K) * Covarariance
             variance = (1 - K) * variance;
