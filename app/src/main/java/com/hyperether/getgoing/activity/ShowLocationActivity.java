@@ -44,6 +44,7 @@ import com.hyperether.getgoing.db.GetGoingDataSource;
 import com.hyperether.getgoing.manager.CacheManager;
 import com.hyperether.getgoing.service.GPSTrackingService;
 import com.hyperether.getgoing.util.Constants;
+import com.hyperether.getgoing.util.Conversion;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -88,6 +89,7 @@ public class ShowLocationActivity extends Activity implements
     // current duration of a walk
     private long timeWhenStopped = 0;
     private long timeCumulative = 0;
+    private int secondsCumulative = 0;
     private Timer timer;
     // protection for stopping timer
     private boolean timerStarted = false;
@@ -412,8 +414,14 @@ public class ShowLocationActivity extends Activity implements
 
                 @Override
                 public void run() {
+                    timeCumulative += 1000;
+                    secondsCumulative = (int) (timeCumulative / 1000);
+
                     mMap.clear();
                     drawRoute(CacheManager.getInstance().getmRoute());
+                    //TODO: Show data
+                    CacheManager.getInstance().setTimeElapsed(Conversion.getDurationString
+                            (secondsCumulative));
 
                     if (CacheManager.getInstance().getVelocity() != null) {
                         showData(CacheManager.getInstance().getDistanceCumulative(),
@@ -745,8 +753,7 @@ public class ShowLocationActivity extends Activity implements
         DbRoute route = datasource
                 .createRoute(timeCumulative, CacheManager.getInstance().getKcalCumulative(),
                         CacheManager.getInstance().getDistanceCumulative(), currentDateandTime,
-                        CacheManager.getInstance().getVelocityAvg(), cbDataFrameLocal
-                                .getProfileId());
+                        CacheManager.getInstance().getVelocityAvg(), cbDataFrameLocal.getProfileId());
 
 		/*
          * Debugging only!!!
