@@ -10,10 +10,10 @@ import android.os.Bundle;
 import android.os.IBinder;
 import android.util.Log;
 
-import com.hyperether.getgoing.manager.CacheManager;
 import com.hyperether.getgoing.data.CBDataFrame;
 import com.hyperether.getgoing.db.DbNode;
 import com.hyperether.getgoing.location.KalmanLatLong;
+import com.hyperether.getgoing.manager.CacheManager;
 import com.hyperether.getgoing.util.CaloriesCalculation;
 import com.hyperether.getgoing.util.Constants;
 import com.hyperether.getgoing.util.Conversion;
@@ -136,14 +136,18 @@ public class GPSTrackingService extends Service {
 
                         //brzina je srednja vrednost izmerene i ocitane brzine
                         velocity = (mCurrentLocation.getSpeed() + (distance / time)) / 2;
-                        CacheManager.getInstance().setVelocity(velocity);
+                        if (distance < 10 && velocity < 10) {
+                            CacheManager.getInstance().setVelocity(velocity);
+                        }
 
                         if (CacheManager.getInstance().getObDataFrameLocal() != null) {
                             cbDataFrameLocal = CacheManager.getInstance().getObDataFrameLocal();
                             kcalCurrent = calcCal.calculate(distance, velocity, cbDataFrameLocal,
                                     weight);
                             kcalCumulative += kcalCurrent;
-                            CacheManager.getInstance().setKcalCumulative(kcalCumulative);
+                            if (distance < 10 && velocity < 10) {
+                                CacheManager.getInstance().setKcalCumulative(kcalCumulative);
+                            }
                         }
 
                         if (distanceDelta > Constants.NODE_ADD_DISTANCE) {
@@ -152,25 +156,33 @@ public class GPSTrackingService extends Service {
                             // node and route database _ids are intentionally 0
                             DbNode tmp = new DbNode(0, latitude, longitude, (float) velocity,
                                     nodeIndex++, 0);
-                            CacheManager.getInstance().addRouteNode(tmp);
+                            if (distance < 10 && velocity < 10) {
+                                CacheManager.getInstance().addRouteNode(tmp);
+                            }
                         }
                     } else {
                         velocity = mCurrentLocation.getSpeed();
-                        CacheManager.getInstance().setVelocity(velocity);
+                        if (distance < 10 && velocity < 10) {
+                            CacheManager.getInstance().setVelocity(velocity);
+                        }
                     }
                 }
 
-                CacheManager.getInstance().setDistanceCumulative(distanceCumulative);
-                CacheManager.getInstance().setKcalCumulative(kcalCumulative);
-                CacheManager.getInstance().setVelocity(velocity);
-                CacheManager.getInstance().setVelocityAvg(velocityAvg);
+                if (distance < 10 && velocity < 10) {
+                    CacheManager.getInstance().setDistanceCumulative(distanceCumulative);
+                    CacheManager.getInstance().setKcalCumulative(kcalCumulative);
+                    CacheManager.getInstance().setVelocity(velocity);
+                    CacheManager.getInstance().setVelocityAvg(velocityAvg);
+                }
 
                 time = 0; // reset the second counter for calculating velocity
             } else {
                 // is connection broken???
             }
 
-            CacheManager.getInstance().setDistanceCumulative(distanceCumulative);
+            if (distance < 10 && velocity < 10) {
+                CacheManager.getInstance().setDistanceCumulative(distanceCumulative);
+            }
         }
 
         @Override
