@@ -44,4 +44,7 @@ public class Constants {
     public static final int RESULT_REQUESTED = 1;
 
     public static final int METRIC = 0;
+
+    // Requets TAG
+    public static final int REQUEST_GPS_SETTINGS = 100;
 }

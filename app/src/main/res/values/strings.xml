@@ -51,6 +51,10 @@
         <item>Imperial</item>
         <item>US</item>
     </string-array>
+
+    <string name="alert_dialog_message">Turn your device\'s location on.</string>
+    <string name="alert_dialog_positive_button">Settings</string>
+    <string name="alert_dialog_negative_button">Cancel</string>
 </resources>
 
 

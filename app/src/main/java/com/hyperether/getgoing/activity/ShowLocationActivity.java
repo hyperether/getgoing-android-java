@@ -1,7 +1,9 @@
 package com.hyperether.getgoing.activity;
 
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentSender;
 import android.content.SharedPreferences;
@@ -53,6 +55,8 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Timer;
 import java.util.TimerTask;
+
+import static android.provider.Settings.ACTION_LOCATION_SOURCE_SETTINGS;
 
 public class ShowLocationActivity extends Activity implements
         ConnectionCallbacks,
@@ -546,6 +550,36 @@ public class ShowLocationActivity extends Activity implements
 
             LocationManager locationManager = (LocationManager)
                     getSystemService(Context.LOCATION_SERVICE);
+
+            boolean gpsEnabled;
+            boolean networkEnabled;
+
+            gpsEnabled = locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER);
+            networkEnabled = locationManager.isProviderEnabled(LocationManager.NETWORK_PROVIDER);
+
+            if(!gpsEnabled && !networkEnabled) {
+                AlertDialog.Builder dialog = new AlertDialog.Builder(this);
+                dialog.setMessage(getString(R.string.alert_dialog_message));
+                dialog.setPositiveButton(R.string.alert_dialog_positive_button, new DialogInterface
+                        .OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface paramDialogInterface, int paramInt) {
+                        // TODO Auto-generated method stub
+                        openGPSSettings();
+                    }
+                });
+
+                dialog.setNegativeButton(R.string.alert_dialog_negative_button, new DialogInterface.OnClickListener() {
+
+                    @Override
+                    public void onClick(DialogInterface paramDialogInterface, int paramInt) {
+                        // TODO Auto-generated method stub
+                    }
+                });
+
+                dialog.show();
+            }
+
             Criteria criteria = new Criteria();
 
             criteria.setAccuracy(Criteria.ACCURACY_FINE);
@@ -796,5 +830,13 @@ public class ShowLocationActivity extends Activity implements
         showDistance = (Chronometer) findViewById(R.id.showDistance);
         showVelocity = (Chronometer) findViewById(R.id.showVelocity);
         showVelocityAvg = (Chronometer) findViewById(R.id.showVelocityAvg);
+    }
+
+    /**
+     * Method to open settings.
+     */
+    public void openGPSSettings() {
+        Intent i = new Intent(ACTION_LOCATION_SOURCE_SETTINGS);
+        startActivityForResult(i, Constants.REQUEST_GPS_SETTINGS);
     }
 }
