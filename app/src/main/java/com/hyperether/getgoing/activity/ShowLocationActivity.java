@@ -557,8 +557,9 @@ public class ShowLocationActivity extends Activity implements
             gpsEnabled = locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER);
             networkEnabled = locationManager.isProviderEnabled(LocationManager.NETWORK_PROVIDER);
 
-            if(!gpsEnabled && !networkEnabled) {
+            if(!gpsEnabled || networkEnabled) {
                 AlertDialog.Builder dialog = new AlertDialog.Builder(this);
+                dialog.setCancelable(false);
                 dialog.setMessage(getString(R.string.alert_dialog_message));
                 dialog.setPositiveButton(R.string.alert_dialog_positive_button, new DialogInterface
                         .OnClickListener() {
