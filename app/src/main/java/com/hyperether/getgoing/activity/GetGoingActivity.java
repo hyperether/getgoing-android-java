@@ -4,7 +4,9 @@ import android.Manifest;
 import android.app.Activity;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.pm.PackageManager;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -67,6 +69,20 @@ public class GetGoingActivity extends Activity {
         cbDataFrameLocal.setAge(age);
         int weight = currentSettings.getInt("weight", 0);
         cbDataFrameLocal.setWeight(weight);
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions,
+                                           @NonNull int[] grantResults) {
+        switch (requestCode) {
+            case Constants.TAG_CODE_PERMISSION_LOCATION:
+                if (grantResults.length > 0 && grantResults[0] == PackageManager
+                        .PERMISSION_GRANTED) {
+                } else {
+                    finish();
+                }
+                break;
+        }
     }
 
     /**

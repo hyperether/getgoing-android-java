@@ -574,6 +574,7 @@ public class ShowLocationActivity extends Activity implements
                     @Override
                     public void onClick(DialogInterface paramDialogInterface, int paramInt) {
                         // TODO Auto-generated method stub
+                        finish();
                     }
                 });
 
@@ -607,6 +608,8 @@ public class ShowLocationActivity extends Activity implements
 
             locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 1000, 10,
                     locationListener);
+        } else {
+            finish();
         }
     }
 
