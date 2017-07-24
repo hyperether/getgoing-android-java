@@ -52,9 +52,29 @@
         <item>US</item>
     </string-array>
 
+    <!-- High accuracy mode alert dialog -->
+    <string name="alert_dialog_title">Enable high accuracy</string>
     <string name="alert_dialog_message">Turn your device\'s high accuracy location mode.</string>
     <string name="alert_dialog_positive_button">Settings</string>
     <string name="alert_dialog_negative_button">Cancel</string>
+
+    <!-- Save button alert dialog -->
+    <string name="alert_dialog_title_save_btn">Save route</string>
+    <string name="alert_dialog_message_save_btn">Are You sure about saving this route.</string>
+    <string name="alert_dialog_positive_button_save_btn">OK</string>
+    <string name="alert_dialog_negative_button_save_btn">Cancel</string>
+
+    <!-- Reset button alert dialog -->
+    <string name="alert_dialog_title_reset_btn">Clear route data</string>
+    <string name="alert_dialog_message_reset_btn">Clear map and rout data.</string>
+    <string name="alert_dialog_positive_reset_save_btn">OK</string>
+    <string name="alert_dialog_negative_reset_save_btn">Cancel</string>
+
+    <!-- Back pressed alert dialog -->
+    <string name="alert_dialog_title_back_pressed">Leave map</string>
+    <string name="alert_dialog_message_back_pressed">All your unsaved data will be lost.</string>
+    <string name="alert_dialog_positive_back_pressed">OK</string>
+    <string name="alert_dialog_negative_back_pressed">Cancel</string>
 </resources>
 
 

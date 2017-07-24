@@ -282,12 +282,34 @@ public class ShowLocationActivity extends Activity implements
     private final OnClickListener mButtonSaveListener = new OnClickListener() {
         @Override
         public void onClick(View v) {
-            // Save the current route in DB*/
-            if (!CacheManager.getInstance().getmRoute().isEmpty()) {
-                CacheManager.getInstance().setTimeElapsed(timeString);
-                // Save the current route in DB*/
-                dbStore(CacheManager.getInstance().getmRoute());
-            }
+            AlertDialog.Builder dialog = new AlertDialog.Builder(v.getContext());
+            dialog.setCancelable(false);
+            dialog.setTitle(R.string.alert_dialog_title_save_btn);
+            dialog.setMessage(getString(R.string.alert_dialog_message_save_btn));
+            dialog.setPositiveButton(R.string.alert_dialog_positive_button_save_btn, new
+                    DialogInterface
+                            .OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface paramDialogInterface, int paramInt) {
+                            // TODO Auto-generated method stub
+                            // Save the current route in DB*/
+                            if (!CacheManager.getInstance().getmRoute().isEmpty()) {
+                                CacheManager.getInstance().setTimeElapsed(timeString);
+                                // Save the current route in DB*/
+                                dbStore(CacheManager.getInstance().getmRoute());
+                            }
+                        }
+                    });
+
+            dialog.setNegativeButton(getString(R.string.alert_dialog_negative_button_save_btn),
+                    new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface paramDialogInterface, int paramInt) {
+                            // TODO Auto-generated method stub
+                        }
+                    });
+
+            dialog.show();
         }
     };
 
@@ -297,19 +319,41 @@ public class ShowLocationActivity extends Activity implements
     private final OnClickListener mButtonResetListener = new OnClickListener() {
         @Override
         public void onClick(View v) {
-            if (CacheManager.getInstance().getmRoute() != null) {
-                clearCacheData();
-            }
+            AlertDialog.Builder dialog = new AlertDialog.Builder(v.getContext());
+            dialog.setCancelable(false);
+            dialog.setTitle(R.string.alert_dialog_title_reset_btn);
+            dialog.setMessage(getString(R.string.alert_dialog_message_reset_btn));
+            dialog.setPositiveButton(R.string.alert_dialog_positive_reset_save_btn, new
+                    DialogInterface
+                            .OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface paramDialogInterface, int paramInt) {
+                            // TODO Auto-generated method stub
+                            if (CacheManager.getInstance().getmRoute() != null) {
+                                clearCacheData();
+                            }
 
-            if (mMap != null) mMap.clear();
+                            if (mMap != null) mMap.clear();
 
-            stopTracking();
+                            stopTracking();
 
-            timeFlg = true; // ready for the new round
-            clearData();
-            showTime.setBase(SystemClock.elapsedRealtime());
-            timeWhenStopped = 0;
-            alreadyStopped = false;
+                            timeFlg = true; // ready for the new round
+                            clearData();
+                            showTime.setBase(SystemClock.elapsedRealtime());
+                            timeWhenStopped = 0;
+                            alreadyStopped = false;
+                        }
+                    });
+
+            dialog.setNegativeButton(getString(R.string.alert_dialog_negative_reset_save_btn),
+                    new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface paramDialogInterface, int paramInt) {
+                            // TODO Auto-generated method stub
+                        }
+                    });
+
+            dialog.show();
         }
     };
 
@@ -557,9 +601,10 @@ public class ShowLocationActivity extends Activity implements
             gpsEnabled = locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER);
             networkEnabled = locationManager.isProviderEnabled(LocationManager.NETWORK_PROVIDER);
 
-            if(!gpsEnabled || !networkEnabled) {
+            if (!gpsEnabled || !networkEnabled) {
                 AlertDialog.Builder dialog = new AlertDialog.Builder(this);
                 dialog.setCancelable(false);
+                dialog.setTitle(R.string.alert_dialog_title);
                 dialog.setMessage(getString(R.string.alert_dialog_message));
                 dialog.setPositiveButton(R.string.alert_dialog_positive_button, new DialogInterface
                         .OnClickListener() {
@@ -570,14 +615,16 @@ public class ShowLocationActivity extends Activity implements
                     }
                 });
 
-                dialog.setNegativeButton(R.string.alert_dialog_negative_button, new DialogInterface.OnClickListener() {
+                dialog.setNegativeButton(R.string.alert_dialog_negative_button, new
+                        DialogInterface.OnClickListener() {
 
-                    @Override
-                    public void onClick(DialogInterface paramDialogInterface, int paramInt) {
-                        // TODO Auto-generated method stub
-                        finish();
-                    }
-                });
+                            @Override
+                            public void onClick(DialogInterface paramDialogInterface, int
+                                    paramInt) {
+                                // TODO Auto-generated method stub
+                                finish();
+                            }
+                        });
 
                 dialog.show();
             }
@@ -612,6 +659,33 @@ public class ShowLocationActivity extends Activity implements
         } else {
             finish();
         }
+    }
+
+    @Override
+    public void onBackPressed() {
+        AlertDialog.Builder dialog = new AlertDialog.Builder(this);
+        dialog.setCancelable(false);
+        dialog.setTitle(R.string.alert_dialog_title_back_pressed);
+        dialog.setMessage(getString(R.string.alert_dialog_message_back_pressed));
+        dialog.setPositiveButton(R.string.alert_dialog_positive_back_pressed, new
+                DialogInterface
+                        .OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface paramDialogInterface, int paramInt) {
+                        // TODO Auto-generated method stub
+                        finish();
+                    }
+                });
+
+        dialog.setNegativeButton(getString(R.string.alert_dialog_negative_back_pressed),
+                new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface paramDialogInterface, int paramInt) {
+                        // TODO Auto-generated method stub
+                    }
+                });
+
+        dialog.show();
     }
 
     /**
@@ -791,7 +865,8 @@ public class ShowLocationActivity extends Activity implements
         DbRoute route = datasource
                 .createRoute(timeCumulative, CacheManager.getInstance().getKcalCumulative(),
                         CacheManager.getInstance().getDistanceCumulative(), currentDateandTime,
-                        CacheManager.getInstance().getVelocityAvg(), cbDataFrameLocal.getProfileId());
+                        CacheManager.getInstance().getVelocityAvg(), cbDataFrameLocal
+                                .getProfileId());
 
 		/*
          * Debugging only!!!
