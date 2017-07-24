@@ -268,6 +268,7 @@ public class GPSTrackingService extends Service {
     @Override
     public void onDestroy() {
         super.onDestroy();
+        timer.cancel();
         if (mLocationManager != null) {
             for (int i = 0; i < mLocationListeners.length; i++) {
                 try {

@@ -38,6 +38,7 @@ import com.google.android.gms.maps.MapFragment;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.PolylineOptions;
+import com.hyperether.getgoing.GetGoingApp;
 import com.hyperether.getgoing.R;
 import com.hyperether.getgoing.data.CBDataFrame;
 import com.hyperether.getgoing.db.DbNode;
@@ -46,7 +47,6 @@ import com.hyperether.getgoing.db.GetGoingDataSource;
 import com.hyperether.getgoing.manager.CacheManager;
 import com.hyperether.getgoing.service.GPSTrackingService;
 import com.hyperether.getgoing.util.Constants;
-
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -88,11 +88,7 @@ public class ShowLocationActivity extends Activity implements
     private Chronometer showTime, showCalories, showDistance;
     private Chronometer showVelocity, showVelocityAvg;
 
-    // Time variables
-    private String timeString;
-
-    // current duration of a walk
-    private long timeCumulative = 0;
+    // timer for data show
     private Timer timer;
 
     // Route storage variables
@@ -229,8 +225,6 @@ public class ShowLocationActivity extends Activity implements
     public void onSaveInstanceState(Bundle savedInstanceState) {
         // Save UI state changes to the savedInstanceState.
         savedInstanceState.putBoolean("mProgramRunning", mProgramRunning);
-        savedInstanceState.putString("time", timeString);
-        savedInstanceState.putLong("timeCumulative", timeCumulative);
         savedInstanceState.putString("currentDateandTime", currentDateandTime);
 
         super.onSaveInstanceState(savedInstanceState);
@@ -242,8 +236,6 @@ public class ShowLocationActivity extends Activity implements
         // Restore UI state from the savedInstanceState.
         // This bundle has also been passed to onCreate.
         mProgramRunning = savedInstanceState.getBoolean("mProgramRunning");
-        timeString = savedInstanceState.getString("time");
-        timeCumulative = savedInstanceState.getLong("timeCumulative");
         currentDateandTime = savedInstanceState.getString("currentDateandTime");
     }
 
@@ -290,7 +282,6 @@ public class ShowLocationActivity extends Activity implements
                             // TODO Auto-generated method stub
                             // Save the current route in DB*/
                             if (!CacheManager.getInstance().getmRoute().isEmpty()) {
-                                CacheManager.getInstance().setTimeElapsed(timeString);
                                 // Save the current route in DB*/
                                 dbStore(CacheManager.getInstance().getmRoute());
                             }
@@ -351,6 +342,7 @@ public class ShowLocationActivity extends Activity implements
     };
 
     private void clearCacheData() {
+        CacheManager.getInstance().setTimeCumulative(0);
         CacheManager.getInstance().clearmRoute();
         CacheManager.getInstance().setDistanceCumulative(0.0);
         CacheManager.getInstance().setVelocity(0.0);
@@ -362,7 +354,6 @@ public class ShowLocationActivity extends Activity implements
      * Via this method recorded data is clear..
      */
     private void clearData() {
-        timeCumulative = 0;
         showData(0, 0, 0, 0);
     }
 
@@ -433,8 +424,8 @@ public class ShowLocationActivity extends Activity implements
 
                 @Override
                 public void run() {
-                 //   timeCumulative += 1000;
-                 //   secondsCumulative = (int) (timeCumulative / 1000);
+                    //   timeCumulative += 1000;
+                    //   secondsCumulative = (int) (timeCumulative / 1000);
 
                     showTime.setText(DateFormat.format("mm:ss", CacheManager.getInstance()
                             .getTimeCumulative()));
@@ -442,8 +433,8 @@ public class ShowLocationActivity extends Activity implements
                     mMap.clear();
                     drawRoute(CacheManager.getInstance().getmRoute());
                     //TODO: Show data
-                //    CacheManager.getInstance().setTimeElapsed(Conversion.getDurationString
-                 //           (secondsCumulative));
+                    //    CacheManager.getInstance().setTimeElapsed(Conversion.getDurationString
+                    //           (secondsCumulative));
 
                     if (CacheManager.getInstance().getVelocity() != null) {
                         showData(CacheManager.getInstance().getDistanceCumulative(),
@@ -647,6 +638,9 @@ public class ShowLocationActivity extends Activity implements
                     @Override
                     public void onClick(DialogInterface paramDialogInterface, int paramInt) {
                         // TODO Auto-generated method stub
+                        stopService(new Intent(GetGoingApp.getInstance().getApplicationContext(),
+                                GPSTrackingService.class));
+                        clearCacheData();
                         finish();
                     }
                 });
@@ -837,7 +831,7 @@ public class ShowLocationActivity extends Activity implements
          * Store the general route data in the DB
 		 * */
         DbRoute route = datasource
-                .createRoute(timeCumulative, CacheManager.getInstance().getKcalCumulative(),
+                .createRoute(CacheManager.getInstance().getTimeCumulative(), CacheManager.getInstance().getKcalCumulative(),
                         CacheManager.getInstance().getDistanceCumulative(), currentDateandTime,
                         CacheManager.getInstance().getVelocityAvg(), cbDataFrameLocal
                                 .getProfileId());
