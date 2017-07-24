@@ -15,8 +15,8 @@ import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.Bundle;
-import android.os.SystemClock;
 import android.support.v4.app.ActivityCompat;
+import android.text.format.DateFormat;
 import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -46,7 +46,7 @@ import com.hyperether.getgoing.db.GetGoingDataSource;
 import com.hyperether.getgoing.manager.CacheManager;
 import com.hyperether.getgoing.service.GPSTrackingService;
 import com.hyperether.getgoing.util.Constants;
-import com.hyperether.getgoing.util.Conversion;
+
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -90,14 +90,10 @@ public class ShowLocationActivity extends Activity implements
 
     // Time variables
     private String timeString;
+
     // current duration of a walk
-    private long timeWhenStopped = 0;
     private long timeCumulative = 0;
-    private int secondsCumulative = 0;
     private Timer timer;
-    // protection for stopping timer
-    private boolean timerStarted = false;
-    private boolean alreadyStopped = false;
 
     // Route storage variables
     private GetGoingDataSource datasource;
@@ -339,9 +335,6 @@ public class ShowLocationActivity extends Activity implements
 
                             timeFlg = true; // ready for the new round
                             clearData();
-                            showTime.setBase(SystemClock.elapsedRealtime());
-                            timeWhenStopped = 0;
-                            alreadyStopped = false;
                         }
                     });
 
@@ -369,7 +362,6 @@ public class ShowLocationActivity extends Activity implements
      * Via this method recorded data is clear..
      */
     private void clearData() {
-        showTime.setBase(SystemClock.elapsedRealtime());
         timeCumulative = 0;
         showData(0, 0, 0, 0);
     }
@@ -380,18 +372,8 @@ public class ShowLocationActivity extends Activity implements
     private void startTracking() {
         startService(new Intent(this, GPSTrackingService.class));
 
-        if (alreadyStopped) {
-            showTime.setBase(SystemClock.elapsedRealtime() + timeWhenStopped);
-        } else {
-            showTime.setBase(SystemClock.elapsedRealtime());
-        }
-
-        showTime.start();
-
         timer = new Timer();
         timer.schedule(new RefreshData(), 0, 1000);
-
-        timerStarted = true;
 
         button_start.setVisibility(View.GONE);
         button_pause.setVisibility(View.VISIBLE);
@@ -406,17 +388,6 @@ public class ShowLocationActivity extends Activity implements
      */
     private void stopTracking() {
         stopService(new Intent(this, GPSTrackingService.class));
-
-        alreadyStopped = true;
-
-        if (timerStarted) {
-            timer.cancel();
-            timer.purge();
-
-            timeWhenStopped = showTime.getBase() - SystemClock.elapsedRealtime();
-            showTime.stop();
-            timerStarted = false;
-        }
 
         button_start.setVisibility(View.VISIBLE);
         button_pause.setVisibility(View.GONE);
@@ -462,14 +433,17 @@ public class ShowLocationActivity extends Activity implements
 
                 @Override
                 public void run() {
-                    timeCumulative += 1000;
-                    secondsCumulative = (int) (timeCumulative / 1000);
+                 //   timeCumulative += 1000;
+                 //   secondsCumulative = (int) (timeCumulative / 1000);
+
+                    showTime.setText(DateFormat.format("mm:ss", CacheManager.getInstance()
+                            .getTimeCumulative()));
 
                     mMap.clear();
                     drawRoute(CacheManager.getInstance().getmRoute());
                     //TODO: Show data
-                    CacheManager.getInstance().setTimeElapsed(Conversion.getDurationString
-                            (secondsCumulative));
+                //    CacheManager.getInstance().setTimeElapsed(Conversion.getDurationString
+                 //           (secondsCumulative));
 
                     if (CacheManager.getInstance().getVelocity() != null) {
                         showData(CacheManager.getInstance().getDistanceCumulative(),
