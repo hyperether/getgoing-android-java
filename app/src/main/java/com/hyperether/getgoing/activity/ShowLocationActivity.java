@@ -219,6 +219,8 @@ public class ShowLocationActivity extends Activity implements
     @Override
     protected void onDestroy() {
         super.onDestroy();
+        clearCacheData();
+        stopService(new Intent(this, GPSTrackingService.class));
     }
 
     @Override
