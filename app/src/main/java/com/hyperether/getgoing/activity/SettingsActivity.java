@@ -9,28 +9,22 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemSelectedListener;
 import android.widget.ArrayAdapter;
-import android.widget.EditText;
 import android.widget.ImageButton;
+import android.widget.NumberPicker;
 import android.widget.Spinner;
-import android.widget.Toast;
 
 import com.hyperether.getgoing.R;
 import com.hyperether.getgoing.data.CBDataFrame;
+import com.hyperether.getgoing.util.Constants;
 
 public class SettingsActivity extends Activity implements OnItemSelectedListener {
 
     private CBDataFrame cbDataFrameLocal;
     Spinner spinner;
     int iCountAdapterCalls = 0;
-    //    NumberPicker mNumberPickerW;
-//    NumberPicker mNumberPickerA;
-    EditText editTextWeight;
-    ImageButton increaseWeight;
-    ImageButton decreaseWeight;
-    EditText editTextAge;
-    ImageButton increaseAge;
-    ImageButton decreaseAge;
     ImageButton buttonConfirmSettings;
+    private NumberPicker agePicker;
+    private NumberPicker weightPicker;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -50,115 +44,39 @@ public class SettingsActivity extends Activity implements OnItemSelectedListener
         spinner.setAdapter(spinnerArrayAdapter);
         spinner.setOnItemSelectedListener(this);
 
-        editTextWeight = (EditText) findViewById(R.id.edit_weight);
-        editTextWeight.setText("0");
-        increaseWeight = (ImageButton) findViewById(R.id.weight_picker_up);
-        increaseWeight.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                setWeight(true);
-            }
-        });
-        decreaseWeight = (ImageButton) findViewById(R.id.weight_picker_down);
-        decreaseWeight.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                setWeight(false);
-            }
-        });
-        editTextAge = (EditText) findViewById(R.id.edit_age);
-        editTextAge.setText("0");
-        increaseAge = (ImageButton) findViewById(R.id.age_picker_up);
-        increaseAge.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                setAge(true);
-            }
-        });
-        decreaseAge = (ImageButton) findViewById(R.id.age_picker_down);
-        decreaseAge.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                setAge(false);
-            }
-        });
+        weightPicker = (NumberPicker) findViewById(R.id.num_picker);
+        agePicker = (NumberPicker) findViewById(R.id.num_picker2);
+
+        String[] numbers = new String[Constants.NUMBER_PICKER_VALUE_SIZE];
+        for (int i = 0; i < numbers.length; i++) {
+            numbers[i] = Integer.toString(i);
+        }
+
+        weightPicker.setDisplayedValues(numbers);
+        weightPicker.setMaxValue(Constants.NUMBER_PICKER_MAX_VALUE);
+        weightPicker.setMinValue(Constants.NUMBER_PICKER_MIN_VALUE);
+        weightPicker.setWrapSelectorWheel(true);
+        weightPicker.setValue(Constants.NUMBER_PICKER_DEFAULT_WEIGHT);
+
+        agePicker.setDisplayedValues(numbers);
+        agePicker.setMaxValue(Constants.NUMBER_PICKER_MAX_VALUE);
+        agePicker.setMinValue(Constants.NUMBER_PICKER_MIN_VALUE);
+        agePicker.setWrapSelectorWheel(true);
+        agePicker.setValue(Constants.NUMBER_PICKER_DEFAULT_AGE);
 
         buttonConfirmSettings = (ImageButton) findViewById(R.id.buttonConfirmSettings);
         buttonConfirmSettings.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                int weight = 0, age = 0;
-                boolean success = false;
-                if ((!editTextWeight.getText().toString().equals("")) &&
-                        (!editTextAge.getText().toString().equals(""))) {
-                    weight = Integer.parseInt(editTextWeight.getText().toString());
-                    age = Integer.parseInt(editTextAge.getText().toString());
+                cbDataFrameLocal.setWeight(weightPicker.getValue());
+                cbDataFrameLocal.setAge(agePicker.getValue());
 
-                    if ((weight > 0) && (age > 0)) {
-                        cbDataFrameLocal.setAge(age);
-                        cbDataFrameLocal.setWeight(weight);
-                        success = true;
-                    }
-                }
-
-                if (success) {
-                    Intent resultIntent = new Intent();
-                    resultIntent.putExtra("dataKey", cbDataFrameLocal);
-                    setResult(Activity.RESULT_OK, resultIntent);
-                    finish();
-                } else {
-                    Toast.makeText(SettingsActivity.this,
-                            getString(R.string.settings_insert_weight_age), Toast.LENGTH_SHORT)
-                            .show();
-                }
+                Intent resultIntent = new Intent();
+                resultIntent.putExtra("dataKey", cbDataFrameLocal);
+                setResult(Activity.RESULT_OK, resultIntent);
+                finish();
             }
         });
-    }
-
-    /**
-     * This method is for setting user weight. Writing direct to edit text field or increasing
-     * and decreasing via buttons.
-     *
-     * @param increase increment body weight
-     */
-    private void setWeight(boolean increase) {
-        int weight;
-        if (!editTextWeight.getText().toString().equals("")) {
-            weight = Integer.parseInt(editTextWeight.getText().toString());
-        } else {
-            weight = 0;
-        }
-        if (increase) {
-            weight++;
-        } else {
-            if (weight > 0) {
-                weight--;
-            }
-        }
-        editTextWeight.setText(weight + "");
-    }
-
-    /**
-     * This method is for setting user age. Writing direct to edit text field or increasing
-     * and decreasing via buttons.
-     *
-     * @param increase increment user age
-     */
-    private void setAge(boolean increase) {
-        int age;
-        if (!editTextAge.getText().toString().equals("")) {
-            age = Integer.parseInt(editTextAge.getText().toString());
-        } else {
-            age = 0;
-        }
-        if (increase) {
-            age++;
-        } else {
-            if (age > 0) {
-                age--;
-            }
-        }
-        editTextAge.setText(age + "");
     }
 
     /*
@@ -168,8 +86,8 @@ public class SettingsActivity extends Activity implements OnItemSelectedListener
     protected void onResume() {
         super.onResume();
         spinner.setSelection(cbDataFrameLocal.getMeasurementSystemId());
-        editTextAge.setText(cbDataFrameLocal.getAge() + "");
-        editTextWeight.setText(cbDataFrameLocal.getWeight() + "");
+        agePicker.setValue(cbDataFrameLocal.getAge());
+        weightPicker.setValue(cbDataFrameLocal.getWeight());
     }
 
     @Override

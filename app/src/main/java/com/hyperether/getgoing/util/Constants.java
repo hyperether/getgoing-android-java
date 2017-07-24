@@ -45,6 +45,13 @@ public class Constants {
 
     public static final int METRIC = 0;
 
+    // Number picker
+    public static final int NUMBER_PICKER_MAX_VALUE = 150;
+    public static final int NUMBER_PICKER_DEFAULT_WEIGHT = 60;
+    public static final int NUMBER_PICKER_DEFAULT_AGE = 20;
+    public static final int NUMBER_PICKER_MIN_VALUE = 0;
+    public static final int NUMBER_PICKER_VALUE_SIZE = 151;
+
     // Requets TAG
     public static final int REQUEST_GPS_SETTINGS = 100;
 }

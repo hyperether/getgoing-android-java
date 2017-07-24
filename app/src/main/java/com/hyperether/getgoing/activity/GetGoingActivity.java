@@ -13,10 +13,10 @@ import android.widget.ImageButton;
 
 import com.crashlytics.android.Crashlytics;
 import com.hyperether.getgoing.R;
-import com.hyperether.getgoing.manager.CacheManager;
 import com.hyperether.getgoing.data.CBDataFrame;
 import com.hyperether.getgoing.db.DbRoute;
 import com.hyperether.getgoing.db.GetGoingDataSource;
+import com.hyperether.getgoing.manager.CacheManager;
 import com.hyperether.getgoing.util.Constants;
 import com.hyperether.getgoing.util.FragmentDialog;
 
@@ -150,15 +150,13 @@ public class GetGoingActivity extends Activity {
                                 this.cbDataFrameLocal.getMeasurementSystemId());
                         editor.putInt("age", this.cbDataFrameLocal.getAge());
                         editor.putInt("weight", this.cbDataFrameLocal.getWeight());
-                        editor.commit();
+                        editor.apply();
 
                         int id = settings.getInt("meteringActivityRequestedId", 0);
                         if (id > 0) {
                             callMeteringActivity(id);
                         }
                     }
-                } else { // back option button pressed
-
                 }
                 break;
         }
