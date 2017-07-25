@@ -16,11 +16,8 @@ import com.hyperether.getgoing.location.KalmanLatLong;
 import com.hyperether.getgoing.manager.CacheManager;
 import com.hyperether.getgoing.util.CaloriesCalculation;
 import com.hyperether.getgoing.util.Constants;
-import com.hyperether.getgoing.util.Conversion;
 import com.hyperether.getgoing.util.LogUtil;
 
-import java.util.Timer;
-import java.util.TimerTask;
 
 /**
  * Created by nikola on 11/07/17.
@@ -58,12 +55,12 @@ public class GPSTrackingService extends Service {
     private double velocity = 0;
     private double velocityAvg = 0;
     private double weight = 0;
+    private long oldTime = 0;
 
     private String timeString;    // current duration of a walk
 
     private CaloriesCalculation calcCal = new CaloriesCalculation();
     private CBDataFrame cbDataFrameLocal;    // to store the current settings
-    private Timer timer;
 
     private class LocationListener implements android.location.LocationListener {
         Location mLastLocation;
@@ -79,6 +76,11 @@ public class GPSTrackingService extends Service {
 
             double dLat, dLong;
             double distance = 0;
+
+            time = System.currentTimeMillis() - oldTime;
+            timeCumulative += System.currentTimeMillis() - oldTime;
+            secondsCumulative = (int) timeCumulative / 1000;
+            oldTime = System.currentTimeMillis();
 
             mCurrentLocation = location;
 
@@ -251,14 +253,13 @@ public class GPSTrackingService extends Service {
         secondsCumulative = CacheManager.getInstance().getSecondsCumulative();
         time = CacheManager.getInstance().getTime();
 
-        timer = new Timer();
-        timer.schedule(new UpdateTimeCumulative(), 0, 1000);
+        oldTime = System.currentTimeMillis();
     }
 
     @Override
     public void onDestroy() {
         super.onDestroy();
-        timer.cancel();
+
         if (mLocationManager != null) {
             for (int i = 0; i < mLocationListeners.length; i++) {
                 try {
@@ -300,22 +301,5 @@ public class GPSTrackingService extends Service {
         double tt = Math.acos(t1 + t2 + t3);
 
         return 6366000 * tt;
-    }
-
-    private class UpdateTimeCumulative extends TimerTask {
-
-        @Override
-        public void run() {
-            timeCumulative += 1000;
-            secondsCumulative = (int) (timeCumulative / 1000);
-
-            timeString = Conversion.getDurationString(secondsCumulative);
-
-            time++;
-
-            CacheManager.getInstance().setTimeCumulative(timeCumulative);
-            CacheManager.getInstance().setSecondsCumulative(secondsCumulative);
-            CacheManager.getInstance().setTime(time);
-        }
     }
 }
