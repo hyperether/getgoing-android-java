@@ -15,8 +15,8 @@ import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.Bundle;
+import android.os.SystemClock;
 import android.support.v4.app.ActivityCompat;
-import android.text.format.DateFormat;
 import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -90,6 +90,7 @@ public class ShowLocationActivity extends Activity implements
 
     // timer for data show
     private Timer timer;
+    long timeWhenStopped = 0;
 
     // Route storage variables
     private GetGoingDataSource datasource;
@@ -324,6 +325,8 @@ public class ShowLocationActivity extends Activity implements
 
                             if (mMap != null) mMap.clear();
 
+                            showTime.setBase(SystemClock.elapsedRealtime());
+                            timeWhenStopped = 0;
                             stopTracking();
 
                             timeFlg = true; // ready for the new round
@@ -365,6 +368,9 @@ public class ShowLocationActivity extends Activity implements
     private void startTracking() {
         startService(new Intent(this, GPSTrackingService.class));
 
+        showTime.setBase(SystemClock.elapsedRealtime() + timeWhenStopped);
+        showTime.start();
+
         timer = new Timer();
         timer.schedule(new RefreshData(), 0, 1000);
 
@@ -381,6 +387,9 @@ public class ShowLocationActivity extends Activity implements
      */
     private void stopTracking() {
         stopService(new Intent(this, GPSTrackingService.class));
+
+        timeWhenStopped = showTime.getBase() - SystemClock.elapsedRealtime();
+        showTime.stop();
 
         button_start.setVisibility(View.VISIBLE);
         button_pause.setVisibility(View.GONE);
@@ -426,9 +435,7 @@ public class ShowLocationActivity extends Activity implements
 
                 @Override
                 public void run() {
-                    showTime.setText(DateFormat.format("mm:ss", CacheManager.getInstance()
-                            .getTimeCumulative()));
-
+                    CacheManager.getInstance().setTimeCumulative(timeWhenStopped);
                     mMap.clear();
                     drawRoute(CacheManager.getInstance().getmRoute());
 
@@ -825,7 +832,7 @@ public class ShowLocationActivity extends Activity implements
          * Store the general route data in the DB
 		 * */
         DbRoute route = datasource
-                .createRoute(CacheManager.getInstance().getTimeCumulative(), CacheManager.getInstance().getKcalCumulative(),
+                .createRoute(timeWhenStopped, CacheManager.getInstance().getKcalCumulative(),
                         CacheManager.getInstance().getDistanceCumulative(), currentDateandTime,
                         CacheManager.getInstance().getVelocityAvg(), cbDataFrameLocal
                                 .getProfileId());
