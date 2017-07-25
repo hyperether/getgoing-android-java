@@ -426,17 +426,11 @@ public class ShowLocationActivity extends Activity implements
 
                 @Override
                 public void run() {
-                    //   timeCumulative += 1000;
-                    //   secondsCumulative = (int) (timeCumulative / 1000);
-
                     showTime.setText(DateFormat.format("mm:ss", CacheManager.getInstance()
                             .getTimeCumulative()));
 
                     mMap.clear();
                     drawRoute(CacheManager.getInstance().getmRoute());
-                    //TODO: Show data
-                    //    CacheManager.getInstance().setTimeElapsed(Conversion.getDurationString
-                    //           (secondsCumulative));
 
                     if (CacheManager.getInstance().getVelocity() != null) {
                         showData(CacheManager.getInstance().getDistanceCumulative(),
