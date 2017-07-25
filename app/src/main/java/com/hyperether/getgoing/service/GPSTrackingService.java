@@ -59,7 +59,6 @@ public class GPSTrackingService extends Service {
     private double velocityAvg = 0;
     private double weight = 0;
 
-    private boolean connectionEstablished = false;
     private String timeString;    // current duration of a walk
 
     private CaloriesCalculation calcCal = new CaloriesCalculation();
@@ -201,8 +200,7 @@ public class GPSTrackingService extends Service {
     }
 
     LocationListener[] mLocationListeners = new LocationListener[]{
-            new LocationListener(LocationManager.GPS_PROVIDER),
-            new LocationListener(LocationManager.NETWORK_PROVIDER)
+            new LocationListener(LocationManager.GPS_PROVIDER)
     };
 
     @Override
@@ -222,15 +220,7 @@ public class GPSTrackingService extends Service {
         weight = settings.getInt("weight", 0);
 
         initializeLocationManager();
-        try {
-            mLocationManager.requestLocationUpdates(
-                    LocationManager.NETWORK_PROVIDER, LOCATION_INTERVAL, LOCATION_DISTANCE,
-                    mLocationListeners[1]);
-        } catch (java.lang.SecurityException ex) {
-            Log.i(TAG, "fail to request location update, ignore", ex);
-        } catch (IllegalArgumentException ex) {
-            Log.d(TAG, "network provider does not exist, " + ex.getMessage());
-        }
+
         try {
             mLocationManager.requestLocationUpdates(
                     LocationManager.GPS_PROVIDER, LOCATION_INTERVAL, LOCATION_DISTANCE,

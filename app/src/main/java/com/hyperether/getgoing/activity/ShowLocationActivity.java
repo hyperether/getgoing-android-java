@@ -557,12 +557,10 @@ public class ShowLocationActivity extends Activity implements
                     getSystemService(Context.LOCATION_SERVICE);
 
             boolean gpsEnabled;
-            boolean networkEnabled;
 
             gpsEnabled = locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER);
-            networkEnabled = locationManager.isProviderEnabled(LocationManager.NETWORK_PROVIDER);
 
-            if (!gpsEnabled || !networkEnabled) {
+            if (!gpsEnabled) {
                 AlertDialog.Builder dialog = new AlertDialog.Builder(this);
                 dialog.setCancelable(false);
                 dialog.setTitle(R.string.alert_dialog_title);
