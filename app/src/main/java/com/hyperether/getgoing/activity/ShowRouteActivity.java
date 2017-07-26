@@ -64,7 +64,7 @@ public class ShowRouteActivity extends FragmentActivity implements OnMapReadyCal
             nodes = datasource.getRouteNodes(route_id);    // Get all nodes for this route
 
             // Show the general values for the current route
-            showTime.setText(String.format(getDurationString(route.getDuration() / 1000)));
+            showTime.setText(String.format(getDurationString(Math.abs(route.getDuration() / 1000))));
             showCalories.setText(String.format("%.02f kcal", route.getEnergy()));
             showDistance.setText(String.format("%.02f m", route.getLength()));
 
