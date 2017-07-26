@@ -137,7 +137,7 @@ public class GPSTrackingService extends Service {
 
                         //brzina je srednja vrednost izmerene i ocitane brzine
                         velocity = (mCurrentLocation.getSpeed() + (distance / time)) / 2;
-                        if (distance < 10 && velocity < 10) {
+                        if (velocity < 30) {
                             CacheManager.getInstance().setVelocity(velocity);
                         }
 
@@ -146,7 +146,7 @@ public class GPSTrackingService extends Service {
                             kcalCurrent = calcCal.calculate(distance, velocity, cbDataFrameLocal,
                                     weight);
                             kcalCumulative += kcalCurrent;
-                            if (distance < 10 && velocity < 10) {
+                            if (velocity < 30) {
                                 CacheManager.getInstance().setKcalCumulative(kcalCumulative);
                             }
                         }
@@ -157,19 +157,19 @@ public class GPSTrackingService extends Service {
                             // node and route database _ids are intentionally 0
                             DbNode tmp = new DbNode(0, latitude, longitude, (float) velocity,
                                     nodeIndex++, 0);
-                            if (distance < 10 && velocity < 10) {
+                            if (velocity < 30) {
                                 CacheManager.getInstance().addRouteNode(tmp);
                             }
                         }
                     } else {
                         velocity = mCurrentLocation.getSpeed();
-                        if (distance < 10 && velocity < 10) {
+                        if (velocity < 30) {
                             CacheManager.getInstance().setVelocity(velocity);
                         }
                     }
                 }
 
-                if (distance < 10 && velocity < 10) {
+                if (velocity < 30) {
                     CacheManager.getInstance().setDistanceCumulative(distanceCumulative);
                     CacheManager.getInstance().setKcalCumulative(kcalCumulative);
                     CacheManager.getInstance().setVelocity(velocity);
@@ -181,7 +181,7 @@ public class GPSTrackingService extends Service {
                 // is connection broken???
             }
 
-            if (distance < 10 && velocity < 10) {
+            if (velocity < 30) {
                 CacheManager.getInstance().setDistanceCumulative(distanceCumulative);
             }
         }
