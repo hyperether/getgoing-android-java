@@ -84,6 +84,9 @@
                 android:background="@android:color/transparent"
                 android:contentDescription="@string/clock_image"
                 android:paddingRight="@dimen/location_img_padding"
+                android:paddingEnd="@dimen/location_img_padding"
+                android:paddingLeft="0dp"
+                android:paddingStart="0dp"
                 android:src="@drawable/clock"/>
 
             <Chronometer
@@ -114,6 +117,9 @@
                 android:background="@android:color/transparent"
                 android:contentDescription="@string/fire_image"
                 android:paddingRight="@dimen/location_img_padding"
+                android:paddingEnd="@dimen/location_img_padding"
+                android:paddingLeft="0dp"
+                android:paddingStart="0dp"
                 android:src="@drawable/fire"/>
 
             <Chronometer
@@ -145,6 +151,9 @@
                 android:background="@android:color/transparent"
                 android:contentDescription="@string/road_image"
                 android:paddingRight="@dimen/location_img_padding"
+                android:paddingEnd="@dimen/location_img_padding"
+                android:paddingLeft="0dp"
+                android:paddingStart="0dp"
                 android:src="@drawable/road"/>
 
             <Chronometer
@@ -176,6 +185,9 @@
                 android:background="@android:color/transparent"
                 android:contentDescription="@string/speed_image"
                 android:paddingRight="@dimen/location_img_padding"
+                android:paddingEnd="@dimen/location_img_padding"
+                android:paddingLeft="0dp"
+                android:paddingStart="0dp"
                 android:src="@drawable/speedmeter"/>
 
             <Chronometer
@@ -207,6 +219,9 @@
                 android:background="@android:color/transparent"
                 android:contentDescription="@string/avg_speed_image"
                 android:paddingRight="@dimen/location_img_padding"
+                android:paddingEnd="@dimen/location_img_padding"
+                android:paddingLeft="0dp"
+                android:paddingStart="0dp"
                 android:src="@drawable/avg_speed"/>
 
             <Chronometer

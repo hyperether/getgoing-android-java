@@ -115,14 +115,14 @@ public class GPSTrackingService extends Service {
                     if (!isKalmanStateSet) {
                         kalman.SetState(latitude,
                                 longitude,
-                                mCurrentLocation.getAccuracy(),
+                                mCurrentLocation != null ? mCurrentLocation.getAccuracy() : 0,
                                 timeCumulative);
                         isKalmanStateSet = true;
                     }
 
                     kalman.Process(latitude,
                             longitude,
-                            mCurrentLocation.getAccuracy(),
+                            mCurrentLocation != null ? mCurrentLocation.getAccuracy() : 0,
                             timeCumulative);
                     latitude = kalman.get_lat();
                     longitude = kalman.get_lng();

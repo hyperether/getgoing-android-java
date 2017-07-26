@@ -29,7 +29,7 @@ public class ShowDataActivity extends ListActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.show_data);
 
-        routes = new ArrayList<DbRoute>();
+        routes = new ArrayList<>();
         // Initialize database connection
         datasource = new GetGoingDataSource(this);
         datasource.open();

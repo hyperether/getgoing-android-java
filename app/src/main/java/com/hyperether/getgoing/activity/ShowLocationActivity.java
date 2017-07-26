@@ -125,7 +125,7 @@ public class ShowLocationActivity extends Activity implements
         // Start with updates turned off
         mUpdatesRequested = false;
         mEditor.putBoolean("KEY_UPDATES_ON", mUpdatesRequested);
-        mEditor.commit();
+        mEditor.apply();
 
 		/*
          * Create a new location client, using the enclosing class to

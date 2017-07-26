@@ -131,7 +131,7 @@ public class GetGoingActivity extends Activity {
             callSettingsActivity();
             return true;
         } else if (itemId == R.id.action_stats) {
-            routes = new ArrayList<DbRoute>();
+            routes = new ArrayList<>();
             // Initialize database connection
             datasource = new GetGoingDataSource(this);
             datasource.open();
@@ -182,11 +182,8 @@ public class GetGoingActivity extends Activity {
      * true: parameters are set false: settings required
      */
     private boolean getParametersStatus(CBDataFrame cbDataFrameLocal) {
-        if ((cbDataFrameLocal.getAge() == 0)
-                || (cbDataFrameLocal.getWeight() == 0)) {
-            return false;
-        }
-        return true;
+        return !((cbDataFrameLocal.getAge() == 0)
+                || (cbDataFrameLocal.getWeight() == 0));
     }
 
     /**
@@ -226,6 +223,6 @@ public class GetGoingActivity extends Activity {
         SharedPreferences settings = getSharedPreferences(Constants.PREF_FILE, 0);
         SharedPreferences.Editor editor = settings.edit();
         editor.putInt("meteringActivityRequestedId", id);
-        editor.commit();
+        editor.apply();
     }
 }

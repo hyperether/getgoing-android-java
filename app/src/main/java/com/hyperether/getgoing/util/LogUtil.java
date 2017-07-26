@@ -214,9 +214,7 @@ public class LogUtil {
     /**
      * Get the background color for a particular event
      *
-     * @param level
-     *
-     * @return
+     * @param level log level
      */
     private String getLevelColor(int level) {
         switch (level) {

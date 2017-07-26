@@ -88,14 +88,6 @@ public class ShowRouteActivity extends FragmentActivity implements OnMapReadyCal
     }
 
     /*
-     * Called when the Activity becomes visible.
-     */
-    @Override
-    protected void onStart() {
-        super.onStart();
-    }
-
-    /*
      * Called when the Activity is no longer visible.
      */
     @Override

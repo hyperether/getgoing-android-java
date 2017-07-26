@@ -19,6 +19,9 @@
             android:layout_centerVertical="true"
             android:contentDescription="@string/app_name"
             android:paddingRight="@dimen/element_padding_land"
+            android:paddingEnd="@dimen/element_padding_land"
+            android:paddingStart="0dp"
+            android:paddingLeft="0dp"
             android:src="@drawable/statistic_walk"/>
 
         <LinearLayout
@@ -41,6 +44,9 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:paddingRight="@dimen/date_padding_land"
+                    android:paddingEnd="@dimen/date_padding_land"
+                    android:paddingStart="0dp"
+                    android:paddingLeft="0dp"
                     android:text="@string/date"
                     android:textSize="@dimen/element_text_size_land"
                     android:textStyle="bold"/>
