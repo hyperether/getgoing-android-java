@@ -4,7 +4,9 @@ import android.Manifest;
 import android.app.Activity;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.pm.PackageManager;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -13,10 +15,10 @@ import android.widget.ImageButton;
 
 import com.crashlytics.android.Crashlytics;
 import com.hyperether.getgoing.R;
-import com.hyperether.getgoing.manager.CacheManager;
 import com.hyperether.getgoing.data.CBDataFrame;
 import com.hyperether.getgoing.db.DbRoute;
 import com.hyperether.getgoing.db.GetGoingDataSource;
+import com.hyperether.getgoing.manager.CacheManager;
 import com.hyperether.getgoing.util.Constants;
 import com.hyperether.getgoing.util.FragmentDialog;
 
@@ -69,6 +71,20 @@ public class GetGoingActivity extends Activity {
         cbDataFrameLocal.setWeight(weight);
     }
 
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions,
+                                           @NonNull int[] grantResults) {
+        switch (requestCode) {
+            case Constants.TAG_CODE_PERMISSION_LOCATION:
+                if (grantResults.length > 0 && grantResults[0] == PackageManager
+                        .PERMISSION_GRANTED) {
+                } else {
+                    finish();
+                }
+                break;
+        }
+    }
+
     /**
      * This method is used for handling button clicks.
      */
@@ -115,7 +131,7 @@ public class GetGoingActivity extends Activity {
             callSettingsActivity();
             return true;
         } else if (itemId == R.id.action_stats) {
-            routes = new ArrayList<DbRoute>();
+            routes = new ArrayList<>();
             // Initialize database connection
             datasource = new GetGoingDataSource(this);
             datasource.open();
@@ -150,15 +166,13 @@ public class GetGoingActivity extends Activity {
                                 this.cbDataFrameLocal.getMeasurementSystemId());
                         editor.putInt("age", this.cbDataFrameLocal.getAge());
                         editor.putInt("weight", this.cbDataFrameLocal.getWeight());
-                        editor.commit();
+                        editor.apply();
 
                         int id = settings.getInt("meteringActivityRequestedId", 0);
                         if (id > 0) {
                             callMeteringActivity(id);
                         }
                     }
-                } else { // back option button pressed
-
                 }
                 break;
         }
@@ -168,11 +182,8 @@ public class GetGoingActivity extends Activity {
      * true: parameters are set false: settings required
      */
     private boolean getParametersStatus(CBDataFrame cbDataFrameLocal) {
-        if ((cbDataFrameLocal.getAge() == 0)
-                || (cbDataFrameLocal.getWeight() == 0)) {
-            return false;
-        }
-        return true;
+        return !((cbDataFrameLocal.getAge() == 0)
+                || (cbDataFrameLocal.getWeight() == 0));
     }
 
     /**
@@ -212,6 +223,6 @@ public class GetGoingActivity extends Activity {
         SharedPreferences settings = getSharedPreferences(Constants.PREF_FILE, 0);
         SharedPreferences.Editor editor = settings.edit();
         editor.putInt("meteringActivityRequestedId", id);
-        editor.commit();
+        editor.apply();
     }
 }

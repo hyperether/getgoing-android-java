@@ -59,11 +59,12 @@ public class ShowRouteActivity extends FragmentActivity implements OnMapReadyCal
             Long route_id =
                     extras.getLong("ROUTE_ID"); // get the id of the route that should be drawn
 
+            datasource.open();
             route = datasource.getRoute(route_id); // get the route
             nodes = datasource.getRouteNodes(route_id);    // Get all nodes for this route
 
             // Show the general values for the current route
-            showTime.setText(String.format(getDurationString(route.getDuration() / 1000)));
+            showTime.setText(String.format(getDurationString(Math.abs(route.getDuration() / 1000))));
             showCalories.setText(String.format("%.02f kcal", route.getEnergy()));
             showDistance.setText(String.format("%.02f m", route.getLength()));
 
@@ -82,15 +83,8 @@ public class ShowRouteActivity extends FragmentActivity implements OnMapReadyCal
                 showLocation(nodes.get(0).getLatitude(), nodes.get(0).getLongitude());
                 drawRoute(nodes); // draw the route obtained from database
             }
+            datasource.close();
         }
-    }
-
-    /*
-     * Called when the Activity becomes visible.
-     */
-    @Override
-    protected void onStart() {
-        super.onStart();
     }
 
     /*

@@ -5,217 +5,197 @@
                 android:layout_marginBottom="@dimen/settings_margin_port"
                 android:layout_marginTop="@dimen/settings_margin_port">
 
-    <RelativeLayout
+    <LinearLayout
         android:id="@+id/metric_layout"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:layout_alignParentTop="true"
-        android:layout_margin="@dimen/settings_layout_margin">
+        android:layout_margin="@dimen/settings_layout_margin"
+        android:gravity="center"
+        android:orientation="horizontal"
+        android:visibility="visible">
 
-        <ImageView
-            android:id="@+id/measure_image"
-            android:layout_width="wrap_content"
+        <LinearLayout
+            android:layout_width="@dimen/measure_icon_width"
             android:layout_height="wrap_content"
-            android:layout_alignParentLeft="true"
-            android:layout_alignParentStart="true"
-            android:layout_centerVertical="true"
-            android:background="@android:color/transparent"
-            android:contentDescription="@string/measure_image"
-            android:src="@drawable/measure"/>
+            android:layout_weight="1"
+            android:gravity="center">
+
+            <ImageView
+                android:id="@+id/measure_image"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@android:color/transparent"
+                android:contentDescription="@string/measure_image"
+                android:src="@drawable/measure"/>
+        </LinearLayout>
 
         <TextView
             android:id="@+id/measure_text"
-            android:layout_width="wrap_content"
+            android:layout_width="@dimen/measure_units"
             android:layout_height="wrap_content"
-            android:layout_centerVertical="true"
-            android:layout_marginLeft="@dimen/settings_txt_margin_left"
-            android:layout_marginStart="@dimen/settings_txt_margin_left"
-            android:layout_toEndOf="@+id/measure_image"
-            android:layout_toRightOf="@+id/measure_image"
+            android:layout_margin="@dimen/default_margin_20"
+            android:layout_weight="1"
+            android:gravity="center"
             android:text="@string/measure_image"
             android:textColor="@color/settings_font"
             android:textSize="@dimen/settings_text_size"/>
 
-        <Spinner
-            android:id="@+id/metric_spinner"
-            android:layout_width="@dimen/settings_spinner_width"
+        <LinearLayout
+            android:layout_width="@dimen/measure_spinner_width"
             android:layout_height="wrap_content"
-            android:layout_alignParentEnd="true"
-            android:layout_alignParentRight="true"
-            android:layout_centerVertical="true"
-            android:prompt="@string/metric_spinner"/>
-    </RelativeLayout>
+            android:layout_weight="1"
+            android:gravity="start">
+
+            <Spinner
+                android:id="@+id/metric_spinner"
+                android:layout_width="@dimen/settings_spinner_width"
+                android:layout_height="wrap_content"
+                android:prompt="@string/metric_spinner"/>
+        </LinearLayout>
+    </LinearLayout>
 
     <View
         android:id="@+id/first_line"
         android:layout_width="match_parent"
         android:layout_height="1dp"
         android:layout_below="@+id/metric_layout"
-        android:background="@color/settings_view_first_line"/>
+        android:layout_marginTop="0dp"
+        android:background="@color/settings_view_second_line"
+        android:visibility="visible"/>
 
-    <View
-        android:id="@+id/second_line"
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="1dp"
-        android:layout_below="@+id/first_line"
-        android:background="@color/settings_view_second_line"/>
-
-    <RelativeLayout
-        android:id="@+id/weight_layout"
-        android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/second_line"
-        android:layout_margin="@dimen/settings_layout_margin">
+        android:layout_centerInParent="true"
+        android:orientation="horizontal">
 
-        <ImageView
-            android:id="@+id/weight_image"
-            android:layout_width="wrap_content"
+        <LinearLayout
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_alignParentLeft="true"
-            android:layout_alignParentStart="true"
-            android:layout_gravity="center_vertical"
-            android:background="@android:color/transparent"
-            android:contentDescription="@string/teg_image"
-            android:src="@drawable/beam_scale"/>
+            android:layout_weight="1"
+            android:orientation="vertical">
 
-        <TextView
-            android:id="@+id/weight_text"
-            android:layout_width="wrap_content"
+
+            <TextView
+                android:id="@+id/weight_text"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_marginBottom="@dimen/default_margin_10"
+                android:layout_marginTop="@dimen/default_margin_10"
+                android:text="@string/teg_image"
+                android:textColor="@color/settings_font"
+                android:textSize="@dimen/settings_text_size"/>
+
+            <LinearLayout
+                android:id="@+id/weight_layout"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="1"
+                android:baselineAligned="false"
+                android:gravity="center"
+                android:orientation="horizontal"
+                android:paddingEnd="@dimen/default_padding_10"
+                android:paddingLeft="0dp"
+                android:paddingRight="@dimen/default_padding_10"
+                android:paddingStart="0dp"
+                android:visibility="visible">
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:gravity="center">
+
+                    <ImageView
+                        android:id="@+id/weight_image"
+                        android:layout_width="@dimen/settings_weight_icon_width"
+                        android:layout_height="wrap_content"
+                        android:layout_margin="@dimen/default_margin_20"
+                        android:background="@android:color/transparent"
+                        android:contentDescription="@string/teg_image"
+                        android:src="@drawable/beam_scale"/>
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="@dimen/number_picker_width"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:gravity="center"
+                    android:orientation="vertical">
+
+                    <NumberPicker
+                        android:id="@+id/num_picker"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:descendantFocusability="blocksDescendants"/>
+                </LinearLayout>
+            </LinearLayout>
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_centerVertical="true"
-            android:layout_marginLeft="@dimen/settings_txt_margin_left"
-            android:layout_marginStart="@dimen/settings_txt_margin_left"
-            android:layout_toEndOf="@+id/weight_image"
-            android:layout_toRightOf="@+id/weight_image"
-            android:text="@string/teg_image"
-            android:textColor="@color/settings_font"
-            android:textSize="@dimen/settings_text_size"/>
+            android:layout_weight="1"
+            android:orientation="vertical">
 
-        <EditText
-            android:id="@+id/edit_weight"
-            android:layout_width="@dimen/settings_edit_width"
-            android:layout_height="@dimen/settings_edit_height"
-            android:layout_centerVertical="true"
-            android:layout_gravity="right"
-            android:layout_marginEnd="@dimen/settings_edit_margin_left"
-            android:layout_marginRight="@dimen/settings_edit_margin_left"
-            android:layout_toLeftOf="@+id/weight_picker_up"
-            android:layout_toStartOf="@+id/weight_picker_up"
-            android:background="@drawable/selector_custom_border_edit_text"
-            android:inputType="number"/>
+            <TextView
+                android:id="@+id/age_text"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="@dimen/default_margin_10"
+                android:layout_marginTop="@dimen/default_margin_10"
+                android:gravity="center"
+                android:text="@string/age_image"
+                android:textColor="@color/settings_font"
+                android:textSize="@dimen/settings_text_size"/>
 
-        <ImageButton
-            android:id="@+id/weight_picker_up"
-            android:layout_width="@dimen/settings_btn_arrow_size"
-            android:layout_height="@dimen/settings_btn_arrow_size"
-            android:layout_centerVertical="true"
-            android:layout_marginEnd="@dimen/settings_arrow_margin_right"
-            android:layout_marginRight="@dimen/settings_arrow_margin_right"
-            android:layout_toLeftOf="@+id/weight_picker_down"
-            android:layout_toStartOf="@+id/weight_picker_down"
-            android:background="@android:color/transparent"
-            android:contentDescription="@string/settings_img_up"
-            android:scaleType="fitXY"
-            android:src="@drawable/button_arrow_up"/>
+            <LinearLayout
+                android:id="@+id/age_layout"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="1"
+                android:baselineAligned="false"
+                android:gravity="center"
+                android:orientation="horizontal"
+                android:paddingEnd="@dimen/default_padding_30"
+                android:paddingLeft="0dp"
+                android:paddingRight="@dimen/default_padding_30"
+                android:paddingStart="0dp"
+                android:visibility="visible">
 
-        <ImageButton
-            android:id="@+id/weight_picker_down"
-            android:layout_width="@dimen/settings_btn_arrow_size"
-            android:layout_height="@dimen/settings_btn_arrow_size"
-            android:layout_alignParentEnd="true"
-            android:layout_alignParentRight="true"
-            android:layout_centerVertical="true"
-            android:background="@android:color/transparent"
-            android:contentDescription="@string/settings_img_down"
-            android:scaleType="fitXY"
-            android:src="@drawable/button_arrow_down"/>
-    </RelativeLayout>
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:gravity="center">
 
-    <RelativeLayout
-        android:id="@+id/age_layout"
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/weight_layout"
-        android:layout_margin="@dimen/settings_layout_margin">
+                    <ImageView
+                        android:id="@+id/age_image"
+                        android:layout_width="@dimen/settings_age_icon_width"
+                        android:layout_height="wrap_content"
+                        android:layout_margin="@dimen/default_margin_20"
+                        android:background="@android:color/transparent"
+                        android:contentDescription="@string/age_image"
+                        android:src="@drawable/sandglass"/>
+                </LinearLayout>
 
-        <ImageView
-            android:id="@+id/age_image"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentLeft="true"
-            android:layout_alignParentStart="true"
-            android:layout_centerVertical="true"
-            android:layout_marginLeft="10dp"
-            android:layout_marginStart="10dp"
-            android:background="@android:color/transparent"
-            android:contentDescription="@string/age_image"
-            android:src="@drawable/sandglass"/>
+                <LinearLayout
+                    android:layout_width="@dimen/number_picker_width"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:gravity="center"
+                    android:orientation="vertical">
 
-        <TextView
-            android:id="@+id/age_text"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_centerVertical="true"
-            android:layout_marginLeft="@dimen/settings_txt_age_margin_left"
-            android:layout_marginStart="@dimen/settings_txt_age_margin_left"
-            android:layout_toEndOf="@+id/age_image"
-            android:layout_toRightOf="@+id/age_image"
-            android:text="@string/age_image"
-            android:textColor="@color/settings_font"
-            android:textSize="@dimen/settings_text_size"/>
-
-        <EditText
-            android:id="@+id/edit_age"
-            android:layout_width="@dimen/settings_edit_width"
-            android:layout_height="@dimen/settings_edit_height"
-            android:layout_centerVertical="true"
-            android:layout_gravity="right"
-            android:layout_marginEnd="@dimen/settings_edit_margin_left"
-            android:layout_marginRight="@dimen/settings_edit_margin_left"
-            android:layout_toLeftOf="@+id/age_picker_up"
-            android:layout_toStartOf="@+id/age_picker_up"
-            android:background="@drawable/selector_custom_border_edit_text"
-            android:inputType="number"/>
-
-        <ImageButton
-            android:id="@+id/age_picker_up"
-            android:layout_width="@dimen/settings_btn_arrow_size"
-            android:layout_height="@dimen/settings_btn_arrow_size"
-            android:layout_centerVertical="true"
-            android:layout_marginEnd="@dimen/settings_arrow_margin_right"
-            android:layout_marginRight="@dimen/settings_arrow_margin_right"
-            android:layout_toLeftOf="@+id/age_picker_down"
-            android:layout_toStartOf="@+id/age_picker_down"
-            android:background="@android:color/transparent"
-            android:contentDescription="@string/settings_img_up"
-            android:scaleType="fitXY"
-            android:src="@drawable/button_arrow_up"/>
-
-        <ImageButton
-            android:id="@+id/age_picker_down"
-            android:layout_width="@dimen/settings_btn_arrow_size"
-            android:layout_height="@dimen/settings_btn_arrow_size"
-            android:layout_alignParentEnd="true"
-            android:layout_alignParentRight="true"
-            android:layout_centerVertical="true"
-            android:background="@android:color/transparent"
-            android:contentDescription="@string/settings_img_down"
-            android:scaleType="fitXY"
-            android:src="@drawable/button_arrow_down"/>
-    </RelativeLayout>
-
-    <View
-        android:id="@+id/third_line"
-        android:layout_width="match_parent"
-        android:layout_height="1dp"
-        android:layout_below="@+id/age_layout"
-        android:background="@color/settings_view_first_line"/>
-
-    <View
-        android:layout_width="match_parent"
-        android:layout_height="1dp"
-        android:layout_below="@+id/third_line"
-        android:background="@color/settings_view_second_line"/>
+                    <NumberPicker
+                        android:id="@+id/num_picker2"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:descendantFocusability="blocksDescendants"/>
+                </LinearLayout>
+            </LinearLayout>
+        </LinearLayout>
+    </LinearLayout>
 
     <ImageButton
         android:id="@+id/buttonConfirmSettings"
@@ -223,7 +203,7 @@
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
         android:layout_centerHorizontal="true"
-        android:layout_margin="10dp"
+        android:layout_margin="@dimen/default_margin_10"
         android:background="@android:color/transparent"
         android:src="@drawable/button_accept"/>
 </RelativeLayout>

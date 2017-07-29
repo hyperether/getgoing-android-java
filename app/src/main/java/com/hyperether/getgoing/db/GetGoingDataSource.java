@@ -100,7 +100,7 @@ public class GetGoingDataSource {
      * Get all routes from database.
      */
     public List<DbRoute> getAllRoutes() {
-        List<DbRoute> routes = new ArrayList<DbRoute>();
+        List<DbRoute> routes = new ArrayList<>();
 
         Cursor cursor = database.query(GetGoingDatabaseHelper.TABLE_ROUTE,
                 allRouteColumns, null, null, null, null, null);
@@ -145,10 +145,8 @@ public class GetGoingDataSource {
      * @param cursor database cursor
      */
     private DbRoute cursorToRoute(Cursor cursor) {
-        DbRoute route = new DbRoute(cursor.getLong(0), cursor.getLong(1), cursor.getDouble(2)
-                , cursor.getDouble(3), cursor.getString(4), cursor.getDouble(5), cursor.getInt(6));
-
-        return route;
+        return new DbRoute(cursor.getLong(0), cursor.getLong(1), cursor.getDouble(2),
+                cursor.getDouble(3), cursor.getString(4), cursor.getDouble(5), cursor.getInt(6));
     }
 
     /**
@@ -209,7 +207,7 @@ public class GetGoingDataSource {
      * Get all nodes in the database.
      */
     public List<DbNode> getAllNodes() {
-        List<DbNode> nodes = new ArrayList<DbNode>();
+        List<DbNode> nodes = new ArrayList<>();
 
         Cursor cursor = database.query(GetGoingDatabaseHelper.TABLE_NODE,
                 allNodeColumns, null, null, null, null, null);
@@ -231,7 +229,7 @@ public class GetGoingDataSource {
      * @param route_id id of the route
      */
     public List<DbNode> getRouteNodes(long route_id) {
-        List<DbNode> nodes = new ArrayList<DbNode>();
+        List<DbNode> nodes = new ArrayList<>();
 
         Cursor cursor = database.query(GetGoingDatabaseHelper.TABLE_NODE, allNodeColumns,
                 GetGoingDatabaseHelper.COLUMN_ROUTE_ID + " = " + route_id, null, null, null, null);
@@ -253,10 +251,7 @@ public class GetGoingDataSource {
      * @param cursor database cursor
      */
     private DbNode cursorToNode(Cursor cursor) {
-        DbNode node = new DbNode(cursor.getLong(0), cursor.getDouble(1), cursor.getDouble(2),
-                cursor.getFloat(3)
-                , cursor.getLong(4), cursor.getLong(5));
-
-        return node;
+        return new DbNode(cursor.getLong(0), cursor.getDouble(1), cursor.getDouble(2),
+                cursor.getFloat(3), cursor.getLong(4), cursor.getLong(5));
     }
 }

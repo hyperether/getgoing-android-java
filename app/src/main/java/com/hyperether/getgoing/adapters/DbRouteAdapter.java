@@ -112,10 +112,8 @@ public class DbRouteAdapter extends BaseAdapter {
             ViewHolder holder = (ViewHolder) convertView.getTag();
 
             textDate = holder.textDate;
-            textTime = holder.textTime;
             textEnergy = holder.textEnergy;
             imageViewAction = holder.imageViewAction;
-            imageViewDelete = holder.imageViewDelete;
         }
 
         DbRoute route = myRoutes.get(position);

@@ -18,7 +18,7 @@ public class CaloriesCalculation {
      *
      * @param dis distance traveled
      * @param vel velocity
-     * @param cbDataFrameLocal
+     * @param cbDataFrameLocal data frame
      * @param weight user weight
      */
     public double calculate(double dis, double vel, CBDataFrame cbDataFrameLocal, double weight) {

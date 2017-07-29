@@ -10,17 +10,14 @@ import android.os.Bundle;
 import android.os.IBinder;
 import android.util.Log;
 
-import com.hyperether.getgoing.manager.CacheManager;
 import com.hyperether.getgoing.data.CBDataFrame;
 import com.hyperether.getgoing.db.DbNode;
 import com.hyperether.getgoing.location.KalmanLatLong;
+import com.hyperether.getgoing.manager.CacheManager;
 import com.hyperether.getgoing.util.CaloriesCalculation;
 import com.hyperether.getgoing.util.Constants;
-import com.hyperether.getgoing.util.Conversion;
 import com.hyperether.getgoing.util.LogUtil;
 
-import java.util.Timer;
-import java.util.TimerTask;
 
 /**
  * Created by nikola on 11/07/17.
@@ -58,13 +55,12 @@ public class GPSTrackingService extends Service {
     private double velocity = 0;
     private double velocityAvg = 0;
     private double weight = 0;
+    private long oldTime = 0;
 
-    private boolean connectionEstablished = false;
     private String timeString;    // current duration of a walk
 
     private CaloriesCalculation calcCal = new CaloriesCalculation();
     private CBDataFrame cbDataFrameLocal;    // to store the current settings
-    private Timer timer;
 
     private class LocationListener implements android.location.LocationListener {
         Location mLastLocation;
@@ -80,6 +76,11 @@ public class GPSTrackingService extends Service {
 
             double dLat, dLong;
             double distance = 0;
+
+            time = System.currentTimeMillis() - oldTime;
+            timeCumulative += System.currentTimeMillis() - oldTime;
+            secondsCumulative = (int) timeCumulative / 1000;
+            oldTime = System.currentTimeMillis();
 
             mCurrentLocation = location;
 
@@ -114,14 +115,14 @@ public class GPSTrackingService extends Service {
                     if (!isKalmanStateSet) {
                         kalman.SetState(latitude,
                                 longitude,
-                                mCurrentLocation.getAccuracy(),
+                                mCurrentLocation != null ? mCurrentLocation.getAccuracy() : 0,
                                 timeCumulative);
                         isKalmanStateSet = true;
                     }
 
                     kalman.Process(latitude,
                             longitude,
-                            mCurrentLocation.getAccuracy(),
+                            mCurrentLocation != null ? mCurrentLocation.getAccuracy() : 0,
                             timeCumulative);
                     latitude = kalman.get_lat();
                     longitude = kalman.get_lng();
@@ -136,14 +137,18 @@ public class GPSTrackingService extends Service {
 
                         //brzina je srednja vrednost izmerene i ocitane brzine
                         velocity = (mCurrentLocation.getSpeed() + (distance / time)) / 2;
-                        CacheManager.getInstance().setVelocity(velocity);
+                        if (velocity < 30) {
+                            CacheManager.getInstance().setVelocity(velocity);
+                        }
 
                         if (CacheManager.getInstance().getObDataFrameLocal() != null) {
                             cbDataFrameLocal = CacheManager.getInstance().getObDataFrameLocal();
                             kcalCurrent = calcCal.calculate(distance, velocity, cbDataFrameLocal,
                                     weight);
                             kcalCumulative += kcalCurrent;
-                            CacheManager.getInstance().setKcalCumulative(kcalCumulative);
+                            if (velocity < 30) {
+                                CacheManager.getInstance().setKcalCumulative(kcalCumulative);
+                            }
                         }
 
                         if (distanceDelta > Constants.NODE_ADD_DISTANCE) {
@@ -152,25 +157,33 @@ public class GPSTrackingService extends Service {
                             // node and route database _ids are intentionally 0
                             DbNode tmp = new DbNode(0, latitude, longitude, (float) velocity,
                                     nodeIndex++, 0);
-                            CacheManager.getInstance().addRouteNode(tmp);
+                            if (velocity < 30) {
+                                CacheManager.getInstance().addRouteNode(tmp);
+                            }
                         }
                     } else {
                         velocity = mCurrentLocation.getSpeed();
-                        CacheManager.getInstance().setVelocity(velocity);
+                        if (velocity < 30) {
+                            CacheManager.getInstance().setVelocity(velocity);
+                        }
                     }
                 }
 
-                CacheManager.getInstance().setDistanceCumulative(distanceCumulative);
-                CacheManager.getInstance().setKcalCumulative(kcalCumulative);
-                CacheManager.getInstance().setVelocity(velocity);
-                CacheManager.getInstance().setVelocityAvg(velocityAvg);
+                if (velocity < 30) {
+                    CacheManager.getInstance().setDistanceCumulative(distanceCumulative);
+                    CacheManager.getInstance().setKcalCumulative(kcalCumulative);
+                    CacheManager.getInstance().setVelocity(velocity);
+                    CacheManager.getInstance().setVelocityAvg(velocityAvg);
+                }
 
                 time = 0; // reset the second counter for calculating velocity
             } else {
                 // is connection broken???
             }
 
-            CacheManager.getInstance().setDistanceCumulative(distanceCumulative);
+            if (velocity < 30) {
+                CacheManager.getInstance().setDistanceCumulative(distanceCumulative);
+            }
         }
 
         @Override
@@ -189,8 +202,7 @@ public class GPSTrackingService extends Service {
     }
 
     LocationListener[] mLocationListeners = new LocationListener[]{
-            new LocationListener(LocationManager.GPS_PROVIDER),
-            new LocationListener(LocationManager.NETWORK_PROVIDER)
+            new LocationListener(LocationManager.GPS_PROVIDER)
     };
 
     @Override
@@ -210,15 +222,7 @@ public class GPSTrackingService extends Service {
         weight = settings.getInt("weight", 0);
 
         initializeLocationManager();
-        try {
-            mLocationManager.requestLocationUpdates(
-                    LocationManager.NETWORK_PROVIDER, LOCATION_INTERVAL, LOCATION_DISTANCE,
-                    mLocationListeners[1]);
-        } catch (java.lang.SecurityException ex) {
-            Log.i(TAG, "fail to request location update, ignore", ex);
-        } catch (IllegalArgumentException ex) {
-            Log.d(TAG, "network provider does not exist, " + ex.getMessage());
-        }
+
         try {
             mLocationManager.requestLocationUpdates(
                     LocationManager.GPS_PROVIDER, LOCATION_INTERVAL, LOCATION_DISTANCE,
@@ -249,13 +253,13 @@ public class GPSTrackingService extends Service {
         secondsCumulative = CacheManager.getInstance().getSecondsCumulative();
         time = CacheManager.getInstance().getTime();
 
-        timer = new Timer();
-        timer.schedule(new UpdateTimeCumulative(), 0, 1000);
+        oldTime = System.currentTimeMillis();
     }
 
     @Override
     public void onDestroy() {
         super.onDestroy();
+
         if (mLocationManager != null) {
             for (int i = 0; i < mLocationListeners.length; i++) {
                 try {
@@ -297,22 +301,5 @@ public class GPSTrackingService extends Service {
         double tt = Math.acos(t1 + t2 + t3);
 
         return 6366000 * tt;
-    }
-
-    private class UpdateTimeCumulative extends TimerTask {
-
-        @Override
-        public void run() {
-            timeCumulative += 1000;
-            secondsCumulative = (int) (timeCumulative / 1000);
-
-            timeString = Conversion.getDurationString(secondsCumulative);
-
-            time++;
-
-            CacheManager.getInstance().setTimeCumulative(timeCumulative);
-            CacheManager.getInstance().setSecondsCumulative(secondsCumulative);
-            CacheManager.getInstance().setTime(time);
-        }
     }
 }
