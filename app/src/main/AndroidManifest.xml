@@ -41,6 +41,10 @@
 
         <service android:name=".service.GPSTrackingService"/>
 
+        <provider android:authorities="com.facebook.app.FacebookContentProvider213193922545275"
+                  android:name="com.facebook.FacebookContentProvider"
+                  android:exported="true"/>
+
         <activity
             android:name=".activity.GetGoingActivity"
             android:icon="@mipmap/ic_logo"

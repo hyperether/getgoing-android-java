@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
 import android.widget.EditText;
 
+import com.facebook.share.widget.ShareButton;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapFragment;
@@ -32,6 +33,8 @@ public class ShowRouteActivity extends FragmentActivity implements OnMapReadyCal
     private List<DbNode> nodes;
     private DbRoute route;
 
+    ShareButton shareButton;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
 
@@ -44,6 +47,8 @@ public class ShowRouteActivity extends FragmentActivity implements OnMapReadyCal
         showTime = (EditText) findViewById(R.id.showTime);
         showCalories = (EditText) findViewById(R.id.showCalories);
         showDistance = (EditText) findViewById(R.id.showDistance);
+
+        shareButton = (ShareButton) findViewById(R.id.btnShare);
 
         MapFragment mapFragment = (MapFragment) getFragmentManager()
                 .findFragmentById(R.id.show_map_page);

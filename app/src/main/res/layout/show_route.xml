@@ -26,7 +26,7 @@
                 android:layout_marginLeft="@dimen/route_margin"
                 android:layout_marginStart="@dimen/route_margin"
                 android:contentDescription="@string/descImageViewEmpty"
-                android:src="@drawable/clock" />
+                android:src="@drawable/clock"/>
 
             <EditText
                 android:id="@+id/showTime"
@@ -40,7 +40,7 @@
                 android:focusable="false"
                 android:focusableInTouchMode="false"
                 android:inputType="text"
-                android:textStyle="bold" />
+                android:textStyle="bold"/>
         </LinearLayout>
 
         <LinearLayout
@@ -59,7 +59,7 @@
                 android:layout_marginLeft="@dimen/route_margin"
                 android:layout_marginStart="@dimen/route_margin"
                 android:contentDescription="@string/descImageViewEmpty"
-                android:src="@drawable/fire" />
+                android:src="@drawable/fire"/>
 
             <EditText
                 android:id="@+id/showCalories"
@@ -73,7 +73,7 @@
                 android:focusable="false"
                 android:focusableInTouchMode="false"
                 android:inputType="text"
-                android:textStyle="bold" />
+                android:textStyle="bold"/>
         </LinearLayout>
 
         <LinearLayout
@@ -92,7 +92,7 @@
                 android:layout_marginLeft="@dimen/route_margin"
                 android:layout_marginStart="@dimen/route_margin"
                 android:contentDescription="@string/descImageViewEmpty"
-                android:src="@drawable/road" />
+                android:src="@drawable/road"/>
 
             <EditText
                 android:id="@+id/showDistance"
@@ -106,8 +106,20 @@
                 android:focusable="false"
                 android:focusableInTouchMode="false"
                 android:inputType="text"
-                android:textStyle="bold" />
+                android:textStyle="bold"/>
         </LinearLayout>
+
+        <com.facebook.share.widget.ShareButton
+            android:id="@+id/btnShare"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="25dp"
+            android:layout_marginStart="25dp"
+            android:layout_toEndOf="@+id/calories_layout"
+            android:layout_toRightOf="@+id/calories_layout"
+            android:background="@color/com_facebook_blue"
+            android:text="Share"/>
     </RelativeLayout>
 
     <fragment
