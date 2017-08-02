@@ -18,6 +18,10 @@
     <string name="time">09:03:48</string>
     <string name="metric_spinner">Metric</string>
 
+    <!-- fb app id -->
+    <string name="facebook_app_id">213193922545275</string>
+    <string name="fb_login_protocol_scheme">fb213193922545275</string>
+
     <string name="SettingsActivityTitle" translatable="false">Settings</string>
     <string name="ShowMap" translatable="false">Map</string>
     <string name="action_reset_settings" translatable="false">Reset</string>

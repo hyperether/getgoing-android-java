@@ -14,6 +14,8 @@ import android.view.View;
 import android.widget.ImageButton;
 
 import com.crashlytics.android.Crashlytics;
+import com.facebook.AccessToken;
+import com.facebook.login.LoginManager;
 import com.hyperether.getgoing.R;
 import com.hyperether.getgoing.data.CBDataFrame;
 import com.hyperether.getgoing.db.DbRoute;
@@ -120,13 +122,14 @@ public class GetGoingActivity extends Activity {
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.get_going, menu);
+        getMenuInflater().inflate(R.menu.menu, menu);
         return super.onCreateOptionsMenu(menu);
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         int itemId = item.getItemId();
+
         if (itemId == R.id.action_settings) {
             callSettingsActivity();
             return true;
@@ -144,6 +147,12 @@ public class GetGoingActivity extends Activity {
             } else {
                 Intent intent = new Intent(GetGoingActivity.this, ShowDataActivity.class);
                 startActivity(intent);
+            }
+            return true;
+        } else if (itemId == R.id.logout) {
+            if (isLoggedIn()) {
+                LoginManager.getInstance().logOut();
+                finish();
             }
             return true;
         } else {
@@ -224,5 +233,13 @@ public class GetGoingActivity extends Activity {
         SharedPreferences.Editor editor = settings.edit();
         editor.putInt("meteringActivityRequestedId", id);
         editor.apply();
+    }
+
+    /**
+     * This method check if user is logged in by fb
+     */
+    public boolean isLoggedIn() {
+        AccessToken accessToken = AccessToken.getCurrentAccessToken();
+        return accessToken != null;
     }
 }
