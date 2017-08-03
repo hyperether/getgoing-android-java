@@ -65,7 +65,7 @@ public class ShowRouteActivity extends FragmentActivity implements OnMapReadyCal
         shareButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                takeScreenshot();
+                takeScreenshot(R.id.relative_layout_data);
                 takeMapSnapshot();
             }
         });
@@ -227,7 +227,7 @@ public class ShowRouteActivity extends FragmentActivity implements OnMapReadyCal
         return String.valueOf(number);
     }
 
-    private void takeScreenshot() {
+    private void takeScreenshot(int layoutName) {
         Date now = new Date();
         android.text.format.DateFormat.format("yyyy-MM-dd_hh:mm:ss", now);
 
@@ -237,7 +237,7 @@ public class ShowRouteActivity extends FragmentActivity implements OnMapReadyCal
                     ".jpg";
 
             // create bitmap screen capture
-            View v1 = findViewById(R.id.relative_layout_data);
+            View v1 = findViewById(layoutName);
             v1.setDrawingCacheEnabled(true);
             Bitmap bitmap = Bitmap.createBitmap(v1.getDrawingCache());
             v1.setDrawingCacheEnabled(false);
@@ -274,7 +274,6 @@ public class ShowRouteActivity extends FragmentActivity implements OnMapReadyCal
 
                     FileOutputStream out = new FileOutputStream(imageFile);
                     bitmap.compress(Bitmap.CompressFormat.PNG, 90, out);
-
                     out.flush();
                     out.close();
 
