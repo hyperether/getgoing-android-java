@@ -1,12 +1,17 @@
 package com.hyperether.getgoing.activity;
 
+import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.Bitmap;
 import android.graphics.Color;
+import android.net.Uri;
 import android.os.Bundle;
+import android.os.Environment;
 import android.support.v4.app.FragmentActivity;
+import android.view.View;
+import android.widget.Button;
 import android.widget.EditText;
 
-import com.facebook.share.widget.ShareButton;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapFragment;
@@ -19,6 +24,9 @@ import com.hyperether.getgoing.db.DbRoute;
 import com.hyperether.getgoing.db.GetGoingDataSource;
 import com.hyperether.getgoing.util.Constants;
 
+import java.io.File;
+import java.io.FileOutputStream;
+import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
 
@@ -33,7 +41,7 @@ public class ShowRouteActivity extends FragmentActivity implements OnMapReadyCal
     private List<DbNode> nodes;
     private DbRoute route;
 
-    ShareButton shareButton;
+    Button shareButton;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -48,11 +56,19 @@ public class ShowRouteActivity extends FragmentActivity implements OnMapReadyCal
         showCalories = (EditText) findViewById(R.id.showCalories);
         showDistance = (EditText) findViewById(R.id.showDistance);
 
-        shareButton = (ShareButton) findViewById(R.id.btnShare);
+        shareButton = (Button) findViewById(R.id.btnShare);
 
         MapFragment mapFragment = (MapFragment) getFragmentManager()
                 .findFragmentById(R.id.show_map_page);
         mapFragment.getMapAsync(this);
+
+        shareButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                takeScreenshot();
+                takeMapSnapshot();
+            }
+        });
     }
 
     @Override
@@ -209,5 +225,74 @@ public class ShowRouteActivity extends FragmentActivity implements OnMapReadyCal
         }
 
         return String.valueOf(number);
+    }
+
+    private void takeScreenshot() {
+        Date now = new Date();
+        android.text.format.DateFormat.format("yyyy-MM-dd_hh:mm:ss", now);
+
+        try {
+            // image naming and path  to include sd card  appending name you choose for file
+            String mPath = Environment.getExternalStorageDirectory().toString() + "/" + now + "" +
+                    ".jpg";
+
+            // create bitmap screen capture
+            View v1 = findViewById(R.id.relative_layout_data);
+            v1.setDrawingCacheEnabled(true);
+            Bitmap bitmap = Bitmap.createBitmap(v1.getDrawingCache());
+            v1.setDrawingCacheEnabled(false);
+
+            File imageFile = new File(mPath);
+
+            FileOutputStream outputStream = new FileOutputStream(imageFile);
+            int quality = 100;
+            bitmap.compress(Bitmap.CompressFormat.JPEG, quality, outputStream);
+            outputStream.flush();
+            outputStream.close();
+
+            openScreenshot(imageFile);
+        } catch (Throwable e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void takeMapSnapshot() {
+        GoogleMap.SnapshotReadyCallback callback = new GoogleMap.SnapshotReadyCallback() {
+            Bitmap bitmap;
+
+            @Override
+            public void onSnapshotReady(Bitmap snapshot) {
+                bitmap = snapshot;
+                try {
+                    Date now = new Date();
+                    android.text.format.DateFormat.format("yyyy-MM-dd_hh:mm:ss", now);
+
+                    String mPath = Environment.getExternalStorageDirectory().toString() +
+                            "/" + "map_" + now + ".jpg";
+
+                    File imageFile = new File(mPath);
+
+                    FileOutputStream out = new FileOutputStream(imageFile);
+                    bitmap.compress(Bitmap.CompressFormat.PNG, 90, out);
+
+                    out.flush();
+                    out.close();
+
+                    openScreenshot(imageFile);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+        };
+
+        mMap.snapshot(callback);
+    }
+
+    private void openScreenshot(File imageFile) {
+        Intent intent = new Intent();
+        intent.setAction(Intent.ACTION_VIEW);
+        Uri uri = Uri.fromFile(imageFile);
+        intent.setDataAndType(uri, "image/*");
+        startActivity(intent);
     }
 }
