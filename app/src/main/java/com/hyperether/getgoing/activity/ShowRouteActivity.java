@@ -1,5 +1,6 @@
 package com.hyperether.getgoing.activity;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Bitmap;
@@ -12,6 +13,10 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 
+import com.facebook.share.model.ShareContent;
+import com.facebook.share.model.ShareMediaContent;
+import com.facebook.share.model.SharePhoto;
+import com.facebook.share.widget.ShareDialog;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapFragment;
@@ -42,6 +47,10 @@ public class ShowRouteActivity extends FragmentActivity implements OnMapReadyCal
     private DbRoute route;
 
     Button shareButton;
+    SharePhoto photo1;
+    SharePhoto photo2;
+    ShareContent shareContent;
+    ShareDialog shareDialog;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -250,7 +259,12 @@ public class ShowRouteActivity extends FragmentActivity implements OnMapReadyCal
             outputStream.flush();
             outputStream.close();
 
-            openScreenshot(imageFile);
+            //openScreenshot(imageFile);
+
+            photo1 = new SharePhoto.Builder()
+                    .setBitmap(bitmap)
+                    .build();
+
         } catch (Throwable e) {
             e.printStackTrace();
         }
@@ -277,7 +291,20 @@ public class ShowRouteActivity extends FragmentActivity implements OnMapReadyCal
                     out.flush();
                     out.close();
 
-                    openScreenshot(imageFile);
+                    //openScreenshot(imageFile);
+
+                    photo2 = new SharePhoto.Builder()
+                            .setBitmap(bitmap)
+                            .build();
+
+                    shareContent = new ShareMediaContent.Builder()
+                            .addMedium(photo1)
+                            .addMedium(photo2)
+                            .build();
+
+                    shareDialog = new ShareDialog(ShowRouteActivity.this);
+                    shareDialog.show(shareContent, ShareDialog.Mode.AUTOMATIC);
+
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
