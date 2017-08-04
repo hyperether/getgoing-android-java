@@ -1,10 +1,11 @@
 package com.hyperether.getgoing.activity;
 
-import android.app.Activity;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Bitmap;
+import android.graphics.Canvas;
 import android.graphics.Color;
+import android.graphics.Matrix;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
@@ -47,8 +48,8 @@ public class ShowRouteActivity extends FragmentActivity implements OnMapReadyCal
     private DbRoute route;
 
     Button shareButton;
-    SharePhoto photo1;
-    SharePhoto photo2;
+    SharePhoto routeDataSnapshot;
+    SharePhoto mapSnapshot;
     ShareContent shareContent;
     ShareDialog shareDialog;
 
@@ -74,8 +75,7 @@ public class ShowRouteActivity extends FragmentActivity implements OnMapReadyCal
         shareButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                takeScreenshot(R.id.relative_layout_data);
-                takeMapSnapshot();
+                takeMapRouteDataSnapshot();
             }
         });
     }
@@ -236,6 +236,11 @@ public class ShowRouteActivity extends FragmentActivity implements OnMapReadyCal
         return String.valueOf(number);
     }
 
+    /**
+     * Take snapshot of specific layout.
+     *
+     * @param layoutName
+     */
     private void takeScreenshot(int layoutName) {
         Date now = new Date();
         android.text.format.DateFormat.format("yyyy-MM-dd_hh:mm:ss", now);
@@ -261,7 +266,7 @@ public class ShowRouteActivity extends FragmentActivity implements OnMapReadyCal
 
             //openScreenshot(imageFile);
 
-            photo1 = new SharePhoto.Builder()
+            routeDataSnapshot = new SharePhoto.Builder()
                     .setBitmap(bitmap)
                     .build();
 
@@ -270,6 +275,9 @@ public class ShowRouteActivity extends FragmentActivity implements OnMapReadyCal
         }
     }
 
+    /**
+     * Take snapshot of map.
+     */
     private void takeMapSnapshot() {
         GoogleMap.SnapshotReadyCallback callback = new GoogleMap.SnapshotReadyCallback() {
             Bitmap bitmap;
@@ -293,13 +301,13 @@ public class ShowRouteActivity extends FragmentActivity implements OnMapReadyCal
 
                     //openScreenshot(imageFile);
 
-                    photo2 = new SharePhoto.Builder()
+                    mapSnapshot = new SharePhoto.Builder()
                             .setBitmap(bitmap)
                             .build();
 
                     shareContent = new ShareMediaContent.Builder()
-                            .addMedium(photo1)
-                            .addMedium(photo2)
+                            .addMedium(routeDataSnapshot)
+                            .addMedium(mapSnapshot)
                             .build();
 
                     shareDialog = new ShareDialog(ShowRouteActivity.this);
@@ -314,11 +322,69 @@ public class ShowRouteActivity extends FragmentActivity implements OnMapReadyCal
         mMap.snapshot(callback);
     }
 
+    /**
+     * Show specific picture in gallery.
+     *
+     * @param imageFile
+     */
     private void openScreenshot(File imageFile) {
         Intent intent = new Intent();
         intent.setAction(Intent.ACTION_VIEW);
         Uri uri = Uri.fromFile(imageFile);
         intent.setDataAndType(uri, "image/*");
         startActivity(intent);
+    }
+
+    /**
+     * Take snapshot of map and specific layout.
+     */
+    private void takeMapRouteDataSnapshot() {
+        GoogleMap.SnapshotReadyCallback callback = new GoogleMap.SnapshotReadyCallback() {
+            Bitmap bitmap;
+
+            @Override
+            public void onSnapshotReady(Bitmap snapshot) {
+                bitmap = snapshot;
+                try {
+                    View mView = findViewById(R.id.data);
+                    mView.setDrawingCacheEnabled(true);
+
+                    Bitmap tmpBitmap = mView.getDrawingCache();
+                    Bitmap backBitmap = Bitmap.createBitmap(tmpBitmap, 0, 0, tmpBitmap.getWidth(), (int) (tmpBitmap
+                            .getHeight() * 0.74));
+
+                    Bitmap bmOverlay = Bitmap.createBitmap(
+                            backBitmap.getWidth(), backBitmap.getHeight(),
+                            backBitmap.getConfig());
+
+                    Canvas canvas = new Canvas(bmOverlay);
+                    canvas.drawBitmap(snapshot, new Matrix(), null);
+                    canvas.drawBitmap(backBitmap, 0, 0, null);
+
+                    FileOutputStream out = new FileOutputStream(
+                            Environment.getExternalStorageDirectory()
+                                    + "/MapScreenShot"
+                                    + System.currentTimeMillis() + ".png");
+                    //bmOverlay.compress(Bitmap.CompressFormat.PNG, 90, out);
+                    out.flush();
+                    out.close();
+
+                    mapSnapshot = new SharePhoto.Builder()
+                            .setBitmap(bmOverlay)
+                            .build();
+
+                    shareContent = new ShareMediaContent.Builder()
+                            .addMedium(mapSnapshot)
+                            .build();
+
+                    shareDialog = new ShareDialog(ShowRouteActivity.this);
+                    shareDialog.show(shareContent, ShareDialog.Mode.AUTOMATIC);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+        };
+
+        mMap.snapshot(callback);
     }
 }
