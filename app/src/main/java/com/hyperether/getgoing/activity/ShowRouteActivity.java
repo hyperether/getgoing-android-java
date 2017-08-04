@@ -14,6 +14,12 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 
+import com.facebook.AccessToken;
+import com.facebook.CallbackManager;
+import com.facebook.FacebookCallback;
+import com.facebook.FacebookException;
+import com.facebook.login.LoginManager;
+import com.facebook.login.LoginResult;
 import com.facebook.share.model.ShareContent;
 import com.facebook.share.model.ShareMediaContent;
 import com.facebook.share.model.SharePhoto;
@@ -47,11 +53,12 @@ public class ShowRouteActivity extends FragmentActivity implements OnMapReadyCal
     private List<DbNode> nodes;
     private DbRoute route;
 
-    Button shareButton;
-    SharePhoto routeDataSnapshot;
-    SharePhoto mapSnapshot;
-    ShareContent shareContent;
-    ShareDialog shareDialog;
+    private CallbackManager callbackManager;
+
+    private SharePhoto routeDataSnapshot;
+    private SharePhoto mapSnapshot;
+    private ShareContent shareContent;
+    private ShareDialog shareDialog;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -66,7 +73,7 @@ public class ShowRouteActivity extends FragmentActivity implements OnMapReadyCal
         showCalories = (EditText) findViewById(R.id.showCalories);
         showDistance = (EditText) findViewById(R.id.showDistance);
 
-        shareButton = (Button) findViewById(R.id.btnShare);
+        Button shareButton = (Button) findViewById(R.id.btnShare);
 
         MapFragment mapFragment = (MapFragment) getFragmentManager()
                 .findFragmentById(R.id.show_map_page);
@@ -75,7 +82,28 @@ public class ShowRouteActivity extends FragmentActivity implements OnMapReadyCal
         shareButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                takeMapRouteDataSnapshot();
+                if (isLoggedIn()) {
+                    takeMapRouteDataSnapshot();
+                } else {
+                    callbackManager = CallbackManager.Factory.create();
+
+                    LoginManager.getInstance().registerCallback(callbackManager, new FacebookCallback<LoginResult>() {
+                        @Override
+                        public void onSuccess(LoginResult loginResult) {
+                            takeMapRouteDataSnapshot();
+                        }
+
+                        @Override
+                        public void onCancel() {
+
+                        }
+
+                        @Override
+                        public void onError(FacebookException error) {
+
+                        }
+                    });
+                }
             }
         });
     }
@@ -386,5 +414,13 @@ public class ShowRouteActivity extends FragmentActivity implements OnMapReadyCal
         };
 
         mMap.snapshot(callback);
+    }
+
+    /**
+     * This method check if user is logged in by fb
+     */
+    public boolean isLoggedIn() {
+        AccessToken accessToken = AccessToken.getCurrentAccessToken();
+        return accessToken != null;
     }
 }

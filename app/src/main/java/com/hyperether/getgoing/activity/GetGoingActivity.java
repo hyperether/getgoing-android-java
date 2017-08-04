@@ -148,16 +148,6 @@ public class GetGoingActivity extends Activity {
                 startActivity(intent);
             }
             return true;
-        } else if (itemId == R.id.logout) {
-            Intent intent = new Intent(GetGoingActivity.this, FbLoginActivity.class);
-            intent.putExtra("logout", true);
-            finish();
-            startActivity(intent);
-            /*if (isLoggedIn()) {
-                LoginManager.getInstance().logOut();
-                finish();
-            }*/
-            return true;
         } else {
             return super.onOptionsItemSelected(item);
         }
@@ -236,13 +226,5 @@ public class GetGoingActivity extends Activity {
         SharedPreferences.Editor editor = settings.edit();
         editor.putInt("meteringActivityRequestedId", id);
         editor.apply();
-    }
-
-    /**
-     * This method check if user is logged in by fb
-     */
-    public boolean isLoggedIn() {
-        AccessToken accessToken = AccessToken.getCurrentAccessToken();
-        return accessToken != null;
     }
 }
