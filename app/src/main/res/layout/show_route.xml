@@ -31,7 +31,9 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:background="@color/com_facebook_button_border_color_focused"
-                android:layout_below="@+id/btnShare">
+                android:layout_below="@+id/btnShare"
+                android:layout_toLeftOf="@+id/relativeLayout"
+                android:layout_toStartOf="@+id/relativeLayout">
 
                 <LinearLayout
                     android:id="@+id/time_layout"
@@ -131,6 +133,18 @@
                         android:inputType="text"
                         android:textStyle="bold"/>
                 </LinearLayout>
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:layout_width="120dp"
+                android:layout_height="100dp"
+                android:layout_below="@+id/btnShare"
+                android:layout_alignParentRight="true"
+                android:layout_alignParentEnd="true"
+                android:id="@+id/relativeLayout"
+                android:layout_alignBottom="@+id/relative_layout_data">
+
+
             </RelativeLayout>
         </RelativeLayout>
     </LinearLayout>
