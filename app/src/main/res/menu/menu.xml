@@ -9,10 +9,6 @@
         android:title="@string/action_settings"/>
 
     <item
-        android:id="@+id/logout"
-        android:title="Logout"/>
-
-    <item
         android:id="@+id/action_stats"
         android:icon="@drawable/button_statistics_action_bar"
         android:orderInCategory="100"
