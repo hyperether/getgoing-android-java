@@ -23,17 +23,16 @@
                 android:layout_height="50dp"
                 android:background="@color/com_facebook_blue"
                 android:text="Share on Facebook"
-                android:textColor="@color/settings_edit_gradient_start"
-                android:layout_weight="0.16"/>
+                android:textColor="@color/settings_edit_gradient_start"/>
 
             <RelativeLayout
                 android:id="@+id/relative_layout_data"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:background="@color/com_facebook_button_border_color_focused"
                 android:layout_below="@+id/btnShare"
                 android:layout_toLeftOf="@+id/relativeLayout"
-                android:layout_toStartOf="@+id/relativeLayout">
+                android:layout_toStartOf="@+id/relativeLayout"
+                android:background="@color/com_facebook_button_border_color_focused">
 
                 <LinearLayout
                     android:id="@+id/time_layout"
@@ -136,15 +135,13 @@
             </RelativeLayout>
 
             <RelativeLayout
+                android:id="@+id/relativeLayout"
                 android:layout_width="120dp"
                 android:layout_height="100dp"
-                android:layout_below="@+id/btnShare"
-                android:layout_alignParentRight="true"
+                android:layout_alignBottom="@+id/relative_layout_data"
                 android:layout_alignParentEnd="true"
-                android:id="@+id/relativeLayout"
-                android:layout_alignBottom="@+id/relative_layout_data">
-
-
+                android:layout_alignParentRight="true"
+                android:layout_below="@+id/btnShare">
             </RelativeLayout>
         </RelativeLayout>
     </LinearLayout>
