@@ -11,6 +11,7 @@ import com.facebook.FacebookException;
 import com.facebook.login.LoginResult;
 import com.facebook.login.widget.LoginButton;
 import com.hyperether.getgoing.R;
+import com.hyperether.getgoing.util.Constants;
 
 public class FbLoginActivity extends Activity {
 
@@ -22,7 +23,11 @@ public class FbLoginActivity extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_fb_login);
 
-        if(isLoggedIn()) {
+        boolean logOut = getIntent().getBooleanExtra("logout", false);
+
+        if (isLoggedIn() && logOut) {
+            return;
+        } else if (isLoggedIn()) {
             startGetGoingActivity();
         }
 
@@ -53,7 +58,20 @@ public class FbLoginActivity extends Activity {
     @Override
     public void onActivityResult(final int requestCode, final int resultCode, final Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
+        if (callbackManager == null) {
+            callbackManager = CallbackManager.Factory.create();
+        }
+
         callbackManager.onActivityResult(requestCode, resultCode, data);
+    }
+
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        if (isLoggedIn()) {
+            Intent intent = new Intent(FbLoginActivity.this, GetGoingActivity.class);
+            startActivityForResult(intent, Constants.RESULT_REQUESTED);
+        }
     }
 
     /**

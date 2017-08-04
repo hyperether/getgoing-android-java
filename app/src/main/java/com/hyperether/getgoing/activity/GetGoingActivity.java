@@ -15,7 +15,6 @@ import android.widget.ImageButton;
 
 import com.crashlytics.android.Crashlytics;
 import com.facebook.AccessToken;
-import com.facebook.login.LoginManager;
 import com.hyperether.getgoing.R;
 import com.hyperether.getgoing.data.CBDataFrame;
 import com.hyperether.getgoing.db.DbRoute;
@@ -150,10 +149,14 @@ public class GetGoingActivity extends Activity {
             }
             return true;
         } else if (itemId == R.id.logout) {
-            if (isLoggedIn()) {
+            Intent intent = new Intent(GetGoingActivity.this, FbLoginActivity.class);
+            intent.putExtra("logout", true);
+            finish();
+            startActivity(intent);
+            /*if (isLoggedIn()) {
                 LoginManager.getInstance().logOut();
                 finish();
-            }
+            }*/
             return true;
         } else {
             return super.onOptionsItemSelected(item);
@@ -188,8 +191,8 @@ public class GetGoingActivity extends Activity {
     }
 
     /*
-     * true: parameters are set false: settings required
-     */
+         * true: parameters are set false: settings required
+         */
     private boolean getParametersStatus(CBDataFrame cbDataFrameLocal) {
         return !((cbDataFrameLocal.getAge() == 0)
                 || (cbDataFrameLocal.getWeight() == 0));
