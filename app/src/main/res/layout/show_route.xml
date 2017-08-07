@@ -9,13 +9,23 @@
               android:orientation="vertical"
               android:weightSum="1">
 
-    <Button
+  <!--  <Button
         android:id="@+id/btnShare"
         android:layout_width="match_parent"
         android:layout_height="50dp"
         android:background="@color/com_facebook_blue"
         android:text="Share on Facebook"
-        android:textColor="@color/settings_edit_gradient_start"/>
+        android:textColor="@color/settings_edit_gradient_start"/> -->
+
+    <com.facebook.share.widget.ShareButton
+        android:id="@+id/btn_fb_share"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="@color/com_facebook_blue"
+        android:text="Share"
+        android:layout_above="@+id/time_layout"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="25dp"/>
 
     <RelativeLayout
         android:id="@+id/data"

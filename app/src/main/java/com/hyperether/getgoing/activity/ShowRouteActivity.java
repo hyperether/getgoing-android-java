@@ -23,6 +23,7 @@ import com.facebook.login.LoginResult;
 import com.facebook.share.model.ShareContent;
 import com.facebook.share.model.ShareMediaContent;
 import com.facebook.share.model.SharePhoto;
+import com.facebook.share.widget.ShareButton;
 import com.facebook.share.widget.ShareDialog;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -73,13 +74,42 @@ public class ShowRouteActivity extends FragmentActivity implements OnMapReadyCal
         showCalories = (EditText) findViewById(R.id.showCalories);
         showDistance = (EditText) findViewById(R.id.showDistance);
 
-        Button shareButton = (Button) findViewById(R.id.btnShare);
+      //  Button shareButton = (Button) findViewById(R.id.btnShare);
+        ShareButton shareButton = (ShareButton) findViewById(R.id.btn_fb_share);
 
         MapFragment mapFragment = (MapFragment) getFragmentManager()
                 .findFragmentById(R.id.show_map_page);
         mapFragment.getMapAsync(this);
 
         shareButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (isLoggedIn()) {
+                    takeMapRouteDataSnapshot();
+                } else {
+                    callbackManager = CallbackManager.Factory.create();
+
+                    LoginManager.getInstance().registerCallback(callbackManager, new FacebookCallback<LoginResult>() {
+                        @Override
+                        public void onSuccess(LoginResult loginResult) {
+                            takeMapRouteDataSnapshot();
+                        }
+
+                        @Override
+                        public void onCancel() {
+
+                        }
+
+                        @Override
+                        public void onError(FacebookException error) {
+
+                        }
+                    });
+                }
+            }
+        });
+
+        /*shareButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 if (isLoggedIn()) {
@@ -105,7 +135,7 @@ public class ShowRouteActivity extends FragmentActivity implements OnMapReadyCal
                     });
                 }
             }
-        });
+        });*/
     }
 
     @Override
