@@ -49,6 +49,7 @@ import com.hyperether.getgoing.service.GPSTrackingService;
 import com.hyperether.getgoing.util.Constants;
 
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
@@ -287,6 +288,16 @@ public class ShowLocationActivity extends Activity implements
                             if (!CacheManager.getInstance().getmRoute().isEmpty()) {
                                 // Save the current route in DB*/
                                 dbStore(CacheManager.getInstance().getmRoute());
+                            } else {
+                                CacheManager.getInstance().setKcalCumulative(0.0);
+                                CacheManager.getInstance().setDistanceCumulative(0.0);
+                                CacheManager.getInstance().setVelocity(0.0);
+                                CacheManager.getInstance().setVelocityAvg(0.0);
+
+                                List<DbNode> tmpRoute = new ArrayList<>();
+                                DbNode tmpNode = new DbNode(0, 0, 0, 0, 0, 0);
+                                tmpRoute.add(tmpNode);
+                                dbStore(tmpRoute);
                             }
                         }
                     });
