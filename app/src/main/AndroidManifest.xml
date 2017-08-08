@@ -55,8 +55,7 @@
             android:name=".activity.ShowLocationActivity"
             android:icon="@mipmap/ic_logo"
             android:label=""
-            android:screenOrientation="portrait"
-            android:theme="@style/NoActionBar"/>
+            android:screenOrientation="portrait"/>
         <activity
             android:name=".activity.ShowDataActivity"
             android:configChanges="orientation|keyboardHidden|screenSize"
@@ -66,7 +65,6 @@
             android:name=".activity.ShowRouteActivity"
             android:icon="@mipmap/ic_logo"
             android:label=""
-            android:theme="@style/NoActionBar"
             android:screenOrientation="portrait"/>
 
         <meta-data
