@@ -64,7 +64,7 @@
 
     <!-- Save button alert dialog -->
     <string name="alert_dialog_title_save_btn">Save route</string>
-    <string name="alert_dialog_message_save_btn">Are You sure about saving this route.</string>
+    <string name="alert_dialog_message_save_btn">Are you sure about saving this route?</string>
     <string name="alert_dialog_positive_button_save_btn">OK</string>
     <string name="alert_dialog_negative_button_save_btn">Cancel</string>
 

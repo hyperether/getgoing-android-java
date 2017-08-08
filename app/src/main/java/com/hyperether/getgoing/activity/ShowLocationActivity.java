@@ -640,32 +640,7 @@ public class ShowLocationActivity extends Activity implements
 
     @Override
     public void onBackPressed() {
-        AlertDialog.Builder dialog = new AlertDialog.Builder(this);
-        dialog.setCancelable(false);
-        dialog.setTitle(R.string.alert_dialog_title_back_pressed);
-        dialog.setMessage(getString(R.string.alert_dialog_message_back_pressed));
-        dialog.setPositiveButton(R.string.alert_dialog_positive_back_pressed, new
-                DialogInterface
-                        .OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface paramDialogInterface, int paramInt) {
-                        // TODO Auto-generated method stub
-                        stopService(new Intent(GetGoingApp.getInstance().getApplicationContext(),
-                                GPSTrackingService.class));
-                        clearCacheData();
-                        finish();
-                    }
-                });
-
-        dialog.setNegativeButton(getString(R.string.alert_dialog_negative_back_pressed),
-                new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface paramDialogInterface, int paramInt) {
-                        // TODO Auto-generated method stub
-                    }
-                });
-
-        dialog.show();
+        super.onBackPressed();
     }
 
     /**
