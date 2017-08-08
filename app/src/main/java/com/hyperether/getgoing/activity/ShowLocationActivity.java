@@ -78,6 +78,7 @@ public class ShowLocationActivity extends Activity implements
 
     private boolean mUpdatesRequested;
     private boolean mProgramRunning = false;
+    private boolean mRouteAlreadySaved = false;
 
     private SharedPreferences mPrefs;
     private Editor mEditor;
@@ -299,6 +300,8 @@ public class ShowLocationActivity extends Activity implements
                                 tmpRoute.add(tmpNode);
                                 dbStore(tmpRoute);
                             }
+
+                            mRouteAlreadySaved = true;
                         }
                     });
 
@@ -398,9 +401,6 @@ public class ShowLocationActivity extends Activity implements
      */
     private void stopTracking() {
         stopService(new Intent(this, GPSTrackingService.class));
-
-        timeWhenStopped = showTime.getBase() - SystemClock.elapsedRealtime();
-        showTime.stop();
 
         button_start.setVisibility(View.VISIBLE);
         button_pause.setVisibility(View.GONE);
@@ -640,7 +640,35 @@ public class ShowLocationActivity extends Activity implements
 
     @Override
     public void onBackPressed() {
-        super.onBackPressed();
+        if (mProgramRunning || !mRouteAlreadySaved) {
+            AlertDialog.Builder dialog = new AlertDialog.Builder(this);
+            dialog.setCancelable(false);
+            dialog.setTitle(R.string.alert_dialog_title_back_pressed);
+            dialog.setMessage(getString(R.string.alert_dialog_message_back_pressed));
+            dialog.setPositiveButton(R.string.alert_dialog_positive_back_pressed, new
+                    DialogInterface
+                            .OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface paramDialogInterface, int paramInt) {
+                            stopService(new Intent(GetGoingApp.getInstance()
+                                    .getApplicationContext(),
+                                    GPSTrackingService.class));
+                            clearCacheData();
+                            finish();
+                        }
+                    });
+
+            dialog.setNegativeButton(getString(R.string.alert_dialog_negative_back_pressed),
+                    new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface paramDialogInterface, int paramInt) {
+                        }
+                    });
+
+            dialog.show();
+        } else {
+            super.onBackPressed();
+        }
     }
 
     /**
