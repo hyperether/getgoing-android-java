@@ -9,6 +9,7 @@ import android.graphics.Matrix;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
+import android.os.Handler;
 import android.support.v4.app.FragmentActivity;
 import android.view.View;
 import android.widget.TextView;
@@ -91,40 +92,40 @@ public class ShowRouteActivity extends FragmentActivity implements OnMapReadyCal
         MapFragment mapFragment = (MapFragment) getFragmentManager()
                 .findFragmentById(R.id.show_map_page);
         mapFragment.getMapAsync(this);
-
-        // Set fake content
-        shareButton.setShareContent(content);
-
-        shareButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                if (isLoggedIn()) {
-                    // Set real content
-                    shareButton.setShareContent(shareContent);
-                    takeMapRouteDataSnapshot();
-                } else {
-                    callbackManager = CallbackManager.Factory.create();
-
-                    LoginManager.getInstance().registerCallback(callbackManager, new FacebookCallback<LoginResult>() {
-                        @Override
-                        public void onSuccess(LoginResult loginResult) {
-                            shareButton.setShareContent(shareContent);
-                            takeMapRouteDataSnapshot();
-                        }
-
-                        @Override
-                        public void onCancel() {
-
-                        }
-
-                        @Override
-                        public void onError(FacebookException error) {
-
-                        }
-                    });
-                }
-            }
-        });
+//
+//        // Set fake content
+//        shareButton.setShareContent(content);
+//
+//        shareButton.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View view) {
+//                if (isLoggedIn()) {
+//                    // Set real content
+//                    shareButton.setShareContent(shareContent);
+//                    takeMapRouteDataSnapshot();
+//                } else {
+//                    callbackManager = CallbackManager.Factory.create();
+//
+//                    LoginManager.getInstance().registerCallback(callbackManager, new FacebookCallback<LoginResult>() {
+//                        @Override
+//                        public void onSuccess(LoginResult loginResult) {
+//                            shareButton.setShareContent(shareContent);
+//                            takeMapRouteDataSnapshot();
+//                        }
+//
+//                        @Override
+//                        public void onCancel() {
+//
+//                        }
+//
+//                        @Override
+//                        public void onError(FacebookException error) {
+//
+//                        }
+//                    });
+//                }
+//            }
+//        });
     }
 
     @Override
@@ -141,7 +142,8 @@ public class ShowRouteActivity extends FragmentActivity implements OnMapReadyCal
             nodes = datasource.getRouteNodes(route_id);    // Get all nodes for this route
 
             // Show the general values for the current route
-            showTime.setText(String.format(getDurationString(Math.abs(route.getDuration() / 1000))));
+            showTime.setText(
+                    String.format(getDurationString(Math.abs(route.getDuration() / 1000))));
             showCalories.setText(String.format("%.02f kcal", route.getEnergy()));
             showDistance.setText(String.format("%.02f m", route.getLength()));
 
@@ -164,7 +166,7 @@ public class ShowRouteActivity extends FragmentActivity implements OnMapReadyCal
 
             zoomRoute(mMap, getRouteLatLng(nodes));
 
-            shareButton.setVisibility(View.VISIBLE);
+            takeMapRouteDataSnapshot();
         }
     }
 
@@ -390,7 +392,7 @@ public class ShowRouteActivity extends FragmentActivity implements OnMapReadyCal
      * Take snapshot of map and specific layout.
      */
     private void takeMapRouteDataSnapshot() {
-        GoogleMap.SnapshotReadyCallback callback = new GoogleMap.SnapshotReadyCallback() {
+        final GoogleMap.SnapshotReadyCallback callback = new GoogleMap.SnapshotReadyCallback() {
             Bitmap bitmap;
 
             @Override
@@ -401,8 +403,9 @@ public class ShowRouteActivity extends FragmentActivity implements OnMapReadyCal
                     mView.setDrawingCacheEnabled(true);
 
                     Bitmap tmpBitmap = mView.getDrawingCache();
-                    Bitmap backBitmap = Bitmap.createBitmap(tmpBitmap, 0, 0, tmpBitmap.getWidth(), (int) (tmpBitmap
-                            .getHeight() * 0.74));
+                    Bitmap backBitmap = Bitmap
+                            .createBitmap(tmpBitmap, 0, 0, tmpBitmap.getWidth(), (int) (tmpBitmap
+                                    .getHeight() * 0.74));
 
                     Bitmap bmOverlay = Bitmap.createBitmap(
                             backBitmap.getWidth(), backBitmap.getHeight(),
@@ -412,13 +415,13 @@ public class ShowRouteActivity extends FragmentActivity implements OnMapReadyCal
                     canvas.drawBitmap(snapshot, new Matrix(), null);
                     canvas.drawBitmap(backBitmap, 0, 0, null);
 
-                    FileOutputStream out = new FileOutputStream(
-                            Environment.getExternalStorageDirectory()
-                                    + "/MapScreenShot"
-                                    + System.currentTimeMillis() + ".png");
-                    //bmOverlay.compress(Bitmap.CompressFormat.PNG, 90, out);
-                    out.flush();
-                    out.close();
+//                    FileOutputStream out = new FileOutputStream(
+//                            Environment.getExternalStorageDirectory()
+//                                    + "/MapScreenShot"
+//                                    + System.currentTimeMillis() + ".png");
+//                    //bmOverlay.compress(Bitmap.CompressFormat.PNG, 90, out);
+//                    out.flush();
+//                    out.close();
 
                     mapSnapshot = new SharePhoto.Builder()
                             .setBitmap(bmOverlay)
@@ -428,16 +431,52 @@ public class ShowRouteActivity extends FragmentActivity implements OnMapReadyCal
                             .addMedium(mapSnapshot)
                             .build();
 
-                    shareDialog = new ShareDialog(ShowRouteActivity.this);
-                    shareDialog.show(shareContent, ShareDialog.Mode.AUTOMATIC);
+                    shareButton.setVisibility(View.VISIBLE);
                     shareButton.setShareContent(shareContent);
+                    shareButton.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View view) {
+                            if (isLoggedIn()) {
+                                shareDialog = new ShareDialog(ShowRouteActivity.this);
+                                shareDialog.show(shareContent, ShareDialog.Mode.AUTOMATIC);
+                            } else {
+                                callbackManager = CallbackManager.Factory.create();
+
+                                LoginManager.getInstance().registerCallback(callbackManager,
+                                        new FacebookCallback<LoginResult>() {
+                                            @Override
+                                            public void onSuccess(LoginResult loginResult) {
+                                                shareDialog = new ShareDialog(
+                                                        ShowRouteActivity.this);
+                                                shareDialog.show(shareContent,
+                                                        ShareDialog.Mode.AUTOMATIC);
+                                            }
+
+                                            @Override
+                                            public void onCancel() {
+
+                                            }
+
+                                            @Override
+                                            public void onError(FacebookException error) {
+
+                                            }
+                                        });
+                            }
+                        }
+                    });
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
             }
         };
 
-        mMap.snapshot(callback);
+        new Handler().postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                mMap.snapshot(callback);
+            }
+        }, 1000);
     }
 
     /**
@@ -452,12 +491,13 @@ public class ShowRouteActivity extends FragmentActivity implements OnMapReadyCal
      * Get LatLng from list of route nodes
      *
      * @param routeNodes list of route nodes
+     *
      * @return
      */
     private List<LatLng> getRouteLatLng(List<DbNode> routeNodes) {
         List<LatLng> routeLatLng = new ArrayList<>();
 
-        for(DbNode item : routeNodes) {
+        for (DbNode item : routeNodes) {
             LatLng loc = new LatLng(item.getLatitude(), item.getLongitude());
             routeLatLng.add(loc);
         }
