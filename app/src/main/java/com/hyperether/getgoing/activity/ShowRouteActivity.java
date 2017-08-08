@@ -1,14 +1,11 @@
 package com.hyperether.getgoing.activity;
 
-import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Matrix;
-import android.net.Uri;
 import android.os.Bundle;
-import android.os.Environment;
 import android.os.Handler;
 import android.support.v4.app.FragmentActivity;
 import android.view.View;
@@ -21,7 +18,6 @@ import com.facebook.FacebookException;
 import com.facebook.login.LoginManager;
 import com.facebook.login.LoginResult;
 import com.facebook.share.model.ShareContent;
-import com.facebook.share.model.ShareLinkContent;
 import com.facebook.share.model.ShareMediaContent;
 import com.facebook.share.model.SharePhoto;
 import com.facebook.share.widget.ShareButton;
@@ -38,12 +34,8 @@ import com.hyperether.getgoing.db.DbNode;
 import com.hyperether.getgoing.db.DbRoute;
 import com.hyperether.getgoing.db.GetGoingDataSource;
 import com.hyperether.getgoing.util.Constants;
-import com.hyperether.getgoing.util.LogUtil;
 
-import java.io.File;
-import java.io.FileOutputStream;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
 
@@ -62,7 +54,6 @@ public class ShowRouteActivity extends FragmentActivity implements OnMapReadyCal
 
     private CallbackManager callbackManager;
 
-    private SharePhoto routeDataSnapshot;
     private SharePhoto mapSnapshot;
     private ShareContent shareContent;
     private ShareDialog shareDialog;
@@ -81,51 +72,12 @@ public class ShowRouteActivity extends FragmentActivity implements OnMapReadyCal
         showCalories = (TextView) findViewById(R.id.showCalories);
         showDistance = (TextView) findViewById(R.id.showDistance);
 
-        // Fake content
-        ShareLinkContent content = new ShareLinkContent.Builder()
-                .setContentUrl(Uri.parse("https://developers.facebook.com"))
-                .build();
-
         shareButton = (ShareButton) findViewById(R.id.btn_fb_share);
         shareButton.setVisibility(View.GONE);
 
         MapFragment mapFragment = (MapFragment) getFragmentManager()
                 .findFragmentById(R.id.show_map_page);
         mapFragment.getMapAsync(this);
-//
-//        // Set fake content
-//        shareButton.setShareContent(content);
-//
-//        shareButton.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View view) {
-//                if (isLoggedIn()) {
-//                    // Set real content
-//                    shareButton.setShareContent(shareContent);
-//                    takeMapRouteDataSnapshot();
-//                } else {
-//                    callbackManager = CallbackManager.Factory.create();
-//
-//                    LoginManager.getInstance().registerCallback(callbackManager, new FacebookCallback<LoginResult>() {
-//                        @Override
-//                        public void onSuccess(LoginResult loginResult) {
-//                            shareButton.setShareContent(shareContent);
-//                            takeMapRouteDataSnapshot();
-//                        }
-//
-//                        @Override
-//                        public void onCancel() {
-//
-//                        }
-//
-//                        @Override
-//                        public void onError(FacebookException error) {
-//
-//                        }
-//                    });
-//                }
-//            }
-//        });
     }
 
     @Override
@@ -290,105 +242,6 @@ public class ShowRouteActivity extends FragmentActivity implements OnMapReadyCal
     }
 
     /**
-     * Take snapshot of specific layout.
-     *
-     * @param layoutName
-     */
-    private void takeScreenshot(int layoutName) {
-        Date now = new Date();
-        android.text.format.DateFormat.format("yyyy-MM-dd_hh:mm:ss", now);
-
-        try {
-            // image naming and path  to include sd card  appending name you choose for file
-            String mPath = Environment.getExternalStorageDirectory().toString() + "/" + now + "" +
-                    ".jpg";
-
-            // create bitmap screen capture
-            View v1 = findViewById(layoutName);
-            v1.setDrawingCacheEnabled(true);
-            Bitmap bitmap = Bitmap.createBitmap(v1.getDrawingCache());
-            v1.setDrawingCacheEnabled(false);
-
-            File imageFile = new File(mPath);
-
-            FileOutputStream outputStream = new FileOutputStream(imageFile);
-            int quality = 100;
-            bitmap.compress(Bitmap.CompressFormat.JPEG, quality, outputStream);
-            outputStream.flush();
-            outputStream.close();
-
-            //openScreenshot(imageFile);
-
-            routeDataSnapshot = new SharePhoto.Builder()
-                    .setBitmap(bitmap)
-                    .build();
-
-        } catch (Throwable e) {
-            e.printStackTrace();
-        }
-    }
-
-    /**
-     * Take snapshot of map.
-     */
-    private void takeMapSnapshot() {
-        GoogleMap.SnapshotReadyCallback callback = new GoogleMap.SnapshotReadyCallback() {
-            Bitmap bitmap;
-
-            @Override
-            public void onSnapshotReady(Bitmap snapshot) {
-                bitmap = snapshot;
-                try {
-                    Date now = new Date();
-                    android.text.format.DateFormat.format("yyyy-MM-dd_hh:mm:ss", now);
-
-                    String mPath = Environment.getExternalStorageDirectory().toString() +
-                            "/" + "map_" + now + ".jpg";
-
-                    File imageFile = new File(mPath);
-
-                    FileOutputStream out = new FileOutputStream(imageFile);
-                    bitmap.compress(Bitmap.CompressFormat.PNG, 90, out);
-                    out.flush();
-                    out.close();
-
-                    //openScreenshot(imageFile);
-
-                    mapSnapshot = new SharePhoto.Builder()
-                            .setBitmap(bitmap)
-                            .build();
-
-                    shareContent = new ShareMediaContent.Builder()
-                            .addMedium(routeDataSnapshot)
-                            .addMedium(mapSnapshot)
-                            .build();
-
-                    shareDialog = new ShareDialog(ShowRouteActivity.this);
-                    shareDialog.show(shareContent, ShareDialog.Mode.AUTOMATIC);
-
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-            }
-        };
-
-        mMap.snapshot(callback);
-    }
-
-    /**
-     * Show specific picture in gallery.
-     *
-     * @param imageFile
-     */
-    private void openScreenshot(File imageFile) {
-        Intent intent = new Intent();
-        intent.setAction(Intent.ACTION_VIEW);
-        Uri uri = Uri.fromFile(imageFile);
-        intent.setDataAndType(uri, "image/*");
-        startActivity(intent);
-    }
-
-    /**
      * Take snapshot of map and specific layout.
      */
     private void takeMapRouteDataSnapshot() {
@@ -414,14 +267,6 @@ public class ShowRouteActivity extends FragmentActivity implements OnMapReadyCal
                     Canvas canvas = new Canvas(bmOverlay);
                     canvas.drawBitmap(snapshot, new Matrix(), null);
                     canvas.drawBitmap(backBitmap, 0, 0, null);
-
-//                    FileOutputStream out = new FileOutputStream(
-//                            Environment.getExternalStorageDirectory()
-//                                    + "/MapScreenShot"
-//                                    + System.currentTimeMillis() + ".png");
-//                    //bmOverlay.compress(Bitmap.CompressFormat.PNG, 90, out);
-//                    out.flush();
-//                    out.close();
 
                     mapSnapshot = new SharePhoto.Builder()
                             .setBitmap(bmOverlay)
@@ -505,14 +350,13 @@ public class ShowRouteActivity extends FragmentActivity implements OnMapReadyCal
         return routeLatLng;
     }
 
-
     /**
      * Zoom a Route at the greatest possible zoom level.
      *
      * @param googleMap: instance of GoogleMap
      * @param lstLatLngRoute: list of LatLng
      */
-    public void zoomRoute(GoogleMap googleMap, List<LatLng> lstLatLngRoute) {
+    public void zoomRoute(final GoogleMap googleMap, List<LatLng> lstLatLngRoute) {
 
         if (googleMap == null || lstLatLngRoute == null || lstLatLngRoute.isEmpty()) return;
 
@@ -520,13 +364,15 @@ public class ShowRouteActivity extends FragmentActivity implements OnMapReadyCal
         for (LatLng latLngPoint : lstLatLngRoute)
             boundsBuilder.include(latLngPoint);
 
-        int routePadding = 100;
-        LatLngBounds latLngBounds = boundsBuilder.build();
+        final int routePadding = 100;
+        final LatLngBounds latLngBounds = boundsBuilder.build();
 
-        try {
-            googleMap.moveCamera(CameraUpdateFactory.newLatLngBounds(latLngBounds, routePadding));
-        } catch (Exception ex) {
-            LogUtil.getInstance().add(LogUtil.ERROR, TAG, "map_size_problem", ex);
-        }
+        new Handler().postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                googleMap.moveCamera(CameraUpdateFactory.newLatLngBounds(latLngBounds,
+                        routePadding));
+            }
+        }, 1000);
     }
 }
