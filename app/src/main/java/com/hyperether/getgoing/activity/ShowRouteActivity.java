@@ -11,8 +11,7 @@ import android.os.Bundle;
 import android.os.Environment;
 import android.support.v4.app.FragmentActivity;
 import android.view.View;
-import android.widget.Button;
-import android.widget.EditText;
+import android.widget.TextView;
 
 import com.facebook.AccessToken;
 import com.facebook.CallbackManager;
@@ -21,6 +20,7 @@ import com.facebook.FacebookException;
 import com.facebook.login.LoginManager;
 import com.facebook.login.LoginResult;
 import com.facebook.share.model.ShareContent;
+import com.facebook.share.model.ShareLinkContent;
 import com.facebook.share.model.ShareMediaContent;
 import com.facebook.share.model.SharePhoto;
 import com.facebook.share.widget.ShareButton;
@@ -30,24 +30,29 @@ import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapFragment;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.LatLngBounds;
 import com.google.android.gms.maps.model.PolylineOptions;
 import com.hyperether.getgoing.R;
 import com.hyperether.getgoing.db.DbNode;
 import com.hyperether.getgoing.db.DbRoute;
 import com.hyperether.getgoing.db.GetGoingDataSource;
 import com.hyperether.getgoing.util.Constants;
+import com.hyperether.getgoing.util.LogUtil;
 
 import java.io.File;
 import java.io.FileOutputStream;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
 
 public class ShowRouteActivity extends FragmentActivity implements OnMapReadyCallback {
 
+    public static final String TAG = ShowRouteActivity.class.getName();
+
     private GoogleMap mMap;
 
-    private EditText showTime, showCalories, showDistance;
+    private TextView showTime, showCalories, showDistance;
 
     private GetGoingDataSource datasource;
 
@@ -60,6 +65,7 @@ public class ShowRouteActivity extends FragmentActivity implements OnMapReadyCal
     private SharePhoto mapSnapshot;
     private ShareContent shareContent;
     private ShareDialog shareDialog;
+    private ShareButton shareButton;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -70,21 +76,31 @@ public class ShowRouteActivity extends FragmentActivity implements OnMapReadyCal
         datasource = new GetGoingDataSource(this);
         datasource.open();
 
-        showTime = (EditText) findViewById(R.id.showTime);
-        showCalories = (EditText) findViewById(R.id.showCalories);
-        showDistance = (EditText) findViewById(R.id.showDistance);
+        showTime = (TextView) findViewById(R.id.showTime);
+        showCalories = (TextView) findViewById(R.id.showCalories);
+        showDistance = (TextView) findViewById(R.id.showDistance);
 
-      //  Button shareButton = (Button) findViewById(R.id.btnShare);
-        ShareButton shareButton = (ShareButton) findViewById(R.id.btn_fb_share);
+        // Fake content
+        ShareLinkContent content = new ShareLinkContent.Builder()
+                .setContentUrl(Uri.parse("https://developers.facebook.com"))
+                .build();
+
+        shareButton = (ShareButton) findViewById(R.id.btn_fb_share);
+        shareButton.setVisibility(View.GONE);
 
         MapFragment mapFragment = (MapFragment) getFragmentManager()
                 .findFragmentById(R.id.show_map_page);
         mapFragment.getMapAsync(this);
 
+        // Set fake content
+        shareButton.setShareContent(content);
+
         shareButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 if (isLoggedIn()) {
+                    // Set real content
+                    shareButton.setShareContent(shareContent);
                     takeMapRouteDataSnapshot();
                 } else {
                     callbackManager = CallbackManager.Factory.create();
@@ -92,6 +108,7 @@ public class ShowRouteActivity extends FragmentActivity implements OnMapReadyCal
                     LoginManager.getInstance().registerCallback(callbackManager, new FacebookCallback<LoginResult>() {
                         @Override
                         public void onSuccess(LoginResult loginResult) {
+                            shareButton.setShareContent(shareContent);
                             takeMapRouteDataSnapshot();
                         }
 
@@ -108,34 +125,6 @@ public class ShowRouteActivity extends FragmentActivity implements OnMapReadyCal
                 }
             }
         });
-
-        /*shareButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (isLoggedIn()) {
-                    takeMapRouteDataSnapshot();
-                } else {
-                    callbackManager = CallbackManager.Factory.create();
-
-                    LoginManager.getInstance().registerCallback(callbackManager, new FacebookCallback<LoginResult>() {
-                        @Override
-                        public void onSuccess(LoginResult loginResult) {
-                            takeMapRouteDataSnapshot();
-                        }
-
-                        @Override
-                        public void onCancel() {
-
-                        }
-
-                        @Override
-                        public void onError(FacebookException error) {
-
-                        }
-                    });
-                }
-            }
-        });*/
     }
 
     @Override
@@ -172,6 +161,10 @@ public class ShowRouteActivity extends FragmentActivity implements OnMapReadyCal
                 drawRoute(nodes); // draw the route obtained from database
             }
             datasource.close();
+
+            zoomRoute(mMap, getRouteLatLng(nodes));
+
+            shareButton.setVisibility(View.VISIBLE);
         }
     }
 
@@ -437,6 +430,7 @@ public class ShowRouteActivity extends FragmentActivity implements OnMapReadyCal
 
                     shareDialog = new ShareDialog(ShowRouteActivity.this);
                     shareDialog.show(shareContent, ShareDialog.Mode.AUTOMATIC);
+                    shareButton.setShareContent(shareContent);
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
@@ -452,5 +446,47 @@ public class ShowRouteActivity extends FragmentActivity implements OnMapReadyCal
     public boolean isLoggedIn() {
         AccessToken accessToken = AccessToken.getCurrentAccessToken();
         return accessToken != null;
+    }
+
+    /**
+     * Get LatLng from list of route nodes
+     *
+     * @param routeNodes list of route nodes
+     * @return
+     */
+    private List<LatLng> getRouteLatLng(List<DbNode> routeNodes) {
+        List<LatLng> routeLatLng = new ArrayList<>();
+
+        for(DbNode item : routeNodes) {
+            LatLng loc = new LatLng(item.getLatitude(), item.getLongitude());
+            routeLatLng.add(loc);
+        }
+
+        return routeLatLng;
+    }
+
+
+    /**
+     * Zoom a Route at the greatest possible zoom level.
+     *
+     * @param googleMap: instance of GoogleMap
+     * @param lstLatLngRoute: list of LatLng
+     */
+    public void zoomRoute(GoogleMap googleMap, List<LatLng> lstLatLngRoute) {
+
+        if (googleMap == null || lstLatLngRoute == null || lstLatLngRoute.isEmpty()) return;
+
+        LatLngBounds.Builder boundsBuilder = new LatLngBounds.Builder();
+        for (LatLng latLngPoint : lstLatLngRoute)
+            boundsBuilder.include(latLngPoint);
+
+        int routePadding = 100;
+        LatLngBounds latLngBounds = boundsBuilder.build();
+
+        try {
+            googleMap.moveCamera(CameraUpdateFactory.newLatLngBounds(latLngBounds, routePadding));
+        } catch (Exception ex) {
+            LogUtil.getInstance().add(LogUtil.ERROR, TAG, "map_size_problem", ex);
+        }
     }
 }
