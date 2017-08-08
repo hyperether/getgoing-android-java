@@ -373,6 +373,6 @@ public class ShowRouteActivity extends FragmentActivity implements OnMapReadyCal
                 googleMap.moveCamera(CameraUpdateFactory.newLatLngBounds(latLngBounds,
                         routePadding));
             }
-        }, 1000);
+        }, 500);
     }
 }
