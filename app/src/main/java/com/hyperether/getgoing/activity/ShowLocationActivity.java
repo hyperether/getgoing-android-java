@@ -394,6 +394,7 @@ public class ShowLocationActivity extends Activity implements
         startUpdates();
 
         mProgramRunning = true;
+        mRouteAlreadySaved = false;
     }
 
     /**
@@ -402,11 +403,15 @@ public class ShowLocationActivity extends Activity implements
     private void stopTracking() {
         stopService(new Intent(this, GPSTrackingService.class));
 
+        timeWhenStopped = showTime.getBase() - SystemClock.elapsedRealtime();
+        showTime.stop();
+
         button_start.setVisibility(View.VISIBLE);
         button_pause.setVisibility(View.GONE);
 
         stopUpdates();
         mProgramRunning = false;
+        mRouteAlreadySaved = false;
 
 		/*
          * TODO: ovo treba jos testirati. Razlog: ako se pauzira merenje i
