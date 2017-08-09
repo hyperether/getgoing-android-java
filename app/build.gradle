@@ -24,7 +24,7 @@ android {
         applicationId "com.hyperether.getgoing"
         minSdkVersion 16
         targetSdkVersion 25
-        versionCode 9
+        versionCode 10
         versionName "3.0.4"
     }
 
@@ -35,7 +35,7 @@ android {
         release {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
-            buildConfigField "boolean", "FILE_LOG_ACTIVE", "true"
+            buildConfigField "boolean", "FILE_LOG_ACTIVE", "false"
         }
     }
 }
@@ -45,8 +45,8 @@ dependencies {
     compile('com.crashlytics.sdk.android:crashlytics:2.6.8@aar') {
         transitive = true;
     }
-    compile 'com.google.android.gms:play-services-maps:11.0.2'
-    compile 'com.google.android.gms:play-services-location:11.0.2'
+    compile 'com.google.android.gms:play-services-maps:11.0.4'
+    compile 'com.google.android.gms:play-services-location:11.0.4'
     compile 'com.facebook.android:facebook-android-sdk:4.+'
     compile 'com.android.support.constraint:constraint-layout:1.0.2'
 }
