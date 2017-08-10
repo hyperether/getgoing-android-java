@@ -111,6 +111,8 @@ public class ShowLocationActivity extends Activity implements
         // Keep screen on all the time
         setContentView(R.layout.show_location);
 
+        mRouteAlreadySaved = true;
+
         // Create the LocationRequest object
         mLocationRequest = LocationRequest.create();
         // Use high accuracy
