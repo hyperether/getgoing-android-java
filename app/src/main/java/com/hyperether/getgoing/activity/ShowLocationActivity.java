@@ -2,6 +2,9 @@ package com.hyperether.getgoing.activity;
 
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.app.Notification;
+import android.app.NotificationManager;
+import android.app.PendingIntent;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -17,6 +20,7 @@ import android.location.LocationManager;
 import android.os.Bundle;
 import android.os.SystemClock;
 import android.support.v4.app.ActivityCompat;
+import android.support.v4.app.NotificationCompat;
 import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -102,6 +106,10 @@ public class ShowLocationActivity extends Activity implements
     private boolean mResolvingError = false;
 
     private GoogleApiAvailability googleApiAvailability = GoogleApiAvailability.getInstance();
+
+    private boolean notificationExist = false;
+    private static final int notificationID = 0;
+    private NotificationManager notificationManager;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -195,6 +203,11 @@ public class ShowLocationActivity extends Activity implements
         mEditor.putBoolean("KEY_UPDATES_ON", mUpdatesRequested);
         mEditor.commit();
         datasource.close();
+
+        if(mProgramRunning){
+            Log.i("TAG", "pracenje u pozadini");
+            backgroundTrackNotification(notificationID);
+        }
         super.onPause();
     }
 
@@ -217,6 +230,8 @@ public class ShowLocationActivity extends Activity implements
             mEditor.commit();
         }
 
+        deleteNotification(notificationID);
+
         datasource.open();
         super.onResume();
     }
@@ -226,6 +241,7 @@ public class ShowLocationActivity extends Activity implements
         super.onDestroy();
         clearCacheData();
         stopService(new Intent(this, GPSTrackingService.class));
+        deleteNotification(notificationID);
     }
 
     @Override
@@ -907,5 +923,33 @@ public class ShowLocationActivity extends Activity implements
     public void openGPSSettings() {
         Intent i = new Intent(ACTION_LOCATION_SOURCE_SETTINGS);
         startActivityForResult(i, Constants.REQUEST_GPS_SETTINGS);
+    }
+
+    private void backgroundTrackNotification(int notificationID){
+        NotificationCompat.Builder builder = new NotificationCompat.Builder(this);
+        builder.setSmallIcon(R.drawable.ic_launher);
+        builder.setContentTitle("GetGoing notification");
+        builder.setContentText("Location tracking in background");
+        builder.setAutoCancel(true);
+        builder.setDefaults(Notification.DEFAULT_VIBRATE);
+
+        PendingIntent pendingIntent = PendingIntent.getActivity(this, 0, this.getIntent(), PendingIntent.FLAG_UPDATE_CURRENT);
+
+        builder.setContentIntent(pendingIntent);
+
+
+        notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+        notificationManager.notify(notificationID,builder.build());
+        notificationExist = true;
+
+
+
+    }
+
+    private void deleteNotification(int notificationID){
+        if(notificationExist){
+            notificationManager.cancel(notificationID);
+            notificationExist = false;
+        }
     }
 }
