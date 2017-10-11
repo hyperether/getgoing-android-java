@@ -78,7 +78,7 @@ public class ShowLocationActivity extends Activity implements
 
     public static final String TAG = ShowLocationActivity.class.getSimpleName();
 
-    private static final long UPDATE_INTERVAL_IN_MILLISECONDS = 1000;
+    private static final long UPDATE_INTERVAL_IN_MILLISECONDS = 3000;
     private static final long FASTEST_UPDATE_INTERVAL_IN_MILLISECONDS =
             UPDATE_INTERVAL_IN_MILLISECONDS / 2;
 
@@ -167,6 +167,31 @@ public class ShowLocationActivity extends Activity implements
         // getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
         // Keep screen on all the time
         setContentView(R.layout.show_location);
+
+        SharedPreferences settings = getSharedPreferences(Constants.PREF_FILE, 0);
+        weight = settings.getInt("weight", 0);
+
+        if (CacheManager.getInstance().getDistanceCumulative() != null) {
+            distanceCumulative = CacheManager.getInstance().getDistanceCumulative();
+        }
+
+        if (CacheManager.getInstance().getKcalCumulative() != null) {
+            kcalCumulative = CacheManager.getInstance().getKcalCumulative();
+        }
+
+        if (CacheManager.getInstance().getVelocity() != null) {
+            velocity = CacheManager.getInstance().getVelocity();
+        }
+
+        if (CacheManager.getInstance().getVelocityAvg() != null) {
+            velocityAvg = CacheManager.getInstance().getVelocityAvg();
+        }
+
+        timeCumulative = CacheManager.getInstance().getTimeCumulative();
+        secondsCumulative = CacheManager.getInstance().getSecondsCumulative();
+        time = CacheManager.getInstance().getTime();
+
+        oldTime = System.currentTimeMillis();
 
         mRouteAlreadySaved = true;
 
@@ -531,6 +556,8 @@ public class ShowLocationActivity extends Activity implements
         // application will never receive updates faster than this value.
         mLocationRequest.setFastestInterval(FASTEST_UPDATE_INTERVAL_IN_MILLISECONDS);
 
+        mLocationRequest.setSmallestDisplacement(5);
+
         mLocationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
     }
 
@@ -542,7 +569,7 @@ public class ShowLocationActivity extends Activity implements
                 Log.d(TAG, "location: " + locationResult.getLastLocation());
 
                 double dLat, dLong;
-                double distance = 0;
+                double distance;
 
                 time = System.currentTimeMillis() - oldTime;
                 timeCumulative += System.currentTimeMillis() - oldTime;
