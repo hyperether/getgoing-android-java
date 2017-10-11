@@ -14,9 +14,13 @@ import android.location.Criteria;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
+import android.os.Build;
 import android.os.Bundle;
+import android.os.Looper;
 import android.os.SystemClock;
+import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.ContextCompat;
 import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -29,7 +33,10 @@ import com.google.android.gms.common.GoogleApiAvailability;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.common.api.GoogleApiClient.ConnectionCallbacks;
 import com.google.android.gms.common.api.GoogleApiClient.OnConnectionFailedListener;
+import com.google.android.gms.location.FusedLocationProviderClient;
+import com.google.android.gms.location.LocationCallback;
 import com.google.android.gms.location.LocationRequest;
+import com.google.android.gms.location.LocationResult;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
@@ -38,14 +45,18 @@ import com.google.android.gms.maps.MapFragment;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.PolylineOptions;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 import com.hyperether.getgoing.GetGoingApp;
 import com.hyperether.getgoing.R;
 import com.hyperether.getgoing.data.CBDataFrame;
 import com.hyperether.getgoing.db.DbNode;
 import com.hyperether.getgoing.db.DbRoute;
 import com.hyperether.getgoing.db.GetGoingDataSource;
+import com.hyperether.getgoing.location.KalmanLatLong;
 import com.hyperether.getgoing.manager.CacheManager;
 import com.hyperether.getgoing.service.GPSTrackingService;
+import com.hyperether.getgoing.util.CaloriesCalculation;
 import com.hyperether.getgoing.util.Constants;
 
 import java.text.SimpleDateFormat;
@@ -65,10 +76,13 @@ public class ShowLocationActivity extends Activity implements
         com.google.android.gms.location.LocationListener,
         OnMapReadyCallback {
 
-    private GoogleMap mMap;
+    public static final String TAG = ShowLocationActivity.class.getSimpleName();
 
-    // Define an object that holds accuracy and frequency parameters
-    private LocationRequest mLocationRequest;
+    private static final long UPDATE_INTERVAL_IN_MILLISECONDS = 1000;
+    private static final long FASTEST_UPDATE_INTERVAL_IN_MILLISECONDS =
+            UPDATE_INTERVAL_IN_MILLISECONDS / 2;
+
+    private GoogleMap mMap;
 
     private final ConnectionResult connectionResult = new ConnectionResult(0, null);
 
@@ -83,7 +97,7 @@ public class ShowLocationActivity extends Activity implements
     private SharedPreferences mPrefs;
     private Editor mEditor;
     // to store the current settings
-    private CBDataFrame cbDataFrameLocal;
+    //private CBDataFrame cbDataFrameLocal;
 
     // U/I variables
     private Button button_start, button_pause, button_rst, button_save;
@@ -103,6 +117,49 @@ public class ShowLocationActivity extends Activity implements
 
     private GoogleApiAvailability googleApiAvailability = GoogleApiAvailability.getInstance();
 
+    //Route data
+    // filter for GPS data smoothing
+    // Initialise Kalman filter
+    private KalmanLatLong kalman = new KalmanLatLong(3);
+
+    private double latitude, longitude, latitude_old, longitude_old;
+    private boolean firstPass = true;
+    private boolean actualPositionValid = false;
+
+    private boolean isKalmanStateSet = false;
+    // Global variable to hold the current location
+    private Location mCurrentLocation;
+    private long timeCumulative = 0;
+    private int nodeIndex;
+
+    private int secondsCumulative = 0;
+    private long time = 0; // time between to position updates
+
+    private double kcalCumulative = 0;
+    private double kcalCurrent;
+    private double distanceCumulative = 0;
+    private double distanceDelta = 0;
+    private double velocity = 0;
+    private double velocityAvg = 0;
+    private double weight = 0;
+    private long oldTime = 0;
+
+    private String timeString;    // current duration of a walk
+
+    private CaloriesCalculation calcCal = new CaloriesCalculation();
+    private CBDataFrame cbDataFrameLocal;    // to store the current settings
+    //Route data
+
+    private FusedLocationProviderClient mFusedLocationClient;
+    private LocationCallback mLocationCallback;
+    // Define an object that holds accuracy and frequency parameters
+    private LocationRequest mLocationRequest;
+    /**
+     * Tracks the status of the location updates request. Value changes when the user presses the
+     * Start Updates and Stop Updates buttons.
+     */
+    private Boolean mRequestingLocationUpdates;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
 
@@ -113,14 +170,12 @@ public class ShowLocationActivity extends Activity implements
 
         mRouteAlreadySaved = true;
 
-        // Create the LocationRequest object
-        mLocationRequest = LocationRequest.create();
-        // Use high accuracy
-        mLocationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
-        // Set the update interval to 5 seconds
-        mLocationRequest.setInterval(Constants.UPDATE_INTERVAL);
-        // Set the fastest update interval to 1 second
-        mLocationRequest.setFastestInterval(Constants.FASTEST_INTERVAL);
+        mRequestingLocationUpdates = false;
+        mFusedLocationClient = LocationServices.getFusedLocationProviderClient(this);
+
+        createLocationRequest();
+        createLocationCallback();
+        createLocationRequest();
 
         // Open the shared preferences
         mPrefs = getSharedPreferences("SharedPreferences", Context.MODE_PRIVATE);
@@ -382,7 +437,11 @@ public class ShowLocationActivity extends Activity implements
      * This method starts timer and enable visibility of pause button.
      */
     private void startTracking() {
-        startService(new Intent(this, GPSTrackingService.class));
+        //startService(new Intent(this, GPSTrackingService.class));
+        if (!mRequestingLocationUpdates) {
+            mRequestingLocationUpdates = true;
+            startLocationUpdates();
+        }
 
         showTime.setBase(SystemClock.elapsedRealtime() + timeWhenStopped);
         showTime.start();
@@ -403,7 +462,8 @@ public class ShowLocationActivity extends Activity implements
      * This method starts timer and enable visibility of start button.
      */
     private void stopTracking() {
-        stopService(new Intent(this, GPSTrackingService.class));
+        //stopService(new Intent(this, GPSTrackingService.class));
+        stopLocationUpdates();
 
         timeWhenStopped = showTime.getBase() - SystemClock.elapsedRealtime();
         showTime.stop();
@@ -412,6 +472,7 @@ public class ShowLocationActivity extends Activity implements
         button_pause.setVisibility(View.GONE);
 
         stopUpdates();
+
         mProgramRunning = false;
         mRouteAlreadySaved = false;
 
@@ -423,6 +484,175 @@ public class ShowLocationActivity extends Activity implements
          * ovo bi trebalo da ga natera da ponovo inicijalizuje lat_old i da ignorise racunanje
 		 * posle prvog update-a. treba probati.
 		 */
+    }
+
+    private void startLocationUpdates() {
+        //permission dodaj
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.M ||
+                ContextCompat.checkSelfPermission(getApplicationContext(), android.Manifest.permission.ACCESS_FINE_LOCATION) ==
+                        PackageManager.PERMISSION_GRANTED) {
+            try {
+                mFusedLocationClient.requestLocationUpdates(mLocationRequest, mLocationCallback, Looper.myLooper());
+            } catch (SecurityException ex) {
+
+            }
+        }
+    }
+
+    private void stopLocationUpdates() {
+        if (!mRequestingLocationUpdates) {
+            Log.d(TAG, "stopLocationUpdates: updates never requested.");
+            return;
+        }
+
+        mRequestingLocationUpdates = false;
+        // It is a good practice to remove location requests when the activity is in a paused or
+        // stopped state. Doing so helps battery performance and is especially
+        // recommended in applications that request frequent location updates.
+        mFusedLocationClient.removeLocationUpdates(mLocationCallback)
+                .addOnCompleteListener(this, new OnCompleteListener<Void>() {
+                    @Override
+                    public void onComplete(@NonNull Task<Void> task) {
+                        mRequestingLocationUpdates = false;
+                    }
+                });
+    }
+
+    private void createLocationRequest() {
+        mLocationRequest = new LocationRequest();
+
+        // Sets the desired interval for active location updates. This interval is
+        // inexact. You may not receive updates at all if no location sources are available, or
+        // you may receive them slower than requested. You may also receive updates faster than
+        // requested if other applications are requesting location at a faster interval.
+        mLocationRequest.setInterval(UPDATE_INTERVAL_IN_MILLISECONDS);
+
+        // Sets the fastest rate for active location updates. This interval is exact, and your
+        // application will never receive updates faster than this value.
+        mLocationRequest.setFastestInterval(FASTEST_UPDATE_INTERVAL_IN_MILLISECONDS);
+
+        mLocationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
+    }
+
+    private void createLocationCallback() {
+        mLocationCallback = new LocationCallback() {
+            @Override
+            public void onLocationResult(LocationResult locationResult) {
+                super.onLocationResult(locationResult);
+                Log.d(TAG, "location: " + locationResult.getLastLocation());
+
+                double dLat, dLong;
+                double distance = 0;
+
+                time = System.currentTimeMillis() - oldTime;
+                timeCumulative += System.currentTimeMillis() - oldTime;
+                secondsCumulative = (int) timeCumulative / 1000;
+                oldTime = System.currentTimeMillis();
+
+                mCurrentLocation = new Location(locationResult.getLastLocation());
+
+                if (mCurrentLocation != null) {
+                    dLat = mCurrentLocation.getLatitude();
+                    dLong = mCurrentLocation.getLongitude();
+
+                    if (firstPass) {
+                        latitude = latitude_old = dLat;
+                        longitude = longitude_old = dLong;
+                        firstPass = false;
+
+                        DbNode tmp = new DbNode(0, latitude, longitude, 0, nodeIndex++, 0);
+                        CacheManager.getInstance().addRouteNode(tmp);
+                    } else {
+                        latitude_old = latitude;
+                        longitude_old = longitude;
+                        latitude = dLat;
+                        longitude = dLong;
+                    }
+
+                    actualPositionValid = true; // put up a flag for the algorithm
+                }
+
+                if (actualPositionValid) {
+                    actualPositionValid = false; // reset the flag
+                    double dLate = latitude - latitude_old;
+                    double dLon = longitude - longitude_old;
+
+                    if ((dLate != 0) || (dLon != 0)) {
+                        // Carry out the path filtering
+                        if (!isKalmanStateSet) {
+                            kalman.SetState(latitude,
+                                    longitude,
+                                    mCurrentLocation != null ? mCurrentLocation.getAccuracy() : 0,
+                                    timeCumulative);
+                            isKalmanStateSet = true;
+                        }
+
+                        kalman.Process(latitude,
+                                longitude,
+                                mCurrentLocation != null ? mCurrentLocation.getAccuracy() : 0,
+                                timeCumulative);
+                        latitude = kalman.get_lat();
+                        longitude = kalman.get_lng();
+
+                        distance =
+                                gps2m(latitude, longitude, latitude_old, longitude_old);
+                        if (!Double.isNaN(distance)) {
+                            distanceCumulative += distance;
+                            distanceDelta += distance;
+
+                            velocityAvg = distanceCumulative / secondsCumulative;
+
+                            //brzina je srednja vrednost izmerene i ocitane brzine
+                            velocity = (mCurrentLocation.getSpeed() + (distance / time)) / 2;
+                            if (velocity < 30) {
+                                CacheManager.getInstance().setVelocity(velocity);
+                            }
+
+                            if (CacheManager.getInstance().getObDataFrameLocal() != null) {
+                                cbDataFrameLocal = CacheManager.getInstance().getObDataFrameLocal();
+                                kcalCurrent = calcCal.calculate(distance, velocity, cbDataFrameLocal,
+                                        weight);
+                                kcalCumulative += kcalCurrent;
+                                if (velocity < 30) {
+                                    CacheManager.getInstance().setKcalCumulative(kcalCumulative);
+                                }
+                            }
+
+                            if (distanceDelta > Constants.NODE_ADD_DISTANCE) {
+                                distanceDelta = 0;
+                                // add new point to the route
+                                // node and route database _ids are intentionally 0
+                                DbNode tmp = new DbNode(0, latitude, longitude, (float) velocity,
+                                        nodeIndex++, 0);
+                                if (velocity < 30) {
+                                    CacheManager.getInstance().addRouteNode(tmp);
+                                }
+                            }
+                        } else {
+                            velocity = mCurrentLocation.getSpeed();
+                            if (velocity < 30) {
+                                CacheManager.getInstance().setVelocity(velocity);
+                            }
+                        }
+                    }
+
+                    if (velocity < 30) {
+                        CacheManager.getInstance().setDistanceCumulative(distanceCumulative);
+                        CacheManager.getInstance().setKcalCumulative(kcalCumulative);
+                        CacheManager.getInstance().setVelocity(velocity);
+                        CacheManager.getInstance().setVelocityAvg(velocityAvg);
+                    }
+
+                    time = 0; // reset the second counter for calculating velocity
+                } else {
+                    // is connection broken???
+                }
+
+                if (velocity < 30) {
+                    CacheManager.getInstance().setDistanceCumulative(distanceCumulative);
+                }
+            }
+        };
     }
 
     @Override
@@ -907,5 +1137,30 @@ public class ShowLocationActivity extends Activity implements
     public void openGPSSettings() {
         Intent i = new Intent(ACTION_LOCATION_SOURCE_SETTINGS);
         startActivityForResult(i, Constants.REQUEST_GPS_SETTINGS);
+    }
+
+    /**
+     * This method only works if the points are close enough that you can omit that
+     * earth is not regular shape
+     *
+     * @param lat_a first point lat
+     * @param lng_a first point lng
+     * @param lat_b second point lat
+     * @param lng_b second point lng
+     */
+    private double gps2m(double lat_a, double lng_a, double lat_b, double lng_b) {
+        double pk = 180 / 3.14169;
+
+        double a1 = lat_a / pk;
+        double a2 = lng_a / pk;
+        double b1 = lat_b / pk;
+        double b2 = lng_b / pk;
+
+        double t1 = Math.cos(a1) * Math.cos(a2) * Math.cos(b1) * Math.cos(b2);
+        double t2 = Math.cos(a1) * Math.sin(a2) * Math.cos(b1) * Math.sin(b2);
+        double t3 = Math.sin(a1) * Math.sin(b1);
+        double tt = Math.acos(t1 + t2 + t3);
+
+        return 6366000 * tt;
     }
 }
