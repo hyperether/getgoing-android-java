@@ -205,7 +205,6 @@ public class ShowLocationActivity extends Activity implements
         datasource.close();
 
         if(mProgramRunning){
-            Log.i("TAG", "pracenje u pozadini");
             backgroundTrackNotification(notificationID);
         }
         super.onPause();
