@@ -54,6 +54,7 @@
         <activity
             android:name=".activity.ShowLocationActivity"
             android:icon="@mipmap/ic_logo"
+            android:launchMode="singleTask"
             android:label=""
             android:screenOrientation="portrait"/>
         <activity
