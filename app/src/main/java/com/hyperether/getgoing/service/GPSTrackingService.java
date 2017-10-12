@@ -1,15 +1,24 @@
 package com.hyperether.getgoing.service;
 
 import android.app.Service;
-import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.pm.PackageManager;
 import android.location.Location;
-import android.location.LocationManager;
-import android.os.Bundle;
+import android.os.Build;
 import android.os.IBinder;
+import android.os.Looper;
+import android.support.annotation.NonNull;
+import android.support.v4.content.ContextCompat;
 import android.util.Log;
 
+import com.google.android.gms.location.FusedLocationProviderClient;
+import com.google.android.gms.location.LocationCallback;
+import com.google.android.gms.location.LocationRequest;
+import com.google.android.gms.location.LocationResult;
+import com.google.android.gms.location.LocationServices;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 import com.hyperether.getgoing.data.CBDataFrame;
 import com.hyperether.getgoing.db.DbNode;
 import com.hyperether.getgoing.location.KalmanLatLong;
@@ -27,8 +36,9 @@ public class GPSTrackingService extends Service {
 
     private static final String TAG = "GPSTracker";
 
-    private LocationManager mLocationManager = null;
-    private static final int LOCATION_INTERVAL = 3000;
+    private static final long UPDATE_INTERVAL_IN_MILLISECONDS = 3000;
+    private static final long FASTEST_UPDATE_INTERVAL_IN_MILLISECONDS =
+            UPDATE_INTERVAL_IN_MILLISECONDS / 2;
     private static final float LOCATION_DISTANCE = 5;
 
     // filter for GPS data smoothing
@@ -62,148 +72,9 @@ public class GPSTrackingService extends Service {
     private CaloriesCalculation calcCal = new CaloriesCalculation();
     private CBDataFrame cbDataFrameLocal;    // to store the current settings
 
-    private class LocationListener implements android.location.LocationListener {
-        Location mLastLocation;
-
-        public LocationListener(String provider) {
-            Log.e(TAG, "LocationListener " + provider);
-            mLastLocation = new Location(provider);
-        }
-
-        @Override
-        public void onLocationChanged(Location location) {
-            LogUtil.getInstance().add(LogUtil.INFO, TAG, "current_loc: " + location, new Exception());
-
-            double dLat, dLong;
-            double distance = 0;
-
-            time = System.currentTimeMillis() - oldTime;
-            timeCumulative += System.currentTimeMillis() - oldTime;
-            secondsCumulative = (int) timeCumulative / 1000;
-            oldTime = System.currentTimeMillis();
-
-            mCurrentLocation = location;
-
-            if (mCurrentLocation != null) {
-                dLat = mCurrentLocation.getLatitude();
-                dLong = mCurrentLocation.getLongitude();
-
-                if (firstPass) {
-                    latitude = latitude_old = dLat;
-                    longitude = longitude_old = dLong;
-                    firstPass = false;
-
-                    DbNode tmp = new DbNode(0, latitude, longitude, 0, nodeIndex++, 0);
-                    CacheManager.getInstance().addRouteNode(tmp);
-                } else {
-                    latitude_old = latitude;
-                    longitude_old = longitude;
-                    latitude = dLat;
-                    longitude = dLong;
-                }
-
-                actualPositionValid = true; // put up a flag for the algorithm
-            }
-
-            if (actualPositionValid) {
-                actualPositionValid = false; // reset the flag
-                double dLate = latitude - latitude_old;
-                double dLon = longitude - longitude_old;
-
-                if ((dLate != 0) || (dLon != 0)) {
-                    // Carry out the path filtering
-                    if (!isKalmanStateSet) {
-                        kalman.SetState(latitude,
-                                longitude,
-                                mCurrentLocation != null ? mCurrentLocation.getAccuracy() : 0,
-                                timeCumulative);
-                        isKalmanStateSet = true;
-                    }
-
-                    kalman.Process(latitude,
-                            longitude,
-                            mCurrentLocation != null ? mCurrentLocation.getAccuracy() : 0,
-                            timeCumulative);
-                    latitude = kalman.get_lat();
-                    longitude = kalman.get_lng();
-
-                    distance =
-                            gps2m(latitude, longitude, latitude_old, longitude_old);
-                    if (!Double.isNaN(distance)) {
-                        distanceCumulative += distance;
-                        distanceDelta += distance;
-
-                        velocityAvg = distanceCumulative / secondsCumulative;
-
-                        //brzina je srednja vrednost izmerene i ocitane brzine
-                        velocity = (mCurrentLocation.getSpeed() + (distance / time)) / 2;
-                        if (velocity < 30) {
-                            CacheManager.getInstance().setVelocity(velocity);
-                        }
-
-                        if (CacheManager.getInstance().getObDataFrameLocal() != null) {
-                            cbDataFrameLocal = CacheManager.getInstance().getObDataFrameLocal();
-                            kcalCurrent = calcCal.calculate(distance, velocity, cbDataFrameLocal,
-                                    weight);
-                            kcalCumulative += kcalCurrent;
-                            if (velocity < 30) {
-                                CacheManager.getInstance().setKcalCumulative(kcalCumulative);
-                            }
-                        }
-
-                        if (distanceDelta > Constants.NODE_ADD_DISTANCE) {
-                            distanceDelta = 0;
-                            // add new point to the route
-                            // node and route database _ids are intentionally 0
-                            DbNode tmp = new DbNode(0, latitude, longitude, (float) velocity,
-                                    nodeIndex++, 0);
-                            if (velocity < 30) {
-                                CacheManager.getInstance().addRouteNode(tmp);
-                            }
-                        }
-                    } else {
-                        velocity = mCurrentLocation.getSpeed();
-                        if (velocity < 30) {
-                            CacheManager.getInstance().setVelocity(velocity);
-                        }
-                    }
-                }
-
-                if (velocity < 30) {
-                    CacheManager.getInstance().setDistanceCumulative(distanceCumulative);
-                    CacheManager.getInstance().setKcalCumulative(kcalCumulative);
-                    CacheManager.getInstance().setVelocity(velocity);
-                    CacheManager.getInstance().setVelocityAvg(velocityAvg);
-                }
-
-                time = 0; // reset the second counter for calculating velocity
-            } else {
-                // is connection broken???
-            }
-
-            if (velocity < 30) {
-                CacheManager.getInstance().setDistanceCumulative(distanceCumulative);
-            }
-        }
-
-        @Override
-        public void onProviderDisabled(String provider) {
-
-        }
-
-        @Override
-        public void onProviderEnabled(String provider) {
-        }
-
-        @Override
-        public void onStatusChanged(String provider, int status, Bundle extras) {
-
-        }
-    }
-
-    LocationListener[] mLocationListeners = new LocationListener[]{
-            new LocationListener(LocationManager.GPS_PROVIDER)
-    };
+    private FusedLocationProviderClient mFusedLocationClient;
+    private LocationCallback mLocationCallback;
+    private LocationRequest mLocationRequest;
 
     @Override
     public IBinder onBind(Intent arg0) {
@@ -213,6 +84,7 @@ public class GPSTrackingService extends Service {
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
         super.onStartCommand(intent, flags, startId);
+        startLocationUpdates();
         return START_STICKY;
     }
 
@@ -221,17 +93,9 @@ public class GPSTrackingService extends Service {
         SharedPreferences settings = getSharedPreferences(Constants.PREF_FILE, 0);
         weight = settings.getInt("weight", 0);
 
-        initializeLocationManager();
-
-        try {
-            mLocationManager.requestLocationUpdates(
-                    LocationManager.GPS_PROVIDER, LOCATION_INTERVAL, LOCATION_DISTANCE,
-                    mLocationListeners[0]);
-        } catch (java.lang.SecurityException ex) {
-            Log.i(TAG, "fail to request location update, ignore", ex);
-        } catch (IllegalArgumentException ex) {
-            Log.d(TAG, "gps provider does not exist " + ex.getMessage());
-        }
+        mFusedLocationClient = LocationServices.getFusedLocationProviderClient(this);
+        createLocationRequest();
+        createLocationCallback();
 
         if (CacheManager.getInstance().getDistanceCumulative() != null) {
             distanceCumulative = CacheManager.getInstance().getDistanceCumulative();
@@ -259,23 +123,172 @@ public class GPSTrackingService extends Service {
     @Override
     public void onDestroy() {
         super.onDestroy();
+        stopLocationUpdates();
+    }
 
-        if (mLocationManager != null) {
-            for (int i = 0; i < mLocationListeners.length; i++) {
-                try {
-                    mLocationManager.removeUpdates(mLocationListeners[i]);
-                } catch (Exception ex) {
-                    Log.i(TAG, "fail to remove location listners, ignore", ex);
-                }
+    private void startLocationUpdates() {
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.M ||
+                ContextCompat.checkSelfPermission(getApplicationContext(), android.Manifest.permission.ACCESS_FINE_LOCATION) ==
+                        PackageManager.PERMISSION_GRANTED) {
+            try {
+                mFusedLocationClient.requestLocationUpdates(mLocationRequest, mLocationCallback, Looper.myLooper());
+            } catch (SecurityException ex) {
+
             }
         }
     }
 
-    private void initializeLocationManager() {
-        if (mLocationManager == null) {
-            mLocationManager = (LocationManager) getApplicationContext().getSystemService(Context
-                    .LOCATION_SERVICE);
-        }
+    private void stopLocationUpdates() {
+        // It is a good practice to remove location requests when the activity is in a paused or
+        // stopped state. Doing so helps battery performance and is especially
+        // recommended in applications that request frequent location updates.
+        mFusedLocationClient.removeLocationUpdates(mLocationCallback)
+                .addOnCompleteListener(new OnCompleteListener<Void>() {
+                    @Override
+                    public void onComplete(@NonNull Task<Void> task) {
+
+                    }
+                });
+    }
+
+    private void createLocationRequest() {
+        mLocationRequest = new LocationRequest();
+
+        // Sets the desired interval for active location updates. This interval is
+        // inexact. You may not receive updates at all if no location sources are available, or
+        // you may receive them slower than requested. You may also receive updates faster than
+        // requested if other applications are requesting location at a faster interval.
+        mLocationRequest.setInterval(UPDATE_INTERVAL_IN_MILLISECONDS);
+
+        // Sets the fastest rate for active location updates. This interval is exact, and your
+        // application will never receive updates faster than this value.
+        mLocationRequest.setFastestInterval(FASTEST_UPDATE_INTERVAL_IN_MILLISECONDS);
+        mLocationRequest.setSmallestDisplacement(LOCATION_DISTANCE);
+
+        mLocationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
+    }
+
+    private void createLocationCallback() {
+        mLocationCallback = new LocationCallback() {
+            @Override
+            public void onLocationResult(LocationResult locationResult) {
+                super.onLocationResult(locationResult);
+                Log.d(TAG, "location: " + locationResult.getLastLocation());
+
+                LogUtil.getInstance().add(LogUtil.INFO, TAG, "current_loc: " + locationResult.getLastLocation(), new Exception());
+
+                double dLat, dLong;
+                double distance = 0;
+
+                time = System.currentTimeMillis() - oldTime;
+                timeCumulative += System.currentTimeMillis() - oldTime;
+                secondsCumulative = (int) timeCumulative / 1000;
+                oldTime = System.currentTimeMillis();
+
+                mCurrentLocation = locationResult.getLastLocation();
+
+                if (mCurrentLocation != null) {
+                    dLat = mCurrentLocation.getLatitude();
+                    dLong = mCurrentLocation.getLongitude();
+
+                    if (firstPass) {
+                        latitude = latitude_old = dLat;
+                        longitude = longitude_old = dLong;
+                        firstPass = false;
+
+                        DbNode tmp = new DbNode(0, latitude, longitude, 0, nodeIndex++, 0);
+                        CacheManager.getInstance().addRouteNode(tmp);
+                    } else {
+                        latitude_old = latitude;
+                        longitude_old = longitude;
+                        latitude = dLat;
+                        longitude = dLong;
+                    }
+
+                    actualPositionValid = true; // put up a flag for the algorithm
+                }
+
+                if (actualPositionValid) {
+                    actualPositionValid = false; // reset the flag
+                    double dLate = latitude - latitude_old;
+                    double dLon = longitude - longitude_old;
+
+                    if ((dLate != 0) || (dLon != 0)) {
+                        // Carry out the path filtering
+                        if (!isKalmanStateSet) {
+                            kalman.SetState(latitude,
+                                    longitude,
+                                    mCurrentLocation != null ? mCurrentLocation.getAccuracy() : 0,
+                                    timeCumulative);
+                            isKalmanStateSet = true;
+                        }
+
+                        kalman.Process(latitude,
+                                longitude,
+                                mCurrentLocation != null ? mCurrentLocation.getAccuracy() : 0,
+                                timeCumulative);
+                        latitude = kalman.get_lat();
+                        longitude = kalman.get_lng();
+
+                        distance =
+                                gps2m(latitude, longitude, latitude_old, longitude_old);
+                        if (!Double.isNaN(distance)) {
+                            distanceCumulative += distance;
+                            distanceDelta += distance;
+
+                            velocityAvg = distanceCumulative / secondsCumulative;
+
+                            //brzina je srednja vrednost izmerene i ocitane brzine
+                            velocity = (mCurrentLocation.getSpeed() + (distance / time)) / 2;
+                            if (velocity < 30) {
+                                CacheManager.getInstance().setVelocity(velocity);
+                            }
+
+                            if (CacheManager.getInstance().getObDataFrameLocal() != null) {
+                                cbDataFrameLocal = CacheManager.getInstance().getObDataFrameLocal();
+                                kcalCurrent = calcCal.calculate(distance, velocity, cbDataFrameLocal,
+                                        weight);
+                                kcalCumulative += kcalCurrent;
+                                if (velocity < 30) {
+                                    CacheManager.getInstance().setKcalCumulative(kcalCumulative);
+                                }
+                            }
+
+                            if (distanceDelta > Constants.NODE_ADD_DISTANCE) {
+                                distanceDelta = 0;
+                                // add new point to the route
+                                // node and route database _ids are intentionally 0
+                                DbNode tmp = new DbNode(0, latitude, longitude, (float) velocity,
+                                        nodeIndex++, 0);
+                                if (velocity < 30) {
+                                    CacheManager.getInstance().addRouteNode(tmp);
+                                }
+                            }
+                        } else {
+                            velocity = mCurrentLocation.getSpeed();
+                            if (velocity < 30) {
+                                CacheManager.getInstance().setVelocity(velocity);
+                            }
+                        }
+                    }
+
+                    if (velocity < 30) {
+                        CacheManager.getInstance().setDistanceCumulative(distanceCumulative);
+                        CacheManager.getInstance().setKcalCumulative(kcalCumulative);
+                        CacheManager.getInstance().setVelocity(velocity);
+                        CacheManager.getInstance().setVelocityAvg(velocityAvg);
+                    }
+
+                    time = 0; // reset the second counter for calculating velocity
+                } else {
+                    // is connection broken???
+                }
+
+                if (velocity < 30) {
+                    CacheManager.getInstance().setDistanceCumulative(distanceCumulative);
+                }
+            }
+        };
     }
 
     /**
