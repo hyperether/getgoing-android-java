@@ -108,6 +108,7 @@ public class ShowLocationActivity extends Activity implements
     private GoogleApiAvailability googleApiAvailability = GoogleApiAvailability.getInstance();
 
     private boolean notificationExist = false;
+    private boolean backPressed = true;
     private static final int notificationID = 0;
     private NotificationManager notificationManager;
 
@@ -204,7 +205,7 @@ public class ShowLocationActivity extends Activity implements
         mEditor.commit();
         datasource.close();
 
-        if(mProgramRunning){
+        if(mProgramRunning && backPressed){
             backgroundTrackNotification(notificationID);
         }
         super.onPause();
@@ -230,6 +231,7 @@ public class ShowLocationActivity extends Activity implements
         }
 
         deleteNotification(notificationID);
+        backPressed = true;
 
         datasource.open();
         super.onResume();
@@ -662,6 +664,7 @@ public class ShowLocationActivity extends Activity implements
 
     @Override
     public void onBackPressed() {
+        backPressed = false;
         if (mProgramRunning || !mRouteAlreadySaved) {
             AlertDialog.Builder dialog = new AlertDialog.Builder(this);
             dialog.setCancelable(false);
