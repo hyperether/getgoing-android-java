@@ -930,22 +930,14 @@ public class ShowLocationActivity extends Activity implements
     private void backgroundTrackNotification(int notificationID){
         NotificationCompat.Builder builder = new NotificationCompat.Builder(this);
         builder.setSmallIcon(R.drawable.ic_launher);
-        builder.setContentTitle("GetGoing notification");
-        builder.setContentText("Location tracking in background");
+        builder.setContentTitle(getString(R.string.notification_title));
+        builder.setContentText(getString(R.string.notification_text));
         builder.setAutoCancel(true);
-        builder.setDefaults(Notification.DEFAULT_VIBRATE);
-
         PendingIntent pendingIntent = PendingIntent.getActivity(this, 0, this.getIntent(), PendingIntent.FLAG_UPDATE_CURRENT);
-
         builder.setContentIntent(pendingIntent);
-
-
         notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
         notificationManager.notify(notificationID,builder.build());
         notificationExist = true;
-
-
-
     }
 
     private void deleteNotification(int notificationID){
