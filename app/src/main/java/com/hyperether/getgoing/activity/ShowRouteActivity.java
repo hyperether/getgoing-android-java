@@ -1,16 +1,33 @@
 package com.hyperether.getgoing.activity;
 
 import android.content.SharedPreferences;
+import android.graphics.Bitmap;
+import android.graphics.Canvas;
 import android.graphics.Color;
+import android.graphics.Matrix;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.v4.app.FragmentActivity;
-import android.widget.EditText;
+import android.view.View;
+import android.widget.TextView;
 
+import com.facebook.AccessToken;
+import com.facebook.CallbackManager;
+import com.facebook.FacebookCallback;
+import com.facebook.FacebookException;
+import com.facebook.login.LoginManager;
+import com.facebook.login.LoginResult;
+import com.facebook.share.model.ShareContent;
+import com.facebook.share.model.ShareMediaContent;
+import com.facebook.share.model.SharePhoto;
+import com.facebook.share.widget.ShareButton;
+import com.facebook.share.widget.ShareDialog;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapFragment;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.LatLngBounds;
 import com.google.android.gms.maps.model.PolylineOptions;
 import com.hyperether.getgoing.R;
 import com.hyperether.getgoing.db.DbNode;
@@ -18,19 +35,29 @@ import com.hyperether.getgoing.db.DbRoute;
 import com.hyperether.getgoing.db.GetGoingDataSource;
 import com.hyperether.getgoing.util.Constants;
 
+import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
 public class ShowRouteActivity extends FragmentActivity implements OnMapReadyCallback {
 
+    public static final String TAG = ShowRouteActivity.class.getName();
+
     private GoogleMap mMap;
 
-    private EditText showTime, showCalories, showDistance;
+    private TextView showTime, showCalories, showDistance;
 
     private GetGoingDataSource datasource;
 
     private List<DbNode> nodes;
     private DbRoute route;
+
+    private CallbackManager callbackManager;
+
+    private SharePhoto mapSnapshot;
+    private ShareContent shareContent;
+    private ShareDialog shareDialog;
+    private ShareButton shareButton;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -41,9 +68,12 @@ public class ShowRouteActivity extends FragmentActivity implements OnMapReadyCal
         datasource = new GetGoingDataSource(this);
         datasource.open();
 
-        showTime = (EditText) findViewById(R.id.showTime);
-        showCalories = (EditText) findViewById(R.id.showCalories);
-        showDistance = (EditText) findViewById(R.id.showDistance);
+        showTime = (TextView) findViewById(R.id.showTime);
+        showCalories = (TextView) findViewById(R.id.showCalories);
+        showDistance = (TextView) findViewById(R.id.showDistance);
+
+        shareButton = (ShareButton) findViewById(R.id.btn_fb_share);
+        shareButton.setVisibility(View.GONE);
 
         MapFragment mapFragment = (MapFragment) getFragmentManager()
                 .findFragmentById(R.id.show_map_page);
@@ -64,7 +94,8 @@ public class ShowRouteActivity extends FragmentActivity implements OnMapReadyCal
             nodes = datasource.getRouteNodes(route_id);    // Get all nodes for this route
 
             // Show the general values for the current route
-            showTime.setText(String.format(getDurationString(Math.abs(route.getDuration() / 1000))));
+            showTime.setText(
+                    String.format(getDurationString(Math.abs(route.getDuration() / 1000))));
             showCalories.setText(String.format("%.02f kcal", route.getEnergy()));
             showDistance.setText(String.format("%.02f m", route.getLength()));
 
@@ -84,6 +115,10 @@ public class ShowRouteActivity extends FragmentActivity implements OnMapReadyCal
                 drawRoute(nodes); // draw the route obtained from database
             }
             datasource.close();
+
+            zoomRoute(mMap, getRouteLatLng(nodes));
+
+            takeMapRouteDataSnapshot();
         }
     }
 
@@ -204,5 +239,140 @@ public class ShowRouteActivity extends FragmentActivity implements OnMapReadyCal
         }
 
         return String.valueOf(number);
+    }
+
+    /**
+     * Take snapshot of map and specific layout.
+     */
+    private void takeMapRouteDataSnapshot() {
+        final GoogleMap.SnapshotReadyCallback callback = new GoogleMap.SnapshotReadyCallback() {
+            Bitmap bitmap;
+
+            @Override
+            public void onSnapshotReady(Bitmap snapshot) {
+                bitmap = snapshot;
+                try {
+                    View mView = findViewById(R.id.data);
+                    mView.setDrawingCacheEnabled(true);
+
+                    Bitmap tmpBitmap = mView.getDrawingCache();
+                    Bitmap backBitmap = Bitmap
+                            .createBitmap(tmpBitmap, 0, 0, tmpBitmap.getWidth(), (int) (tmpBitmap
+                                    .getHeight() * 0.74));
+
+                    Bitmap bmOverlay = Bitmap.createBitmap(
+                            backBitmap.getWidth(), backBitmap.getHeight(),
+                            backBitmap.getConfig());
+
+                    Canvas canvas = new Canvas(bmOverlay);
+                    canvas.drawBitmap(snapshot, new Matrix(), null);
+                    canvas.drawBitmap(backBitmap, 0, 0, null);
+
+                    mapSnapshot = new SharePhoto.Builder()
+                            .setBitmap(bmOverlay)
+                            .build();
+
+                    shareContent = new ShareMediaContent.Builder()
+                            .addMedium(mapSnapshot)
+                            .build();
+
+                    shareButton.setVisibility(View.VISIBLE);
+                    shareButton.setShareContent(shareContent);
+                    shareButton.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View view) {
+                            if (isLoggedIn()) {
+                                shareDialog = new ShareDialog(ShowRouteActivity.this);
+                                shareDialog.show(shareContent, ShareDialog.Mode.AUTOMATIC);
+                            } else {
+                                callbackManager = CallbackManager.Factory.create();
+
+                                LoginManager.getInstance().registerCallback(callbackManager,
+                                        new FacebookCallback<LoginResult>() {
+                                            @Override
+                                            public void onSuccess(LoginResult loginResult) {
+                                                shareDialog = new ShareDialog(
+                                                        ShowRouteActivity.this);
+                                                shareDialog.show(shareContent,
+                                                        ShareDialog.Mode.AUTOMATIC);
+                                            }
+
+                                            @Override
+                                            public void onCancel() {
+
+                                            }
+
+                                            @Override
+                                            public void onError(FacebookException error) {
+
+                                            }
+                                        });
+                            }
+                        }
+                    });
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+        };
+
+        new Handler().postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                mMap.snapshot(callback);
+            }
+        }, 1000);
+    }
+
+    /**
+     * This method check if user is logged in by fb
+     */
+    public boolean isLoggedIn() {
+        AccessToken accessToken = AccessToken.getCurrentAccessToken();
+        return accessToken != null;
+    }
+
+    /**
+     * Get LatLng from list of route nodes
+     *
+     * @param routeNodes list of route nodes
+     *
+     * @return
+     */
+    private List<LatLng> getRouteLatLng(List<DbNode> routeNodes) {
+        List<LatLng> routeLatLng = new ArrayList<>();
+
+        for (DbNode item : routeNodes) {
+            LatLng loc = new LatLng(item.getLatitude(), item.getLongitude());
+            routeLatLng.add(loc);
+        }
+
+        return routeLatLng;
+    }
+
+    /**
+     * Zoom a Route at the greatest possible zoom level.
+     *
+     * @param googleMap: instance of GoogleMap
+     * @param lstLatLngRoute: list of LatLng
+     */
+    public void zoomRoute(final GoogleMap googleMap, List<LatLng> lstLatLngRoute) {
+
+        if (googleMap == null || lstLatLngRoute == null || lstLatLngRoute.isEmpty()) return;
+
+        LatLngBounds.Builder boundsBuilder = new LatLngBounds.Builder();
+        for (LatLng latLngPoint : lstLatLngRoute)
+            boundsBuilder.include(latLngPoint);
+
+        final int routePadding = 100;
+        final LatLngBounds latLngBounds = boundsBuilder.build();
+
+        new Handler().postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                googleMap.moveCamera(CameraUpdateFactory.newLatLngBounds(latLngBounds,
+                        routePadding));
+            }
+        }, 500);
     }
 }

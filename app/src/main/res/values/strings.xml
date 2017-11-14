@@ -18,6 +18,10 @@
     <string name="time">09:03:48</string>
     <string name="metric_spinner">Metric</string>
 
+    <!-- fb app id -->
+    <string name="facebook_app_id">213193922545275</string>
+    <string name="fb_login_protocol_scheme">fb213193922545275</string>
+
     <string name="SettingsActivityTitle" translatable="false">Settings</string>
     <string name="ShowMap" translatable="false">Map</string>
     <string name="action_reset_settings" translatable="false">Reset</string>
@@ -60,7 +64,7 @@
 
     <!-- Save button alert dialog -->
     <string name="alert_dialog_title_save_btn">Save route</string>
-    <string name="alert_dialog_message_save_btn">Are You sure about saving this route.</string>
+    <string name="alert_dialog_message_save_btn">Your route is successfully saved.</string>
     <string name="alert_dialog_positive_button_save_btn">OK</string>
     <string name="alert_dialog_negative_button_save_btn">Cancel</string>
 
@@ -75,6 +79,11 @@
     <string name="alert_dialog_message_back_pressed">All your unsaved data will be lost.</string>
     <string name="alert_dialog_positive_back_pressed">OK</string>
     <string name="alert_dialog_negative_back_pressed">Cancel</string>
+
+    <!-- Notification when app is tracking in background -->
+    <string name="notification_title">GetGoing</string>
+    <string name="notification_text">Tracking…</string>
+
 </resources>
 
 

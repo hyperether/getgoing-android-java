@@ -2,6 +2,9 @@ package com.hyperether.getgoing.activity;
 
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.app.Notification;
+import android.app.NotificationManager;
+import android.app.PendingIntent;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -17,6 +20,7 @@ import android.location.LocationManager;
 import android.os.Bundle;
 import android.os.SystemClock;
 import android.support.v4.app.ActivityCompat;
+import android.support.v4.app.NotificationCompat;
 import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -49,6 +53,7 @@ import com.hyperether.getgoing.service.GPSTrackingService;
 import com.hyperether.getgoing.util.Constants;
 
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
@@ -77,6 +82,7 @@ public class ShowLocationActivity extends Activity implements
 
     private boolean mUpdatesRequested;
     private boolean mProgramRunning = false;
+    private boolean mRouteAlreadySaved = false;
 
     private SharedPreferences mPrefs;
     private Editor mEditor;
@@ -101,6 +107,11 @@ public class ShowLocationActivity extends Activity implements
 
     private GoogleApiAvailability googleApiAvailability = GoogleApiAvailability.getInstance();
 
+    private boolean notificationExist = false;
+    private boolean backPressed = true;
+    private static final int notificationID = 0;
+    private NotificationManager notificationManager;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
 
@@ -108,6 +119,8 @@ public class ShowLocationActivity extends Activity implements
         // getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
         // Keep screen on all the time
         setContentView(R.layout.show_location);
+
+        mRouteAlreadySaved = true;
 
         // Create the LocationRequest object
         mLocationRequest = LocationRequest.create();
@@ -191,6 +204,10 @@ public class ShowLocationActivity extends Activity implements
         mEditor.putBoolean("KEY_UPDATES_ON", mUpdatesRequested);
         mEditor.commit();
         datasource.close();
+
+        if(mProgramRunning && backPressed){
+            backgroundTrackNotification(notificationID);
+        }
         super.onPause();
     }
 
@@ -213,6 +230,9 @@ public class ShowLocationActivity extends Activity implements
             mEditor.commit();
         }
 
+        deleteNotification(notificationID);
+        backPressed = true;
+
         datasource.open();
         super.onResume();
     }
@@ -222,6 +242,7 @@ public class ShowLocationActivity extends Activity implements
         super.onDestroy();
         clearCacheData();
         stopService(new Intent(this, GPSTrackingService.class));
+        deleteNotification(notificationID);
     }
 
     @Override
@@ -287,7 +308,19 @@ public class ShowLocationActivity extends Activity implements
                             if (!CacheManager.getInstance().getmRoute().isEmpty()) {
                                 // Save the current route in DB*/
                                 dbStore(CacheManager.getInstance().getmRoute());
+                            } else {
+                                CacheManager.getInstance().setKcalCumulative(0.0);
+                                CacheManager.getInstance().setDistanceCumulative(0.0);
+                                CacheManager.getInstance().setVelocity(0.0);
+                                CacheManager.getInstance().setVelocityAvg(0.0);
+
+                                List<DbNode> tmpRoute = new ArrayList<>();
+                                DbNode tmpNode = new DbNode(0, 0, 0, 0, 0, 0);
+                                tmpRoute.add(tmpNode);
+                                dbStore(tmpRoute);
                             }
+
+                            mRouteAlreadySaved = true;
                         }
                     });
 
@@ -380,6 +413,7 @@ public class ShowLocationActivity extends Activity implements
         startUpdates();
 
         mProgramRunning = true;
+        mRouteAlreadySaved = false;
     }
 
     /**
@@ -396,6 +430,7 @@ public class ShowLocationActivity extends Activity implements
 
         stopUpdates();
         mProgramRunning = false;
+        mRouteAlreadySaved = false;
 
 		/*
          * TODO: ovo treba jos testirati. Razlog: ako se pauzira merenje i
@@ -629,32 +664,36 @@ public class ShowLocationActivity extends Activity implements
 
     @Override
     public void onBackPressed() {
-        AlertDialog.Builder dialog = new AlertDialog.Builder(this);
-        dialog.setCancelable(false);
-        dialog.setTitle(R.string.alert_dialog_title_back_pressed);
-        dialog.setMessage(getString(R.string.alert_dialog_message_back_pressed));
-        dialog.setPositiveButton(R.string.alert_dialog_positive_back_pressed, new
-                DialogInterface
-                        .OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface paramDialogInterface, int paramInt) {
-                        // TODO Auto-generated method stub
-                        stopService(new Intent(GetGoingApp.getInstance().getApplicationContext(),
-                                GPSTrackingService.class));
-                        clearCacheData();
-                        finish();
-                    }
-                });
+        backPressed = false;
+        if (mProgramRunning || !mRouteAlreadySaved) {
+            AlertDialog.Builder dialog = new AlertDialog.Builder(this);
+            dialog.setCancelable(false);
+            dialog.setTitle(R.string.alert_dialog_title_back_pressed);
+            dialog.setMessage(getString(R.string.alert_dialog_message_back_pressed));
+            dialog.setPositiveButton(R.string.alert_dialog_positive_back_pressed, new
+                    DialogInterface
+                            .OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface paramDialogInterface, int paramInt) {
+                            stopService(new Intent(GetGoingApp.getInstance()
+                                    .getApplicationContext(),
+                                    GPSTrackingService.class));
+                            clearCacheData();
+                            finish();
+                        }
+                    });
 
-        dialog.setNegativeButton(getString(R.string.alert_dialog_negative_back_pressed),
-                new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface paramDialogInterface, int paramInt) {
-                        // TODO Auto-generated method stub
-                    }
-                });
+            dialog.setNegativeButton(getString(R.string.alert_dialog_negative_back_pressed),
+                    new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface paramDialogInterface, int paramInt) {
+                        }
+                    });
 
-        dialog.show();
+            dialog.show();
+        } else {
+            super.onBackPressed();
+        }
     }
 
     /**
@@ -886,5 +925,25 @@ public class ShowLocationActivity extends Activity implements
     public void openGPSSettings() {
         Intent i = new Intent(ACTION_LOCATION_SOURCE_SETTINGS);
         startActivityForResult(i, Constants.REQUEST_GPS_SETTINGS);
+    }
+
+    private void backgroundTrackNotification(int notificationID){
+        NotificationCompat.Builder builder = new NotificationCompat.Builder(this);
+        builder.setSmallIcon(R.drawable.ic_launher);
+        builder.setContentTitle(getString(R.string.notification_title));
+        builder.setContentText(getString(R.string.notification_text));
+        builder.setAutoCancel(true);
+        PendingIntent pendingIntent = PendingIntent.getActivity(this, 0, this.getIntent(), PendingIntent.FLAG_UPDATE_CURRENT);
+        builder.setContentIntent(pendingIntent);
+        notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+        notificationManager.notify(notificationID,builder.build());
+        notificationExist = true;
+    }
+
+    private void deleteNotification(int notificationID){
+        if(notificationExist){
+            notificationManager.cancel(notificationID);
+            notificationExist = false;
+        }
     }
 }

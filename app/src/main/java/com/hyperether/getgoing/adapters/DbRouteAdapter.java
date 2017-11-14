@@ -122,7 +122,7 @@ public class DbRouteAdapter extends BaseAdapter {
         convertView.setTag(tmpHolder);
 
         String d = "" + route.getDate();
-        String e = " Energy: " + Double.valueOf(df.format(route.getEnergy())) + " kcal";
+        String e = " Energy: " + Double.valueOf(df.format(route.getEnergy()).replace(",",".")) + " kcal";
 
         textDate.setText(d);
         textEnergy.setText(e);

@@ -14,6 +14,7 @@ import android.view.View;
 import android.widget.ImageButton;
 
 import com.crashlytics.android.Crashlytics;
+import com.facebook.AccessToken;
 import com.hyperether.getgoing.R;
 import com.hyperether.getgoing.data.CBDataFrame;
 import com.hyperether.getgoing.db.DbRoute;
@@ -120,13 +121,14 @@ public class GetGoingActivity extends Activity {
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.get_going, menu);
+        getMenuInflater().inflate(R.menu.menu, menu);
         return super.onCreateOptionsMenu(menu);
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         int itemId = item.getItemId();
+
         if (itemId == R.id.action_settings) {
             callSettingsActivity();
             return true;
@@ -179,8 +181,8 @@ public class GetGoingActivity extends Activity {
     }
 
     /*
-     * true: parameters are set false: settings required
-     */
+         * true: parameters are set false: settings required
+         */
     private boolean getParametersStatus(CBDataFrame cbDataFrameLocal) {
         return !((cbDataFrameLocal.getAge() == 0)
                 || (cbDataFrameLocal.getWeight() == 0));

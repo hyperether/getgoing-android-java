@@ -4,13 +4,14 @@ buildscript {
     }
 
     dependencies {
-        classpath 'io.fabric.tools:gradle:1.21.6'
+        classpath 'io.fabric.tools:gradle:1.24.4'
     }
 }
 apply plugin: 'com.android.application'
 apply plugin: 'io.fabric'
 
 repositories {
+    mavenCentral()
     maven { url 'https://maven.fabric.io/public' }
 }
 
@@ -23,8 +24,9 @@ android {
         applicationId "com.hyperether.getgoing"
         minSdkVersion 16
         targetSdkVersion 25
-        versionCode 8
-        versionName "3.0.3"
+        versionCode 12
+        versionName "3.0.5"
+
     }
 
     buildTypes {
@@ -34,19 +36,25 @@ android {
         release {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
-            buildConfigField "boolean", "FILE_LOG_ACTIVE", "true"
+            buildConfigField "boolean", "FILE_LOG_ACTIVE", "false"
         }
     }
 }
 
 dependencies {
     compile fileTree(dir: 'libs', include: ['*.jar'])
-    compile "com.google.android.gms:play-services-maps:11.0.2"
-    compile "com.google.android.gms:play-services-location:11.0.2"
-    compile "android.arch.persistence.room:runtime:1.0.0-alpha3"
     compile('com.crashlytics.sdk.android:crashlytics:2.6.8@aar') {
         transitive = true;
     }
+    compile 'com.google.android.gms:play-services-maps:11.0.4'
+    compile 'com.google.android.gms:play-services-location:11.0.4'
+    compile 'com.facebook.android:facebook-android-sdk:4.+'
+    compile 'com.android.support.constraint:constraint-layout:1.0.2'
+
+    compile "android.arch.persistence.room:runtime:1.0.0-alpha3"
+
+    testCompile 'junit:junit:4.12'
+    testCompile 'org.mockito:mockito-core:1.10.19'
 
     annotationProcessor "android.arch.persistence.room:compiler:1.0.0-alpha3"
     testCompile "android.arch.persistence.room:testing:1.0.0-alpha3"
