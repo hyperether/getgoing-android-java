@@ -1,37 +1,59 @@
 package com.hyperether.getgoing;
 
-import android.test.ActivityInstrumentationTestCase2;
-import android.test.suitebuilder.annotation.SmallTest;
-import android.widget.ImageButton;
+import android.content.ComponentName;
+import android.content.Intent;
+import android.support.test.espresso.ViewAssertion;
+import android.support.test.espresso.intent.rule.IntentsTestRule;
+import android.support.test.filters.LargeTest;
+import android.support.test.rule.ActivityTestRule;
+import android.support.test.runner.AndroidJUnit4;
+
+
 
 import com.hyperether.getgoing.activity.GetGoingActivity;
+import com.hyperether.getgoing.activity.ShowDataActivity;
+
+import org.hamcrest.Matcher;
+import org.junit.Rule;
+import org.junit.Test;
+import org.junit.runner.RunWith;
+
+import static android.support.test.InstrumentationRegistry.getTargetContext;
+import static android.support.test.espresso.Espresso.onView;
+import static android.support.test.espresso.action.ViewActions.click;
+import static android.support.test.espresso.assertion.ViewAssertions.matches;
+import static android.support.test.espresso.intent.Intents.intended;
+import static android.support.test.espresso.intent.matcher.IntentMatchers.hasComponent;
+import static android.support.test.espresso.matcher.ViewMatchers.isDisplayed;
+import static android.support.test.espresso.matcher.ViewMatchers.withId;
+import static android.support.test.espresso.matcher.ViewMatchers.withText;
 
 /**
  * Created by nikola on 19.10.17..
  */
 
-public class GetGoingActivityTest extends ActivityInstrumentationTestCase2<GetGoingActivity> {
-    public GetGoingActivityTest() {
-        super(GetGoingActivity.class);
+@RunWith(AndroidJUnit4.class)
+@LargeTest
+public class GetGoingActivityTest {
+
+    @Rule
+    public ActivityTestRule<GetGoingActivity> mActivityRule =
+            new ActivityTestRule(GetGoingActivity.class);
+
+
+    @Test
+    public void checkButtons(){
+        onView(withId(R.id.walk_button)).check(matches(isDisplayed()));
+        onView(withId(R.id.run_button)).check(matches(isDisplayed()));
+        onView(withId(R.id.ride_button)).check(matches(isDisplayed()));
+
     }
 
-    @Override
-    protected void setUp() throws Exception {
-        super.setUp();
+    @Test
+    public void clickButtons(){
+        onView(withId(R.id.walk_button)).perform(click());
+
     }
 
-    @SmallTest
-    public void testaddButtonListener(){
-        ImageButton imageButtonwalk = (ImageButton)getActivity().findViewById(R.id.walk_button);
-        ImageButton imageButtonrun = (ImageButton)getActivity().findViewById(R.id.walk_button);
-        ImageButton imageButtonride = (ImageButton)getActivity().findViewById(R.id.walk_button);
-        assertNotNull(imageButtonwalk);
-        assertNotNull(imageButtonride);
-        assertNotNull(imageButtonrun);
-    }
 
-    @Override
-    protected void tearDown() throws Exception {
-        super.tearDown();
-    }
 }
