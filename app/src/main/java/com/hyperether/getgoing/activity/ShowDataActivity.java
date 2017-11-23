@@ -126,20 +126,18 @@ public class ShowDataActivity extends ListActivity {
         Map<String, Float> y3 = collectData().get(2);
 
         for (int i = 0; i < x.size(); i++) {
-            if (y1.containsKey(x.get(i))) {
-                yVal1.add(new BarEntry(y1.get(x.get(i)), i));
+            String xVal = x.get(i);
+            if (y1.containsKey(xVal)) {
+                yVal1.add(new BarEntry(y1.get(xVal), i));
+            }
+            if (y2.containsKey(xVal)) {
+                yVal2.add(new BarEntry(y2.get(xVal), i));
+            }
+            if (y3.containsKey(xVal)) {
+                yVal3.add(new BarEntry(y3.get(xVal), i));
             }
         }
-        for (int i = 0; i < x.size(); i++) {
-            if (y2.containsKey(x.get(i))) {
-                yVal2.add(new BarEntry(y2.get(x.get(i)), i));
-            }
-        }
-        for (int i = 0; i < x.size(); i++) {
-            if (y3.containsKey(x.get(i))) {
-                yVal3.add(new BarEntry(y3.get(x.get(i)), i));
-            }
-        }
+
         BarDataSet set1 = new BarDataSet(yVal1, "Walk");
         BarDataSet set2 = new BarDataSet(yVal2, "Run");
         BarDataSet set3 = new BarDataSet(yVal3, "Ride");
