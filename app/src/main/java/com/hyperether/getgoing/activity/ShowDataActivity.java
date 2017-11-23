@@ -162,7 +162,7 @@ public class ShowDataActivity extends ListActivity {
         chart.getAxisRight().setEnabled(false);
         chart.getAxisLeft().setDrawGridLines(false);
         chart.animateY(2000, Easing.EasingOption.Linear);
-        chart.setVisibleXRangeMaximum(5);
+        chart.setVisibleXRangeMaximum(8);
     }
 
     @Override
