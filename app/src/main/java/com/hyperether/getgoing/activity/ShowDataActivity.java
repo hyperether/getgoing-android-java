@@ -73,7 +73,7 @@ public class ShowDataActivity extends ListActivity {
         startActivity(intent);
     }
 
-    private ArrayList xValuesChart() {
+    private ArrayList<String> xValuesChart() {
         LinkedHashSet<String> charDatesSet = new LinkedHashSet<>();
         ArrayList<String> charDates = new ArrayList<>();
         for (int i = 0; i < routes.size(); i++) {
@@ -83,8 +83,8 @@ public class ShowDataActivity extends ListActivity {
         return charDates;
     }
 
-    private ArrayList<Map> collectData() {
-        ArrayList<Map> collectedData = new ArrayList<>();
+    private ArrayList<Map<String, Float>> collectData() {
+        ArrayList<Map<String, Float>> collectedData = new ArrayList<>();
         Map<String, Float> mapY1 = new LinkedHashMap<>();
         Map<String, Float> mapY2 = new LinkedHashMap<>();
         Map<String, Float> mapY3 = new LinkedHashMap<>();
@@ -120,7 +120,7 @@ public class ShowDataActivity extends ListActivity {
         ArrayList<BarEntry> yVal1 = new ArrayList<>();
         ArrayList<BarEntry> yVal2 = new ArrayList<>();
         ArrayList<BarEntry> yVal3 = new ArrayList<>();
-        ArrayList x = xValuesChart();
+        ArrayList<String> x = xValuesChart();
         Map<String, Float> y1 = collectData().get(0);
         Map<String, Float> y2 = collectData().get(1);
         Map<String, Float> y3 = collectData().get(2);
