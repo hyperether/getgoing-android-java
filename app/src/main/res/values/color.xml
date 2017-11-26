@@ -15,4 +15,7 @@
     <color name="walk_graph_color">#087389</color>
     <color name="run_graph_color">#503b53</color>
     <color name="ride_graph_color">#7eae1b</color>
+    <color name="walk_shadow">#6F087389</color>
+    <color name="run_shadow">#6F503B53</color>
+    <color name="ride_shadow">#6F7EAE1B</color>
 </resources>

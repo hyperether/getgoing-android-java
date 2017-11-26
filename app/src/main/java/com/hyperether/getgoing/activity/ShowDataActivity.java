@@ -153,10 +153,13 @@ public class ShowDataActivity extends ListActivity {
         BarDataSet set2 = new BarDataSet(yVal2, getString(R.string.chart_label_run));
         BarDataSet set3 = new BarDataSet(yVal3, getString(R.string.chart_label_ride));
         set1.setColor(getResources().getColor(R.color.walk_graph_color));
+        set1.setBarShadowColor(getResources().getColor(R.color.walk_shadow));
         set1.setValueTextSize(10f);
         set2.setColor(getResources().getColor(R.color.run_graph_color));
+        set2.setBarShadowColor(getResources().getColor(R.color.run_shadow));
         set2.setValueTextSize(10f);
         set3.setColor(getResources().getColor(R.color.ride_graph_color));
+        set3.setBarShadowColor(getResources().getColor(R.color.ride_shadow));
         set3.setValueTextSize(10f);
         dataSets.add(set1);
         dataSets.add(set2);
