@@ -84,6 +84,11 @@
     <string name="notification_title">GetGoing</string>
     <string name="notification_text">Tracking…</string>
 
+    <!-- BarChart labels -->
+    <string name="chart_label_walk">Walk</string>
+    <string name="chart_label_run">Run</string>
+    <string name="chart_label_ride">Ride</string>
+
 </resources>
 
 

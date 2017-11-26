@@ -30,7 +30,7 @@ public class ShowDataActivity extends ListActivity {
     private List<DbRoute> routes;
     private ListView list;
     private DbRouteAdapter adapter;
-    private  BarChart chart;
+    private BarChart chart;
 
     DecimalFormat df = new DecimalFormat("#.##");      // limiting output values to 8 decimal places
 
@@ -73,38 +73,38 @@ public class ShowDataActivity extends ListActivity {
         startActivity(intent);
     }
 
-    private ArrayList xValuesChart(){
+    private ArrayList<String> xValuesChart() {
         LinkedHashSet<String> charDatesSet = new LinkedHashSet<>();
         ArrayList<String> charDates = new ArrayList<>();
-        for(int i = 0;i<routes.size();i++){
-            charDatesSet.add(routes.get(i).getDate().substring(0,10));
+        for (int i = 0; i < routes.size(); i++) {
+            charDatesSet.add(routes.get(i).getDate().substring(0, 10));
         }
         charDates.addAll(charDatesSet);
         return charDates;
     }
 
-    private ArrayList<Map> collectData(){
-        ArrayList<Map> collectedData = new ArrayList<>();
+    private ArrayList<Map<String, Float>> collectData() {
+        ArrayList<Map<String, Float>> collectedData = new ArrayList<>();
         Map<String, Float> mapY1 = new LinkedHashMap<>();
         Map<String, Float> mapY2 = new LinkedHashMap<>();
         Map<String, Float> mapY3 = new LinkedHashMap<>();
 
-        for(DbRoute item : routes){
-            if(mapY1.containsKey(item.getDate().substring(0,10)) && item.getActivity_id() == 1){
-                float q = mapY1.get(item.getDate().substring(0,10)) + (float) item.getEnergy();
-                mapY1.put(item.getDate().substring(0,10), q);
-            } else if(item.getActivity_id() == 1) {
-                mapY1.put(item.getDate().substring(0,10), (float) item.getEnergy());
-            } else if(mapY2.containsKey(item.getDate().substring(0,10)) && item.getActivity_id() == 2){
-                float q = mapY2.get(item.getDate().substring(0,10)) + (float) item.getEnergy();
-                mapY2.put(item.getDate().substring(0,10), q);
-            }else if(item.getActivity_id() == 2) {
-                mapY2.put(item.getDate().substring(0,10), (float) item.getEnergy());
-            }else if(mapY3.containsKey(item.getDate().substring(0,10)) && item.getActivity_id() == 3){
-                float q = mapY3.get(item.getDate().substring(0,10)) + (float) item.getEnergy();
-                mapY3.put(item.getDate().substring(0,10), q);
-            }else if(item.getActivity_id() == 3) {
-                mapY3.put(item.getDate().substring(0,10), (float) item.getEnergy());
+        for (DbRoute item : routes) {
+            if (mapY1.containsKey(item.getDate().substring(0, 10)) && item.getActivity_id() == 1) {
+                float q = mapY1.get(item.getDate().substring(0, 10)) + (float) item.getEnergy();
+                mapY1.put(item.getDate().substring(0, 10), q);
+            } else if (item.getActivity_id() == 1) {
+                mapY1.put(item.getDate().substring(0, 10), (float) item.getEnergy());
+            } else if (mapY2.containsKey(item.getDate().substring(0, 10)) && item.getActivity_id() == 2) {
+                float q = mapY2.get(item.getDate().substring(0, 10)) + (float) item.getEnergy();
+                mapY2.put(item.getDate().substring(0, 10), q);
+            } else if (item.getActivity_id() == 2) {
+                mapY2.put(item.getDate().substring(0, 10), (float) item.getEnergy());
+            } else if (mapY3.containsKey(item.getDate().substring(0, 10)) && item.getActivity_id() == 3) {
+                float q = mapY3.get(item.getDate().substring(0, 10)) + (float) item.getEnergy();
+                mapY3.put(item.getDate().substring(0, 10), q);
+            } else if (item.getActivity_id() == 3) {
+                mapY3.put(item.getDate().substring(0, 10), (float) item.getEnergy());
             }
         }
         collectedData.add(mapY1);
@@ -118,29 +118,40 @@ public class ShowDataActivity extends ListActivity {
         ArrayList<BarEntry> yVal1 = new ArrayList<>();
         ArrayList<BarEntry> yVal2 = new ArrayList<>();
         ArrayList<BarEntry> yVal3 = new ArrayList<>();
-        ArrayList x = xValuesChart();
+        ArrayList<String> x = xValuesChart();
         Map<String, Float> y1 = collectData().get(0);
         Map<String, Float> y2 = collectData().get(1);
         Map<String, Float> y3 = collectData().get(2);
+        String xVal;
+        float emptyValue = 0;
 
-        for(int i = 0;i<x.size();i++){
-            if(y1.containsKey(x.get(i))) {
-                yVal1.add(new BarEntry(y1.get(x.get(i)), i));
+        for (int i = 0; i < x.size(); i++) {
+            xVal = x.get(i);
+            if (y1.containsKey(x.get(i))) {
+                yVal1.add(new BarEntry(y1.get(xVal), i));
+            } else {
+                yVal1.add(new BarEntry(emptyValue, i));
             }
         }
-        for(int i = 0;i<x.size();i++){
-            if(y2.containsKey(x.get(i))) {
-                yVal2.add(new BarEntry(y2.get(x.get(i)), i));
+        for (int i = 0; i < x.size(); i++) {
+            xVal = x.get(i);
+            if (y2.containsKey(x.get(i))) {
+                yVal2.add(new BarEntry(y2.get(xVal), i));
+            } else {
+                yVal2.add(new BarEntry(emptyValue, i));
             }
         }
-        for(int i = 0;i<x.size();i++){
-            if(y3.containsKey(x.get(i))) {
-                yVal3.add(new BarEntry(y3.get(x.get(i)), i));
+        for (int i = 0; i < x.size(); i++) {
+            xVal = x.get(i);
+            if (y3.containsKey(x.get(i))) {
+                yVal3.add(new BarEntry(y3.get(xVal), i));
+            } else {
+                yVal3.add(new BarEntry(emptyValue, i));
             }
         }
-        BarDataSet set1 = new BarDataSet(yVal1,"Walk");
-        BarDataSet set2 = new BarDataSet(yVal2,"Run");
-        BarDataSet set3 = new BarDataSet(yVal3,"Ride");
+        BarDataSet set1 = new BarDataSet(yVal1, getString(R.string.chart_label_walk));
+        BarDataSet set2 = new BarDataSet(yVal2, getString(R.string.chart_label_run));
+        BarDataSet set3 = new BarDataSet(yVal3, getString(R.string.chart_label_ride));
         set1.setColor(getResources().getColor(R.color.walk_graph_color));
         set1.setValueTextSize(10f);
         set2.setColor(getResources().getColor(R.color.run_graph_color));
@@ -154,7 +165,7 @@ public class ShowDataActivity extends ListActivity {
         return dataSets;
     }
 
-    private void populateChart(){
+    private void populateChart() {
         BarData data = new BarData(xValuesChart(), prepareData());
         chart.setData(data);
         chart.moveViewToX(xValuesChart().size());
@@ -162,7 +173,9 @@ public class ShowDataActivity extends ListActivity {
         chart.getAxisRight().setEnabled(false);
         chart.getAxisLeft().setDrawGridLines(false);
         chart.animateY(2000, Easing.EasingOption.Linear);
-        chart.setVisibleXRangeMaximum(5);
+        chart.setVisibleXRangeMaximum(8);
+        chart.setDrawBarShadow(true);
+        chart.getAxisLeft().setAxisMinValue(0f);
     }
 
     @Override
