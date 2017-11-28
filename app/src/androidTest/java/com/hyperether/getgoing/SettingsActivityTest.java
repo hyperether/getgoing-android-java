@@ -6,7 +6,6 @@ import android.support.test.runner.AndroidJUnit4;
 
 import com.hyperether.getgoing.activity.SettingsActivity;
 
-import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -33,7 +32,8 @@ public class SettingsActivityTest {
     public ActivityTestRule<SettingsActivity> mActivityRule =
             new ActivityTestRule(SettingsActivity.class);
 
-    @Before
+
+    @Test
     public void setDataFrame() {
         onView(withId(R.id.metric_spinner)).perform(click());
         onData(anything()).atPosition(0).perform(click());

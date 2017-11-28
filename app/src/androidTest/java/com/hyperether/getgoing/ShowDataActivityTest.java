@@ -28,8 +28,6 @@ import static org.hamcrest.Matchers.anything;
 @LargeTest
 public class ShowDataActivityTest {
 
-    private String rowContent = "Energy: 21.65 kcal";
-
     @Rule
     public ActivityTestRule<ShowDataActivity> mActivityRule =
             new ActivityTestRule(ShowDataActivity.class);
