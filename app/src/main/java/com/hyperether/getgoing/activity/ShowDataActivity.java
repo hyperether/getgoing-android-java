@@ -127,28 +127,23 @@ public class ShowDataActivity extends ListActivity {
 
         for (int i = 0; i < x.size(); i++) {
             xVal = x.get(i);
-            if (y1.containsKey(x.get(i))) {
+            if (y1.containsKey(xVal)) {
                 yVal1.add(new BarEntry(y1.get(xVal), i));
             } else {
                 yVal1.add(new BarEntry(emptyValue, i));
             }
-        }
-        for (int i = 0; i < x.size(); i++) {
-            xVal = x.get(i);
-            if (y2.containsKey(x.get(i))) {
+            if (y2.containsKey(xVal)) {
                 yVal2.add(new BarEntry(y2.get(xVal), i));
             } else {
                 yVal2.add(new BarEntry(emptyValue, i));
             }
-        }
-        for (int i = 0; i < x.size(); i++) {
-            xVal = x.get(i);
-            if (y3.containsKey(x.get(i))) {
+            if (y3.containsKey(xVal)) {
                 yVal3.add(new BarEntry(y3.get(xVal), i));
             } else {
                 yVal3.add(new BarEntry(emptyValue, i));
             }
         }
+
         BarDataSet set1 = new BarDataSet(yVal1, getString(R.string.chart_label_walk));
         BarDataSet set2 = new BarDataSet(yVal2, getString(R.string.chart_label_run));
         BarDataSet set3 = new BarDataSet(yVal3, getString(R.string.chart_label_ride));
