@@ -2,15 +2,19 @@ package com.hyperether.getgoing.db;
 
 import android.arch.persistence.room.ColumnInfo;
 import android.arch.persistence.room.Entity;
+import android.arch.persistence.room.ForeignKey;
+import android.arch.persistence.room.Index;
 import android.arch.persistence.room.PrimaryKey;
 import android.os.Parcel;
 import android.os.Parcelable;
 
-@Entity
+@Entity(foreignKeys = @ForeignKey(entity = DbNode.class,
+        parentColumns = "id",
+        childColumns = "route_idroute"
+),
+        indices = {@Index(value = "route_idroute", unique = true)})
 public class DbNode implements Parcelable {
-    @PrimaryKey
-    private int uid;
-
+    @PrimaryKey(autoGenerate = true)
     private long id;
 
     @ColumnInfo
@@ -75,13 +79,14 @@ public class DbNode implements Parcelable {
         this.index = index;
     }
 
-    public long getRouteId() {
+    public long getRoute_id() {
         return route_id;
     }
 
     public void setRouteId(long route_id) {
         this.route_id = route_id;
     }
+
 
     @Override
     public int describeContents() {

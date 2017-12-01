@@ -105,6 +105,7 @@ public class ShowLocationActivity extends Activity implements
     private boolean timeFlg = true;
     private boolean mResolvingError = false;
 
+
     private GoogleApiAvailability googleApiAvailability = GoogleApiAvailability.getInstance();
 
     private boolean notificationExist = false;

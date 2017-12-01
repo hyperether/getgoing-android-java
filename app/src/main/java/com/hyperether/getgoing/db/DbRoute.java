@@ -1,12 +1,24 @@
 package com.hyperether.getgoing.db;
 
+import android.arch.persistence.room.ColumnInfo;
+import android.arch.persistence.room.Entity;
+import android.arch.persistence.room.PrimaryKey;
+
+@Entity
 public class DbRoute {
+    @PrimaryKey(autoGenerate = true)
     private long id;
+    @ColumnInfo
     private long duration; // duration in milliseconds
+    @ColumnInfo
     private double energy;
+    @ColumnInfo
     private double length;
+    @ColumnInfo
     private String date;
+    @ColumnInfo
     private double avgSpeed;  // average speed during this route
+    @ColumnInfo
     private int activity_id;   // actitivy called for this route walk = 1, run = 2, ride = 3
 
     public DbRoute(long id, long duration, double energy, double length,

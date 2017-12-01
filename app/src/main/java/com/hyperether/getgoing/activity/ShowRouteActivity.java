@@ -1,5 +1,6 @@
 package com.hyperether.getgoing.activity;
 
+import android.app.Activity;
 import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
@@ -7,7 +8,6 @@ import android.graphics.Color;
 import android.graphics.Matrix;
 import android.os.Bundle;
 import android.os.Handler;
-import android.support.v4.app.FragmentActivity;
 import android.view.View;
 import android.widget.TextView;
 
@@ -39,7 +39,7 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
-public class ShowRouteActivity extends FragmentActivity implements OnMapReadyCallback {
+public class ShowRouteActivity extends Activity implements OnMapReadyCallback {
 
     public static final String TAG = ShowRouteActivity.class.getName();
 
@@ -177,7 +177,7 @@ public class ShowRouteActivity extends FragmentActivity implements OnMapReadyCal
     /**
      * Drawing a segment of the route and coloring it in accordance with the speed.
      *
-     * @param firstNode first point of the rout
+     * @param firstNode  first point of the rout
      * @param secondNode second point of the rout
      */
     private void drawSegment(DbNode firstNode, DbNode secondNode) {
@@ -336,7 +336,6 @@ public class ShowRouteActivity extends FragmentActivity implements OnMapReadyCal
      * Get LatLng from list of route nodes
      *
      * @param routeNodes list of route nodes
-     *
      * @return
      */
     private List<LatLng> getRouteLatLng(List<DbNode> routeNodes) {
@@ -353,7 +352,7 @@ public class ShowRouteActivity extends FragmentActivity implements OnMapReadyCal
     /**
      * Zoom a Route at the greatest possible zoom level.
      *
-     * @param googleMap: instance of GoogleMap
+     * @param googleMap:      instance of GoogleMap
      * @param lstLatLngRoute: list of LatLng
      */
     public void zoomRoute(final GoogleMap googleMap, List<LatLng> lstLatLngRoute) {

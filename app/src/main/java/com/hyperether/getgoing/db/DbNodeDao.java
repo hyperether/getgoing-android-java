@@ -11,6 +11,6 @@ import java.util.List;
 @Dao
 public interface DbNodeDao {
 
-    @Query("SELECT * FROM node")
+    @Query("SELECT * FROM DbNode")
     List<DbNode> getAll();
 }
