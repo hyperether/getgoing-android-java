@@ -2,7 +2,6 @@ package com.hyperether.getgoing.activity;
 
 import android.app.Activity;
 import android.app.AlertDialog;
-import android.app.Notification;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.Context;
@@ -45,6 +44,7 @@ import com.google.android.gms.maps.model.PolylineOptions;
 import com.hyperether.getgoing.GetGoingApp;
 import com.hyperether.getgoing.R;
 import com.hyperether.getgoing.data.CBDataFrame;
+import com.hyperether.getgoing.db.AppDatabase;
 import com.hyperether.getgoing.db.DbNode;
 import com.hyperether.getgoing.db.DbRoute;
 import com.hyperether.getgoing.db.GetGoingDataSource;
@@ -60,6 +60,8 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Timer;
 import java.util.TimerTask;
+
+import io.reactivex.Flowable;
 
 import static android.provider.Settings.ACTION_LOCATION_SOURCE_SETTINGS;
 
@@ -105,6 +107,7 @@ public class ShowLocationActivity extends Activity implements
     private boolean timeFlg = true;
     private boolean mResolvingError = false;
 
+    AppDatabase dbRoom = AppDatabase.getInstance(this);
 
     private GoogleApiAvailability googleApiAvailability = GoogleApiAvailability.getInstance();
 
@@ -206,7 +209,7 @@ public class ShowLocationActivity extends Activity implements
         mEditor.commit();
         datasource.close();
 
-        if(mProgramRunning && backPressed){
+        if (mProgramRunning && backPressed) {
             backgroundTrackNotification(notificationID);
         }
         super.onPause();
@@ -308,7 +311,7 @@ public class ShowLocationActivity extends Activity implements
                             // Save the current route in DB*/
                             if (!CacheManager.getInstance().getmRoute().isEmpty()) {
                                 // Save the current route in DB*/
-                                dbStore(CacheManager.getInstance().getmRoute());
+                                roomStore(CacheManager.getInstance().getmRoute());
                             } else {
                                 CacheManager.getInstance().setKcalCumulative(0.0);
                                 CacheManager.getInstance().setDistanceCumulative(0.0);
@@ -318,7 +321,7 @@ public class ShowLocationActivity extends Activity implements
                                 List<DbNode> tmpRoute = new ArrayList<>();
                                 DbNode tmpNode = new DbNode(0, 0, 0, 0, 0, 0);
                                 tmpRoute.add(tmpNode);
-                                dbStore(tmpRoute);
+                                roomStore(tmpRoute);
                             }
 
                             mRouteAlreadySaved = true;
@@ -490,8 +493,8 @@ public class ShowLocationActivity extends Activity implements
      * This method show measured data.
      *
      * @param distance passed distance
-     * @param kcal calories burned
-     * @param vel average velocity
+     * @param kcal     calories burned
+     * @param vel      average velocity
      */
     private void showData(double distance, double kcal, double vel,
                           double velAvg) {
@@ -826,7 +829,7 @@ public class ShowLocationActivity extends Activity implements
     /**
      * This method draws a segment of the route and coloring it in accordance with the speed
      *
-     * @param firstNode first point of the rout
+     * @param firstNode  first point of the rout
      * @param secondNode second point of the rout
      */
     private void drawSegment(DbNode firstNode, DbNode secondNode) {
@@ -900,6 +903,28 @@ public class ShowLocationActivity extends Activity implements
         }
     }
 
+    /*
+         * Store the every node in the RoomDB
+		 * */
+    private void roomStore(List<DbNode> nodeList) {
+        DbNode currentNode = null;
+
+        long routeId = dbRoom.dbRouteDao().insertRoute(new DbRoute(0, timeWhenStopped, CacheManager.getInstance().getKcalCumulative(),
+                CacheManager.getInstance().getDistanceCumulative(), currentDateandTime,
+                CacheManager.getInstance().getVelocityAvg(), cbDataFrameLocal
+                .getProfileId()));
+        Flowable<DbRoute> route = dbRoom.dbRouteDao().getRouteById(routeId);
+
+        if (route != null) {
+            Iterator<DbNode> it = nodeList.iterator();
+            while (it.hasNext()) {
+                currentNode = it.next();
+                dbRoom.dbNodeDao().insertNode(new DbNode(0, currentNode.getLatitude(), currentNode.getLongitude(),
+                        currentNode.getVelocity(), currentNode.getIndex(), routeId));
+            }
+        }
+    }
+
     /**
      * Method for initiating layout.
      */
@@ -928,7 +953,7 @@ public class ShowLocationActivity extends Activity implements
         startActivityForResult(i, Constants.REQUEST_GPS_SETTINGS);
     }
 
-    private void backgroundTrackNotification(int notificationID){
+    private void backgroundTrackNotification(int notificationID) {
         NotificationCompat.Builder builder = new NotificationCompat.Builder(this);
         builder.setSmallIcon(R.drawable.ic_launher);
         builder.setContentTitle(getString(R.string.notification_title));
@@ -937,12 +962,12 @@ public class ShowLocationActivity extends Activity implements
         PendingIntent pendingIntent = PendingIntent.getActivity(this, 0, this.getIntent(), PendingIntent.FLAG_UPDATE_CURRENT);
         builder.setContentIntent(pendingIntent);
         notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
-        notificationManager.notify(notificationID,builder.build());
+        notificationManager.notify(notificationID, builder.build());
         notificationExist = true;
     }
 
-    private void deleteNotification(int notificationID){
-        if(notificationExist){
+    private void deleteNotification(int notificationID) {
+        if (notificationExist) {
             notificationManager.cancel(notificationID);
             notificationExist = false;
         }
