@@ -3,6 +3,7 @@ package com.hyperether.getgoing.db;
 import android.arch.persistence.room.ColumnInfo;
 import android.arch.persistence.room.Entity;
 import android.arch.persistence.room.ForeignKey;
+import android.arch.persistence.room.Index;
 import android.arch.persistence.room.PrimaryKey;
 import android.os.Parcel;
 import android.os.Parcelable;
@@ -12,8 +13,9 @@ import static android.arch.persistence.room.ForeignKey.CASCADE;
 @Entity(foreignKeys = @ForeignKey(entity = DbRoute.class,
         parentColumns = "id",
         childColumns = "route_idroute",
-        onDelete = CASCADE
-))
+        onDelete = CASCADE),
+        indices = {@Index(value = "route_idroute")
+})
 public class DbNode implements Parcelable {
     @PrimaryKey(autoGenerate = true)
     private long id;
