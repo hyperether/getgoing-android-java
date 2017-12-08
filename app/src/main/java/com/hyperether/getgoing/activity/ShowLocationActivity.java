@@ -19,7 +19,6 @@ import android.location.LocationManager;
 import android.os.Bundle;
 import android.os.SystemClock;
 import android.support.v4.app.ActivityCompat;
-import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.NotificationCompat;
 import android.util.Log;
 import android.view.View;
@@ -910,18 +909,20 @@ public class ShowLocationActivity extends Activity implements
     private void roomStore(List<DbNode> nodeList) {
         DbNode currentNode = null;
 
-        long routeId = dbRoom.dbRouteDao().insertRoute(new DbRoute(0, timeWhenStopped, CacheManager.getInstance().getKcalCumulative(),
-                CacheManager.getInstance().getDistanceCumulative(), currentDateandTime,
-                CacheManager.getInstance().getVelocityAvg(), cbDataFrameLocal
-                .getProfileId()));
+        long routeId = dbRoom.dbRouteDao().insertRoute(
+                new DbRoute(0, timeWhenStopped, CacheManager.getInstance().getKcalCumulative(),
+                        CacheManager.getInstance().getDistanceCumulative(), currentDateandTime,
+                        CacheManager.getInstance().getVelocityAvg(), cbDataFrameLocal
+                        .getProfileId()));
         Flowable<DbRoute> route = dbRoom.dbRouteDao().getRouteById(routeId);
 
         if (route != null) {
             Iterator<DbNode> it = nodeList.iterator();
             while (it.hasNext()) {
                 currentNode = it.next();
-                dbRoom.dbNodeDao().insertNode(new DbNode(0, currentNode.getLatitude(), currentNode.getLongitude(),
-                        currentNode.getVelocity(), currentNode.getIndex(), routeId));
+                dbRoom.dbNodeDao().insertNode(
+                        new DbNode(0, currentNode.getLatitude(), currentNode.getLongitude(),
+                                currentNode.getVelocity(), currentNode.getIndex(), routeId));
             }
         }
     }
@@ -960,7 +961,8 @@ public class ShowLocationActivity extends Activity implements
         builder.setContentTitle(getString(R.string.notification_title));
         builder.setContentText(getString(R.string.notification_text));
         builder.setAutoCancel(true);
-        PendingIntent pendingIntent = PendingIntent.getActivity(this, 0, this.getIntent(), PendingIntent.FLAG_UPDATE_CURRENT);
+        PendingIntent pendingIntent = PendingIntent
+                .getActivity(this, 0, this.getIntent(), PendingIntent.FLAG_UPDATE_CURRENT);
         builder.setContentIntent(pendingIntent);
         notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
         notificationManager.notify(notificationID, builder.build());
