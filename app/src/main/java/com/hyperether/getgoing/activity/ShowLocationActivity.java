@@ -45,6 +45,7 @@ import com.hyperether.getgoing.GetGoingApp;
 import com.hyperether.getgoing.R;
 import com.hyperether.getgoing.data.CBDataFrame;
 import com.hyperether.getgoing.db.AppDatabase;
+import com.hyperether.getgoing.db.DbHelper;
 import com.hyperether.getgoing.db.DbNode;
 import com.hyperether.getgoing.db.DbRoute;
 import com.hyperether.getgoing.db.GetGoingDataSource;
@@ -60,8 +61,6 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Timer;
 import java.util.TimerTask;
-
-import io.reactivex.Flowable;
 
 import static android.provider.Settings.ACTION_LOCATION_SOURCE_SETTINGS;
 
@@ -106,8 +105,6 @@ public class ShowLocationActivity extends Activity implements
     private String currentDateandTime;
     private boolean timeFlg = true;
     private boolean mResolvingError = false;
-
-    AppDatabase dbRoom = AppDatabase.getInstance(this);
 
     private GoogleApiAvailability googleApiAvailability = GoogleApiAvailability.getInstance();
 
@@ -493,8 +490,8 @@ public class ShowLocationActivity extends Activity implements
      * This method show measured data.
      *
      * @param distance passed distance
-     * @param kcal     calories burned
-     * @param vel      average velocity
+     * @param kcal calories burned
+     * @param vel average velocity
      */
     private void showData(double distance, double kcal, double vel,
                           double velAvg) {
@@ -829,7 +826,7 @@ public class ShowLocationActivity extends Activity implements
     /**
      * This method draws a segment of the route and coloring it in accordance with the speed
      *
-     * @param firstNode  first point of the rout
+     * @param firstNode first point of the rout
      * @param secondNode second point of the rout
      */
     private void drawSegment(DbNode firstNode, DbNode secondNode) {
@@ -907,24 +904,34 @@ public class ShowLocationActivity extends Activity implements
          * Store the every node in the RoomDB
 		 * */
     private void roomStore(List<DbNode> nodeList) {
-        DbNode currentNode = null;
+        // TODO: execute this on new background thread/handler
+        // Then remove flowable/reactive parts
+//        DbNode currentNode = null;
 
-        long routeId = dbRoom.dbRouteDao().insertRoute(
-                new DbRoute(0, timeWhenStopped, CacheManager.getInstance().getKcalCumulative(),
-                        CacheManager.getInstance().getDistanceCumulative(), currentDateandTime,
-                        CacheManager.getInstance().getVelocityAvg(), cbDataFrameLocal
-                        .getProfileId()));
-        Flowable<DbRoute> route = dbRoom.dbRouteDao().getRouteById(routeId);
-
-        if (route != null) {
-            Iterator<DbNode> it = nodeList.iterator();
-            while (it.hasNext()) {
-                currentNode = it.next();
-                dbRoom.dbNodeDao().insertNode(
-                        new DbNode(0, currentNode.getLatitude(), currentNode.getLongitude(),
-                                currentNode.getVelocity(), currentNode.getIndex(), routeId));
-            }
-        }
+        DbRoute dbRoute = new DbRoute(0, timeWhenStopped,
+                CacheManager.getInstance().getKcalCumulative(),
+                CacheManager.getInstance().getDistanceCumulative(), currentDateandTime,
+                CacheManager.getInstance().getVelocityAvg(), cbDataFrameLocal
+                .getProfileId());
+        DbHelper.getInstance(getApplicationContext()).insertRoute(dbRoute, nodeList);
+//
+//
+//        long routeId = dbRoom.dbRouteDao().insertRoute(
+//                new DbRoute(0, timeWhenStopped, CacheManager.getInstance().getKcalCumulative(),
+//                        CacheManager.getInstance().getDistanceCumulative(), currentDateandTime,
+//                        CacheManager.getInstance().getVelocityAvg(), cbDataFrameLocal
+//                        .getProfileId()));
+//        Flowable<DbRoute> route = dbRoom.dbRouteDao().getRouteById(routeId);
+//
+//        if (route != null) {
+//            Iterator<DbNode> it = nodeList.iterator();
+//            while (it.hasNext()) {
+//                currentNode = it.next();
+//                dbRoom.dbNodeDao().insertNode(
+//                        new DbNode(0, currentNode.getLatitude(), currentNode.getLongitude(),
+//                                currentNode.getVelocity(), currentNode.getIndex(), routeId));
+//            }
+//        }
     }
 
     /**

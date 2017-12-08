@@ -15,7 +15,7 @@ import static android.arch.persistence.room.ForeignKey.CASCADE;
         childColumns = "route_idroute",
         onDelete = CASCADE),
         indices = {@Index(value = "route_idroute")
-})
+        })
 public class DbNode implements Parcelable {
     @PrimaryKey(autoGenerate = true)
     private long id;
@@ -82,14 +82,13 @@ public class DbNode implements Parcelable {
         this.index = index;
     }
 
-    public long getRoute_id() {
+    public long getRouteId() {
         return route_id;
     }
 
     public void setRouteId(long route_id) {
         this.route_id = route_id;
     }
-
 
     @Override
     public int describeContents() {
