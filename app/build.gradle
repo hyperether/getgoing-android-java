@@ -48,11 +48,17 @@ dependencies {
     compile('com.crashlytics.sdk.android:crashlytics:2.6.8@aar') {
         transitive = true;
     }
-    compile 'com.google.android.gms:play-services-maps:11.6.0'
-    compile 'com.google.android.gms:play-services-location:11.6.0'
+    compile 'com.google.android.gms:play-services-maps:11.6.2'
+    compile 'com.google.android.gms:play-services-location:11.6.2'
     compile 'com.facebook.android:facebook-android-sdk:4.28.0'
     compile 'com.android.support.constraint:constraint-layout:1.0.2'
     compile 'com.github.PhilJay:MPAndroidChart:v2.2.4'
+
+//    compile(name: 'android-toolbox-debug', ext: 'aar')
+    compile('com.hyperether:android-toolbox:1.0.2@aar') {
+        transitive = true;
+    }
+
     testCompile 'junit:junit:4.12'
     androidTestCompile 'com.android.support.test.espresso:espresso-intents:3.0.1', {
         exclude group: 'com.android.support', module: 'support-annotations'
