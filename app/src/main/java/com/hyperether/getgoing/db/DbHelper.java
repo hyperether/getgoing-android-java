@@ -8,7 +8,6 @@ import android.os.HandlerThread;
 import java.util.Iterator;
 import java.util.List;
 
-import io.reactivex.Flowable;
 
 /**
  * Created by Slobodan on 7/11/2017.
@@ -22,7 +21,7 @@ public class DbHelper {
     private AppDatabase db;
 
     private DbHelper(Context ctxt) {
-        db = Room.databaseBuilder(ctxt, AppDatabase.class, DATABASE_NAME).build();
+        db = Room.databaseBuilder(ctxt, AppDatabase.class, DATABASE_NAME).fallbackToDestructiveMigration().build();
     }
 
     public static DbHelper getInstance(Context ctxt) {
@@ -42,18 +41,51 @@ public class DbHelper {
             @Override
             public void run() {
                 long routeId = db.dbRouteDao().insertRoute(dbRoute);
-                Flowable<DbRoute> route = db.dbRouteDao().getRouteById(routeId);
+                DbRoute route = db.dbRouteDao().getRouteById(routeId);
 
                 if (route != null) {
-                    Iterator<DbNode> it = nodeList.iterator();
-                    while (it.hasNext()) {
-                        DbNode currentNode = it.next();
-                        db.dbNodeDao().insertNode(
-                                new DbNode(0, currentNode.getLatitude(), currentNode.getLongitude(),
-                                        currentNode.getVelocity(), currentNode.getIndex(),
-                                        routeId));
+                    for (DbNode currentNode : nodeList) {
+                        db.dbNodeDao().insertNode(new DbNode(0, currentNode.getLatitude(), currentNode.getLongitude(),
+                                currentNode.getVelocity(), currentNode.getIndex(),
+                                routeId));
                     }
                 }
+            }
+        });
+    }
+
+    public void getAllRoutes(final List<DbRoute> routes) {
+
+        getDbHandler().post(new Runnable() {
+            public void run() {
+                routes.addAll(db.dbRouteDao().getAll());
+            }
+        });
+    }
+
+    public void getRouteById(final List<DbRoute> routes, final long id) {
+        getDbHandler().post(new Runnable() {
+            public void run() {
+                DbRoute r1 = db.dbRouteDao().getRouteById(id);
+                routes.add(r1);
+            }
+        });
+    }
+
+    public void deleteRouteById(final long id) {
+
+        getDbHandler().post(new Runnable() {
+            public void run() {
+                db.dbRouteDao().deleteRouteById(id);
+            }
+        });
+    }
+
+    public void getAllNodesByRouteId(final List<DbNode> nodes, final long id) {
+
+        getDbHandler().post(new Runnable() {
+            public void run() {
+                nodes.addAll(db.dbNodeDao().getAllByRouteId(id));
             }
         });
     }

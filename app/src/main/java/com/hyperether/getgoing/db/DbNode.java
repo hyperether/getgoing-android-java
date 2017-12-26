@@ -12,9 +12,9 @@ import static android.arch.persistence.room.ForeignKey.CASCADE;
 
 @Entity(foreignKeys = @ForeignKey(entity = DbRoute.class,
         parentColumns = "id",
-        childColumns = "route_idroute",
+        childColumns = "routeId",
         onDelete = CASCADE),
-        indices = {@Index(value = "route_idroute")
+        indices = {@Index(value = "routeId")
         })
 public class DbNode implements Parcelable {
     @PrimaryKey(autoGenerate = true)
@@ -28,18 +28,18 @@ public class DbNode implements Parcelable {
     private float velocity;
     @ColumnInfo(name = "number")
     private long index; // node index within a particular route
-    @ColumnInfo(name = "route_idroute")
-    private long route_id; // foreign key
+
+    private long routeId; // foreign key
 
     public DbNode(long id, double latitude, double longitude, float velocity,
-                  long index, long route_id) {
+                  long index, long routeId) {
         super();
         this.id = id;
         this.latitude = latitude;
         this.longitude = longitude;
         this.velocity = velocity;
         this.index = index;
-        this.route_id = route_id;
+        this.routeId = routeId;
     }
 
     public long getId() {
@@ -83,11 +83,11 @@ public class DbNode implements Parcelable {
     }
 
     public long getRouteId() {
-        return route_id;
+        return routeId;
     }
 
-    public void setRouteId(long route_id) {
-        this.route_id = route_id;
+    public void setRouteId(long routeId) {
+        this.routeId = routeId;
     }
 
     @Override
@@ -103,7 +103,7 @@ public class DbNode implements Parcelable {
         out.writeDouble(longitude);
         out.writeFloat(velocity);
         out.writeLong(index);
-        out.writeLong(route_id);
+        out.writeLong(routeId);
         out.writeLong(id);
     }
 
@@ -112,7 +112,7 @@ public class DbNode implements Parcelable {
         longitude = in.readDouble();
         velocity = in.readFloat();
         index = in.readLong();
-        route_id = in.readLong();
+        routeId = in.readLong();
         id = in.readLong();
     }
 

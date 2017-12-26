@@ -7,8 +7,6 @@ import android.arch.persistence.room.Query;
 
 import java.util.List;
 
-import io.reactivex.Flowable;
-
 @Dao
 public interface DbRouteDao {
 
@@ -19,8 +17,11 @@ public interface DbRouteDao {
     long insertRoute(DbRoute dbRoute);
 
     @Query("SELECT * FROM DbRoute WHERE id = :id")
-    Flowable<DbRoute> getRouteById(long id);
+    DbRoute getRouteById(long id);
 
     @Delete
     void deleteRoutes(DbRoute... routes);
+
+    @Query("DELETE FROM DbRoute WHERE id = :id")
+    void deleteRouteById(long id);
 }

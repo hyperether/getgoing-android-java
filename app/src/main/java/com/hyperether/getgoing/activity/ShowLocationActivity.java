@@ -44,11 +44,9 @@ import com.google.android.gms.maps.model.PolylineOptions;
 import com.hyperether.getgoing.GetGoingApp;
 import com.hyperether.getgoing.R;
 import com.hyperether.getgoing.data.CBDataFrame;
-import com.hyperether.getgoing.db.AppDatabase;
 import com.hyperether.getgoing.db.DbHelper;
 import com.hyperether.getgoing.db.DbNode;
 import com.hyperether.getgoing.db.DbRoute;
-import com.hyperether.getgoing.db.GetGoingDataSource;
 import com.hyperether.getgoing.manager.CacheManager;
 import com.hyperether.getgoing.service.GPSTrackingService;
 import com.hyperether.getgoing.util.Constants;
@@ -100,7 +98,6 @@ public class ShowLocationActivity extends Activity implements
     long timeWhenStopped = 0;
 
     // Route storage variables
-    private GetGoingDataSource datasource;
     private SimpleDateFormat sdf;
     private String currentDateandTime;
     private boolean timeFlg = true;
@@ -160,8 +157,6 @@ public class ShowLocationActivity extends Activity implements
 
         initLayoutDinamically();
 
-        datasource = new GetGoingDataSource(this);
-        datasource.open();
         sdf = new SimpleDateFormat("dd.MM.yyyy.' 'HH:mm:ss", Locale.ENGLISH);
 
         clearData();
@@ -195,7 +190,6 @@ public class ShowLocationActivity extends Activity implements
 		 */
         //mLocationClient.disconnect();
         mGoogleApiClient.disconnect();
-        datasource.close();
         super.onStop();
     }
 
@@ -204,7 +198,6 @@ public class ShowLocationActivity extends Activity implements
         // Save the current setting for updates
         mEditor.putBoolean("KEY_UPDATES_ON", mUpdatesRequested);
         mEditor.commit();
-        datasource.close();
 
         if (mProgramRunning && backPressed) {
             backgroundTrackNotification(notificationID);
@@ -234,7 +227,6 @@ public class ShowLocationActivity extends Activity implements
         deleteNotification(notificationID);
         backPressed = true;
 
-        datasource.open();
         super.onResume();
     }
 
@@ -860,53 +852,12 @@ public class ShowLocationActivity extends Activity implements
         }
     }
 
-    /**
-     * Method for storing tracking data into DB.
-     *
-     * @param nodeList tracked rout
-     */
-    private void dbStore(List<DbNode> nodeList) {
-        DbNode currentNode = null;
-
-		/*
-         * Store the general route data in the DB
-		 * */
-        DbRoute route = datasource
-                .createRoute(timeWhenStopped, CacheManager.getInstance().getKcalCumulative(),
-                        CacheManager.getInstance().getDistanceCumulative(), currentDateandTime,
-                        CacheManager.getInstance().getVelocityAvg(), cbDataFrameLocal
-                                .getProfileId());
-
-		/*
-         * Debugging only!!!
-		 *
-		 * */
-        /*
-        datasource.createNode(50.78007792, 6.15212939, (float) 1.5, 0, route.getId());
-		datasource.createNode(50.78009774, 6.15212161, (float) 2.5, 1, route.getId());
-		datasource.createNode(50.78011194, 6.15201426, (float) 3.5, 2, route.getId());
-		 */
-
-		/*
-         * Store the every node in the DB
-		 * */
-        if (route != null) {
-            Iterator<DbNode> it = nodeList.iterator();
-            while (it.hasNext()) {
-                currentNode = it.next();
-                datasource.createNode(currentNode.getLatitude(), currentNode.getLongitude(),
-                        currentNode.getVelocity(), currentNode.getIndex(), route.getId());
-            }
-        }
-    }
-
     /*
          * Store the every node in the RoomDB
 		 * */
     private void roomStore(List<DbNode> nodeList) {
         // TODO: execute this on new background thread/handler
         // Then remove flowable/reactive parts
-//        DbNode currentNode = null;
 
         DbRoute dbRoute = new DbRoute(0, timeWhenStopped,
                 CacheManager.getInstance().getKcalCumulative(),
@@ -914,24 +865,7 @@ public class ShowLocationActivity extends Activity implements
                 CacheManager.getInstance().getVelocityAvg(), cbDataFrameLocal
                 .getProfileId());
         DbHelper.getInstance(getApplicationContext()).insertRoute(dbRoute, nodeList);
-//
-//
-//        long routeId = dbRoom.dbRouteDao().insertRoute(
-//                new DbRoute(0, timeWhenStopped, CacheManager.getInstance().getKcalCumulative(),
-//                        CacheManager.getInstance().getDistanceCumulative(), currentDateandTime,
-//                        CacheManager.getInstance().getVelocityAvg(), cbDataFrameLocal
-//                        .getProfileId()));
-//        Flowable<DbRoute> route = dbRoom.dbRouteDao().getRouteById(routeId);
-//
-//        if (route != null) {
-//            Iterator<DbNode> it = nodeList.iterator();
-//            while (it.hasNext()) {
-//                currentNode = it.next();
-//                dbRoom.dbNodeDao().insertNode(
-//                        new DbNode(0, currentNode.getLatitude(), currentNode.getLongitude(),
-//                                currentNode.getVelocity(), currentNode.getIndex(), routeId));
-//            }
-//        }
+
     }
 
     /**

@@ -2,11 +2,11 @@
   "formatVersion": 1,
   "database": {
     "version": 2,
-    "identityHash": "8ca5a12c0791091520fdbb7dd85d5abf",
+    "identityHash": "1c27c86ef6b4c8d9b68b4db5743a0e7f",
     "entities": [
       {
         "tableName": "DbNode",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `latitude` REAL NOT NULL, `longitude` REAL NOT NULL, `velocity` REAL NOT NULL, `number` INTEGER NOT NULL, `route_idroute` INTEGER NOT NULL, FOREIGN KEY(`route_idroute`) REFERENCES `DbRoute`(`id`) ON UPDATE NO ACTION ON DELETE CASCADE )",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `latitude` REAL NOT NULL, `longitude` REAL NOT NULL, `velocity` REAL NOT NULL, `number` INTEGER NOT NULL, `routeId` INTEGER NOT NULL, FOREIGN KEY(`routeId`) REFERENCES `DbRoute`(`id`) ON UPDATE NO ACTION ON DELETE CASCADE )",
         "fields": [
           {
             "fieldPath": "id",
@@ -39,8 +39,8 @@
             "notNull": true
           },
           {
-            "fieldPath": "route_id",
-            "columnName": "route_idroute",
+            "fieldPath": "routeId",
+            "columnName": "routeId",
             "affinity": "INTEGER",
             "notNull": true
           }
@@ -53,12 +53,12 @@
         },
         "indices": [
           {
-            "name": "index_DbNode_route_idroute",
+            "name": "index_DbNode_routeId",
             "unique": false,
             "columnNames": [
-              "route_idroute"
+              "routeId"
             ],
-            "createSql": "CREATE  INDEX `index_DbNode_route_idroute` ON `${TABLE_NAME}` (`route_idroute`)"
+            "createSql": "CREATE  INDEX `index_DbNode_routeId` ON `${TABLE_NAME}` (`routeId`)"
           }
         ],
         "foreignKeys": [
@@ -67,7 +67,7 @@
             "onDelete": "CASCADE",
             "onUpdate": "NO ACTION",
             "columns": [
-              "route_idroute"
+              "routeId"
             ],
             "referencedColumns": [
               "id"
@@ -134,7 +134,7 @@
     ],
     "setupQueries": [
       "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
-      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, \"8ca5a12c0791091520fdbb7dd85d5abf\")"
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, \"1c27c86ef6b4c8d9b68b4db5743a0e7f\")"
     ]
   }
 }

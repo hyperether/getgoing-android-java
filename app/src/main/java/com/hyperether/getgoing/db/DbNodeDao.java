@@ -16,6 +16,9 @@ public interface DbNodeDao {
     @Query("SELECT * FROM DbNode")
     List<DbNode> getAll();
 
+    @Query("SELECT * FROM DbNode WHERE routeId = :id")
+    List<DbNode> getAllByRouteId(long id);
+
     @Insert
     void insertNode(DbNode node);
 

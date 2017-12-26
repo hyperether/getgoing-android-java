@@ -14,8 +14,8 @@ import com.github.mikephil.charting.data.BarEntry;
 import com.github.mikephil.charting.interfaces.datasets.IBarDataSet;
 import com.hyperether.getgoing.R;
 import com.hyperether.getgoing.adapters.DbRouteAdapter;
+import com.hyperether.getgoing.db.DbHelper;
 import com.hyperether.getgoing.db.DbRoute;
-import com.hyperether.getgoing.db.GetGoingDataSource;
 
 import java.text.DecimalFormat;
 import java.util.ArrayList;
@@ -26,7 +26,6 @@ import java.util.Map;
 
 public class ShowDataActivity extends ListActivity {
 
-    private GetGoingDataSource datasource;
     private List<DbRoute> routes;
     private ListView list;
     private DbRouteAdapter adapter;
@@ -40,16 +39,8 @@ public class ShowDataActivity extends ListActivity {
         setContentView(R.layout.show_data);
 
         routes = new ArrayList<>();
-        // Initialize database connection
-        datasource = new GetGoingDataSource(this);
-        datasource.open();
-        routes = datasource.getAllRoutes(); // Get the list of all routes from database
-        chart = (BarChart) findViewById(R.id.barChart);
+        DbHelper.getInstance(this).getAllRoutes(routes);
 
-        // use the custom adapter to show the
-        // elements in a ListView
-        populateListView();
-        populateChart();
     }
 
     /**
@@ -57,7 +48,7 @@ public class ShowDataActivity extends ListActivity {
      */
     private void populateListView() {
         adapter = new DbRouteAdapter(ShowDataActivity.this);
-        adapter.updateRoutes(routes, datasource); // populate adapter with routes
+        adapter.updateRoutes(routes); // populate adapter with routes
         list = (ListView) findViewById(android.R.id.list);
         list.setAdapter(adapter);
     }
@@ -178,19 +169,20 @@ public class ShowDataActivity extends ListActivity {
 
     @Override
     protected void onResume() {
-        datasource.open();
+        populateListView();
+        chart = (BarChart) findViewById(R.id.barChart);
+        populateChart();
         super.onResume();
     }
 
     @Override
     protected void onPause() {
-        datasource.close();
         super.onPause();
     }
 
     @Override
     protected void onStop() {
-        datasource.close();
         super.onStop();
     }
+
 }

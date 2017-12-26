@@ -14,11 +14,10 @@ import android.view.View;
 import android.widget.ImageButton;
 
 import com.crashlytics.android.Crashlytics;
-import com.facebook.AccessToken;
 import com.hyperether.getgoing.R;
 import com.hyperether.getgoing.data.CBDataFrame;
+import com.hyperether.getgoing.db.DbHelper;
 import com.hyperether.getgoing.db.DbRoute;
-import com.hyperether.getgoing.db.GetGoingDataSource;
 import com.hyperether.getgoing.manager.CacheManager;
 import com.hyperether.getgoing.util.Constants;
 import com.hyperether.getgoing.util.FragmentDialog;
@@ -37,9 +36,6 @@ public class GetGoingActivity extends Activity {
     //private static final int US = 2;
 
     private CBDataFrame cbDataFrameLocal;
-
-    // Database access variables
-    private GetGoingDataSource datasource;
     private List<DbRoute> routes;
 
     @Override
@@ -53,6 +49,9 @@ public class GetGoingActivity extends Activity {
         addButtonListener();
 
         cbDataFrameLocal = new CBDataFrame();
+
+        routes = new ArrayList<>();
+        DbHelper.getInstance(this).getAllRoutes(routes);
 
         ActivityCompat.requestPermissions(this, new String[]{
                 Manifest.permission.ACCESS_FINE_LOCATION,
@@ -133,13 +132,6 @@ public class GetGoingActivity extends Activity {
             callSettingsActivity();
             return true;
         } else if (itemId == R.id.action_stats) {
-            routes = new ArrayList<>();
-            // Initialize database connection
-            datasource = new GetGoingDataSource(this);
-            datasource.open();
-            routes = datasource.getAllRoutes(); // Get the list of all routes from database
-            datasource.close();
-
             if (routes.isEmpty()) {
                 FragmentDialog dialog = new FragmentDialog();
                 dialog.show(getFragmentManager(), "Data set empty");

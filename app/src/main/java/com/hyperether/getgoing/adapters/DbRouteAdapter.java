@@ -11,8 +11,8 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.hyperether.getgoing.R;
+import com.hyperether.getgoing.db.DbHelper;
 import com.hyperether.getgoing.db.DbRoute;
-import com.hyperether.getgoing.db.GetGoingDataSource;
 
 import java.text.DecimalFormat;
 import java.util.Collections;
@@ -23,7 +23,6 @@ public class DbRouteAdapter extends BaseAdapter {
 
     private List<DbRoute> myRoutes = Collections.emptyList();
     private final Context context;
-    private GetGoingDataSource datasource;
 
     DecimalFormat df = new DecimalFormat("#.##");
     // limiting output values to 8 decimal places
@@ -34,9 +33,8 @@ public class DbRouteAdapter extends BaseAdapter {
         this.context = context;
     }
 
-    public void updateRoutes(List<DbRoute> myRoutes, GetGoingDataSource datasource) {
+    public void updateRoutes(List<DbRoute> myRoutes) {
         this.myRoutes = myRoutes;
-        this.datasource = datasource;
         notifyDataSetChanged();
     }
 
@@ -122,7 +120,7 @@ public class DbRouteAdapter extends BaseAdapter {
         convertView.setTag(tmpHolder);
 
         String d = "" + route.getDate();
-        String e = " Energy: " + Double.valueOf(df.format(route.getEnergy()).replace(",",".")) + " kcal";
+        String e = " Energy: " + Double.valueOf(df.format(route.getEnergy()).replace(",", ".")) + " kcal";
 
         textDate.setText(d);
         textEnergy.setText(e);
@@ -162,6 +160,7 @@ public class DbRouteAdapter extends BaseAdapter {
                                 @Override
                                 public void onClick(DialogInterface dialog, int whichButton) {
                                     doPositiveClick(lastClickedRow);
+                                    notifyDataSetChanged();
                                 }
                             }).setNegativeButton(R.string.dialog_cancel,
                     new DialogInterface.OnClickListener() {
@@ -185,13 +184,14 @@ public class DbRouteAdapter extends BaseAdapter {
         // where the position of this element is stored
         if (tmpHolder != null) {
             long id = tmpHolder.route_id;
-
-            // delete the route with all nodes attached to it
-            datasource.deleteRouteById(id);
-
-            // refresh the route list
-            myRoutes = datasource.getAllRoutes();
+            DbHelper.getInstance(v.getContext()).deleteRouteById(id);
+            for (int i = 0; i < myRoutes.size(); i++) {
+                if (myRoutes.get(i).getId() == id) {
+                    myRoutes.remove(i);
+                }
+            }
             notifyDataSetChanged();
         }
     }
+
 }

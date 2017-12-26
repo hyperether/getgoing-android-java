@@ -30,9 +30,9 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.LatLngBounds;
 import com.google.android.gms.maps.model.PolylineOptions;
 import com.hyperether.getgoing.R;
+import com.hyperether.getgoing.db.DbHelper;
 import com.hyperether.getgoing.db.DbNode;
 import com.hyperether.getgoing.db.DbRoute;
-import com.hyperether.getgoing.db.GetGoingDataSource;
 import com.hyperether.getgoing.util.Constants;
 
 import java.util.ArrayList;
@@ -47,10 +47,11 @@ public class ShowRouteActivity extends Activity implements OnMapReadyCallback {
 
     private TextView showTime, showCalories, showDistance;
 
-    private GetGoingDataSource datasource;
-
     private List<DbNode> nodes;
     private DbRoute route;
+    private List<DbRoute> routesById;
+    private Bundle extras;
+    private Long route_id;
 
     private CallbackManager callbackManager;
 
@@ -65,8 +66,13 @@ public class ShowRouteActivity extends Activity implements OnMapReadyCallback {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.show_route);
 
-        datasource = new GetGoingDataSource(this);
-        datasource.open();
+        extras = getIntent().getExtras();
+        route_id = extras.getLong("ROUTE_ID");
+        routesById = new ArrayList<>();
+        nodes = new ArrayList<>();
+        DbHelper.getInstance(this).getRouteById(routesById, route_id);
+        DbHelper.getInstance(this).getAllNodesByRouteId(nodes, route_id);
+
 
         showTime = (TextView) findViewById(R.id.showTime);
         showCalories = (TextView) findViewById(R.id.showCalories);
@@ -84,15 +90,9 @@ public class ShowRouteActivity extends Activity implements OnMapReadyCallback {
     public void onMapReady(GoogleMap googleMap) {
         this.mMap = googleMap;
 
-        Bundle extras = getIntent().getExtras();
         if (extras != null) {
-            Long route_id =
-                    extras.getLong("ROUTE_ID"); // get the id of the route that should be drawn
-
-            datasource.open();
-            route = datasource.getRoute(route_id); // get the route
-            nodes = datasource.getRouteNodes(route_id);    // Get all nodes for this route
-
+            // get the id of the route that should be drawn
+            route = routesById.get(0); // get the route
             // Show the general values for the current route
             showTime.setText(
                     String.format(getDurationString(Math.abs(route.getDuration() / 1000))));
@@ -114,7 +114,7 @@ public class ShowRouteActivity extends Activity implements OnMapReadyCallback {
                 showLocation(nodes.get(0).getLatitude(), nodes.get(0).getLongitude());
                 drawRoute(nodes); // draw the route obtained from database
             }
-            datasource.close();
+            //datasource.close();
 
             zoomRoute(mMap, getRouteLatLng(nodes));
 
@@ -127,19 +127,16 @@ public class ShowRouteActivity extends Activity implements OnMapReadyCallback {
      */
     @Override
     protected void onStop() {
-        datasource.close();
         super.onStop();
     }
 
     @Override
     protected void onPause() {
-        datasource.close();
         super.onPause();
     }
 
     @Override
     protected void onResume() {
-        datasource.open();
         super.onResume();
     }
 
