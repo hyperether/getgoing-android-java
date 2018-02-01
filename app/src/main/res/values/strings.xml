@@ -17,6 +17,8 @@
     <string name="date">15.12.2014.</string>
     <string name="time">09:03:48</string>
     <string name="metric_spinner">Metric</string>
+    <string name="energyLabel1">Energy:</string>
+    <string name="energyLabel2">kcal</string>
 
     <!-- fb app id -->
     <string name="facebook_app_id">213193922545275</string>

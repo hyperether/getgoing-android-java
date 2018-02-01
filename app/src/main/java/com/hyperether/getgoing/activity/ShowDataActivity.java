@@ -1,10 +1,9 @@
 package com.hyperether.getgoing.activity;
 
-import android.app.ListActivity;
-import android.content.Intent;
+import android.app.Activity;
 import android.os.Bundle;
-import android.view.View;
-import android.widget.ListView;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 
 import com.github.mikephil.charting.animation.Easing;
 import com.github.mikephil.charting.charts.BarChart;
@@ -13,7 +12,7 @@ import com.github.mikephil.charting.data.BarDataSet;
 import com.github.mikephil.charting.data.BarEntry;
 import com.github.mikephil.charting.interfaces.datasets.IBarDataSet;
 import com.hyperether.getgoing.R;
-import com.hyperether.getgoing.adapters.DbRouteAdapter;
+import com.hyperether.getgoing.adapters.DbRecyclerAdapter;
 import com.hyperether.getgoing.db.DbHelper;
 import com.hyperether.getgoing.db.DbRoute;
 
@@ -24,12 +23,13 @@ import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
 
-public class ShowDataActivity extends ListActivity {
+public class ShowDataActivity extends Activity {
 
     private List<DbRoute> routes;
-    private ListView list;
-    private DbRouteAdapter adapter;
     private BarChart chart;
+
+    private RecyclerView.Adapter recyclerAdapter;
+    private RecyclerView recyclerView;
 
     DecimalFormat df = new DecimalFormat("#.##");      // limiting output values to 8 decimal places
 
@@ -47,21 +47,14 @@ public class ShowDataActivity extends ListActivity {
      * This method is for populating list view
      */
     private void populateListView() {
-        adapter = new DbRouteAdapter(ShowDataActivity.this);
-        adapter.updateRoutes(routes); // populate adapter with routes
-        list = (ListView) findViewById(android.R.id.list);
-        list.setAdapter(adapter);
-    }
 
-    /**
-     * Monitor for the click on one row of the ListView
-     */
-    protected void onListItemClick(ListView l, View v, int position, long id) {
-        DbRoute route = routes.get((int) id);
-        // Passing the unique database id of the chosen route in order to draw it correctly
-        Intent intent = new Intent(getBaseContext(), ShowRouteActivity.class);
-        intent.putExtra("ROUTE_ID", route.getId());
-        startActivity(intent);
+        recyclerView = (RecyclerView)findViewById(R.id.recyclerList);
+        recyclerAdapter = new DbRecyclerAdapter(this, routes);
+        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
+        linearLayoutManager.setOrientation(LinearLayoutManager.VERTICAL);
+        recyclerView.setLayoutManager(linearLayoutManager);
+        recyclerView.setAdapter(recyclerAdapter);
+
     }
 
     private ArrayList<String> xValuesChart() {

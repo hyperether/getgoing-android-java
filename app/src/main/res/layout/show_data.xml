@@ -10,9 +10,9 @@
 
     </com.github.mikephil.charting.charts.BarChart>
 
-    <ListView
-        android:id="@android:id/list"
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/recyclerList"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_below="@+id/barChart"/>
+        android:layout_below="@+id/barChart"></android.support.v7.widget.RecyclerView>
 </RelativeLayout>
