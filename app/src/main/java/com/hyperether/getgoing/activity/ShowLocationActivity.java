@@ -50,6 +50,7 @@ import com.hyperether.getgoing.db.DbRoute;
 import com.hyperether.getgoing.manager.CacheManager;
 import com.hyperether.getgoing.service.GPSTrackingService;
 import com.hyperether.getgoing.util.Constants;
+import com.hyperether.toolbox.HyperConst;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -67,6 +68,11 @@ public class ShowLocationActivity extends Activity implements
         OnConnectionFailedListener,
         com.google.android.gms.location.LocationListener,
         OnMapReadyCallback {
+
+    private static final long UPDATE_INTERVAL_IN_MILLISECONDS = 3000;
+    private static final long FASTEST_UPDATE_INTERVAL_IN_MILLISECONDS =
+            UPDATE_INTERVAL_IN_MILLISECONDS / 2;
+    private static final float LOCATION_DISTANCE = 5;
 
     private GoogleMap mMap;
 
@@ -105,10 +111,10 @@ public class ShowLocationActivity extends Activity implements
 
     private GoogleApiAvailability googleApiAvailability = GoogleApiAvailability.getInstance();
 
-    private boolean notificationExist = false;
-    private boolean backPressed = true;
-    private static final int notificationID = 0;
-    private NotificationManager notificationManager;
+//    private boolean notificationExist = false;
+//    private boolean backPressed = true;
+//    private static final int notificationID = 0;
+//    private NotificationManager notificationManager;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -199,9 +205,9 @@ public class ShowLocationActivity extends Activity implements
         mEditor.putBoolean("KEY_UPDATES_ON", mUpdatesRequested);
         mEditor.commit();
 
-        if (mProgramRunning && backPressed) {
-            backgroundTrackNotification(notificationID);
-        }
+//        if (mProgramRunning && backPressed) {
+//            backgroundTrackNotification(notificationID);
+//        }
         super.onPause();
     }
 
@@ -224,8 +230,8 @@ public class ShowLocationActivity extends Activity implements
             mEditor.commit();
         }
 
-        deleteNotification(notificationID);
-        backPressed = true;
+//        deleteNotification(notificationID);
+//        backPressed = true;
 
         super.onResume();
     }
@@ -235,7 +241,7 @@ public class ShowLocationActivity extends Activity implements
         super.onDestroy();
         clearCacheData();
         stopService(new Intent(this, GPSTrackingService.class));
-        deleteNotification(notificationID);
+//        deleteNotification(notificationID);
     }
 
     @Override
@@ -392,7 +398,11 @@ public class ShowLocationActivity extends Activity implements
      * This method starts timer and enable visibility of pause button.
      */
     private void startTracking() {
-        startService(new Intent(this, GPSTrackingService.class));
+        Intent intent = new Intent(this, GPSTrackingService.class);
+        intent.putExtra(HyperConst.LOC_INTERVAL, UPDATE_INTERVAL_IN_MILLISECONDS);
+        intent.putExtra(HyperConst.LOC_FASTEST_INTERVAL, FASTEST_UPDATE_INTERVAL_IN_MILLISECONDS);
+        intent.putExtra(HyperConst.LOC_DISTANCE, LOCATION_DISTANCE);
+        startService(intent);
 
         showTime.setBase(SystemClock.elapsedRealtime() + timeWhenStopped);
         showTime.start();
@@ -657,7 +667,7 @@ public class ShowLocationActivity extends Activity implements
 
     @Override
     public void onBackPressed() {
-        backPressed = false;
+//        backPressed = false;
         if (mProgramRunning || !mRouteAlreadySaved) {
             AlertDialog.Builder dialog = new AlertDialog.Builder(this);
             dialog.setCancelable(false);
@@ -896,24 +906,23 @@ public class ShowLocationActivity extends Activity implements
         startActivityForResult(i, Constants.REQUEST_GPS_SETTINGS);
     }
 
-    private void backgroundTrackNotification(int notificationID) {
-        NotificationCompat.Builder builder = new NotificationCompat.Builder(this);
-        builder.setSmallIcon(R.drawable.ic_launher);
-        builder.setContentTitle(getString(R.string.notification_title));
-        builder.setContentText(getString(R.string.notification_text));
-        builder.setAutoCancel(true);
-        PendingIntent pendingIntent = PendingIntent
-                .getActivity(this, 0, this.getIntent(), PendingIntent.FLAG_UPDATE_CURRENT);
-        builder.setContentIntent(pendingIntent);
-        notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
-        notificationManager.notify(notificationID, builder.build());
-        notificationExist = true;
-    }
-
-    private void deleteNotification(int notificationID) {
-        if (notificationExist) {
-            notificationManager.cancel(notificationID);
-            notificationExist = false;
-        }
-    }
+//    private void backgroundTrackNotification(int notificationID){
+//        NotificationCompat.Builder builder = new NotificationCompat.Builder(this);
+//        builder.setSmallIcon(R.drawable.ic_launher);
+//        builder.setContentTitle(getString(R.string.notification_title));
+//        builder.setContentText(getString(R.string.notification_text));
+//        builder.setAutoCancel(true);
+//        PendingIntent pendingIntent = PendingIntent//.getActivity(this, 0, this.getIntent(), PendingIntent.FLAG_UPDATE_CURRENT);
+//        builder.setContentIntent(pendingIntent);
+//        notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+//        notificationManager.notify(notificationID,builder.build());
+//        notificationExist = true;
+//    }
+//
+//    private void deleteNotification(int notificationID){
+//        if(notificationExist){
+//            notificationManager.cancel(notificationID);
+//            notificationExist = false;
+//        }
+//    }
 }
