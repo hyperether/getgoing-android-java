@@ -82,6 +82,9 @@
     <string name="alert_dialog_positive_back_pressed">OK</string>
     <string name="alert_dialog_negative_back_pressed">Cancel</string>
 
+    <!-- ShowData empty list alert dialog -->
+    <string name="alert_dialog_empty_title">You don\'t have any saved route yet!</string>
+
     <!-- Notification when app is tracking in background -->
     <string name="notification_title">GetGoing</string>
     <string name="notification_text">Tracking…</string>

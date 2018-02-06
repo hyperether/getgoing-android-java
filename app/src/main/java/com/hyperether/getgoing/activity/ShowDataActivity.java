@@ -1,10 +1,11 @@
 package com.hyperether.getgoing.activity;
 
 import android.app.Activity;
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.View;
 import android.widget.RelativeLayout;
 
@@ -44,7 +45,7 @@ public class ShowDataActivity extends Activity implements DbHelper.Callback {
         progressLayout = findViewById(R.id.progressLayout);
 
         routes = new ArrayList<>();
-        DbHelper.getInstance(this).getAllRoutes(routes, this);
+        DbHelper.getInstance(this).populateRoutes(routes, this);
 
     }
 
@@ -67,10 +68,22 @@ public class ShowDataActivity extends Activity implements DbHelper.Callback {
         runOnUiThread(new Runnable() {
             @Override
             public void run() {
-                Log.i("Taggg", "complite");
-                populateListView();
-                populateChart();
-                progressLayout.setVisibility(View.GONE);
+                if(!routes.isEmpty()) {
+                    populateListView();
+                    populateChart();
+                    progressLayout.setVisibility(View.GONE);
+                } else {
+                    new AlertDialog.Builder(ShowDataActivity.this)
+                            .setTitle(R.string.alert_dialog_empty_title)
+                            .setPositiveButton(R.string.confirm,
+                                    new DialogInterface.OnClickListener() {
+                                        @Override
+                                        public void onClick(DialogInterface dialog, int whichButton) {
+                                            finish();
+                                        }
+                                    }).create().show();
+                }
+
             }
         });
     }

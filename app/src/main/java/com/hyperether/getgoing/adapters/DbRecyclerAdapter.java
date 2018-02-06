@@ -125,7 +125,6 @@ public class DbRecyclerAdapter extends RecyclerView.Adapter<DbRecyclerAdapter.Vi
         public ImageView imageViewAction;
         public ImageView imageViewDelete;
         public RelativeLayout elementLayout;
-        public long route_id;
 
         public ViewHolder(View itemView) {
             super(itemView);
@@ -143,9 +142,8 @@ public class DbRecyclerAdapter extends RecyclerView.Adapter<DbRecyclerAdapter.Vi
     public void deleteItem(int position) {
         DbRoute route = myRoutes.get(position);
         DbHelper.getInstance(context).deleteRouteById(route.getId());
-        notifyItemRangeChanged(position-1, myRoutes.size());
         myRoutes.remove(position);
-        notifyItemRemoved(position);
+        notifyDataSetChanged();
     }
 
     public void onListItemClick(int position) {

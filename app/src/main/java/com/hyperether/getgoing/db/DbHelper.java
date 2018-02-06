@@ -5,7 +5,6 @@ import android.content.Context;
 import android.os.Handler;
 import android.os.HandlerThread;
 
-import java.util.Iterator;
 import java.util.List;
 
 
@@ -59,23 +58,11 @@ public class DbHelper {
         });
     }
 
-    public List<DbRoute> populateRoutes(Callback callback) {
-        this.callback = callback;
-        List<DbRoute> routes = db.dbRouteDao().getAll();
-        callback.handlerDone();
-        return routes;
-    }
-
-    public void getAllRoutes(final List<DbRoute> routes, final Callback callback) {
+    public void populateRoutes(final List<DbRoute> routes, final Callback callback) {
         this.callback = callback;
         getDbHandler().post(new Runnable() {
             public void run() {
                 routes.addAll(db.dbRouteDao().getAll());
-                try {
-                    Thread.sleep(5000);
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                }
                 callback.handlerDone();
             }
         });
