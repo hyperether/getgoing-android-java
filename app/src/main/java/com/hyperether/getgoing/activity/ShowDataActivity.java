@@ -4,6 +4,9 @@ import android.app.Activity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
+import android.view.View;
+import android.widget.RelativeLayout;
 
 import com.github.mikephil.charting.animation.Easing;
 import com.github.mikephil.charting.charts.BarChart;
@@ -16,30 +19,32 @@ import com.hyperether.getgoing.adapters.DbRecyclerAdapter;
 import com.hyperether.getgoing.db.DbHelper;
 import com.hyperether.getgoing.db.DbRoute;
 
-import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
 
-public class ShowDataActivity extends Activity {
+public class ShowDataActivity extends Activity implements DbHelper.Callback {
 
     private List<DbRoute> routes;
     private BarChart chart;
-
     private RecyclerView.Adapter recyclerAdapter;
     private RecyclerView recyclerView;
-
-    DecimalFormat df = new DecimalFormat("#.##");      // limiting output values to 8 decimal places
+    private RelativeLayout progressLayout;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.show_data);
 
+        chart = (BarChart) findViewById(R.id.barChart);
+        chart.setNoDataText("");
+        chart.setNoDataTextDescription("");
+        progressLayout = findViewById(R.id.progressLayout);
+
         routes = new ArrayList<>();
-        DbHelper.getInstance(this).getAllRoutes(routes);
+        DbHelper.getInstance(this).getAllRoutes(routes, this);
 
     }
 
@@ -55,6 +60,19 @@ public class ShowDataActivity extends Activity {
         recyclerView.setLayoutManager(linearLayoutManager);
         recyclerView.setAdapter(recyclerAdapter);
 
+    }
+
+    @Override
+    public void handlerDone() {
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                Log.i("Taggg", "complite");
+                populateListView();
+                populateChart();
+                progressLayout.setVisibility(View.GONE);
+            }
+        });
     }
 
     private ArrayList<String> xValuesChart() {
@@ -158,24 +176,6 @@ public class ShowDataActivity extends Activity {
         chart.setVisibleXRangeMaximum(8);
         chart.setDrawBarShadow(true);
         chart.getAxisLeft().setAxisMinValue(0f);
-    }
-
-    @Override
-    protected void onResume() {
-        populateListView();
-        chart = (BarChart) findViewById(R.id.barChart);
-        populateChart();
-        super.onResume();
-    }
-
-    @Override
-    protected void onPause() {
-        super.onPause();
-    }
-
-    @Override
-    protected void onStop() {
-        super.onStop();
     }
 
 }

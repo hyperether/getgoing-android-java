@@ -27,7 +27,7 @@ import java.util.List;
 
 import io.fabric.sdk.android.Fabric;
 
-public class GetGoingActivity extends Activity {
+public class GetGoingActivity extends Activity implements DbHelper.Callback {
 
     private static final int WALK_ID = 1;
     private static final int RUN_ID = 2;
@@ -51,7 +51,7 @@ public class GetGoingActivity extends Activity {
         cbDataFrameLocal = new CBDataFrame();
 
         routes = new ArrayList<>();
-        DbHelper.getInstance(this).getAllRoutes(routes);
+        DbHelper.getInstance(this).getAllRoutes(routes, this);
 
         ActivityCompat.requestPermissions(this, new String[]{
                 Manifest.permission.ACCESS_FINE_LOCATION,
@@ -218,5 +218,10 @@ public class GetGoingActivity extends Activity {
         SharedPreferences.Editor editor = settings.edit();
         editor.putInt("meteringActivityRequestedId", id);
         editor.apply();
+    }
+
+    @Override
+    public void handlerDone() {
+
     }
 }

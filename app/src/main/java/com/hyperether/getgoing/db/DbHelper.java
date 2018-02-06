@@ -14,9 +14,14 @@ import java.util.List;
  */
 public class DbHelper {
 
+    public interface Callback {
+        public void handlerDone();
+    }
+
     private static final String DATABASE_NAME = "getgoing_db";
     private static DbHelper instance;
     private Handler mHandler;
+    private Callback callback;
 
     private AppDatabase db;
 
@@ -54,11 +59,24 @@ public class DbHelper {
         });
     }
 
-    public void getAllRoutes(final List<DbRoute> routes) {
+    public List<DbRoute> populateRoutes(Callback callback) {
+        this.callback = callback;
+        List<DbRoute> routes = db.dbRouteDao().getAll();
+        callback.handlerDone();
+        return routes;
+    }
 
+    public void getAllRoutes(final List<DbRoute> routes, final Callback callback) {
+        this.callback = callback;
         getDbHandler().post(new Runnable() {
             public void run() {
                 routes.addAll(db.dbRouteDao().getAll());
+                try {
+                    Thread.sleep(5000);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+                callback.handlerDone();
             }
         });
     }
@@ -90,7 +108,7 @@ public class DbHelper {
         });
     }
 
-    private Handler getDbHandler() {
+    public Handler getDbHandler() {
         if (mHandler == null) {
             HandlerThread mThread = new HandlerThread("db-thread");
             mThread.start();
