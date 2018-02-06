@@ -62,11 +62,6 @@ public class DbHelper {
         this.callback = callback;
         getDbHandler().post(new Runnable() {
             public void run() {
-                try {
-                    Thread.sleep(3000);
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                }
                 routes.addAll(db.dbRouteDao().getAll());
                 callback.handlerDone();
             }
