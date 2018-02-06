@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
+import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 
 import com.github.mikephil.charting.animation.Easing;
@@ -32,7 +33,7 @@ public class ShowDataActivity extends Activity implements DbHelper.Callback {
     private BarChart chart;
     private RecyclerView.Adapter recyclerAdapter;
     private RecyclerView recyclerView;
-    private RelativeLayout progressLayout;
+    private ProgressBar progress;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -42,7 +43,7 @@ public class ShowDataActivity extends Activity implements DbHelper.Callback {
         chart = (BarChart) findViewById(R.id.barChart);
         chart.setNoDataText("");
         chart.setNoDataTextDescription("");
-        progressLayout = findViewById(R.id.progressLayout);
+        progress = findViewById(R.id.progress);
 
         routes = new ArrayList<>();
         DbHelper.getInstance(this).populateRoutes(routes, this);
@@ -71,7 +72,7 @@ public class ShowDataActivity extends Activity implements DbHelper.Callback {
                 if(!routes.isEmpty()) {
                     populateListView();
                     populateChart();
-                    progressLayout.setVisibility(View.GONE);
+                    progress.setVisibility(View.GONE);
                 } else {
                     new AlertDialog.Builder(ShowDataActivity.this)
                             .setTitle(R.string.alert_dialog_empty_title)
