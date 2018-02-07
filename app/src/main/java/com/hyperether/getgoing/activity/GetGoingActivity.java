@@ -36,7 +36,6 @@ public class GetGoingActivity extends Activity {
     //private static final int US = 2;
 
     private CBDataFrame cbDataFrameLocal;
-    private List<DbRoute> routes;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -49,9 +48,6 @@ public class GetGoingActivity extends Activity {
         addButtonListener();
 
         cbDataFrameLocal = new CBDataFrame();
-
-        routes = new ArrayList<>();
-        DbHelper.getInstance(this).getAllRoutes(routes);
 
         ActivityCompat.requestPermissions(this, new String[]{
                 Manifest.permission.ACCESS_FINE_LOCATION,
@@ -132,13 +128,8 @@ public class GetGoingActivity extends Activity {
             callSettingsActivity();
             return true;
         } else if (itemId == R.id.action_stats) {
-            if (routes.isEmpty()) {
-                FragmentDialog dialog = new FragmentDialog();
-                dialog.show(getFragmentManager(), "Data set empty");
-            } else {
-                Intent intent = new Intent(GetGoingActivity.this, ShowDataActivity.class);
-                startActivity(intent);
-            }
+            Intent intent = new Intent(GetGoingActivity.this, ShowDataActivity.class);
+            startActivity(intent);
             return true;
         } else {
             return super.onOptionsItemSelected(item);

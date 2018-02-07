@@ -3,8 +3,8 @@
 
     <item
         android:id="@+id/action_reset_settings"
-        android:icon="@drawable/button_reset_action_bar"
+        android:icon="@drawable/ic_refresh_white_24px"
         android:orderInCategory="100"
         android:showAsAction="ifRoom"
-        android:title="@string/action_reset_settings"/>
+        android:title="@string/action_reset_settings" />
 </menu>
