@@ -95,6 +95,19 @@ public class DbHelper {
         });
     }
 
+    public void getRouteAndNodesRouteId(final List<DbRoute> routes, final List<DbNode> nodes, final long id, final Callback callback) {
+        this.callback = callback;
+        getDbHandler().post(new Runnable() {
+            public void run() {
+                DbRoute r1 = db.dbRouteDao().getRouteById(id);
+                routes.add(r1);
+                nodes.addAll(db.dbNodeDao().getAllByRouteId(id));
+                callback.handlerDone();
+            }
+        });
+
+    }
+
     public Handler getDbHandler() {
         if (mHandler == null) {
             HandlerThread mThread = new HandlerThread("db-thread");
