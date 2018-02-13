@@ -9,6 +9,7 @@ import android.graphics.Matrix;
 import android.os.Bundle;
 import android.os.Handler;
 import android.view.View;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.facebook.AccessToken;
@@ -39,9 +40,11 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
-public class ShowRouteActivity extends Activity implements OnMapReadyCallback {
+public class ShowRouteActivity extends Activity implements OnMapReadyCallback, DbHelper.OnDataLoadListener {
 
     public static final String TAG = ShowRouteActivity.class.getName();
+
+    private ProgressBar progressBar;
 
     private GoogleMap mMap;
 
@@ -66,13 +69,12 @@ public class ShowRouteActivity extends Activity implements OnMapReadyCallback {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.show_route);
 
+        progressBar = (ProgressBar)findViewById(R.id.progressMap);
+
         extras = getIntent().getExtras();
         route_id = extras.getLong("ROUTE_ID");
         routesById = new ArrayList<>();
         nodes = new ArrayList<>();
-        DbHelper.getInstance(this).getRouteById(routesById, route_id);
-        DbHelper.getInstance(this).getAllNodesByRouteId(nodes, route_id);
-
 
         showTime = (TextView) findViewById(R.id.showTime);
         showCalories = (TextView) findViewById(R.id.showCalories);
@@ -81,9 +83,21 @@ public class ShowRouteActivity extends Activity implements OnMapReadyCallback {
         shareButton = (ShareButton) findViewById(R.id.btn_fb_share);
         shareButton.setVisibility(View.GONE);
 
-        MapFragment mapFragment = (MapFragment) getFragmentManager()
-                .findFragmentById(R.id.show_map_page);
-        mapFragment.getMapAsync(this);
+        DbHelper.getInstance(this).getRouteAndNodesRouteId(routesById, nodes, route_id, this);
+
+    }
+
+    @Override
+    public void onLoad() {
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                MapFragment mapFragment = (MapFragment) getFragmentManager()
+                        .findFragmentById(R.id.show_map_page);
+                mapFragment.getMapAsync(ShowRouteActivity.this);
+                progressBar.setVisibility(View.GONE);
+            }
+        });
     }
 
     @Override
@@ -114,7 +128,6 @@ public class ShowRouteActivity extends Activity implements OnMapReadyCallback {
                 showLocation(nodes.get(0).getLatitude(), nodes.get(0).getLongitude());
                 drawRoute(nodes); // draw the route obtained from database
             }
-            //datasource.close();
 
             zoomRoute(mMap, getRouteLatLng(nodes));
 
@@ -371,4 +384,5 @@ public class ShowRouteActivity extends Activity implements OnMapReadyCallback {
             }
         }, 500);
     }
+
 }

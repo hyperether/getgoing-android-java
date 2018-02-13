@@ -16,14 +16,8 @@ import android.widget.ImageButton;
 import com.crashlytics.android.Crashlytics;
 import com.hyperether.getgoing.R;
 import com.hyperether.getgoing.data.CBDataFrame;
-import com.hyperether.getgoing.db.DbHelper;
-import com.hyperether.getgoing.db.DbRoute;
 import com.hyperether.getgoing.manager.CacheManager;
 import com.hyperether.getgoing.util.Constants;
-import com.hyperether.getgoing.util.FragmentDialog;
-
-import java.util.ArrayList;
-import java.util.List;
 
 import io.fabric.sdk.android.Fabric;
 
@@ -36,7 +30,6 @@ public class GetGoingActivity extends Activity {
     //private static final int US = 2;
 
     private CBDataFrame cbDataFrameLocal;
-    private List<DbRoute> routes;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -49,9 +42,6 @@ public class GetGoingActivity extends Activity {
         addButtonListener();
 
         cbDataFrameLocal = new CBDataFrame();
-
-        routes = new ArrayList<>();
-        DbHelper.getInstance(this).getAllRoutes(routes);
 
         ActivityCompat.requestPermissions(this, new String[]{
                 Manifest.permission.ACCESS_FINE_LOCATION,
@@ -132,13 +122,8 @@ public class GetGoingActivity extends Activity {
             callSettingsActivity();
             return true;
         } else if (itemId == R.id.action_stats) {
-            if (routes.isEmpty()) {
-                FragmentDialog dialog = new FragmentDialog();
-                dialog.show(getFragmentManager(), "Data set empty");
-            } else {
                 Intent intent = new Intent(GetGoingActivity.this, ShowDataActivity.class);
                 startActivity(intent);
-            }
             return true;
         } else {
             return super.onOptionsItemSelected(item);
@@ -219,4 +204,5 @@ public class GetGoingActivity extends Activity {
         editor.putInt("meteringActivityRequestedId", id);
         editor.apply();
     }
+
 }
