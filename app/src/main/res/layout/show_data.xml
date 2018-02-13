@@ -1,7 +1,17 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-                android:layout_width="match_parent"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:orientation="vertical">
+
+    <ProgressBar
+        android:id="@+id/progress"
+        style="?android:attr/progressBarStyle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:layout_centerVertical="true"
+        android:indeterminateTint="@color/ride_graph_color" />
 
     <com.github.mikephil.charting.charts.BarChart
         android:layout_width="match_parent"
@@ -14,5 +24,7 @@
         android:id="@+id/recyclerList"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_below="@+id/barChart"></android.support.v7.widget.RecyclerView>
+        android:layout_below="@+id/barChart">
+
+    </android.support.v7.widget.RecyclerView>
 </RelativeLayout>
