@@ -13,14 +13,13 @@ import java.util.List;
  */
 public class DbHelper {
 
-    public interface Callback {
-        public void handlerDone();
+    public interface OnDataLoadListener {
+        public void onLoad();
     }
 
     private static final String DATABASE_NAME = "getgoing_db";
     private static DbHelper instance;
     private Handler mHandler;
-    private Callback callback;
 
     private AppDatabase db;
 
@@ -58,12 +57,11 @@ public class DbHelper {
         });
     }
 
-    public void populateRoutes(final List<DbRoute> routes, final Callback callback) {
-        this.callback = callback;
+    public void populateRoutes(final List<DbRoute> routes, final OnDataLoadListener dataLoadListener) {
         getDbHandler().post(new Runnable() {
             public void run() {
                 routes.addAll(db.dbRouteDao().getAll());
-                callback.handlerDone();
+                dataLoadListener.onLoad();
             }
         });
     }
@@ -95,14 +93,13 @@ public class DbHelper {
         });
     }
 
-    public void getRouteAndNodesRouteId(final List<DbRoute> routes, final List<DbNode> nodes, final long id, final Callback callback) {
-        this.callback = callback;
+    public void getRouteAndNodesRouteId(final List<DbRoute> routes, final List<DbNode> nodes, final long id, final OnDataLoadListener dataLoadListener) {
         getDbHandler().post(new Runnable() {
             public void run() {
                 DbRoute r1 = db.dbRouteDao().getRouteById(id);
                 routes.add(r1);
                 nodes.addAll(db.dbNodeDao().getAllByRouteId(id));
-                callback.handlerDone();
+                dataLoadListener.onLoad();
             }
         });
 

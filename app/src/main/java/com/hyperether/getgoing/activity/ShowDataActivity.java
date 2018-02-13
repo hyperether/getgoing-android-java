@@ -26,7 +26,7 @@ import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
 
-public class ShowDataActivity extends Activity implements DbHelper.Callback {
+public class ShowDataActivity extends Activity implements DbHelper.OnDataLoadListener {
 
     private List<DbRoute> routes;
     private BarChart chart;
@@ -64,7 +64,7 @@ public class ShowDataActivity extends Activity implements DbHelper.Callback {
     }
 
     @Override
-    public void handlerDone() {
+    public void onLoad() {
         runOnUiThread(new Runnable() {
             @Override
             public void run() {

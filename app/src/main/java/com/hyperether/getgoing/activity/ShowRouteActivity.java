@@ -40,7 +40,7 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
-public class ShowRouteActivity extends Activity implements OnMapReadyCallback, DbHelper.Callback {
+public class ShowRouteActivity extends Activity implements OnMapReadyCallback, DbHelper.OnDataLoadListener {
 
     public static final String TAG = ShowRouteActivity.class.getName();
 
@@ -88,7 +88,7 @@ public class ShowRouteActivity extends Activity implements OnMapReadyCallback, D
     }
 
     @Override
-    public void handlerDone() {
+    public void onLoad() {
         runOnUiThread(new Runnable() {
             @Override
             public void run() {
