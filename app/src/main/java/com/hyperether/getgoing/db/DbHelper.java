@@ -5,7 +5,6 @@ import android.content.Context;
 import android.os.Handler;
 import android.os.HandlerThread;
 
-import java.util.Iterator;
 import java.util.List;
 
 
@@ -13,6 +12,10 @@ import java.util.List;
  * Created by Slobodan on 7/11/2017.
  */
 public class DbHelper {
+
+    public interface OnDataLoadListener {
+        public void onLoad();
+    }
 
     private static final String DATABASE_NAME = "getgoing_db";
     private static DbHelper instance;
@@ -54,11 +57,11 @@ public class DbHelper {
         });
     }
 
-    public void getAllRoutes(final List<DbRoute> routes) {
-
+    public void populateRoutes(final List<DbRoute> routes, final OnDataLoadListener dataLoadListener) {
         getDbHandler().post(new Runnable() {
             public void run() {
                 routes.addAll(db.dbRouteDao().getAll());
+                dataLoadListener.onLoad();
             }
         });
     }
@@ -90,7 +93,19 @@ public class DbHelper {
         });
     }
 
-    private Handler getDbHandler() {
+    public void getRouteAndNodesRouteId(final List<DbRoute> routes, final List<DbNode> nodes, final long id, final OnDataLoadListener dataLoadListener) {
+        getDbHandler().post(new Runnable() {
+            public void run() {
+                DbRoute r1 = db.dbRouteDao().getRouteById(id);
+                routes.add(r1);
+                nodes.addAll(db.dbNodeDao().getAllByRouteId(id));
+                dataLoadListener.onLoad();
+            }
+        });
+
+    }
+
+    public Handler getDbHandler() {
         if (mHandler == null) {
             HandlerThread mThread = new HandlerThread("db-thread");
             mThread.start();
