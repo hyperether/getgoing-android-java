@@ -5,7 +5,7 @@
 
     <!-- List element -->
     <dimen name="date_padding_land">35dp</dimen>
-    <dimen name="element_padding_land">60dp</dimen>
+    <dimen name="element_padding_land">15dp</dimen>
     <dimen name="element_text_size">30sp</dimen>
 
     <!-- Show Location -->
