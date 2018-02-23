@@ -16,8 +16,14 @@ import android.widget.ImageButton;
 import com.crashlytics.android.Crashlytics;
 import com.hyperether.getgoing.R;
 import com.hyperether.getgoing.data.CBDataFrame;
+import com.hyperether.getgoing.db.DbHelper;
+import com.hyperether.getgoing.db.DbRoute;
 import com.hyperether.getgoing.manager.CacheManager;
 import com.hyperether.getgoing.util.Constants;
+import com.hyperether.getgoing.util.FragmentDialog;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import io.fabric.sdk.android.Fabric;
 
@@ -122,8 +128,8 @@ public class GetGoingActivity extends Activity {
             callSettingsActivity();
             return true;
         } else if (itemId == R.id.action_stats) {
-                Intent intent = new Intent(GetGoingActivity.this, ShowDataActivity.class);
-                startActivity(intent);
+            Intent intent = new Intent(GetGoingActivity.this, ShowDataActivity.class);
+            startActivity(intent);
             return true;
         } else {
             return super.onOptionsItemSelected(item);
@@ -204,5 +210,4 @@ public class GetGoingActivity extends Activity {
         editor.putInt("meteringActivityRequestedId", id);
         editor.apply();
     }
-
 }
