@@ -31,3 +31,4 @@ proguard/
 
 # Fabric
 fabric.properties
+/release/output.json
