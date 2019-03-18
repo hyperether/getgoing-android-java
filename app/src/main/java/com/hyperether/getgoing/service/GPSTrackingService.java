@@ -14,7 +14,6 @@ import com.hyperether.getgoing.manager.CacheManager;
 import com.hyperether.getgoing.util.CaloriesCalculation;
 import com.hyperether.getgoing.util.Constants;
 import com.hyperether.getgoing.util.Conversion;
-import com.hyperether.getgoing.util.LogUtil;
 import com.hyperether.toolbox.HyperNotification;
 import com.hyperether.toolbox.location.HyperLocationService;
 
@@ -104,9 +103,6 @@ public class GPSTrackingService extends HyperLocationService {
 
     @Override
     protected void onLocationUpdate(Location location) {
-        LogUtil.getInstance().add(LogUtil.INFO, TAG, "current_loc: " + location,
-                new Exception());
-
         double dLat, dLong;
         double distance = 0;
 
