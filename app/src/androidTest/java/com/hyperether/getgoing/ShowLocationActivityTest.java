@@ -5,8 +5,8 @@ import android.support.test.filters.LargeTest;
 import android.support.test.rule.ActivityTestRule;
 import android.support.test.runner.AndroidJUnit4;
 
-import com.hyperether.getgoing.activity.ShowLocationActivity;
 import com.hyperether.getgoing.data.CBDataFrame;
+import com.hyperether.getgoing.ui.activity.ShowLocationActivity;
 
 import org.junit.Before;
 import org.junit.Rule;
@@ -25,14 +25,14 @@ public class ShowLocationActivityTest {
 
     @Rule
     public ActivityTestRule<ShowLocationActivity> mActivityRule =
-            new ActivityTestRule(ShowLocationActivity.class,true,true);
+            new ActivityTestRule(ShowLocationActivity.class, true, true);
 
     @Before
-    public void createFrame(){
+    public void createFrame() {
         dataFrame.setMeasurementSystemId(1);
         Parcel parcel = Parcel.obtain();
-        dataFrame.writeToParcel(parcel,dataFrame.describeContents());
-        ShowLocationActivity activity = (ShowLocationActivity)mActivityRule.getActivity();
+        dataFrame.writeToParcel(parcel, dataFrame.describeContents());
+        ShowLocationActivity activity = (ShowLocationActivity) mActivityRule.getActivity();
 
     }
 

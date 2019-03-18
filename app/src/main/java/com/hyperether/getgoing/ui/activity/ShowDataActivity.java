@@ -1,4 +1,4 @@
-package com.hyperether.getgoing.activity;
+package com.hyperether.getgoing.ui.activity;
 
 import android.app.Activity;
 import android.app.AlertDialog;
@@ -16,9 +16,9 @@ import com.github.mikephil.charting.data.BarDataSet;
 import com.github.mikephil.charting.data.BarEntry;
 import com.github.mikephil.charting.interfaces.datasets.IBarDataSet;
 import com.hyperether.getgoing.R;
-import com.hyperether.getgoing.adapters.DbRecyclerAdapter;
 import com.hyperether.getgoing.db.DbHelper;
 import com.hyperether.getgoing.db.DbRoute;
+import com.hyperether.getgoing.ui.adapter.DbRecyclerAdapter;
 
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
@@ -54,7 +54,7 @@ public class ShowDataActivity extends Activity implements DbHelper.OnDataLoadLis
      */
     private void populateListView() {
 
-        recyclerView = (RecyclerView)findViewById(R.id.recyclerList);
+        recyclerView = (RecyclerView) findViewById(R.id.recyclerList);
         recyclerAdapter = new DbRecyclerAdapter(this, routes);
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
         linearLayoutManager.setOrientation(LinearLayoutManager.VERTICAL);
@@ -68,7 +68,7 @@ public class ShowDataActivity extends Activity implements DbHelper.OnDataLoadLis
         runOnUiThread(new Runnable() {
             @Override
             public void run() {
-                if(!routes.isEmpty()) {
+                if (!routes.isEmpty()) {
                     populateListView();
                     populateChart();
                     progress.setVisibility(View.GONE);
@@ -78,7 +78,8 @@ public class ShowDataActivity extends Activity implements DbHelper.OnDataLoadLis
                             .setPositiveButton(R.string.confirm,
                                     new DialogInterface.OnClickListener() {
                                         @Override
-                                        public void onClick(DialogInterface dialog, int whichButton) {
+                                        public void onClick(DialogInterface dialog,
+                                                            int whichButton) {
                                             finish();
                                         }
                                     }).create().show();
@@ -110,12 +111,14 @@ public class ShowDataActivity extends Activity implements DbHelper.OnDataLoadLis
                 mapY1.put(item.getDate().substring(0, 10), q);
             } else if (item.getActivity_id() == 1) {
                 mapY1.put(item.getDate().substring(0, 10), (float) item.getEnergy());
-            } else if (mapY2.containsKey(item.getDate().substring(0, 10)) && item.getActivity_id() == 2) {
+            } else if (mapY2.containsKey(item.getDate().substring(0, 10)) &&
+                    item.getActivity_id() == 2) {
                 float q = mapY2.get(item.getDate().substring(0, 10)) + (float) item.getEnergy();
                 mapY2.put(item.getDate().substring(0, 10), q);
             } else if (item.getActivity_id() == 2) {
                 mapY2.put(item.getDate().substring(0, 10), (float) item.getEnergy());
-            } else if (mapY3.containsKey(item.getDate().substring(0, 10)) && item.getActivity_id() == 3) {
+            } else if (mapY3.containsKey(item.getDate().substring(0, 10)) &&
+                    item.getActivity_id() == 3) {
                 float q = mapY3.get(item.getDate().substring(0, 10)) + (float) item.getEnergy();
                 mapY3.put(item.getDate().substring(0, 10), q);
             } else if (item.getActivity_id() == 3) {

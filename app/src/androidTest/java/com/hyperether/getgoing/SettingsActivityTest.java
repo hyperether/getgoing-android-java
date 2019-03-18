@@ -4,7 +4,7 @@ import android.support.test.filters.LargeTest;
 import android.support.test.rule.ActivityTestRule;
 import android.support.test.runner.AndroidJUnit4;
 
-import com.hyperether.getgoing.activity.SettingsActivity;
+import com.hyperether.getgoing.ui.activity.SettingsActivity;
 
 import org.junit.Rule;
 import org.junit.Test;
@@ -37,7 +37,8 @@ public class SettingsActivityTest {
     public void setDataFrame() {
         onView(withId(R.id.metric_spinner)).perform(click());
         onData(anything()).atPosition(0).perform(click());
-        onView(withId(R.id.metric_spinner)).check(matches(withSpinnerText(containsString("Metric"))));
+        onView(withId(R.id.metric_spinner))
+                .check(matches(withSpinnerText(containsString("Metric"))));
     }
 
 

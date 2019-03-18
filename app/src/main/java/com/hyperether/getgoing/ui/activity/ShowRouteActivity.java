@@ -1,4 +1,4 @@
-package com.hyperether.getgoing.activity;
+package com.hyperether.getgoing.ui.activity;
 
 import android.app.Activity;
 import android.content.SharedPreferences;
@@ -40,7 +40,8 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
-public class ShowRouteActivity extends Activity implements OnMapReadyCallback, DbHelper.OnDataLoadListener {
+public class ShowRouteActivity extends Activity implements OnMapReadyCallback,
+        DbHelper.OnDataLoadListener {
 
     public static final String TAG = ShowRouteActivity.class.getName();
 
@@ -69,7 +70,7 @@ public class ShowRouteActivity extends Activity implements OnMapReadyCallback, D
         super.onCreate(savedInstanceState);
         setContentView(R.layout.show_route);
 
-        progressBar = (ProgressBar)findViewById(R.id.progressMap);
+        progressBar = (ProgressBar) findViewById(R.id.progressMap);
 
         extras = getIntent().getExtras();
         route_id = extras.getLong("ROUTE_ID");
@@ -187,7 +188,7 @@ public class ShowRouteActivity extends Activity implements OnMapReadyCallback, D
     /**
      * Drawing a segment of the route and coloring it in accordance with the speed.
      *
-     * @param firstNode  first point of the rout
+     * @param firstNode first point of the rout
      * @param secondNode second point of the rout
      */
     private void drawSegment(DbNode firstNode, DbNode secondNode) {
@@ -346,6 +347,7 @@ public class ShowRouteActivity extends Activity implements OnMapReadyCallback, D
      * Get LatLng from list of route nodes
      *
      * @param routeNodes list of route nodes
+     *
      * @return
      */
     private List<LatLng> getRouteLatLng(List<DbNode> routeNodes) {
@@ -362,7 +364,7 @@ public class ShowRouteActivity extends Activity implements OnMapReadyCallback, D
     /**
      * Zoom a Route at the greatest possible zoom level.
      *
-     * @param googleMap:      instance of GoogleMap
+     * @param googleMap: instance of GoogleMap
      * @param lstLatLngRoute: list of LatLng
      */
     public void zoomRoute(final GoogleMap googleMap, List<LatLng> lstLatLngRoute) {

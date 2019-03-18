@@ -1,4 +1,4 @@
-package com.hyperether.getgoing.adapters;
+package com.hyperether.getgoing.ui.adapter;
 
 import android.app.AlertDialog;
 import android.content.Context;
@@ -13,9 +13,9 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.hyperether.getgoing.R;
-import com.hyperether.getgoing.activity.ShowRouteActivity;
 import com.hyperether.getgoing.db.DbHelper;
 import com.hyperether.getgoing.db.DbRoute;
+import com.hyperether.getgoing.ui.activity.ShowRouteActivity;
 
 import java.text.DecimalFormat;
 import java.util.Collections;
@@ -56,7 +56,8 @@ public class DbRecyclerAdapter extends RecyclerView.Adapter<DbRecyclerAdapter.Vi
     public void onBindViewHolder(ViewHolder holder, final int position) {
         final DbRoute route = myRoutes.get(position);
         date = route.getDate();
-        energy = energyp1 + " " + Double.valueOf(df.format(route.getEnergy()).replace(",", ".")) + " " + energyp2;
+        energy = energyp1 + " " + Double.valueOf(df.format(route.getEnergy()).replace(",", ".")) +
+                " " + energyp2;
 
         if (holder.imageViewAction != null) {
             switch (route.getActivity_id()) {

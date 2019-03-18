@@ -1,4 +1,4 @@
-package com.hyperether.getgoing.activity;
+package com.hyperether.getgoing.ui.activity;
 
 import android.app.Activity;
 import android.content.Intent;

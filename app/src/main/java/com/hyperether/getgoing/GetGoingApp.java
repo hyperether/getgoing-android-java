@@ -12,9 +12,6 @@ public class GetGoingApp extends Application {
     private static GetGoingApp instance = null;
 
     public static GetGoingApp getInstance() {
-        if (instance == null) {
-            instance = new GetGoingApp();
-        }
         return instance;
     }
 

@@ -1,4 +1,4 @@
-package com.hyperether.getgoing.location;
+package com.hyperether.getgoing.util;
 
 import java.text.DecimalFormat;
 
@@ -96,8 +96,8 @@ public class KalmanLatLong {
             // limiting output values to 8 decimal places
             DecimalFormat df = new DecimalFormat("#.########");
 
-            lat = Double.valueOf(df.format(lat).replace(",","."));
-            lng = Double.valueOf(df.format(lng).replace(",","."));
+            lat = Double.valueOf(df.format(lat).replace(",", "."));
+            lng = Double.valueOf(df.format(lng).replace(",", "."));
 
             // new Covarariance matrix is (IdentityMatrix - K) * Covarariance
             variance = (1 - K) * variance;

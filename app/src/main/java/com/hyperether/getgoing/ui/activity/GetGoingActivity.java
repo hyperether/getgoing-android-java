@@ -1,4 +1,4 @@
-package com.hyperether.getgoing.activity;
+package com.hyperether.getgoing.ui.activity;
 
 import android.Manifest;
 import android.app.Activity;
@@ -16,14 +16,8 @@ import android.widget.ImageButton;
 import com.crashlytics.android.Crashlytics;
 import com.hyperether.getgoing.R;
 import com.hyperether.getgoing.data.CBDataFrame;
-import com.hyperether.getgoing.db.DbHelper;
-import com.hyperether.getgoing.db.DbRoute;
 import com.hyperether.getgoing.manager.CacheManager;
 import com.hyperether.getgoing.util.Constants;
-import com.hyperether.getgoing.util.FragmentDialog;
-
-import java.util.ArrayList;
-import java.util.List;
 
 import io.fabric.sdk.android.Fabric;
 
@@ -56,9 +50,9 @@ public class GetGoingActivity extends Activity {
 
         SharedPreferences currentSettings = getSharedPreferences(Constants.PREF_FILE, 0);
 
-		/*
+        /*
          * default value is metric
-		 */
+         */
         int measureUnitId = currentSettings.getInt("measurementSystemId", Constants.METRIC);
         cbDataFrameLocal.setMeasurementSystemId(measureUnitId);
         int age = currentSettings.getInt("age", 0);
@@ -164,8 +158,8 @@ public class GetGoingActivity extends Activity {
     }
 
     /*
-         * true: parameters are set false: settings required
-         */
+     * true: parameters are set false: settings required
+     */
     private boolean getParametersStatus(CBDataFrame cbDataFrameLocal) {
         return !((cbDataFrameLocal.getAge() == 0)
                 || (cbDataFrameLocal.getWeight() == 0));

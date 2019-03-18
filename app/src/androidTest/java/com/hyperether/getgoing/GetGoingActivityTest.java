@@ -4,7 +4,7 @@ import android.support.test.filters.LargeTest;
 import android.support.test.rule.ActivityTestRule;
 import android.support.test.runner.AndroidJUnit4;
 
-import com.hyperether.getgoing.activity.GetGoingActivity;
+import com.hyperether.getgoing.ui.activity.GetGoingActivity;
 
 import org.junit.Rule;
 import org.junit.Test;
@@ -33,14 +33,14 @@ public class GetGoingActivityTest {
             new ActivityTestRule(GetGoingActivity.class);
 
     @Test
-    public void checkButtons(){
+    public void checkButtons() {
         onView(withId(R.id.walk_button)).check(matches(isDisplayed()));
         onView(withId(R.id.run_button)).check(matches(isDisplayed()));
         onView(withId(R.id.ride_button)).check(matches(isDisplayed()));
     }
 
     @Test
-    public void clickButtons(){
+    public void clickButtons() {
         onView(withId(R.id.walk_button)).perform(click());
         pressBack();
         onView(withId(R.id.run_button)).perform(click());
@@ -49,7 +49,7 @@ public class GetGoingActivityTest {
     }
 
     @Test
-    public void clickOptions(){
+    public void clickOptions() {
         openActionBarOverflowOrOptionsMenu(getInstrumentation().getTargetContext());
         onView(withText("Statistics")).perform(click());
         pressBack();

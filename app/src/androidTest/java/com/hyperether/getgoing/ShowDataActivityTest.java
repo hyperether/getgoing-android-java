@@ -4,7 +4,7 @@ import android.support.test.filters.LargeTest;
 import android.support.test.rule.ActivityTestRule;
 import android.support.test.runner.AndroidJUnit4;
 
-import com.hyperether.getgoing.activity.ShowDataActivity;
+import com.hyperether.getgoing.ui.activity.ShowDataActivity;
 
 import org.junit.Rule;
 import org.junit.Test;
@@ -36,7 +36,8 @@ public class ShowDataActivityTest {
     public void checkElements() {
         onData(anything()).inAdapterView(withId(android.R.id.list)).atPosition(0).perform(click());
         pressBack();
-        onData(anything()).inAdapterView(withId(android.R.id.list)).atPosition(0).onChildView(withId(R.id.delete_layout)).perform(click());
+        onData(anything()).inAdapterView(withId(android.R.id.list)).atPosition(0)
+                .onChildView(withId(R.id.delete_layout)).perform(click());
         onView(withText(R.string.delete_message)).check(matches(isDisplayed()));
         onView(withText(R.string.confirm)).perform(click());
     }
