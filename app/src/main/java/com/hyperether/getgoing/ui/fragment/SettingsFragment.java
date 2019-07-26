@@ -31,13 +31,13 @@ public class SettingsFragment extends Fragment implements OnItemSelectedListener
     private NumberPicker agePicker;
     private NumberPicker weightPicker;
 
-    private  SettingsFragmentListener listener;
+    private SettingsFragmentListener listener;
 
-    public SettingsFragment(){
+    public SettingsFragment() {
 
     }
 
-    public static SettingsFragment newInstance(CBDataFrame dataFrame){
+    public static SettingsFragment newInstance(CBDataFrame dataFrame) {
         SettingsFragment settingsFragment = new SettingsFragment();
         Bundle bundle = new Bundle();
         bundle.putParcelable(DATA_KEY, dataFrame);
@@ -48,7 +48,7 @@ public class SettingsFragment extends Fragment implements OnItemSelectedListener
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        if (getArguments() != null){
+        if (getArguments() != null) {
             cbDataFrameLocal = getArguments().getParcelable(DATA_KEY);
         }
     }
@@ -64,9 +64,9 @@ public class SettingsFragment extends Fragment implements OnItemSelectedListener
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
-        if (context instanceof SettingsFragmentListener){
+        if (context instanceof SettingsFragmentListener) {
             listener = (SettingsFragmentListener) context;
-        }else {
+        } else {
             throw new RuntimeException(context.toString() + " must implement SettingsFragmentListener interface");
         }
     }
@@ -149,7 +149,12 @@ public class SettingsFragment extends Fragment implements OnItemSelectedListener
             cbDataFrameLocal.setAge(0);
             cbDataFrameLocal.setWeight(0);
             cbDataFrameLocal.setMeasurementSystemId(0);
-
+            listener.onDataSent(cbDataFrameLocal);
+            getActivity()
+                    .getFragmentManager()
+                    .beginTransaction()
+                    .remove(SettingsFragment.this)
+                    .commit();
             return true;
         } else {
             return super.onOptionsItemSelected(item);
@@ -174,9 +179,7 @@ public class SettingsFragment extends Fragment implements OnItemSelectedListener
         // TODO Auto-generated method stub
     }
 
-
-
-    public interface SettingsFragmentListener{
+    public interface SettingsFragmentListener {
         void onDataSent(CBDataFrame dataFrame);
     }
 
