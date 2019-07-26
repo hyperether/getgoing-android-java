@@ -24,7 +24,7 @@ import io.fabric.sdk.android.Fabric;
 
 import static com.hyperether.getgoing.ui.fragment.SettingsFragment.DATA_KEY;
 
-public class GetGoingActivity extends Activity {
+public class GetGoingActivity extends Activity implements SettingsFragment.SettingsFragmentListener {
 
     private static final int WALK_ID = 1;
     private static final int RUN_ID = 2;
@@ -211,5 +211,10 @@ public class GetGoingActivity extends Activity {
         SharedPreferences.Editor editor = settings.edit();
         editor.putInt("meteringActivityRequestedId", id);
         editor.apply();
+    }
+
+    @Override
+    public void onDataSent(CBDataFrame dataFrame) {
+        cbDataFrameLocal = dataFrame;
     }
 }

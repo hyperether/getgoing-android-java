@@ -2,6 +2,7 @@ package com.hyperether.getgoing.ui.fragment;
 
 import android.app.Activity;
 import android.app.Fragment;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -32,6 +33,8 @@ public class SettingsFragment extends Fragment implements OnItemSelectedListener
     private NumberPicker agePicker;
     private NumberPicker weightPicker;
 
+    private  SettingsFragmentListener listener;
+
     public SettingsFragment(){
 
     }
@@ -58,6 +61,16 @@ public class SettingsFragment extends Fragment implements OnItemSelectedListener
         View rootView = inflater.inflate(R.layout.fragment_settings, container, false);
         initLayout(rootView);
         return rootView;
+    }
+
+    @Override
+    public void onAttach(Context context) {
+        super.onAttach(context);
+        if (context instanceof SettingsFragmentListener){
+            listener = (SettingsFragmentListener) context;
+        }else {
+            throw new RuntimeException(context.toString() + " must implement SettingsFragmentListener interface");
+        }
     }
 
     private void initLayout(View rootView) {
@@ -96,11 +109,8 @@ public class SettingsFragment extends Fragment implements OnItemSelectedListener
             public void onClick(View v) {
                 cbDataFrameLocal.setWeight(weightPicker.getValue());
                 cbDataFrameLocal.setAge(agePicker.getValue());
-
-                Intent resultIntent = new Intent();
-                resultIntent.putExtra(DATA_KEY, cbDataFrameLocal);
-                //setResult(Activity.RESULT_OK, resultIntent);
-                //finish();
+                listener.onDataSent(cbDataFrameLocal);
+                
             }
         });
     }
@@ -114,6 +124,12 @@ public class SettingsFragment extends Fragment implements OnItemSelectedListener
         spinner.setSelection(cbDataFrameLocal.getMeasurementSystemId());
         agePicker.setValue(cbDataFrameLocal.getAge());
         weightPicker.setValue(cbDataFrameLocal.getWeight());
+    }
+
+    @Override
+    public void onDetach() {
+        super.onDetach();
+        listener = null;
     }
 
     @Override
@@ -163,6 +179,10 @@ public class SettingsFragment extends Fragment implements OnItemSelectedListener
     public void onSaveInstanceState(Bundle savedInstanceState) {
         savedInstanceState.putParcelable("cbDataFrameLocal", cbDataFrameLocal);
         super.onSaveInstanceState(savedInstanceState);
+    }
+
+    public interface SettingsFragmentListener{
+        void onDataSent(CBDataFrame dataFrame);
     }
 
 //    @Override
