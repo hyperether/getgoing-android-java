@@ -1,9 +1,7 @@
 package com.hyperether.getgoing.ui.fragment;
 
-import android.app.Activity;
 import android.app.Fragment;
 import android.content.Context;
-import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -110,7 +108,11 @@ public class SettingsFragment extends Fragment implements OnItemSelectedListener
                 cbDataFrameLocal.setWeight(weightPicker.getValue());
                 cbDataFrameLocal.setAge(agePicker.getValue());
                 listener.onDataSent(cbDataFrameLocal);
-                
+                getActivity()
+                        .getFragmentManager()
+                        .beginTransaction()
+                        .remove(SettingsFragment.this)
+                        .commit();
             }
         });
     }
@@ -147,10 +149,7 @@ public class SettingsFragment extends Fragment implements OnItemSelectedListener
             cbDataFrameLocal.setAge(0);
             cbDataFrameLocal.setWeight(0);
             cbDataFrameLocal.setMeasurementSystemId(0);
-            Intent resultIntent = new Intent();
-            resultIntent.putExtra(DATA_KEY, cbDataFrameLocal);
-            // setResult(Activity.RESULT_OK, resultIntent);
-           // finish();
+
             return true;
         } else {
             return super.onOptionsItemSelected(item);
@@ -175,19 +174,10 @@ public class SettingsFragment extends Fragment implements OnItemSelectedListener
         // TODO Auto-generated method stub
     }
 
-    @Override
-    public void onSaveInstanceState(Bundle savedInstanceState) {
-        savedInstanceState.putParcelable("cbDataFrameLocal", cbDataFrameLocal);
-        super.onSaveInstanceState(savedInstanceState);
-    }
+
 
     public interface SettingsFragmentListener{
         void onDataSent(CBDataFrame dataFrame);
     }
 
-//    @Override
-//    public void onRestoreInstanceState(Bundle savedInstanceState) {
-//        super.onRestoreInstanceState(savedInstanceState);
-//        cbDataFrameLocal = savedInstanceState.getParcelable("cbDataFrameLocal");
-//    }
 }

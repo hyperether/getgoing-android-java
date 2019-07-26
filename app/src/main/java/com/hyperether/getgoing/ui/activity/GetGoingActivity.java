@@ -177,9 +177,6 @@ public class GetGoingActivity extends Activity implements SettingsFragment.Setti
                 .beginTransaction()
                 .replace(R.id.activity_main, settingsFragment)
                 .commit();
-//        Intent intent = new Intent(GetGoingActivity.this, SettingsFragment.class);
-//        intent.putExtra("searchKey", this.cbDataFrameLocal);
-//        startActivityForResult(intent, Constants.RESULT_REQUESTED);
     }
 
     /**
