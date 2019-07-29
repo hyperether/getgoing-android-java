@@ -49,11 +49,6 @@
             android:exported="true" />
 
         <activity
-            android:name=".ui.fragment.SettingsFragment"
-            android:icon="@mipmap/ic_logo"
-            android:label=""
-            android:windowSoftInputMode="stateHidden" />
-        <activity
             android:name=".ui.activity.ShowLocationActivity"
             android:icon="@mipmap/ic_logo"
             android:label=""
