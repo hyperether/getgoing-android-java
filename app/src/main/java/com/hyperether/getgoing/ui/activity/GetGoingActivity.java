@@ -17,11 +17,14 @@ import com.crashlytics.android.Crashlytics;
 import com.hyperether.getgoing.R;
 import com.hyperether.getgoing.data.CBDataFrame;
 import com.hyperether.getgoing.manager.CacheManager;
+import com.hyperether.getgoing.ui.fragment.SettingsFragment;
 import com.hyperether.getgoing.util.Constants;
 
 import io.fabric.sdk.android.Fabric;
 
-public class GetGoingActivity extends Activity {
+import static com.hyperether.getgoing.ui.fragment.SettingsFragment.DATA_KEY;
+
+public class GetGoingActivity extends Activity implements SettingsFragment.SettingsFragmentListener {
 
     private static final int WALK_ID = 1;
     private static final int RUN_ID = 2;
@@ -119,7 +122,7 @@ public class GetGoingActivity extends Activity {
         int itemId = item.getItemId();
 
         if (itemId == R.id.action_settings) {
-            callSettingsActivity();
+            callSettingsFragment();
             return true;
         } else if (itemId == R.id.action_stats) {
             Intent intent = new Intent(GetGoingActivity.this, ShowDataActivity.class);
@@ -136,8 +139,8 @@ public class GetGoingActivity extends Activity {
         switch (requestCode) {
             case (Constants.RESULT_REQUESTED):
                 if (resultCode == Activity.RESULT_OK) {
-                    if (data.hasExtra("dataKey")) {
-                        this.cbDataFrameLocal = data.getParcelableExtra("dataKey");
+                    if (data.hasExtra(DATA_KEY)) {
+                        this.cbDataFrameLocal = data.getParcelableExtra(DATA_KEY);
                         SharedPreferences settings = getSharedPreferences(
                                 Constants.PREF_FILE, 0);
                         SharedPreferences.Editor editor = settings.edit();
@@ -166,16 +169,18 @@ public class GetGoingActivity extends Activity {
     }
 
     /**
-     * This method starts SettingsActivity
+     * This method starts SettingsFragment
      */
-    private void callSettingsActivity() {
-        Intent intent = new Intent(GetGoingActivity.this, SettingsActivity.class);
-        intent.putExtra("searchKey", this.cbDataFrameLocal);
-        startActivityForResult(intent, Constants.RESULT_REQUESTED);
+    private void callSettingsFragment() {
+        SettingsFragment settingsFragment = SettingsFragment.newInstance(this.cbDataFrameLocal);
+        getFragmentManager()
+                .beginTransaction()
+                .replace(R.id.activity_main, settingsFragment)
+                .commit();
     }
 
     /**
-     * This method starts SettingsActivity
+     * This method starts SettingsFragment
      *
      * @param id mode id
      */
@@ -189,7 +194,7 @@ public class GetGoingActivity extends Activity {
             startActivity(intent);
         } else {
             setMeteringActivityRequested(id);
-            callSettingsActivity();
+            callSettingsFragment();
         }
     }
 
@@ -203,5 +208,10 @@ public class GetGoingActivity extends Activity {
         SharedPreferences.Editor editor = settings.edit();
         editor.putInt("meteringActivityRequestedId", id);
         editor.apply();
+    }
+
+    @Override
+    public void onDataSent(CBDataFrame dataFrame) {
+        cbDataFrameLocal = dataFrame;
     }
 }

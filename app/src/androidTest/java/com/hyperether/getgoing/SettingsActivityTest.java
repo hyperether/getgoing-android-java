@@ -4,7 +4,7 @@ import android.support.test.filters.LargeTest;
 import android.support.test.rule.ActivityTestRule;
 import android.support.test.runner.AndroidJUnit4;
 
-import com.hyperether.getgoing.ui.activity.SettingsActivity;
+import com.hyperether.getgoing.ui.fragment.SettingsFragment;
 
 import org.junit.Rule;
 import org.junit.Test;
@@ -29,8 +29,8 @@ import static org.hamcrest.Matchers.containsString;
 public class SettingsActivityTest {
 
     @Rule
-    public ActivityTestRule<SettingsActivity> mActivityRule =
-            new ActivityTestRule(SettingsActivity.class);
+    public ActivityTestRule<SettingsFragment> mActivityRule =
+            new ActivityTestRule(SettingsFragment.class);
 
 
     @Test
