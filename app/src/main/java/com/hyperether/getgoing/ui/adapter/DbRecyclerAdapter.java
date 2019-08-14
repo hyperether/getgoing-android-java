@@ -8,7 +8,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.hyperether.getgoing.R;
@@ -20,6 +19,7 @@ import java.text.DecimalFormat;
 import java.util.Collections;
 import java.util.List;
 
+import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.recyclerview.widget.RecyclerView;
 
 /**
@@ -110,8 +110,6 @@ public class DbRecyclerAdapter extends RecyclerView.Adapter<DbRecyclerAdapter.Vi
                         }).create().show();
             }
         });
-
-
     }
 
     @Override
@@ -126,7 +124,7 @@ public class DbRecyclerAdapter extends RecyclerView.Adapter<DbRecyclerAdapter.Vi
         public TextView textEnergy;
         public ImageView imageViewAction;
         public ImageView imageViewDelete;
-        public RelativeLayout elementLayout;
+        public ConstraintLayout elementLayout;
 
         public ViewHolder(View itemView) {
             super(itemView);
@@ -136,9 +134,7 @@ public class DbRecyclerAdapter extends RecyclerView.Adapter<DbRecyclerAdapter.Vi
             imageViewAction = itemView.findViewById(R.id.walk_image);
             imageViewDelete = itemView.findViewById(R.id.delete_layout);
             elementLayout = itemView.findViewById(R.id.element_layout);
-
         }
-
     }
 
     public void deleteItem(int position) {

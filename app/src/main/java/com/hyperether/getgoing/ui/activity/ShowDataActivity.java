@@ -59,6 +59,7 @@ public class ShowDataActivity extends AppCompatActivity implements DbHelper.OnDa
             // update UI
             routes.clear();
             routes.addAll(routeList);
+            recyclerAdapter.notifyDataSetChanged();
         });
     }
 
