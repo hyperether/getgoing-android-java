@@ -9,10 +9,10 @@ import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.ImageButton;
 
 import com.crashlytics.android.Crashlytics;
 import com.hyperether.getgoing.R;
+import com.hyperether.getgoing.databinding.ActivityMainBinding;
 import com.hyperether.getgoing.manager.CacheManager;
 import com.hyperether.getgoing.model.CBDataFrame;
 import com.hyperether.getgoing.ui.fragment.SettingsFragment;
@@ -21,6 +21,7 @@ import com.hyperether.getgoing.util.Constants;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
+import androidx.databinding.DataBindingUtil;
 import io.fabric.sdk.android.Fabric;
 
 import static com.hyperether.getgoing.ui.fragment.SettingsFragment.DATA_KEY;
@@ -34,17 +35,21 @@ public class GetGoingActivity extends AppCompatActivity implements
     //private static final int IMPERIAL = 1;
     //private static final int US = 2;
 
+    private ActivityMainBinding mBinding;
+
     private CBDataFrame cbDataFrameLocal;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         Fabric.with(this, new Crashlytics());
-        setContentView(R.layout.activity_main);
-        if (getActionBar() != null) {
-            getActionBar().setTitle("");
+
+        mBinding = DataBindingUtil.setContentView(this, R.layout.activity_main);
+        mBinding.setViewModel(new ClickHandler());
+
+        if (getSupportActionBar() != null) {
+            getSupportActionBar().setTitle("");
         }
-        addButtonListener();
         getSupportActionBar().show();
 
         cbDataFrameLocal = new CBDataFrame();
@@ -79,38 +84,6 @@ public class GetGoingActivity extends AppCompatActivity implements
                 }
                 break;
         }
-    }
-
-    /**
-     * This method is used for handling button clicks.
-     */
-    public void addButtonListener() {
-        ImageButton buttonWalk;
-        buttonWalk = (ImageButton) findViewById(R.id.walk_button);
-        buttonWalk.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                callMeteringActivity(WALK_ID);
-            }
-        });
-
-        ImageButton buttonRide;
-        buttonRide = (ImageButton) findViewById(R.id.ride_button);
-        buttonRide.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                callMeteringActivity(RIDE_ID);
-            }
-        });
-
-        ImageButton buttonRun;
-        buttonRun = (ImageButton) findViewById(R.id.run_button);
-        buttonRun.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                callMeteringActivity(RUN_ID);
-            }
-        });
     }
 
     @Override
@@ -216,5 +189,19 @@ public class GetGoingActivity extends AppCompatActivity implements
     @Override
     public void onDataSent(CBDataFrame dataFrame) {
         cbDataFrameLocal = dataFrame;
+    }
+
+    public class ClickHandler {
+        public void onWalk(View view) {
+            callMeteringActivity(WALK_ID);
+        }
+
+        public void onRun(View view) {
+            callMeteringActivity(RUN_ID);
+        }
+
+        public void onRide(View view) {
+            callMeteringActivity(RIDE_ID);
+        }
     }
 }

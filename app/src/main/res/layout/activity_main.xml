@@ -1,56 +1,71 @@
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/activity_main"
-    android:layout_width="fill_parent"
-    android:layout_height="fill_parent"
-    android:orientation="vertical">
+<?xml version="1.0" encoding="utf-8"?>
+<layout
+    xmlns:android="http://schemas.android.com/apk/res/android">
 
-    <View
-        android:layout_width="match_parent"
-        android:layout_height="1dp"
-        android:background="@color/black" />
+    <data>
 
-    <ImageButton
-        android:id="@+id/walk_button"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_weight="1"
-        android:background="@android:color/transparent"
-        android:contentDescription="@string/button1_normal"
-        android:scaleType="fitXY"
-        android:src="@drawable/button_walk" />
+        <variable
+            name="viewModel"
+            type="com.hyperether.getgoing.ui.activity.GetGoingActivity.ClickHandler"/>
+    </data>
 
-    <View
-        android:layout_width="match_parent"
-        android:layout_height="1dp"
-        android:background="@color/black" />
+    <LinearLayout
+        android:id="@+id/activity_main"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:orientation="vertical">
 
-    <ImageButton
-        android:id="@+id/run_button"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_weight="1"
-        android:background="@android:color/transparent"
-        android:contentDescription="@string/button2_normal"
-        android:scaleType="fitXY"
-        android:src="@drawable/button_run" />
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="@color/black"/>
 
-    <View
-        android:layout_width="match_parent"
-        android:layout_height="1dp"
-        android:background="@color/black" />
+        <ImageButton
+            android:id="@+id/walk_button"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:background="@android:color/transparent"
+            android:contentDescription="@string/button1_normal"
+            android:onClick="@{viewModel::onWalk}"
+            android:scaleType="fitXY"
+            android:src="@drawable/button_walk"/>
 
-    <ImageButton
-        android:id="@+id/ride_button"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_weight="1"
-        android:background="@android:color/transparent"
-        android:contentDescription="@string/button3_normal"
-        android:scaleType="fitXY"
-        android:src="@drawable/button_ride" />
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="@color/black"/>
 
-    <View
-        android:layout_width="match_parent"
-        android:layout_height="1dp"
-        android:background="@color/black" />
-</LinearLayout>
+        <ImageButton
+            android:id="@+id/run_button"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:background="@android:color/transparent"
+            android:contentDescription="@string/button2_normal"
+            android:onClick="@{viewModel::onRun}"
+            android:scaleType="fitXY"
+            android:src="@drawable/button_run"/>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="@color/black"/>
+
+        <ImageButton
+            android:id="@+id/ride_button"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:background="@android:color/transparent"
+            android:contentDescription="@string/button3_normal"
+            android:onClick="@{viewModel::onRide}"
+            android:scaleType="fitXY"
+            android:src="@drawable/button_ride"/>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="@color/black"/>
+    </LinearLayout>
+</layout>
