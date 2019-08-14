@@ -1,11 +1,8 @@
 package com.hyperether.getgoing.ui.activity;
 
-import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.os.Bundle;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.widget.ProgressBar;
 
@@ -16,9 +13,10 @@ import com.github.mikephil.charting.data.BarDataSet;
 import com.github.mikephil.charting.data.BarEntry;
 import com.github.mikephil.charting.interfaces.datasets.IBarDataSet;
 import com.hyperether.getgoing.R;
-import com.hyperether.getgoing.db.DbHelper;
-import com.hyperether.getgoing.db.DbRoute;
+import com.hyperether.getgoing.repository.room.DbHelper;
+import com.hyperether.getgoing.repository.room.entity.DbRoute;
 import com.hyperether.getgoing.ui.adapter.DbRecyclerAdapter;
+import com.hyperether.getgoing.viewmodel.NodeViewModel;
 
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
@@ -26,9 +24,14 @@ import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
 
-public class ShowDataActivity extends Activity implements DbHelper.OnDataLoadListener {
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.lifecycle.ViewModelProviders;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
-    private List<DbRoute> routes;
+public class ShowDataActivity extends AppCompatActivity implements DbHelper.OnDataLoadListener {
+
+    private final List<DbRoute> routes = new ArrayList<>();
     private BarChart chart;
     private RecyclerView.Adapter recyclerAdapter;
     private RecyclerView recyclerView;
@@ -38,29 +41,37 @@ public class ShowDataActivity extends Activity implements DbHelper.OnDataLoadLis
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.show_data);
+        getSupportActionBar().show();
 
         chart = (BarChart) findViewById(R.id.barChart);
         chart.setNoDataText("");
         chart.setNoDataTextDescription("");
         progress = findViewById(R.id.progress);
+        progress.setVisibility(View.GONE);
 
-        routes = new ArrayList<>();
-        DbHelper.getInstance(this).populateRoutes(routes, this);
+        populateListView();
+        populateChart();
 
+//        DbHelper.getInstance(this).populateRoutes(routes, this);
+
+        NodeViewModel model = ViewModelProviders.of(this).get(NodeViewModel.class);
+        model.getRouteList().observe(this, routeList -> {
+            // update UI
+            routes.clear();
+            routes.addAll(routeList);
+        });
     }
 
     /**
      * This method is for populating list view
      */
     private void populateListView() {
-
         recyclerView = (RecyclerView) findViewById(R.id.recyclerList);
         recyclerAdapter = new DbRecyclerAdapter(this, routes);
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
-        linearLayoutManager.setOrientation(LinearLayoutManager.VERTICAL);
+        linearLayoutManager.setOrientation(RecyclerView.VERTICAL);
         recyclerView.setLayoutManager(linearLayoutManager);
         recyclerView.setAdapter(recyclerAdapter);
-
     }
 
     @Override

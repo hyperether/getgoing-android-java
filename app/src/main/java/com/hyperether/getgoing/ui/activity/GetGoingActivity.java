@@ -6,8 +6,6 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
-import android.support.v4.app.ActivityCompat;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -15,16 +13,20 @@ import android.widget.ImageButton;
 
 import com.crashlytics.android.Crashlytics;
 import com.hyperether.getgoing.R;
-import com.hyperether.getgoing.data.CBDataFrame;
 import com.hyperether.getgoing.manager.CacheManager;
+import com.hyperether.getgoing.model.CBDataFrame;
 import com.hyperether.getgoing.ui.fragment.SettingsFragment;
 import com.hyperether.getgoing.util.Constants;
 
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
 import io.fabric.sdk.android.Fabric;
 
 import static com.hyperether.getgoing.ui.fragment.SettingsFragment.DATA_KEY;
 
-public class GetGoingActivity extends Activity implements SettingsFragment.SettingsFragmentListener {
+public class GetGoingActivity extends AppCompatActivity implements
+        SettingsFragment.SettingsFragmentListener {
 
     private static final int WALK_ID = 1;
     private static final int RUN_ID = 2;
@@ -43,6 +45,7 @@ public class GetGoingActivity extends Activity implements SettingsFragment.Setti
             getActionBar().setTitle("");
         }
         addButtonListener();
+        getSupportActionBar().show();
 
         cbDataFrameLocal = new CBDataFrame();
 

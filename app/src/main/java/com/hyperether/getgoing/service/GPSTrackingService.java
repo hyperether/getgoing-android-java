@@ -6,9 +6,9 @@ import android.content.SharedPreferences;
 import android.location.Location;
 
 import com.hyperether.getgoing.R;
-import com.hyperether.getgoing.data.CBDataFrame;
-import com.hyperether.getgoing.db.DbNode;
 import com.hyperether.getgoing.manager.CacheManager;
+import com.hyperether.getgoing.model.CBDataFrame;
+import com.hyperether.getgoing.repository.room.entity.DbNode;
 import com.hyperether.getgoing.ui.activity.ShowLocationActivity;
 import com.hyperether.getgoing.util.CaloriesCalculation;
 import com.hyperether.getgoing.util.Constants;

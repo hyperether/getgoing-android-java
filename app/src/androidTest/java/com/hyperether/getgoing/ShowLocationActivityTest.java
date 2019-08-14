@@ -1,17 +1,18 @@
 package com.hyperether.getgoing;
 
 import android.os.Parcel;
-import android.support.test.filters.LargeTest;
-import android.support.test.rule.ActivityTestRule;
-import android.support.test.runner.AndroidJUnit4;
 
-import com.hyperether.getgoing.data.CBDataFrame;
+import com.hyperether.getgoing.model.CBDataFrame;
 import com.hyperether.getgoing.ui.activity.ShowLocationActivity;
 
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+
+import androidx.test.filters.LargeTest;
+import androidx.test.rule.ActivityTestRule;
+import androidx.test.runner.AndroidJUnit4;
 
 /**
  * Created by nikola on 19.10.17..

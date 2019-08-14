@@ -4,7 +4,6 @@ import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,13 +12,15 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.hyperether.getgoing.R;
-import com.hyperether.getgoing.db.DbHelper;
-import com.hyperether.getgoing.db.DbRoute;
+import com.hyperether.getgoing.repository.room.DbHelper;
+import com.hyperether.getgoing.repository.room.entity.DbRoute;
 import com.hyperether.getgoing.ui.activity.ShowRouteActivity;
 
 import java.text.DecimalFormat;
 import java.util.Collections;
 import java.util.List;
+
+import androidx.recyclerview.widget.RecyclerView;
 
 /**
  * Created by nikola on 29.1.18..

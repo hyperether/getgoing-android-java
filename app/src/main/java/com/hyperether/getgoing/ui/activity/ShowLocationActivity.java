@@ -14,8 +14,6 @@ import android.location.Location;
 import android.location.LocationManager;
 import android.os.Bundle;
 import android.os.SystemClock;
-import android.support.v4.app.ActivityCompat;
-import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
@@ -30,11 +28,11 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.PolylineOptions;
 import com.hyperether.getgoing.GetGoingApp;
 import com.hyperether.getgoing.R;
-import com.hyperether.getgoing.data.CBDataFrame;
-import com.hyperether.getgoing.db.DbHelper;
-import com.hyperether.getgoing.db.DbNode;
-import com.hyperether.getgoing.db.DbRoute;
 import com.hyperether.getgoing.manager.CacheManager;
+import com.hyperether.getgoing.model.CBDataFrame;
+import com.hyperether.getgoing.repository.room.DbHelper;
+import com.hyperether.getgoing.repository.room.entity.DbNode;
+import com.hyperether.getgoing.repository.room.entity.DbRoute;
 import com.hyperether.getgoing.service.GPSTrackingService;
 import com.hyperether.getgoing.util.Constants;
 import com.hyperether.toolbox.HyperConst;
@@ -47,6 +45,8 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Timer;
 import java.util.TimerTask;
+
+import androidx.core.app.ActivityCompat;
 
 import static android.provider.Settings.ACTION_LOCATION_SOURCE_SETTINGS;
 
@@ -248,7 +248,8 @@ public class ShowLocationActivity extends Activity implements OnMapReadyCallback
                                 clearCacheData();
                             }
 
-                            if (mMap != null) mMap.clear();
+                            if (mMap != null)
+                                mMap.clear();
 
                             showTime.setBase(SystemClock.elapsedRealtime());
                             timeWhenStopped = 0;

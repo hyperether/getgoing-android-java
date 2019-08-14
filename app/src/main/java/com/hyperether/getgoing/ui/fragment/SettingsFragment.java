@@ -17,7 +17,7 @@ import android.widget.NumberPicker;
 import android.widget.Spinner;
 
 import com.hyperether.getgoing.R;
-import com.hyperether.getgoing.data.CBDataFrame;
+import com.hyperether.getgoing.model.CBDataFrame;
 import com.hyperether.getgoing.util.Constants;
 
 public class SettingsFragment extends Fragment implements OnItemSelectedListener {
@@ -54,7 +54,8 @@ public class SettingsFragment extends Fragment implements OnItemSelectedListener
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+                             Bundle savedInstanceState) {
         setHasOptionsMenu(true);
         View rootView = inflater.inflate(R.layout.fragment_settings, container, false);
         initLayout(rootView);
@@ -67,7 +68,8 @@ public class SettingsFragment extends Fragment implements OnItemSelectedListener
         if (context instanceof SettingsFragmentListener) {
             listener = (SettingsFragmentListener) context;
         } else {
-            throw new RuntimeException(context.toString() + " must implement SettingsFragmentListener interface");
+            throw new RuntimeException(
+                    context.toString() + " must implement SettingsFragmentListener interface");
         }
     }
 

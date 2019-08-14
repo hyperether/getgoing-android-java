@@ -31,9 +31,9 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.LatLngBounds;
 import com.google.android.gms.maps.model.PolylineOptions;
 import com.hyperether.getgoing.R;
-import com.hyperether.getgoing.db.DbHelper;
-import com.hyperether.getgoing.db.DbNode;
-import com.hyperether.getgoing.db.DbRoute;
+import com.hyperether.getgoing.repository.room.DbHelper;
+import com.hyperether.getgoing.repository.room.entity.DbNode;
+import com.hyperether.getgoing.repository.room.entity.DbRoute;
 import com.hyperether.getgoing.util.Constants;
 
 import java.util.ArrayList;
@@ -369,7 +369,8 @@ public class ShowRouteActivity extends Activity implements OnMapReadyCallback,
      */
     public void zoomRoute(final GoogleMap googleMap, List<LatLng> lstLatLngRoute) {
 
-        if (googleMap == null || lstLatLngRoute == null || lstLatLngRoute.isEmpty()) return;
+        if (googleMap == null || lstLatLngRoute == null || lstLatLngRoute.isEmpty())
+            return;
 
         LatLngBounds.Builder boundsBuilder = new LatLngBounds.Builder();
         for (LatLng latLngPoint : lstLatLngRoute)

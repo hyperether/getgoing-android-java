@@ -1,6 +1,6 @@
 package com.hyperether.getgoing.util;
 
-import com.hyperether.getgoing.data.CBDataFrame;
+import com.hyperether.getgoing.model.CBDataFrame;
 
 
 public class CaloriesCalculation {

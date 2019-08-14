@@ -1,4 +1,4 @@
-package com.hyperether.getgoing.data;
+package com.hyperether.getgoing.model;
 
 import android.os.Parcel;
 import android.os.Parcelable;

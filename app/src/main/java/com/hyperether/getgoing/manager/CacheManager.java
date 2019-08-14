@@ -1,7 +1,7 @@
 package com.hyperether.getgoing.manager;
 
-import com.hyperether.getgoing.data.CBDataFrame;
-import com.hyperether.getgoing.db.DbNode;
+import com.hyperether.getgoing.model.CBDataFrame;
+import com.hyperether.getgoing.repository.room.entity.DbNode;
 
 import java.util.ArrayList;
 import java.util.List;
