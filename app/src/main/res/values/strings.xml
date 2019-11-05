@@ -93,6 +93,15 @@
     <string name="chart_label_walk">Walk</string>
     <string name="chart_label_run">Run</string>
     <string name="chart_label_ride">Ride</string>
+    <string name="my_profile">My profile</string>
+    <string name="my_data">MY DATA</string>
+    <string name="placeholder_male">Male</string>
+    <string name="placeholder_21_year">21 year</string>
+    <string name="placeholder_185cm">185cm</string>
+    <string name="placeholder_85kg">85kg</string>
+    <string name="total_activities">TOTAL ACTIVITIES</string>
+    <string name="placeholder_18_2km">18.2km</string>
+    <string name="placeholder_730kcal">730kcal</string>
 
 </resources>
 

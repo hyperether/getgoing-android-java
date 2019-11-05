@@ -47,10 +47,10 @@ public class GetGoingActivity extends AppCompatActivity implements
         mBinding = DataBindingUtil.setContentView(this, R.layout.activity_main);
         mBinding.setViewModel(new ClickHandler());
 
-        if (getSupportActionBar() != null) {
-            getSupportActionBar().setTitle("");
-        }
-        getSupportActionBar().show();
+//        if (getSupportActionBar() != null) {
+//            getSupportActionBar().setTitle("");
+//        }
+//        getSupportActionBar().show();
 
         cbDataFrameLocal = new CBDataFrame();
 
@@ -64,12 +64,12 @@ public class GetGoingActivity extends AppCompatActivity implements
         /*
          * default value is metric
          */
-        int measureUnitId = currentSettings.getInt("measurementSystemId", Constants.METRIC);
-        cbDataFrameLocal.setMeasurementSystemId(measureUnitId);
-        int age = currentSettings.getInt("age", 0);
-        cbDataFrameLocal.setAge(age);
-        int weight = currentSettings.getInt("weight", 0);
-        cbDataFrameLocal.setWeight(weight);
+//        int measureUnitId = currentSettings.getInt("measurementSystemId", Constants.METRIC);
+//        cbDataFrameLocal.setMeasurementSystemId(measureUnitId);
+//        int age = currentSettings.getInt("age", 0);
+//        cbDataFrameLocal.setAge(age);
+//        int weight = currentSettings.getInt("weight", 0);
+//        cbDataFrameLocal.setWeight(weight);
     }
 
     @Override
