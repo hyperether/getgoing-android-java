@@ -56,10 +56,11 @@ public class SettingsFragment extends Fragment implements OnItemSelectedListener
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        setHasOptionsMenu(true);
-        View rootView = inflater.inflate(R.layout.fragment_settings, container, false);
-        initLayout(rootView);
-        return rootView;
+//        setHasOptionsMenu(true);
+//        View rootView = inflater.inflate(R.layout.fragment_settings, container, false);
+//        initLayout(rootView);
+//        return rootView;
+        return null;
     }
 
     @Override
@@ -74,49 +75,49 @@ public class SettingsFragment extends Fragment implements OnItemSelectedListener
     }
 
     private void initLayout(View rootView) {
-        spinner = rootView.findViewById(R.id.metric_spinner);
-        ArrayAdapter<CharSequence> spinnerArrayAdapter = ArrayAdapter.createFromResource(
-                getActivity(), R.array.measure_units, R.layout.settings_spinner);
-        // Specify the layout to use when the list of choices appears
-        spinnerArrayAdapter.setDropDownViewResource(R.layout.settings_spinner);
-        // Apply the adapter to the spinner
-        spinner.setAdapter(spinnerArrayAdapter);
-        spinner.setOnItemSelectedListener(this);
-
-        weightPicker = rootView.findViewById(R.id.num_picker);
-        agePicker = rootView.findViewById(R.id.num_picker2);
-
-        String[] numbers = new String[Constants.NUMBER_PICKER_VALUE_SIZE];
-        for (int i = 0; i < numbers.length; i++) {
-            numbers[i] = Integer.toString(i);
-        }
-
-        weightPicker.setDisplayedValues(numbers);
-        weightPicker.setMaxValue(Constants.NUMBER_PICKER_MAX_VALUE);
-        weightPicker.setMinValue(Constants.NUMBER_PICKER_MIN_VALUE);
-        weightPicker.setWrapSelectorWheel(true);
-        weightPicker.setValue(Constants.NUMBER_PICKER_DEFAULT_WEIGHT);
-
-        agePicker.setDisplayedValues(numbers);
-        agePicker.setMaxValue(Constants.NUMBER_PICKER_MAX_VALUE);
-        agePicker.setMinValue(Constants.NUMBER_PICKER_MIN_VALUE);
-        agePicker.setWrapSelectorWheel(true);
-        agePicker.setValue(Constants.NUMBER_PICKER_DEFAULT_AGE);
-
-        buttonConfirmSettings = rootView.findViewById(R.id.buttonConfirmSettings);
-        buttonConfirmSettings.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                cbDataFrameLocal.setWeight(weightPicker.getValue());
-                cbDataFrameLocal.setAge(agePicker.getValue());
-                listener.onDataSent(cbDataFrameLocal);
-                getActivity()
-                        .getFragmentManager()
-                        .beginTransaction()
-                        .remove(SettingsFragment.this)
-                        .commit();
-            }
-        });
+//        spinner = rootView.findViewById(R.id.metric_spinner);
+//        ArrayAdapter<CharSequence> spinnerArrayAdapter = ArrayAdapter.createFromResource(
+//                getActivity(), R.array.measure_units, R.layout.settings_spinner);
+//        // Specify the layout to use when the list of choices appears
+//        spinnerArrayAdapter.setDropDownViewResource(R.layout.settings_spinner);
+//        // Apply the adapter to the spinner
+//        spinner.setAdapter(spinnerArrayAdapter);
+//        spinner.setOnItemSelectedListener(this);
+//
+//        weightPicker = rootView.findViewById(R.id.num_picker);
+//        agePicker = rootView.findViewById(R.id.num_picker2);
+//
+//        String[] numbers = new String[Constants.NUMBER_PICKER_VALUE_SIZE];
+//        for (int i = 0; i < numbers.length; i++) {
+//            numbers[i] = Integer.toString(i);
+//        }
+//
+//        weightPicker.setDisplayedValues(numbers);
+//        weightPicker.setMaxValue(Constants.NUMBER_PICKER_MAX_VALUE);
+//        weightPicker.setMinValue(Constants.NUMBER_PICKER_MIN_VALUE);
+//        weightPicker.setWrapSelectorWheel(true);
+//        weightPicker.setValue(Constants.NUMBER_PICKER_DEFAULT_WEIGHT);
+//
+//        agePicker.setDisplayedValues(numbers);
+//        agePicker.setMaxValue(Constants.NUMBER_PICKER_MAX_VALUE);
+//        agePicker.setMinValue(Constants.NUMBER_PICKER_MIN_VALUE);
+//        agePicker.setWrapSelectorWheel(true);
+//        agePicker.setValue(Constants.NUMBER_PICKER_DEFAULT_AGE);
+//
+//        buttonConfirmSettings = rootView.findViewById(R.id.buttonConfirmSettings);
+//        buttonConfirmSettings.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                cbDataFrameLocal.setWeight(weightPicker.getValue());
+//                cbDataFrameLocal.setAge(agePicker.getValue());
+//                listener.onDataSent(cbDataFrameLocal);
+//                getActivity()
+//                        .getFragmentManager()
+//                        .beginTransaction()
+//                        .remove(SettingsFragment.this)
+//                        .commit();
+//            }
+//        });
     }
 
     /*
@@ -138,29 +139,30 @@ public class SettingsFragment extends Fragment implements OnItemSelectedListener
 
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-        menu.clear();
-        inflater.inflate(R.menu.settings, menu);
-        super.onCreateOptionsMenu(menu, inflater);
+//        menu.clear();
+//        inflater.inflate(R.menu.settings, menu);
+//        super.onCreateOptionsMenu(menu, inflater);
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
 
-        int itemId = item.getItemId();
-        if (itemId == R.id.action_reset_settings) {
-            cbDataFrameLocal.setAge(0);
-            cbDataFrameLocal.setWeight(0);
-            cbDataFrameLocal.setMeasurementSystemId(0);
-            listener.onDataSent(cbDataFrameLocal);
-            getActivity()
-                    .getFragmentManager()
-                    .beginTransaction()
-                    .remove(SettingsFragment.this)
-                    .commit();
-            return true;
-        } else {
-            return super.onOptionsItemSelected(item);
-        }
+//        int itemId = item.getItemId();
+//        if (itemId == R.id.action_reset_settings) {
+//            cbDataFrameLocal.setAge(0);
+//            cbDataFrameLocal.setWeight(0);
+//            cbDataFrameLocal.setMeasurementSystemId(0);
+//            listener.onDataSent(cbDataFrameLocal);
+//            getActivity()
+//                    .getFragmentManager()
+//                    .beginTransaction()
+//                    .remove(SettingsFragment.this)
+//                    .commit();
+//            return true;
+//        } else {
+//            return super.onOptionsItemSelected(item);
+//        }
+        return false;
     }
 
     @Override

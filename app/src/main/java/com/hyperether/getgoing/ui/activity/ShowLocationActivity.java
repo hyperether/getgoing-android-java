@@ -87,7 +87,7 @@ public class ShowLocationActivity extends Activity implements OnMapReadyCallback
         super.onCreate(savedInstanceState);
         // getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
         // Keep screen on all the time
-        setContentView(R.layout.show_location);
+        //setContentView(R.layout.show_location);
 
         mRouteAlreadySaved = true;
 
@@ -106,9 +106,9 @@ public class ShowLocationActivity extends Activity implements OnMapReadyCallback
 
         clearData();
 
-        MapFragment mapFragment = (MapFragment) getFragmentManager()
-                .findFragmentById(R.id.show_map_page);
-        mapFragment.getMapAsync(this);
+//        MapFragment mapFragment = (MapFragment) getFragmentManager()
+//                .findFragmentById(R.id.show_map_page);
+//        mapFragment.getMapAsync(this);
 
         if (mPrefs.contains("KEY_UPDATES_ON")) {
             mLocTrackingRunning = mPrefs.getBoolean("KEY_UPDATES_ON", false);
@@ -574,20 +574,20 @@ public class ShowLocationActivity extends Activity implements OnMapReadyCallback
      * Method for initiating layout.
      */
     private void initLayoutDinamically() {
-        button_start = (Button) findViewById(R.id.start_button);
-        button_start.setOnClickListener(mButtonStartListener);
-        button_pause = (Button) findViewById(R.id.end_button);
-        button_pause.setOnClickListener(mButtonPauseListener);
-        button_rst = (Button) findViewById(R.id.refresh_button);
-        button_rst.setOnClickListener(mButtonResetListener);
-        button_save = (Button) findViewById(R.id.save_button);
-        button_save.setOnClickListener(mButtonSaveListener);
-
-        showTime = (Chronometer) findViewById(R.id.showTime);
-        showCalories = (Chronometer) findViewById(R.id.showCalories);
-        showDistance = (Chronometer) findViewById(R.id.showDistance);
-        showVelocity = (Chronometer) findViewById(R.id.showVelocity);
-        showVelocityAvg = (Chronometer) findViewById(R.id.showVelocityAvg);
+//        button_start = (Button) findViewById(R.id.start_button);
+//        button_start.setOnClickListener(mButtonStartListener);
+//        button_pause = (Button) findViewById(R.id.end_button);
+//        button_pause.setOnClickListener(mButtonPauseListener);
+//        button_rst = (Button) findViewById(R.id.refresh_button);
+//        button_rst.setOnClickListener(mButtonResetListener);
+//        button_save = (Button) findViewById(R.id.save_button);
+//        button_save.setOnClickListener(mButtonSaveListener);
+//
+//        showTime = (Chronometer) findViewById(R.id.showTime);
+//        showCalories = (Chronometer) findViewById(R.id.showCalories);
+//        showDistance = (Chronometer) findViewById(R.id.showDistance);
+//        showVelocity = (Chronometer) findViewById(R.id.showVelocity);
+//        showVelocityAvg = (Chronometer) findViewById(R.id.showVelocityAvg);
     }
 
     /**

@@ -15,6 +15,7 @@ import com.hyperether.getgoing.R;
 import com.hyperether.getgoing.databinding.ActivityMainBinding;
 import com.hyperether.getgoing.manager.CacheManager;
 import com.hyperether.getgoing.model.CBDataFrame;
+import com.hyperether.getgoing.ui.CurvedBottomView;
 import com.hyperether.getgoing.ui.fragment.SettingsFragment;
 import com.hyperether.getgoing.util.Constants;
 
@@ -89,24 +90,16 @@ public class GetGoingActivity extends AppCompatActivity implements
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.menu, menu);
-        return super.onCreateOptionsMenu(menu);
+//        getMenuInflater().inflate(R.menu.menu, menu);
+//        return super.onCreateOptionsMenu(menu);
+        return false;
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         int itemId = item.getItemId();
 
-        if (itemId == R.id.action_settings) {
-            callSettingsFragment();
-            return true;
-        } else if (itemId == R.id.action_stats) {
-            Intent intent = new Intent(GetGoingActivity.this, ShowDataActivity.class);
-            startActivity(intent);
-            return true;
-        } else {
-            return super.onOptionsItemSelected(item);
-        }
+        return false;
     }
 
     @Override
@@ -148,11 +141,11 @@ public class GetGoingActivity extends AppCompatActivity implements
      * This method starts SettingsFragment
      */
     private void callSettingsFragment() {
-        SettingsFragment settingsFragment = SettingsFragment.newInstance(this.cbDataFrameLocal);
-        getFragmentManager()
-                .beginTransaction()
-                .replace(R.id.activity_main, settingsFragment)
-                .commit();
+//        SettingsFragment settingsFragment = SettingsFragment.newInstance(this.cbDataFrameLocal);
+//        getFragmentManager()
+//                .beginTransaction()
+//                .replace(R.id.activity_main, settingsFragment)
+//                .commit();
     }
 
     /**

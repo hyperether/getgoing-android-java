@@ -96,7 +96,7 @@ public class GPSTrackingService extends HyperLocationService {
         startForeground(1123, HyperNotification.getInstance().getForegroundServiceNotification(this,
                 getString(R.string.notification_title),
                 getString(R.string.notification_text),
-                R.drawable.ic_launher,
+                R.drawable.ic_logo_light,
                 R.mipmap.ic_logo,
                 pendingIntent));
     }

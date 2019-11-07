@@ -15,7 +15,6 @@ import com.github.mikephil.charting.interfaces.datasets.IBarDataSet;
 import com.hyperether.getgoing.R;
 import com.hyperether.getgoing.repository.room.DbHelper;
 import com.hyperether.getgoing.repository.room.entity.DbRoute;
-import com.hyperether.getgoing.ui.adapter.DbRecyclerAdapter;
 import com.hyperether.getgoing.viewmodel.NodeViewModel;
 
 import java.util.ArrayList;
@@ -68,7 +67,7 @@ public class ShowDataActivity extends AppCompatActivity implements DbHelper.OnDa
      */
     private void populateListView() {
         recyclerView = (RecyclerView) findViewById(R.id.recyclerList);
-        recyclerAdapter = new DbRecyclerAdapter(this, routes);
+        //recyclerAdapter = new DbRecyclerAdapter(this, routes);
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
         linearLayoutManager.setOrientation(RecyclerView.VERTICAL);
         recyclerView.setLayoutManager(linearLayoutManager);
