@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="mat_gray">#424242</color>
+    <color name="light_theme_accent">#20baff</color>
+</resources>
