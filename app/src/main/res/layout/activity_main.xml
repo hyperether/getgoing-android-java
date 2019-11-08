@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
-<layout xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
-    xmlns:android="http://schemas.android.com/apk/res/android">
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
 
     <data>
 
         <variable
             name="viewModel"
-            type="com.hyperether.getgoing.ui.activity.GetGoingActivity.ClickHandler"/>
+            type="com.hyperether.getgoing.ui.activity.GetGoingActivity.ClickHandler" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -278,9 +278,8 @@
             android:textAppearance="@style/TextAppearance.AppCompat.Large"
             android:textColor="@color/black"
             android:textSize="20sp"
-            app:layout_constraintBottom_toBottomOf="@+id/customBottomBar"
-            app:layout_constraintEnd_toEndOf="@+id/customBottomBar"
-            app:layout_constraintStart_toStartOf="@+id/customBottomBar" />
-
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

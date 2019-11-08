@@ -7,10 +7,11 @@ import android.graphics.Paint;
 import android.graphics.Path;
 import android.graphics.Point;
 import android.util.AttributeSet;
+import android.view.View;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
-public class CurvedBottomView extends BottomNavigationView {
+public class CurvedBottomView extends View {
 
     private Path mPath;
     private Paint mPaint;
