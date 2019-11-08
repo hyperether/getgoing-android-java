@@ -1,6 +1,7 @@
 package com.hyperether.getgoing.ui.activity;
 
 import android.Manifest;
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -11,6 +12,7 @@ import android.view.MenuItem;
 import android.view.View;
 
 import com.crashlytics.android.Crashlytics;
+import com.dinuscxj.progressbar.CircleProgressBar;
 import com.hyperether.getgoing.R;
 import com.hyperether.getgoing.databinding.ActivityMainBinding;
 import com.hyperether.getgoing.manager.CacheManager;
@@ -37,8 +39,8 @@ public class GetGoingActivity extends AppCompatActivity implements
     //private static final int US = 2;
 
     private ActivityMainBinding mBinding;
-
     private CBDataFrame cbDataFrameLocal;
+    private CircleProgressBar circleProgressBar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -46,14 +48,16 @@ public class GetGoingActivity extends AppCompatActivity implements
         Fabric.with(this, new Crashlytics());
 
         mBinding = DataBindingUtil.setContentView(this, R.layout.activity_main);
-        mBinding.setViewModel(new ClickHandler());
+        cbDataFrameLocal = new CBDataFrame();
+        mBinding.setViewModel(new ClickHandler(cbDataFrameLocal));
 
 //        if (getSupportActionBar() != null) {
 //            getSupportActionBar().setTitle("");
 //        }
 //        getSupportActionBar().show();
 
-        cbDataFrameLocal = new CBDataFrame();
+        circleProgressBar = findViewById(R.id.cpb_am_kmgoal);
+        circleProgressBar.setProgress(42);
 
         ActivityCompat.requestPermissions(this, new String[]{
                 Manifest.permission.ACCESS_FINE_LOCATION,
@@ -185,6 +189,12 @@ public class GetGoingActivity extends AppCompatActivity implements
     }
 
     public class ClickHandler {
+        CBDataFrame mDataFrame;
+
+        ClickHandler(CBDataFrame pDataFrame){
+            mDataFrame = pDataFrame;
+        }
+
         public void onWalk(View view) {
             callMeteringActivity(WALK_ID);
         }
@@ -195,6 +205,22 @@ public class GetGoingActivity extends AppCompatActivity implements
 
         public void onRide(View view) {
             callMeteringActivity(RIDE_ID);
+        }
+
+        public void onProfileClick()
+        {
+            ProfileFragment profileFragment = ProfileFragment.newInstance(this.mDataFrame);
+            profileFragment.show(getSupportFragmentManager(), "ProfileFragment");
+        }
+    }
+
+    private static final class MyProgressFormatter implements CircleProgressBar.ProgressFormatter {
+        private static final String DEFAULT_PATTERN = "%d%%";
+
+        @SuppressLint("DefaultLocale")
+        @Override
+        public CharSequence format(int progress, int max) {
+            return String.format(DEFAULT_PATTERN, (int)((float)progress / (float)max * 100));
         }
     }
 }
