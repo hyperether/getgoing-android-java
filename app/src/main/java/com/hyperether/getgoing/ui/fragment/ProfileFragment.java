@@ -1,4 +1,4 @@
-package com.hyperether.getgoing.ui.activity;
+package com.hyperether.getgoing.ui.fragment;
 
 import android.app.Dialog;
 import android.os.Bundle;
@@ -28,13 +28,30 @@ public class ProfileFragment extends DialogFragment {
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        Dialog dialog = this.getDialog();
+        setStyle(DialogFragment.STYLE_NORMAL, R.style.FullScreenDialogStyle);
     }
 
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+        super.onCreateView(inflater, container, savedInstanceState);
+
         View rootView = inflater.inflate(R.layout.fragment_profile, container, false);
         return rootView;
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+
+        Dialog dialog = getDialog();
+
+        if (dialog != null)
+        {
+            int width = ViewGroup.LayoutParams.MATCH_PARENT;
+            int height = ViewGroup.LayoutParams.MATCH_PARENT;
+
+            dialog.getWindow().setLayout(width, height);
+        }
     }
 }

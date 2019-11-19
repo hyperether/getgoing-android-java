@@ -7,15 +7,19 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
-import android.view.Menu;
-import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.databinding.DataBindingUtil;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.LinearSnapHelper;
+import androidx.recyclerview.widget.OrientationHelper;
+import androidx.recyclerview.widget.RecyclerView;
+import androidx.recyclerview.widget.SnapHelper;
 
 import com.crashlytics.android.Crashlytics;
 import com.dinuscxj.progressbar.CircleProgressBar;
@@ -23,8 +27,12 @@ import com.hyperether.getgoing.R;
 import com.hyperether.getgoing.databinding.ActivityMainBinding;
 import com.hyperether.getgoing.manager.CacheManager;
 import com.hyperether.getgoing.model.CBDataFrame;
+import com.hyperether.getgoing.ui.adapter.HorizontalListAdapter;
+import com.hyperether.getgoing.ui.fragment.ProfileFragment;
 import com.hyperether.getgoing.ui.fragment.SettingsFragment;
 import com.hyperether.getgoing.util.Constants;
+
+import java.util.ArrayList;
 
 import io.fabric.sdk.android.Fabric;
 
@@ -39,34 +47,35 @@ public class GetGoingActivity extends AppCompatActivity implements
     //private static final int IMPERIAL = 1;
     //private static final int US = 2;
 
+    public static final ArrayList DRAWABLE_ARRAY = new ArrayList<Integer>() {{
+        add(R.drawable.ic_light_bicycling_icon_inactive);
+        add(R.drawable.ic_light_running_icon_inactive);
+        add(R.drawable.ic_light_walking_icon);
+    }};
+
     private ActivityMainBinding mBinding;
     private CBDataFrame cbDataFrameLocal;
     private CircleProgressBar circleProgressBar;
+    private HorizontalListAdapter mAdapter;
+    private RecyclerView recyclerView;
+    private RecyclerView.LayoutManager layoutManager;
+    private ImageView selectorButton;
+    private SnapHelper snapHelper;
+    private TextView actLabel;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         Fabric.with(this, new Crashlytics());
-
         mBinding = DataBindingUtil.setContentView(this, R.layout.activity_main);
+
         cbDataFrameLocal = new CBDataFrame();
         mBinding.setViewModel(new ClickHandler());
 
-//        if (getSupportActionBar() != null) {
-//            getSupportActionBar().setTitle("");
-//        }
-//        getSupportActionBar().show();
+        actLabel = findViewById(R.id.tv_ma_mainact);
 
-        ImageView ib_am_user = findViewById(R.id.ib_am_user);
-        ib_am_user.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                ProfileFragment profileFragment = ProfileFragment.newInstance(null);
-                profileFragment.show(getSupportFragmentManager(), "ProfileFragment");
-            }
-        });
-        circleProgressBar = findViewById(R.id.cpb_am_kmgoal);
-        circleProgressBar.setProgress(42);
+        initRecyclerView();
+        initProgressBars();
 
         ActivityCompat.requestPermissions(this, new String[]{
                 Manifest.permission.ACCESS_FINE_LOCATION,
@@ -98,21 +107,6 @@ public class GetGoingActivity extends AppCompatActivity implements
                 }
                 break;
         }
-    }
-
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
-//        getMenuInflater().inflate(R.menu.menu, menu);
-//        return super.onCreateOptionsMenu(menu);
-        return false;
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        int itemId = item.getItemId();
-
-        return false;
     }
 
     @Override
@@ -190,6 +184,54 @@ public class GetGoingActivity extends AppCompatActivity implements
         SharedPreferences.Editor editor = settings.edit();
         editor.putInt("meteringActivityRequestedId", id);
         editor.apply();
+    }
+
+    private void initRecyclerView()
+    {
+        recyclerView = findViewById(R.id.recyclerView);
+        recyclerView.setHasFixedSize(true);
+        layoutManager = new LinearLayoutManager(this);
+        ((LinearLayoutManager) layoutManager).setOrientation(OrientationHelper.HORIZONTAL);
+        recyclerView.setLayoutManager(layoutManager);
+        mAdapter = new HorizontalListAdapter(DRAWABLE_ARRAY, getApplicationContext());
+        recyclerView.setAdapter(mAdapter);
+        ((LinearLayoutManager) layoutManager).scrollToPositionWithOffset(Integer.MAX_VALUE / 2, -20);
+
+        snapHelper = new LinearSnapHelper();
+        snapHelper.attachToRecyclerView(recyclerView);
+
+        recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
+            @Override
+            public void onScrolled(@NonNull RecyclerView recyclerView, int dx, int dy) {
+                super.onScrolled(recyclerView, dx, dy);
+                Integer k1 = ((LinearLayoutManager) layoutManager).findFirstCompletelyVisibleItemPosition();
+                ImageView centralImg = layoutManager.findViewByPosition(k1).findViewById(R.id.iv_ri_pic);
+
+                //ImageView leftImg = layoutManager.findViewByPosition(((LinearLayoutManager) layoutManager).findFirstVisibleItemPosition()).findViewById(R.id.iv_ri_pic);
+                //ImageView rightImg = layoutManager.findViewByPosition(((LinearLayoutManager) layoutManager).findLastVisibleItemPosition()).findViewById(R.id.iv_ri_pic);
+                //centralImg.setImageDrawable(getResources().getDrawable(R.drawable.ic_birthday_cake));
+
+                if (centralImg.getTag().equals(R.drawable.ic_light_bicycling_icon_inactive))
+                    actLabel.setText("Cycling");
+                else if (centralImg.getTag().equals(R.drawable.ic_light_running_icon_inactive))
+                    actLabel.setText("Running");
+                else if (centralImg.getTag().equals(R.drawable.ic_light_walking_icon))
+                    actLabel.setText("Walking");
+
+                //Toast.makeText(getApplicationContext(),  , Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
+
+    private void initProgressBars()
+    {
+        ImageView ib_am_user = findViewById(R.id.ib_am_user);
+        ib_am_user.setOnClickListener(view -> {
+            ProfileFragment profileFragment = ProfileFragment.newInstance(null);
+            profileFragment.show(getSupportFragmentManager(), "ProfileFragment");
+        });
+        circleProgressBar = findViewById(R.id.cpb_am_kmgoal);
+        circleProgressBar.setProgress(42);
     }
 
     @Override

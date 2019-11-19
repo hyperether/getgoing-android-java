@@ -2,4 +2,5 @@
 <resources>
     <color name="mat_gray">#424242</color>
     <color name="light_theme_accent">#20baff</color>
+    <color name="color_background_new">#EDF1F1</color>
 </resources>
