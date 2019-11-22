@@ -9,6 +9,7 @@ import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.util.DisplayMetrics;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -29,6 +30,7 @@ import com.hyperether.getgoing.R;
 import com.hyperether.getgoing.databinding.ActivityMainBinding;
 import com.hyperether.getgoing.manager.CacheManager;
 import com.hyperether.getgoing.model.CBDataFrame;
+import com.hyperether.getgoing.ui.CurvedBottomView;
 import com.hyperether.getgoing.ui.adapter.HorizontalListAdapter;
 import com.hyperether.getgoing.ui.fragment.ProfileFragment;
 import com.hyperether.getgoing.ui.fragment.SettingsFragment;
@@ -62,6 +64,7 @@ public class GetGoingActivity extends AppCompatActivity implements
     private RecyclerView recyclerView;
     private RecyclerView.LayoutManager layoutManager;
     private ImageView blueRectangle;
+    private TextView blueSentence;
     private SnapHelper snapHelper;
     private TextView actLabel;
 
@@ -245,8 +248,16 @@ public class GetGoingActivity extends AppCompatActivity implements
         if (ratio >= 1.8)
         {
             blueRectangle = findViewById(R.id.iv_am_bluerectangle);
+            blueSentence = findViewById(R.id.tv_am_burn);
+            ViewGroup.MarginLayoutParams params = (ViewGroup.MarginLayoutParams) blueSentence.getLayoutParams();
+
+            blueRectangle.getLayoutParams().height = 650;
+            params.bottomMargin = 100;
+            blueSentence.setLayoutParams(params);
+
+            blueSentence.invalidate();
+            blueSentence.requestLayout();
             blueRectangle.requestLayout();
-            blueRectangle.getLayoutParams().height = 600;
         }
     }
 

@@ -105,6 +105,13 @@
     <string name="get_ready">Get ready</string>
     <string name="placeholder_running">Running</string>
     <string name="my_activities">My activities</string>
+    <string name="last_exercise">Last exercise</string>
+    <string name="view_all">View all</string>
+    <string name="choose_your_exercise">Choose your exercise</string>
+    <string name="can_we_burn_our_legs">Can we burn our legs?</string>
+    <string name="kcal">kcal</string>
+    <string name="running">Running</string>
+    <string name="min">min</string>
 
 </resources>
 
