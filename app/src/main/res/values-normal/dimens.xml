@@ -24,4 +24,7 @@
     <dimen name="settings_margin_port">20dp</dimen>
     <dimen name="settings_edit_margin_left">10dp</dimen>
     <dimen name="settings_text_size">17sp</dimen>
+
+    <dimen name="curved_bottom_bar">180dp</dimen>
+    <dimen name="blue_rectangle">200dp</dimen>
 </resources>

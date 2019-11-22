@@ -7,12 +7,14 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
+import android.util.DisplayMetrics;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.core.app.ActivityCompat;
 import androidx.databinding.DataBindingUtil;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -59,7 +61,7 @@ public class GetGoingActivity extends AppCompatActivity implements
     private HorizontalListAdapter mAdapter;
     private RecyclerView recyclerView;
     private RecyclerView.LayoutManager layoutManager;
-    private ImageView selectorButton;
+    private ImageView blueRectangle;
     private SnapHelper snapHelper;
     private TextView actLabel;
 
@@ -74,6 +76,7 @@ public class GetGoingActivity extends AppCompatActivity implements
 
         actLabel = findViewById(R.id.tv_ma_mainact);
 
+        initScreenDimen();
         initRecyclerView();
         initProgressBars();
 
@@ -232,6 +235,19 @@ public class GetGoingActivity extends AppCompatActivity implements
         });
         circleProgressBar = findViewById(R.id.cpb_am_kmgoal);
         circleProgressBar.setProgress(42);
+    }
+
+    private void initScreenDimen()
+    {
+        DisplayMetrics metrics = getApplicationContext().getResources().getDisplayMetrics();
+        float ratio = (float)metrics.heightPixels / (float)metrics.widthPixels;
+
+        if (ratio >= 1.8)
+        {
+            blueRectangle = findViewById(R.id.iv_am_bluerectangle);
+            blueRectangle.requestLayout();
+            blueRectangle.getLayoutParams().height = 600;
+        }
     }
 
     @Override

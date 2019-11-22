@@ -18,4 +18,7 @@
     <dimen name="settings_spinner_width">150dp</dimen>
     <dimen name="settings_text_size">25sp</dimen>
     <dimen name="settings_arrow_margin_right">10dp</dimen>
+
+    <dimen name="curved_bottom_bar">220dp</dimen>
+    <dimen name="blue_rectangle">300dp</dimen>
 </resources>
