@@ -1,7 +1,9 @@
 package com.hyperether.getgoing.ui.adapter;
 
 import android.content.Context;
+import android.graphics.drawable.Drawable;
 import android.os.Build;
+import android.util.SparseIntArray;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,14 +14,14 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.hyperether.getgoing.R;
 
-import java.util.ArrayList;
-
 public class HorizontalListAdapter extends RecyclerView.Adapter<HorizontalListAdapter.ViewHolder> {
-    private ArrayList<Integer> imgList;
+    private SparseIntArray imgList;
     private LayoutInflater mInflater;
     private Context mContext;
 
-    public HorizontalListAdapter(ArrayList<Integer> data, Context pContext)
+    public ViewHolder mHolder;
+
+    public HorizontalListAdapter(SparseIntArray data, Context pContext)
     {
         this.imgList = data;
         this.mInflater = LayoutInflater.from(pContext);
@@ -36,12 +38,14 @@ public class HorizontalListAdapter extends RecyclerView.Adapter<HorizontalListAd
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         int positionInList = position % imgList.size();
-        Integer img = imgList.get(positionInList);
+        mHolder = holder;
+        Integer img = imgList.keyAt(positionInList);
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) { //sdk min?
             holder.img.setImageDrawable(mContext.getDrawable(img));
             holder.img.setTag(img);
         }
+
     }
 
     @Override
@@ -52,7 +56,12 @@ public class HorizontalListAdapter extends RecyclerView.Adapter<HorizontalListAd
 
     @Override
     public int getItemCount() {
-        return Integer.MAX_VALUE;
+        return imgList.size() * 10;
+    }
+
+    public ViewHolder getHolder()
+    {
+        return mHolder;
     }
 
     public static class ViewHolder extends RecyclerView.ViewHolder {

@@ -6,8 +6,10 @@ import android.app.Activity;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.util.DisplayMetrics;
+import android.util.SparseIntArray;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
@@ -51,21 +53,19 @@ public class GetGoingActivity extends AppCompatActivity implements
     //private static final int IMPERIAL = 1;
     //private static final int US = 2;
 
-    public static final ArrayList DRAWABLE_ARRAY = new ArrayList<Integer>() {{
-        add(R.drawable.ic_light_bicycling_icon_inactive);
-        add(R.drawable.ic_light_running_icon_inactive);
-        add(R.drawable.ic_light_walking_icon);
-    }};
+    public static boolean DRAW_INACTIVE_DRAWABLE = false;
 
     private ActivityMainBinding mBinding;
     private CBDataFrame cbDataFrameLocal;
-    private CircleProgressBar circleProgressBar;
-    private HorizontalListAdapter mAdapter;
+    private SnapHelper snapHelper;
     private RecyclerView recyclerView;
     private RecyclerView.LayoutManager layoutManager;
+
+    private CircleProgressBar circleProgressBar;
+    private HorizontalListAdapter mAdapter;
     private ImageView blueRectangle;
+    private ImageView selectorView;
     private TextView blueSentence;
-    private SnapHelper snapHelper;
     private TextView actLabel;
 
     @Override
@@ -195,27 +195,40 @@ public class GetGoingActivity extends AppCompatActivity implements
     private void initRecyclerView()
     {
         recyclerView = findViewById(R.id.recyclerView);
+        selectorView = findViewById(R.id.imageView2);
         recyclerView.setHasFixedSize(true);
+
         layoutManager = new LinearLayoutManager(this);
         ((LinearLayoutManager) layoutManager).setOrientation(OrientationHelper.HORIZONTAL);
         recyclerView.setLayoutManager(layoutManager);
-        mAdapter = new HorizontalListAdapter(DRAWABLE_ARRAY, getApplicationContext());
+
+        SparseIntArray DRAWABLE_MAP = new SparseIntArray();
+        DRAWABLE_MAP.append(R.drawable.ic_light_bicycling_icon_inactive, R.drawable.ic_light_bicycling_icon_active);
+        DRAWABLE_MAP.append(R.drawable.ic_light_running_icon_inactive, R.drawable.ic_light_running_icon_active);
+        DRAWABLE_MAP.append(R.drawable.ic_light_walking_icon, R.drawable.ic_light_walking_icon_active);
+
+        mAdapter = new HorizontalListAdapter(DRAWABLE_MAP, getApplicationContext());
         recyclerView.setAdapter(mAdapter);
-        ((LinearLayoutManager) layoutManager).scrollToPositionWithOffset(Integer.MAX_VALUE / 2, -20);
+
+        ((LinearLayoutManager) layoutManager).scrollToPositionWithOffset(layoutManager.getItemCount() / 2, -20);
 
         snapHelper = new LinearSnapHelper();
         snapHelper.attachToRecyclerView(recyclerView);
+
+        int[] centralImgPos = new int[2];
+        int[] selectorViewPos = new int[2];
 
         recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
             @Override
             public void onScrolled(@NonNull RecyclerView recyclerView, int dx, int dy) {
                 super.onScrolled(recyclerView, dx, dy);
                 Integer k1 = ((LinearLayoutManager) layoutManager).findFirstCompletelyVisibleItemPosition();
-                ImageView centralImg = layoutManager.findViewByPosition(k1).findViewById(R.id.iv_ri_pic);
+                Integer k2 = ((LinearLayoutManager) layoutManager).findFirstVisibleItemPosition();
+                Integer k3 = ((LinearLayoutManager) layoutManager).findLastVisibleItemPosition();
 
-                //ImageView leftImg = layoutManager.findViewByPosition(((LinearLayoutManager) layoutManager).findFirstVisibleItemPosition()).findViewById(R.id.iv_ri_pic);
-                //ImageView rightImg = layoutManager.findViewByPosition(((LinearLayoutManager) layoutManager).findLastVisibleItemPosition()).findViewById(R.id.iv_ri_pic);
-                //centralImg.setImageDrawable(getResources().getDrawable(R.drawable.ic_birthday_cake));
+                ImageView centralImg = layoutManager.findViewByPosition(k1).findViewById(R.id.iv_ri_pic);
+                ImageView leftImg = layoutManager.findViewByPosition(k2).findViewById(R.id.iv_ri_pic);
+                ImageView rightImg = layoutManager.findViewByPosition(k3).findViewById(R.id.iv_ri_pic);
 
                 if (centralImg.getTag().equals(R.drawable.ic_light_bicycling_icon_inactive))
                     actLabel.setText("Cycling");
@@ -224,7 +237,40 @@ public class GetGoingActivity extends AppCompatActivity implements
                 else if (centralImg.getTag().equals(R.drawable.ic_light_walking_icon))
                     actLabel.setText("Walking");
 
-                //Toast.makeText(getApplicationContext(),  , Toast.LENGTH_SHORT).show();
+                centralImg.getLocationOnScreen(centralImgPos);
+                selectorView.getLocationOnScreen(selectorViewPos);
+
+                //Drawable tempImg = centralImg.getDrawable(); //centralimg na pocetku je active img tj torta
+
+                if (centralImgPos[0] > selectorViewPos[0] - 50 && centralImgPos[0] < selectorViewPos[0] + 50)
+                {
+                    if (centralImg.getTag().equals(R.drawable.ic_light_bicycling_icon_inactive))
+                        centralImg.setImageDrawable(getApplicationContext().getResources().getDrawable(R.drawable.ic_light_bicycling_icon_active));
+                    else if (centralImg.getTag().equals(R.drawable.ic_light_running_icon_inactive))
+                        centralImg.setImageDrawable(getApplicationContext().getResources().getDrawable(R.drawable.ic_light_running_icon_active));
+                    else if (centralImg.getTag().equals(R.drawable.ic_light_walking_icon))
+                        centralImg.setImageDrawable(getApplicationContext().getResources().getDrawable(R.drawable.ic_light_walking_icon_active));
+                }
+                else if (centralImgPos[0] < selectorViewPos[0] - 50 && centralImgPos[0] > selectorViewPos[0] + 50)
+                {
+                    Integer newK1 = null;
+
+                    if (centralImgPos[0] < selectorViewPos[0] - 50)
+                        newK1 = ((LinearLayoutManager) layoutManager).findFirstVisibleItemPosition();
+                    if (centralImgPos[0] > selectorViewPos[0] + 50)
+                        newK1 = ((LinearLayoutManager) layoutManager).findLastVisibleItemPosition();
+
+                    ImageView switchImg = layoutManager.findViewByPosition(newK1).findViewById(R.id.iv_ri_pic);
+
+                    if (switchImg.getDrawable().equals(getApplicationContext().getResources().getDrawable(R.drawable.ic_light_bicycling_icon_active)))
+                        switchImg.setImageDrawable(getApplicationContext().getResources().getDrawable(R.drawable.ic_light_bicycling_icon_inactive));
+                    else if (switchImg.getTag().equals(R.drawable.ic_light_running_icon_active))
+                        switchImg.setImageDrawable(getApplicationContext().getResources().getDrawable(R.drawable.ic_light_running_icon_inactive));
+                    else if (switchImg.getTag().equals(R.drawable.ic_light_walking_icon_active))
+                        switchImg.setImageDrawable(getApplicationContext().getResources().getDrawable(R.drawable.ic_light_walking_icon));
+
+
+                }
             }
         });
     }
@@ -295,4 +341,5 @@ public class GetGoingActivity extends AppCompatActivity implements
             return String.format(DEFAULT_PATTERN, (int) ((float) progress / (float) max * 100));
         }
     }
+
 }
