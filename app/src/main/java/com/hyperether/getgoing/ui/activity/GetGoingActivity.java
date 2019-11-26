@@ -12,6 +12,7 @@ import android.util.DisplayMetrics;
 import android.util.SparseIntArray;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -34,6 +35,7 @@ import com.hyperether.getgoing.manager.CacheManager;
 import com.hyperether.getgoing.model.CBDataFrame;
 import com.hyperether.getgoing.ui.CurvedBottomView;
 import com.hyperether.getgoing.ui.adapter.HorizontalListAdapter;
+import com.hyperether.getgoing.ui.fragment.ActivitiesFragment;
 import com.hyperether.getgoing.ui.fragment.ProfileFragment;
 import com.hyperether.getgoing.ui.fragment.SettingsFragment;
 import com.hyperether.getgoing.util.Constants;
@@ -53,7 +55,7 @@ public class GetGoingActivity extends AppCompatActivity implements
     //private static final int IMPERIAL = 1;
     //private static final int US = 2;
 
-    public static boolean DRAW_INACTIVE_DRAWABLE = false;
+    public static float ratio = (float) 0.0;
 
     private ActivityMainBinding mBinding;
     private CBDataFrame cbDataFrameLocal;
@@ -81,6 +83,7 @@ public class GetGoingActivity extends AppCompatActivity implements
 
         initScreenDimen();
         initRecyclerView();
+        initListeners();
         initProgressBars();
 
         ActivityCompat.requestPermissions(this, new String[]{
@@ -214,6 +217,23 @@ public class GetGoingActivity extends AppCompatActivity implements
 
         snapHelper = new LinearSnapHelper();
         snapHelper.attachToRecyclerView(recyclerView);
+    }
+
+    @Deprecated
+    private void initListeners()
+    {
+        ImageView ib_am_user = findViewById(R.id.ib_am_user);
+        ImageView iv_am_arrows = findViewById(R.id.iv_am_arrow2actfrag);
+
+        ib_am_user.setOnClickListener(view -> {
+            ProfileFragment profileFragment = ProfileFragment.newInstance(null);
+            profileFragment.show(getSupportFragmentManager(), "ProfileFragment");
+        });
+
+        iv_am_arrows.setOnClickListener(view -> {
+            ActivitiesFragment activitiesFragment = ActivitiesFragment.newInstance(null);
+            activitiesFragment.show(getSupportFragmentManager(), "ActivitiesFragment");
+        });
 
         recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener()
         {
@@ -312,11 +332,6 @@ public class GetGoingActivity extends AppCompatActivity implements
 
     private void initProgressBars()
     {
-        ImageView ib_am_user = findViewById(R.id.ib_am_user);
-        ib_am_user.setOnClickListener(view -> {
-            ProfileFragment profileFragment = ProfileFragment.newInstance(null);
-            profileFragment.show(getSupportFragmentManager(), "ProfileFragment");
-        });
         circleProgressBar = findViewById(R.id.cpb_am_kmgoal);
         circleProgressBar.setProgress(42);
     }
@@ -324,7 +339,7 @@ public class GetGoingActivity extends AppCompatActivity implements
     private void initScreenDimen()
     {
         DisplayMetrics metrics = getApplicationContext().getResources().getDisplayMetrics();
-        float ratio = (float)metrics.heightPixels / (float)metrics.widthPixels;
+        ratio = (float)metrics.heightPixels / (float)metrics.widthPixels;
 
         if (ratio >= 1.8)
         {
