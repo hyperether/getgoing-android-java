@@ -113,7 +113,7 @@
         <ImageView
             android:id="@+id/iv_am_bluerectangle"
             android:layout_width="match_parent"
-            android:layout_height="@dimen/blue_rectangle"
+            android:layout_height="0dp"
             android:layout_marginStart="16dp"
             android:layout_marginLeft="16dp"
             android:layout_marginTop="12dp"
@@ -121,6 +121,7 @@
             android:layout_marginRight="16dp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.0"
+            app:layout_constraintBottom_toTopOf="@+id/tv_am_choose"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/tv_am_lastexercise"
             app:srcCompat="@drawable/ic_blue_rectangle_custom" />
