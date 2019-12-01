@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" android:layout_width="300dp"
+    android:layout_height="150dp"
+    android:background="@color/color_background_dialog">
+
+    <TextView
+        android:id="@+id/dialog_title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/select_your_gender"
+        android:textSize="18sp"
+        android:textColor="@color/mat_gray"
+        android:padding="8dp"/>
+
+    <RadioGroup
+        android:id="@+id/dialog_radiogroup"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
+        android:orientation="horizontal"
+        android:visibility="gone">
+
+        <RadioButton
+            android:id="@+id/dialog_rb_male"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="@string/male"
+            android:textSize="16sp"/>
+
+        <RadioButton
+            android:id="@+id/dialog_rb_female"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="@string/female"
+            android:textSize="16sp"/>
+
+        <RadioButton
+            android:id="@+id/dialog_rb_other"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="@string/other"
+            android:textSize="16sp"/>
+
+    </RadioGroup>
+
+    <Spinner
+        android:id="@+id/dialog_spinner_age"
+        android:layout_width="match_parent"
+        android:layout_height="100dp"
+        android:layout_marginTop="20dp"
+        android:visibility="gone" />
+
+    <Spinner
+        android:id="@+id/dialog_spinner_height"
+        android:layout_width="match_parent"
+        android:layout_height="100dp"
+        android:layout_marginTop="20dp"
+        android:visibility="gone" />
+
+    <Spinner
+        android:id="@+id/dialog_spinner_weight"
+        android:layout_width="match_parent"
+        android:layout_height="100dp"
+        android:layout_marginTop="20dp"
+        android:visibility="gone" />
+
+</LinearLayout>

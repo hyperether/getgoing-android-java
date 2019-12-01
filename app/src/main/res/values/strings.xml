@@ -112,6 +112,10 @@
     <string name="kcal">kcal</string>
     <string name="running">Running</string>
     <string name="min">min</string>
+    <string name="male">Male</string>
+    <string name="female">Female</string>
+    <string name="other">Other</string>
+    <string name="select_your_gender">Select your gender:</string>
 
 </resources>
 
