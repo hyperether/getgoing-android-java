@@ -4,6 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools">
 
     <data>
+
         <variable
             name="viewModel"
             type="com.hyperether.getgoing.ui.activity.GetGoingActivity.ClickHandler" />
@@ -113,12 +114,13 @@
         <ImageView
             android:id="@+id/iv_am_bluerectangle"
             android:layout_width="match_parent"
-            android:layout_height="@dimen/blue_rectangle"
+            android:layout_height="0dp"
             android:layout_marginStart="16dp"
             android:layout_marginLeft="16dp"
             android:layout_marginTop="12dp"
             android:layout_marginEnd="16dp"
             android:layout_marginRight="16dp"
+            app:layout_constraintBottom_toTopOf="@+id/tv_am_choose"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.0"
             app:layout_constraintStart_toStartOf="parent"
@@ -127,27 +129,25 @@
 
         <ImageView
             android:id="@+id/iv_am_circletransparent"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="155dp"
+            android:layout_height="155dp"
             android:layout_marginBottom="160dp"
+            android:src="@drawable/ic_circle"
             app:layout_constraintBottom_toBottomOf="@+id/customBottomBar"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintHorizontal_bias="0.5"
-            app:srcCompat="@drawable/ic_ellipse_5"
-            />
+            app:layout_constraintStart_toStartOf="parent" />
 
         <ImageView
             android:id="@+id/imageView2"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:elevation="5dp"
+            android:layout_width="135dp"
+            android:layout_height="135dp"
             android:layout_marginBottom="170dp"
+            android:elevation="5dp"
+            android:src="@drawable/ic_circle_white"
             app:layout_constraintBottom_toBottomOf="@+id/customBottomBar"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.5"
-            app:layout_constraintStart_toStartOf="parent"
-            app:srcCompat="@drawable/ic_ellipse_1" />
+            app:layout_constraintStart_toStartOf="parent" />
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/recyclerView"
@@ -171,9 +171,9 @@
             app:layout_constraintStart_toStartOf="@+id/iv_am_bluerectangle"
             app:layout_constraintTop_toTopOf="@+id/iv_am_bluerectangle"
             app:layout_constraintVertical_bias="0.478"
+            app:progress_end_color="@android:color/white"
             app:progress_shader="sweep"
             app:progress_start_color="@android:color/white"
-            app:progress_end_color="@android:color/white"
             app:progress_stroke_width="5dp"
             app:progress_text_color="@android:color/white"
             app:progress_text_size="18sp"
@@ -191,9 +191,9 @@
             app:layout_constraintTop_toTopOf="@+id/iv_am_bluerectangle"
             app:layout_constraintVertical_bias="0.478"
             app:line_count="12"
+            app:progress_end_color="@android:color/white"
             app:progress_shader="sweep"
             app:progress_start_color="@android:color/white"
-            app:progress_end_color="@android:color/white"
             app:progress_stroke_width="3dp"
             app:progress_text_color="@android:color/white"
             app:progress_text_size="18sp"
@@ -285,9 +285,9 @@
             android:background="@drawable/ic_button_layout"
             android:text="@string/get_ready"
             android:textAlignment="center"
+            android:textAllCaps="false"
             android:textColor="@android:color/white"
             android:textSize="18sp"
-            android:textAllCaps="false"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.505"
