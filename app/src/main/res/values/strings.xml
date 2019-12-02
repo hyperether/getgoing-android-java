@@ -93,6 +93,8 @@
     <string name="chart_label_walk">Walk</string>
     <string name="chart_label_run">Run</string>
     <string name="chart_label_ride">Ride</string>
+
+    <!-- new strings -->
     <string name="my_profile">My profile</string>
     <string name="my_data">MY DATA</string>
     <string name="placeholder_male">Male</string>
@@ -116,6 +118,10 @@
     <string name="female">Female</string>
     <string name="other">Other</string>
     <string name="select_your_gender">Select your gender:</string>
+    <string name="how_old_are_you">How old are you?</string>
+    <string name="how_tall_are_you">How tall are you?</string>
+    <string name="enter_your_weight">Enter your weight:</string>
+    <string name="textview_age_end">" years"</string>
 
 </resources>
 
