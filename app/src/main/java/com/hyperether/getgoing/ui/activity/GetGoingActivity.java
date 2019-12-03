@@ -6,24 +6,23 @@ import android.app.Activity;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
-import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.util.DisplayMetrics;
 import android.util.SparseIntArray;
+import android.view.Gravity;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.core.app.ActivityCompat;
 import androidx.databinding.DataBindingUtil;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.LinearSnapHelper;
 import androidx.recyclerview.widget.OrientationHelper;
+import androidx.recyclerview.widget.PagerSnapHelper;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.recyclerview.widget.SnapHelper;
 
@@ -33,18 +32,16 @@ import com.hyperether.getgoing.R;
 import com.hyperether.getgoing.databinding.ActivityMainBinding;
 import com.hyperether.getgoing.manager.CacheManager;
 import com.hyperether.getgoing.model.CBDataFrame;
-import com.hyperether.getgoing.ui.CurvedBottomView;
 import com.hyperether.getgoing.ui.adapter.HorizontalListAdapter;
 import com.hyperether.getgoing.ui.fragment.ActivitiesFragment;
-import com.hyperether.getgoing.ui.fragment.ProfileFragment;
-import com.hyperether.getgoing.ui.fragment.SettingsFragment;
+import com.hyperether.getgoing.ui.fragment.old.ProfileFragment;
+import com.hyperether.getgoing.ui.fragment.old.SettingsFragment;
 import com.hyperether.getgoing.util.Constants;
-
-import java.util.ArrayList;
+import com.hyperether.getgoing.util.GravitySnapHelper;
 
 import io.fabric.sdk.android.Fabric;
 
-import static com.hyperether.getgoing.ui.fragment.SettingsFragment.DATA_KEY;
+import static com.hyperether.getgoing.ui.fragment.old.SettingsFragment.DATA_KEY;
 
 public class GetGoingActivity extends AppCompatActivity implements
         SettingsFragment.SettingsFragmentListener {
@@ -67,8 +64,11 @@ public class GetGoingActivity extends AppCompatActivity implements
     private HorizontalListAdapter mAdapter;
     private ImageView blueRectangle;
     private ImageView selectorView;
+    private ImageView selectorViewTransparent;
+    private ImageView blueRecActivity;
     private TextView blueSentence;
     private TextView actLabel;
+    private View curvedBottomView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -80,6 +80,9 @@ public class GetGoingActivity extends AppCompatActivity implements
         mBinding.setViewModel(new ClickHandler());
 
         actLabel = findViewById(R.id.tv_ma_mainact);
+        selectorView = findViewById(R.id.imageView2);
+        selectorViewTransparent = findViewById(R.id.iv_am_circletransparent);
+        circleProgressBar = findViewById(R.id.cpb_am_kmgoal);
 
         initScreenDimen();
         initRecyclerView();
@@ -198,11 +201,10 @@ public class GetGoingActivity extends AppCompatActivity implements
     private void initRecyclerView()
     {
         recyclerView = findViewById(R.id.recyclerView);
-        selectorView = findViewById(R.id.imageView2);
         recyclerView.setHasFixedSize(true);
 
         layoutManager = new LinearLayoutManager(this);
-        ((LinearLayoutManager) layoutManager).setOrientation(OrientationHelper.HORIZONTAL);
+        ((LinearLayoutManager) layoutManager).setOrientation(RecyclerView.HORIZONTAL);
         recyclerView.setLayoutManager(layoutManager);
 
         SparseIntArray DRAWABLE_MAP = new SparseIntArray();
@@ -213,10 +215,12 @@ public class GetGoingActivity extends AppCompatActivity implements
         mAdapter = new HorizontalListAdapter(DRAWABLE_MAP, getApplicationContext());
         recyclerView.setAdapter(mAdapter);
 
-        ((LinearLayoutManager) layoutManager).scrollToPositionWithOffset(layoutManager.getItemCount() / 2, -20);
+        //((LinearLayoutManager) layoutManager).scrollToPositionWithOffset(layoutManager.getItemCount() / 2, 0);
 
         snapHelper = new LinearSnapHelper();
         snapHelper.attachToRecyclerView(recyclerView);
+
+        layoutManager.scrollToPosition(layoutManager.getItemCount() / 2);
     }
 
     @Deprecated
@@ -262,7 +266,9 @@ public class GetGoingActivity extends AppCompatActivity implements
                     selectorView.getLocationOnScreen(selectorViewPos);
                 }
 
-                if (centralImgPos[0] > selectorViewPos[0] - 50 && centralImgPos[0] < selectorViewPos[0] + 50)
+                int centralImgWidthParam = centralImg.getLayoutParams().width / 2;
+
+                if (centralImgPos[0] > selectorViewPos[0] - centralImgWidthParam && centralImgPos[0] < selectorViewPos[0] + centralImgWidthParam)
                 {
                     if (centralImg.getTag().equals(R.drawable.ic_light_bicycling_icon_inactive))
                     {
@@ -332,7 +338,6 @@ public class GetGoingActivity extends AppCompatActivity implements
 
     private void initProgressBars()
     {
-        circleProgressBar = findViewById(R.id.cpb_am_kmgoal);
         circleProgressBar.setProgress(42);
     }
 
@@ -341,12 +346,31 @@ public class GetGoingActivity extends AppCompatActivity implements
         DisplayMetrics metrics = getApplicationContext().getResources().getDisplayMetrics();
         ratio = (float)metrics.heightPixels / (float)metrics.widthPixels;
 
+        curvedBottomView = findViewById(R.id.customBottomBar);
+        blueRectangle = findViewById(R.id.iv_am_bluerectangle);
+        blueSentence = findViewById(R.id.tv_am_burn);
+        blueRecActivity = findViewById(R.id.iv_am_activity);
+
+//        blueRectangle.getLayoutParams().height = (int) (circleProgressBar.getLayoutParams().height + circleProgressBar.getLayoutParams().height * 0.2);
+//        curvedBottomView.getLayoutParams().height = (int) (metrics.heightPixels * 0.2);
+//
+//        ViewGroup.MarginLayoutParams activityLabelParams = (ViewGroup.MarginLayoutParams) actLabel.getLayoutParams();
+//        activityLabelParams.bottomMargin = (int) (curvedBottomView.getLayoutParams().height * 0.1);
+//        actLabel.setLayoutParams(activityLabelParams);
+//
+//        ViewGroup.MarginLayoutParams selViewTransParams = (ViewGroup.MarginLayoutParams) selectorViewTransparent.getLayoutParams();
+//        selViewTransParams.bottomMargin = (int) (curvedBottomView.getLayoutParams().height - curvedBottomView.getLayoutParams().height * 0.15);
+//        selectorViewTransparent.setLayoutParams(selViewTransParams);
+//
+//        ViewGroup.MarginLayoutParams blueRecActivityParams = (ViewGroup.MarginLayoutParams) blueRecActivity.getLayoutParams();
+//        blueRecActivityParams.topMargin = (int) (circleProgressBar.getLayoutParams().height * 0.15);
+//        blueRecActivity.setLayoutParams(blueRecActivityParams);
+
         if (ratio >= 1.8)
         {
-            blueRectangle = findViewById(R.id.iv_am_bluerectangle);
-            blueSentence = findViewById(R.id.tv_am_burn);
             ViewGroup.MarginLayoutParams params = (ViewGroup.MarginLayoutParams) blueSentence.getLayoutParams();
 
+            blueRectangle.getLayoutParams().height = (int) (circleProgressBar.getLayoutParams().height + circleProgressBar.getLayoutParams().height * 0.3);
             blueRectangle.getLayoutParams().height = 650;
             params.bottomMargin = 100;
             blueSentence.setLayoutParams(params);

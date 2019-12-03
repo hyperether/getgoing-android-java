@@ -45,10 +45,10 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="19dp"
             android:layout_marginLeft="19dp"
-            android:layout_marginTop="16dp"
+            android:layout_marginTop="8dp"
             android:text="@string/last_exercise"
             android:textColor="@color/mat_gray"
-            android:textSize="24sp"
+            android:textSize="22sp"
             android:textStyle="bold"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/iv_am_logo" />
@@ -73,7 +73,7 @@
             android:layout_marginRight="4dp"
             android:text="@string/view_all"
             android:textColor="@color/light_theme_accent"
-            android:textSize="20sp"
+            android:textSize="18sp"
             app:layout_constraintBottom_toBottomOf="@+id/tv_am_lastexercise"
             app:layout_constraintEnd_toStartOf="@+id/iv_am_arrow2actfrag"
             app:layout_constraintTop_toTopOf="@+id/tv_am_lastexercise" />
@@ -86,7 +86,7 @@
             android:layout_marginLeft="16dp"
             android:text="@string/choose_your_exercise"
             android:textColor="@color/mat_gray"
-            android:textSize="26sp"
+            android:textSize="22sp"
             android:textStyle="bold"
             app:layout_constraintBottom_toTopOf="@+id/tv_am_burn"
             app:layout_constraintStart_toStartOf="parent" />
@@ -97,7 +97,7 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="16dp"
             android:layout_marginLeft="16dp"
-            android:layout_marginBottom="24dp"
+            android:layout_marginBottom="16dp"
             android:text="@string/can_we_burn_our_legs"
             android:textColor="@color/light_theme_accent"
             android:textSize="16sp"
@@ -109,29 +109,28 @@
             android:layout_width="match_parent"
             android:layout_height="@dimen/curved_bottom_bar"
             app:layout_constraintBottom_toBottomOf="parent"
-            tools:layout_editor_absoluteX="0dp" />
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent" />
 
         <ImageView
             android:id="@+id/iv_am_bluerectangle"
             android:layout_width="match_parent"
-            android:layout_height="0dp"
+            android:layout_height="160dp"
             android:layout_marginStart="16dp"
             android:layout_marginLeft="16dp"
-            android:layout_marginTop="12dp"
+            android:layout_marginTop="8dp"
             android:layout_marginEnd="16dp"
             android:layout_marginRight="16dp"
-            app:layout_constraintBottom_toTopOf="@+id/tv_am_choose"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.0"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/tv_am_lastexercise"
             app:srcCompat="@drawable/ic_blue_rectangle_custom" />
 
         <ImageView
             android:id="@+id/iv_am_circletransparent"
-            android:layout_width="155dp"
-            android:layout_height="155dp"
-            android:layout_marginBottom="160dp"
+            android:layout_width="120dp"
+            android:layout_height="120dp"
+            android:layout_marginBottom="130dp"
             android:src="@drawable/ic_circle"
             app:layout_constraintBottom_toBottomOf="@+id/customBottomBar"
             app:layout_constraintEnd_toEndOf="parent"
@@ -139,20 +138,19 @@
 
         <ImageView
             android:id="@+id/imageView2"
-            android:layout_width="135dp"
-            android:layout_height="135dp"
-            android:layout_marginBottom="170dp"
+            android:layout_width="100dp"
+            android:layout_height="100dp"
             android:elevation="5dp"
             android:src="@drawable/ic_circle_white"
-            app:layout_constraintBottom_toBottomOf="@+id/customBottomBar"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.5"
-            app:layout_constraintStart_toStartOf="parent" />
+            app:layout_constraintBottom_toBottomOf="@+id/iv_am_circletransparent"
+            app:layout_constraintEnd_toEndOf="@+id/iv_am_circletransparent"
+            app:layout_constraintStart_toStartOf="@+id/iv_am_circletransparent"
+            app:layout_constraintTop_toTopOf="@+id/iv_am_circletransparent" />
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/recyclerView"
             android:layout_width="match_parent"
-            android:layout_height="80dp"
+            android:layout_height="50dp"
             android:elevation="10dp"
             android:orientation="horizontal"
             app:layout_constraintBottom_toBottomOf="@+id/imageView2"
@@ -162,10 +160,10 @@
 
         <com.dinuscxj.progressbar.CircleProgressBar
             android:id="@+id/cpb_am_kmgoal"
-            android:layout_width="130dp"
-            android:layout_height="130dp"
-            android:layout_marginStart="24dp"
-            android:layout_marginLeft="24dp"
+            android:layout_width="115dp"
+            android:layout_height="115dp"
+            android:layout_marginStart="16dp"
+            android:layout_marginLeft="16dp"
             android:background="@android:color/transparent"
             app:layout_constraintBottom_toBottomOf="@+id/iv_am_bluerectangle"
             app:layout_constraintStart_toStartOf="@+id/iv_am_bluerectangle"
@@ -181,10 +179,10 @@
 
         <com.dinuscxj.progressbar.CircleProgressBar
             android:id="@+id/cpb_am_kmgoal1"
-            android:layout_width="130dp"
-            android:layout_height="130dp"
-            android:layout_marginEnd="24dp"
-            android:layout_marginRight="24dp"
+            android:layout_width="115dp"
+            android:layout_height="115dp"
+            android:layout_marginEnd="16dp"
+            android:layout_marginRight="16dp"
             android:background="@android:color/transparent"
             app:layout_constraintBottom_toBottomOf="@+id/iv_am_bluerectangle"
             app:layout_constraintEnd_toEndOf="@+id/iv_am_bluerectangle"
@@ -210,7 +208,7 @@
             android:layout_marginBottom="48dp"
             android:text="@string/kcal"
             android:textColor="@android:color/white"
-            android:textSize="22sp"
+            android:textSize="18sp"
             app:layout_constraintBottom_toTopOf="@+id/tv_am_kcalval"
             app:layout_constraintEnd_toStartOf="@+id/cpb_am_kmgoal1"
             app:layout_constraintStart_toEndOf="@+id/cpb_am_kmgoal"
@@ -227,7 +225,7 @@
             android:layout_marginRight="8dp"
             android:text="165"
             android:textColor="@android:color/white"
-            android:textSize="22sp"
+            android:textSize="18sp"
             android:textStyle="bold"
             app:layout_constraintBottom_toBottomOf="@+id/iv_am_bluerectangle"
             app:layout_constraintEnd_toStartOf="@+id/cpb_am_kmgoal1"
@@ -238,30 +236,30 @@
             android:id="@+id/tv_am_progbar_act"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="24dp"
+            android:layout_marginTop="32dp"
             android:text="@string/running"
             android:textColor="@android:color/white"
             android:textSize="14sp"
-            app:layout_constraintBottom_toBottomOf="@+id/cpb_am_kmgoal"
             app:layout_constraintEnd_toEndOf="@+id/cpb_am_kmgoal"
-            app:layout_constraintStart_toStartOf="@+id/cpb_am_kmgoal" />
+            app:layout_constraintStart_toStartOf="@+id/cpb_am_kmgoal"
+            app:layout_constraintTop_toBottomOf="@+id/iv_am_activity" />
 
         <TextView
             android:id="@+id/tv_am_progbar_time"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="24dp"
+            android:layout_marginTop="32dp"
             android:text="@string/min"
             android:textColor="@android:color/white"
-            app:layout_constraintBottom_toBottomOf="@+id/cpb_am_kmgoal1"
             app:layout_constraintEnd_toEndOf="@+id/cpb_am_kmgoal1"
-            app:layout_constraintStart_toStartOf="@+id/cpb_am_kmgoal1" />
+            app:layout_constraintStart_toStartOf="@+id/cpb_am_kmgoal1"
+            app:layout_constraintTop_toBottomOf="@+id/imageView5" />
 
         <ImageView
             android:id="@+id/iv_am_activity"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="16dp"
+            android:layout_height="0dp"
+            android:layout_marginTop="20dp"
             app:layout_constraintEnd_toEndOf="@+id/cpb_am_kmgoal"
             app:layout_constraintStart_toStartOf="@+id/cpb_am_kmgoal"
             app:layout_constraintTop_toTopOf="@+id/cpb_am_kmgoal"
@@ -270,8 +268,8 @@
         <ImageView
             android:id="@+id/imageView5"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="16dp"
+            android:layout_height="0dp"
+            android:layout_marginTop="20dp"
             app:layout_constraintEnd_toEndOf="@+id/cpb_am_kmgoal1"
             app:layout_constraintStart_toStartOf="@+id/cpb_am_kmgoal1"
             app:layout_constraintTop_toTopOf="@+id/cpb_am_kmgoal1"
@@ -301,10 +299,10 @@
             android:layout_marginLeft="8dp"
             android:layout_marginEnd="8dp"
             android:layout_marginRight="8dp"
-            android:layout_marginBottom="40dp"
+            android:layout_marginBottom="15dp"
             android:text="@string/placeholder_running"
             android:textColor="@color/black"
-            android:textSize="24sp"
+            android:textSize="20sp"
             app:layout_constraintBottom_toTopOf="@+id/materialButton"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent" />

@@ -1,4 +1,4 @@
-package com.hyperether.getgoing.ui.fragment;
+package com.hyperether.getgoing.ui.fragment.old;
 
 import android.app.Fragment;
 import android.content.Context;
@@ -11,14 +11,11 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemSelectedListener;
-import android.widget.ArrayAdapter;
 import android.widget.ImageButton;
 import android.widget.NumberPicker;
 import android.widget.Spinner;
 
-import com.hyperether.getgoing.R;
 import com.hyperether.getgoing.model.CBDataFrame;
-import com.hyperether.getgoing.util.Constants;
 
 public class SettingsFragment extends Fragment implements OnItemSelectedListener {
 

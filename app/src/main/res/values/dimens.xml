@@ -70,6 +70,6 @@
     <dimen name="route_img_size">30dp</dimen>
 
     <!-- New UI dimensions -->
-    <dimen name="curved_bottom_bar">180dp</dimen>
+    <dimen name="curved_bottom_bar">140dp</dimen>
     <dimen name="blue_rectangle">200dp</dimen>
 </resources>

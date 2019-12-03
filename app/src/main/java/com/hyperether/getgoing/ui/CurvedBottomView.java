@@ -19,7 +19,7 @@ public class CurvedBottomView extends View {
     private int mNavBarWidth;
     private int mNavBarHeight;
 
-    private final int BUTTON_CURVE_RADIUS = 300 / 2;
+    private final int BUTTON_CURVE_RADIUS = 110;
 
     private Point mFirstCurveStart = new Point();
     private Point mFirstCurveEnd = new Point();
