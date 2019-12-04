@@ -7,6 +7,7 @@ import android.util.DisplayMetrics;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.SeekBar;
 import android.widget.TextView;
@@ -32,6 +33,7 @@ public class ActivitiesFragment extends DialogFragment
     private TextView goal;
     private SeekBar seekBar;
     private TextView low, medium, high;
+    private ImageButton backBtn;
 
     public static ActivitiesFragment newInstance(CBDataFrame dataFrame) {
         ActivitiesFragment activitiesFragment = new ActivitiesFragment();
@@ -122,6 +124,7 @@ public class ActivitiesFragment extends DialogFragment
     private void initListeners()
     {
         goal = getView().findViewById(R.id.tv_fa_goal);
+        backBtn = getView().findViewById(R.id.ib_fa_back);
 
         seekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
             @Override
@@ -155,6 +158,7 @@ public class ActivitiesFragment extends DialogFragment
         low.setOnClickListener(view -> seekBar.setProgress(CONST_LOW));
         medium.setOnClickListener(view -> seekBar.setProgress(CONST_MEDIUM));
         high.setOnClickListener(view -> seekBar.setProgress(CONST_HIGH));
+        backBtn.setOnClickListener(view -> this.getDialog().dismiss());
 
     }
 

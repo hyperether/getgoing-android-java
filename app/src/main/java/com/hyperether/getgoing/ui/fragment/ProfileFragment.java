@@ -1,4 +1,4 @@
-package com.hyperether.getgoing.ui.fragment.old;
+package com.hyperether.getgoing.ui.fragment;
 
 import android.app.AlertDialog;
 import android.app.Dialog;

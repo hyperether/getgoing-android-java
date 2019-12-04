@@ -1,7 +1,6 @@
 package com.hyperether.getgoing.ui.adapter;
 
 import android.content.Context;
-import android.graphics.drawable.Drawable;
 import android.os.Build;
 import android.util.SparseIntArray;
 import android.view.LayoutInflater;
@@ -13,6 +12,7 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.hyperether.getgoing.R;
+import com.hyperether.getgoing.util.Conversion;
 
 public class HorizontalListAdapter extends RecyclerView.Adapter<HorizontalListAdapter.ViewHolder> {
     private SparseIntArray imgList;
@@ -31,7 +31,16 @@ public class HorizontalListAdapter extends RecyclerView.Adapter<HorizontalListAd
     @NonNull
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View view = mInflater.inflate(R.layout.hlist_row_item, parent, false);
+        View view = null;
+        float screenwidth = Conversion.convertPixelToDp(mContext, mContext.getResources().getDisplayMetrics().widthPixels);
+
+        if (screenwidth == 360)
+            view = mInflater.inflate(R.layout.hlist_row_item_360, parent, false);
+        else if (screenwidth >= 410 && screenwidth <= 412)
+            view = mInflater.inflate(R.layout.hlist_row_item_410, parent, false);
+        else if (screenwidth >= 455 && screenwidth <= 462)
+            view = mInflater.inflate(R.layout.hlist_row_item_460, parent, false);
+
         return new ViewHolder(view);
     }
 

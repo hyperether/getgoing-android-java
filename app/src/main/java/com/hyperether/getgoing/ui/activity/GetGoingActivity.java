@@ -9,7 +9,6 @@ import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.util.DisplayMetrics;
 import android.util.SparseIntArray;
-import android.view.Gravity;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
@@ -21,8 +20,6 @@ import androidx.core.app.ActivityCompat;
 import androidx.databinding.DataBindingUtil;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.LinearSnapHelper;
-import androidx.recyclerview.widget.OrientationHelper;
-import androidx.recyclerview.widget.PagerSnapHelper;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.recyclerview.widget.SnapHelper;
 
@@ -34,10 +31,10 @@ import com.hyperether.getgoing.manager.CacheManager;
 import com.hyperether.getgoing.model.CBDataFrame;
 import com.hyperether.getgoing.ui.adapter.HorizontalListAdapter;
 import com.hyperether.getgoing.ui.fragment.ActivitiesFragment;
-import com.hyperether.getgoing.ui.fragment.old.ProfileFragment;
+import com.hyperether.getgoing.ui.fragment.ProfileFragment;
 import com.hyperether.getgoing.ui.fragment.old.SettingsFragment;
 import com.hyperether.getgoing.util.Constants;
-import com.hyperether.getgoing.util.GravitySnapHelper;
+import com.hyperether.getgoing.util.Conversion;
 
 import io.fabric.sdk.android.Fabric;
 
@@ -215,12 +212,13 @@ public class GetGoingActivity extends AppCompatActivity implements
         mAdapter = new HorizontalListAdapter(DRAWABLE_MAP, getApplicationContext());
         recyclerView.setAdapter(mAdapter);
 
-        //((LinearLayoutManager) layoutManager).scrollToPositionWithOffset(layoutManager.getItemCount() / 2, 0);
+        //((LinearLayoutManager) layoutManager).scrollToPositionWithOffset(15, 0);
 
         snapHelper = new LinearSnapHelper();
         snapHelper.attachToRecyclerView(recyclerView);
 
-        layoutManager.scrollToPosition(layoutManager.getItemCount() / 2);
+        float screenwidth = Conversion.convertPixelToDp(this, getApplicationContext().getResources().getDisplayMetrics().widthPixels);
+        ((LinearLayoutManager) layoutManager).scrollToPositionWithOffset(layoutManager.getItemCount() / 2, /*(- Conversion.convertDpToPixel(50, this)) / 2*/-1);
     }
 
     @Deprecated
@@ -350,21 +348,6 @@ public class GetGoingActivity extends AppCompatActivity implements
         blueRectangle = findViewById(R.id.iv_am_bluerectangle);
         blueSentence = findViewById(R.id.tv_am_burn);
         blueRecActivity = findViewById(R.id.iv_am_activity);
-
-//        blueRectangle.getLayoutParams().height = (int) (circleProgressBar.getLayoutParams().height + circleProgressBar.getLayoutParams().height * 0.2);
-//        curvedBottomView.getLayoutParams().height = (int) (metrics.heightPixels * 0.2);
-//
-//        ViewGroup.MarginLayoutParams activityLabelParams = (ViewGroup.MarginLayoutParams) actLabel.getLayoutParams();
-//        activityLabelParams.bottomMargin = (int) (curvedBottomView.getLayoutParams().height * 0.1);
-//        actLabel.setLayoutParams(activityLabelParams);
-//
-//        ViewGroup.MarginLayoutParams selViewTransParams = (ViewGroup.MarginLayoutParams) selectorViewTransparent.getLayoutParams();
-//        selViewTransParams.bottomMargin = (int) (curvedBottomView.getLayoutParams().height - curvedBottomView.getLayoutParams().height * 0.15);
-//        selectorViewTransparent.setLayoutParams(selViewTransParams);
-//
-//        ViewGroup.MarginLayoutParams blueRecActivityParams = (ViewGroup.MarginLayoutParams) blueRecActivity.getLayoutParams();
-//        blueRecActivityParams.topMargin = (int) (circleProgressBar.getLayoutParams().height * 0.15);
-//        blueRecActivity.setLayoutParams(blueRecActivityParams);
 
         if (ratio >= 1.8)
         {
