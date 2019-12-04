@@ -18,6 +18,9 @@ import androidx.fragment.app.DialogFragment;
 
 import com.hyperether.getgoing.R;
 import com.hyperether.getgoing.model.CBDataFrame;
+import com.hyperether.getgoing.ui.activity.GetGoingActivity;
+import com.hyperether.getgoing.util.CaloriesCalculation;
+import com.hyperether.getgoing.util.Constants;
 
 import static com.hyperether.getgoing.ui.activity.GetGoingActivity.ratio;
 
@@ -25,14 +28,13 @@ public class ActivitiesFragment extends DialogFragment
 {
     public static final String DATA_KEY = "data_key";
 
-    public static final int CONST_LOW = 2500;
-    public static final int CONST_MEDIUM = 5000;
-    public static final int CONST_HIGH = 7500;
+
 
     private View whiteView;
     private TextView goal;
     private SeekBar seekBar;
     private TextView low, medium, high;
+    private TextView minutesRunning, minutesWalking, minutesCycling, kcal;
     private ImageButton backBtn;
 
     public static ActivitiesFragment newInstance(CBDataFrame dataFrame) {
@@ -63,6 +65,11 @@ public class ActivitiesFragment extends DialogFragment
         super.onStart();
 
         seekBar = getView().findViewById(R.id.seekBar);
+        goal = getView().findViewById(R.id.tv_fa_goal);
+        minutesWalking = getView().findViewById(R.id.tv_fa_minutes);
+        minutesRunning = getView().findViewById(R.id.tv_fa_min2);
+        minutesCycling = getView().findViewById(R.id.tv_fa_min3);
+        kcal = getView().findViewById(R.id.tv_fa_kcal);
 
         Dialog dialog = getDialog();
 
@@ -75,6 +82,7 @@ public class ActivitiesFragment extends DialogFragment
         }
 
         initScreenDimen();
+        initLabels();
         initProgressStringColor();
         initListeners();
     }
@@ -123,7 +131,6 @@ public class ActivitiesFragment extends DialogFragment
     @SuppressLint("SetTextI18n")
     private void initListeners()
     {
-        goal = getView().findViewById(R.id.tv_fa_goal);
         backBtn = getView().findViewById(R.id.ib_fa_back);
 
         seekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
@@ -146,6 +153,13 @@ public class ActivitiesFragment extends DialogFragment
                     medium.setTextColor(getResources().getColor(R.color.mat_gray));
                     high.setTextColor(getResources().getColor(R.color.light_theme_accent));
                 }
+
+                int[] timeEstimates = getTimeEstimates(i);
+
+                minutesWalking.setText(timeEstimates[0] + " min");
+                minutesRunning.setText(timeEstimates[1] + " min");
+                minutesCycling.setText(timeEstimates[2] + " min");
+                kcal.setText("About " + (int) (i * 0.00112 * GetGoingActivity.getUserWeight()) + "kcal");
             }
 
             @Override
@@ -155,11 +169,34 @@ public class ActivitiesFragment extends DialogFragment
             public void onStopTrackingTouch(SeekBar seekBar) {}
         });
 
-        low.setOnClickListener(view -> seekBar.setProgress(CONST_LOW));
-        medium.setOnClickListener(view -> seekBar.setProgress(CONST_MEDIUM));
-        high.setOnClickListener(view -> seekBar.setProgress(CONST_HIGH));
+        low.setOnClickListener(view -> seekBar.setProgress(Constants.CONST_LOW_DIST));
+        medium.setOnClickListener(view -> seekBar.setProgress(Constants.CONST_MEDIUM_DIST));
+        high.setOnClickListener(view -> seekBar.setProgress(Constants.CONST_HIGH_DIST));
         backBtn.setOnClickListener(view -> this.getDialog().dismiss());
 
+    }
+
+    private int[] getTimeEstimates(int dist)
+    {
+        int[] returnValues = new int[3];
+
+        returnValues[0] = (int) (dist / (Constants.AVG_SPEED_WALK * 60));
+        returnValues[1] = (int) (dist / (Constants.AVG_SPEED_RUN * 60));
+        returnValues[2] = (int) (dist / (Constants.AVG_SPEED_CYCLING * 60));
+
+        return returnValues;
+    }
+
+    private void initLabels()
+    {
+        int progress = seekBar.getProgress();
+        int[] timeEstimates = getTimeEstimates(progress);
+
+        goal.setText(Integer.toString(progress));
+        minutesWalking.setText(timeEstimates[0] + " min");
+        minutesRunning.setText(timeEstimates[1] + " min");
+        minutesCycling.setText(timeEstimates[2] + " min");
+        kcal.setText("About " + (int) (progress * 0.00112 * GetGoingActivity.getUserWeight()) + "kcal");
     }
 
 }

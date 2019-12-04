@@ -8,6 +8,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.ImageButton;
+import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.Spinner;
 import android.widget.TextView;
@@ -18,6 +19,8 @@ import androidx.fragment.app.DialogFragment;
 
 import com.hyperether.getgoing.R;
 import com.hyperether.getgoing.model.CBDataFrame;
+import com.hyperether.getgoing.ui.activity.GetGoingActivity;
+import com.hyperether.getgoing.util.Constants;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -26,9 +29,10 @@ public class ProfileFragment extends DialogFragment {
 
     public static final String DATA_KEY = "data_key";
 
-    private ImageButton genderBtn, ageBtn, heightBtn, weightBtn;
+    private ImageButton genderBtn, ageBtn, heightBtn, weightBtn, backBtn;
     private TextView tvAge, tvGender, tvHeight, tvWeight;
     private RadioGroup radioGroup;
+    private RadioButton rbMale, rbFemale, rbOther;
 
     private CBDataFrame mDataFrame;
     private ViewGroup rootViewGroup;
@@ -65,6 +69,11 @@ public class ProfileFragment extends DialogFragment {
     public void onStart() {
         super.onStart();
 
+        tvGender = getView().findViewById(R.id.tv_fp_gender);
+        tvHeight = getView().findViewById(R.id.tv_fp_height);
+        tvAge = getView().findViewById(R.id.tv_fp_age);
+        tvWeight = getView().findViewById(R.id.tv_fp_weight);
+
         Dialog dialog = getDialog();
 
         if (dialog != null)
@@ -75,6 +84,7 @@ public class ProfileFragment extends DialogFragment {
             dialog.getWindow().setLayout(width, height);
         }
 
+        initLabels();
         initDialogs();
     }
 
@@ -84,6 +94,8 @@ public class ProfileFragment extends DialogFragment {
         ageBtn = getView().findViewById(R.id.ib_fp_age);
         weightBtn = getView().findViewById(R.id.ib_fp_weight);
         heightBtn = getView().findViewById(R.id.ib_fp_height);
+
+        backBtn = getView().findViewById(R.id.ib_fp_backbutton);
 
         genderBtn.setOnClickListener(view -> {
             String id = "gender";
@@ -116,6 +128,8 @@ public class ProfileFragment extends DialogFragment {
                 builder.show();
             }
         });
+
+        backBtn.setOnClickListener(view -> this.getDialog().dismiss());
     }
 
     private AlertDialog.Builder createDialog(String pID, View pView)
@@ -129,28 +143,56 @@ public class ProfileFragment extends DialogFragment {
         {
             case "gender":
             {
-                tvGender = getView().findViewById(R.id.tv_fp_gender);
-
                 genderBuilder = new AlertDialog.Builder(pView.getContext());
                 inflater = LayoutInflater.from(pView.getContext());
 
                 View toInflate = inflater.inflate(R.layout.alertdialog_gender, rootViewGroup);
                 radioGroup = toInflate.findViewById(R.id.dialog_radiogroup);
 
+                rbMale = radioGroup.findViewById(R.id.dialog_rb_male);
+                rbFemale = radioGroup.findViewById(R.id.dialog_rb_female);
+                rbOther = radioGroup.findViewById(R.id.dialog_rb_other);
+
+                if (GetGoingActivity.getGender().equals(Constants.gender.Male))
+                {
+                    rbMale.setChecked(true);
+                    rbFemale.setChecked(false);
+                    rbOther.setChecked(false);
+                }
+                else if (GetGoingActivity.getGender().equals(Constants.gender.Female))
+                {
+                    rbMale.setChecked(false);
+                    rbFemale.setChecked(true);
+                    rbOther.setChecked(false);
+                }
+                else if (GetGoingActivity.getGender().equals(Constants.gender.Other))
+                {
+                    rbMale.setChecked(false);
+                    rbFemale.setChecked(false);
+                    rbOther.setChecked(true);
+                }
+
+                int checkedID = radioGroup.getCheckedRadioButtonId();
+                View radioButton = radioGroup.findViewById(checkedID);
+                int index = radioGroup.indexOfChild(radioButton);
+
                 genderBuilder.setView(toInflate)
                         .setPositiveButton("Confirm", (dialogInterface, i) -> {
                             //TODO: add model field for gender
-                            int checkedID = radioGroup.getCheckedRadioButtonId();
-                            View radioButton = radioGroup.findViewById(checkedID);
-                            int index = radioGroup.indexOfChild(radioButton);
 
                             String newText;
-                            if (index == 0)
+                            if (index == 0){
                                 newText = "Male";
-                            else if (index == 1)
+                                GetGoingActivity.setGender(Constants.gender.Male);
+                            }
+                            else if (index == 1){
                                 newText = "Female";
-                            else
+                                GetGoingActivity.setGender(Constants.gender.Female);
+                            }
+                            else {
                                 newText = "Other";
+                                GetGoingActivity.setGender(Constants.gender.Other);
+                            }
 
                             tvGender.setText(newText);
                         })
@@ -160,8 +202,6 @@ public class ProfileFragment extends DialogFragment {
             }
             case "age":
             {
-                tvAge = getView().findViewById(R.id.tv_fp_age);
-
                 List ageList = new ArrayList<String>();
                 for (int i = 1; i <= 120; i++) {
                     ageList.add(Integer.toString(i));
@@ -176,10 +216,12 @@ public class ProfileFragment extends DialogFragment {
                 Spinner ageSpinner = toInflate.findViewById(R.id.dialog_spinner_age);
                 ArrayAdapter<String> adapter = new ArrayAdapter<String>(pView.getContext(), android.R.layout.simple_list_item_1, ageList);
                 ageSpinner.setAdapter(adapter);
+                ageSpinner.setSelection(GetGoingActivity.getUserAge()- 1);
 
                 ageBuilder.setPositiveButton("Confirm", (dialogInterface, i) -> {
 //                    mDataFrame.setAge(Integer.valueOf((String) ageSpinner.getSelectedItem())); //TODO: CHECK
                     tvAge.setText(ageSpinner.getSelectedItem() + getResources().getString(R.string.textview_age_end));
+                    GetGoingActivity.setUserAge(Integer.valueOf((String) ageSpinner.getSelectedItem()));
                 })
                         .setNegativeButton("Cancel", (dialogInterface, i) -> dialogInterface.cancel());
 
@@ -187,8 +229,6 @@ public class ProfileFragment extends DialogFragment {
             }
             case "weight":
             {
-                tvWeight = getView().findViewById(R.id.tv_fp_weight);
-
                 List weightList = new ArrayList<String>();
                 for (int i = 40; i <= 150; i++) {
                     weightList.add(Integer.toString(i));
@@ -203,10 +243,12 @@ public class ProfileFragment extends DialogFragment {
                 Spinner weightSpinner = toInflate.findViewById(R.id.dialog_spinner_weight);
                 ArrayAdapter<String> adapter = new ArrayAdapter<String>(pView.getContext(), android.R.layout.simple_list_item_1, weightList);
                 weightSpinner.setAdapter(adapter);
+                weightSpinner.setSelection(GetGoingActivity.getUserWeight() - 40);
 
                 weightBuilder.setPositiveButton("Confirm", (dialogInterface, i) -> {
                     //mDataFrame.setWeight(Integer.valueOf((String) weightSpinner.getSelectedItem())); //TODO: CHECK
                     tvWeight.setText(weightSpinner.getSelectedItem() + " kg");
+                    GetGoingActivity.setUserWeight(Integer.valueOf((String) weightSpinner.getSelectedItem())); //temp, prebaci na unos iz baze
                 })
                 .setNegativeButton("Cancel", (dialogInterface, i) -> dialogInterface.cancel());
 
@@ -214,8 +256,6 @@ public class ProfileFragment extends DialogFragment {
             }
             case "height":
             {
-                tvHeight = getView().findViewById(R.id.tv_fp_height);
-
                 List heightList = new ArrayList<String>();
                 for (int i = 110; i <= 250; i++) {
                     heightList.add(Integer.toString(i));
@@ -230,10 +270,12 @@ public class ProfileFragment extends DialogFragment {
                 Spinner heightSpinner = toInflate.findViewById(R.id.dialog_spinner_height);
                 ArrayAdapter<String> adapter = new ArrayAdapter<String>(pView.getContext(), android.R.layout.simple_list_item_1, heightList);
                 heightSpinner.setAdapter(adapter);
+                heightSpinner.setSelection(GetGoingActivity.getUserHeight() - 110);
 
                 heightBuilder.setPositiveButton("Confirm", (dialogInterface, i) -> {
                             //TODO: modify model
                     tvHeight.setText(heightSpinner.getSelectedItem() + " cm");
+                    GetGoingActivity.setUserHeight(Integer.valueOf((String) heightSpinner.getSelectedItem()));
                 })
                 .setNegativeButton("Cancel", (dialogInterface, i) -> dialogInterface.cancel());
 
@@ -242,5 +284,13 @@ public class ProfileFragment extends DialogFragment {
         }
 
         return null;
+    }
+
+    private void initLabels()
+    {
+        tvAge.setText(GetGoingActivity.getUserAge() + " years");
+        tvHeight.setText(GetGoingActivity.getUserHeight() + "cm");
+        tvWeight.setText(GetGoingActivity.getUserWeight() + "kg");
+        tvGender.setText(GetGoingActivity.getGender().name());
     }
 }

@@ -51,6 +51,12 @@ public class GetGoingActivity extends AppCompatActivity implements
 
     public static float ratio = (float) 0.0;
 
+    /*TEMPORARY USER DATA VARIABLES*/
+    private static int userWeight = 0;
+    private static int userHeight = 0;
+    private static int userAge = 0;
+    public static Constants.gender gender = Constants.gender.Male;
+
     private ActivityMainBinding mBinding;
     private CBDataFrame cbDataFrameLocal;
     private SnapHelper snapHelper;
@@ -226,6 +232,7 @@ public class GetGoingActivity extends AppCompatActivity implements
     {
         ImageView ib_am_user = findViewById(R.id.ib_am_user);
         ImageView iv_am_arrows = findViewById(R.id.iv_am_arrow2actfrag);
+        TextView tv_am_viewall = findViewById(R.id.tv_am_viewall);
 
         ib_am_user.setOnClickListener(view -> {
             ProfileFragment profileFragment = ProfileFragment.newInstance(null);
@@ -233,6 +240,11 @@ public class GetGoingActivity extends AppCompatActivity implements
         });
 
         iv_am_arrows.setOnClickListener(view -> {
+            ActivitiesFragment activitiesFragment = ActivitiesFragment.newInstance(null);
+            activitiesFragment.show(getSupportFragmentManager(), "ActivitiesFragment");
+        });
+
+        tv_am_viewall.setOnClickListener(view -> {
             ActivitiesFragment activitiesFragment = ActivitiesFragment.newInstance(null);
             activitiesFragment.show(getSupportFragmentManager(), "ActivitiesFragment");
         });
@@ -358,6 +370,38 @@ public class GetGoingActivity extends AppCompatActivity implements
             params.bottomMargin = 100;
             blueSentence.setLayoutParams(params);
         }
+    }
+
+    public static int getUserWeight() {
+        return userWeight;
+    }
+
+    public static void setUserWeight(int pUserWeight) {
+        userWeight = pUserWeight;
+    }
+
+    public static int getUserAge() {
+        return userAge;
+    }
+
+    public static void setUserAge(int pUserAge) {
+        userAge = pUserAge;
+    }
+
+    public static int getUserHeight() {
+        return userHeight;
+    }
+
+    public static void setUserHeight(int pUserHeight) {
+        userHeight = pUserHeight;
+    }
+
+    public static Constants.gender getGender() {
+        return gender;
+    }
+
+    public static void setGender(Constants.gender gender) {
+        GetGoingActivity.gender = gender;
     }
 
     @Override
