@@ -59,7 +59,7 @@
     </string-array>
 
     <!-- High accuracy mode alert dialog -->
-    <string name="alert_dialog_title">Enable devices\'s GPS</string>
+    <string name="alert_dialog_title">Enable device\'s GPS</string>
     <string name="alert_dialog_message">Turn on your device\'s GPS.</string>
     <string name="alert_dialog_positive_button">Settings</string>
     <string name="alert_dialog_negative_button">Cancel</string>
@@ -134,6 +134,8 @@
     <string name="gender_male">Male</string>
     <string name="gender_female">Female</string>
     <string name="gender_other">Other</string>
+    <string name="totalkm_0km">0km</string>
+    <string name="totalkcal_0kcal">0kcal</string>
 
 </resources>
 

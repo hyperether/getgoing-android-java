@@ -23,6 +23,8 @@ import androidx.fragment.app.DialogFragment;
 
 import com.hyperether.getgoing.R;
 import com.hyperether.getgoing.model.CBDataFrame;
+import com.hyperether.getgoing.repository.room.DbHelper;
+import com.hyperether.getgoing.repository.room.entity.DbRoute;
 import com.hyperether.getgoing.ui.activity.GetGoingActivity;
 import com.hyperether.getgoing.util.Constants;
 
@@ -69,7 +71,17 @@ public class ProfileFragment extends DialogFragment {
         View rootView = inflater.inflate(R.layout.fragment_profile, container, false);
         genderImg = rootView.findViewById(R.id.iv_fp_gender);
 
-        //genderImg.setImageDrawable();
+        int genderSel = settings.getInt("gender", 0);
+
+        if (genderSel == 0) {
+            genderImg.setImageDrawable(getResources().getDrawable(R.drawable.ic_gendersign_male));
+        }
+        else if (genderSel == 1) {
+            genderImg.setImageDrawable(getResources().getDrawable(R.drawable.ic_light_gender_female_icon));
+        }
+        else if (genderSel == 2) {
+            genderImg.setImageDrawable(getResources().getDrawable(R.drawable.ic_transgender));
+        }
 
         return rootView;
     }
@@ -94,6 +106,7 @@ public class ProfileFragment extends DialogFragment {
         }
 
         initLabels();
+        initTotals();
         initDialogs();
     }
 
@@ -172,7 +185,21 @@ public class ProfileFragment extends DialogFragment {
                     }
                     editor.apply();
                 })
-                .setPositiveButton("Confirm", (dialogInterface, i) -> tvGender.setText(newText[0]))
+                .setPositiveButton("Confirm", (dialogInterface, i) -> {
+                    tvGender.setText(newText[0]);
+
+                    switch (newText[0]) {
+                        case "Male":
+                            genderImg.setImageDrawable(getResources().getDrawable(R.drawable.ic_gendersign_male));
+                            break;
+                        case "Female":
+                            genderImg.setImageDrawable(getResources().getDrawable(R.drawable.ic_light_gender_female_icon));
+                            break;
+                        case "Other":
+                            genderImg.setImageDrawable(getResources().getDrawable(R.drawable.ic_transgender));
+                            break;
+                    }
+                })
                 .setNegativeButton("Cancel", (dialogInterface, i) -> dialogInterface.cancel());
 
                 return genderBuilder;
@@ -286,5 +313,27 @@ public class ProfileFragment extends DialogFragment {
         else if (gender == 2) {
             tvGender.setText(R.string.gender_other);
         }
+    }
+
+    private void initTotals()
+    {
+        List<DbRoute> routeList = new ArrayList<>();
+
+        DbHelper.getInstance(getContext()).getRoutes(routeList::addAll);
+
+        float totalRoute = 0;
+        int totalKcal = 0;
+
+        for (DbRoute route : routeList)
+        {
+            totalRoute += route.getLength();
+            totalKcal += route.getEnergy();
+        }
+
+        TextView totalMileage = getView().findViewById(R.id.tv_fp_mileage);
+        TextView totalCalories = getView().findViewById(R.id.tv_fp_calories);
+
+        totalMileage.setText(totalRoute + "km");
+        totalCalories.setText(totalKcal + "kcal");
     }
 }
