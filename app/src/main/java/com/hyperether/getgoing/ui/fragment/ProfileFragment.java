@@ -2,12 +2,16 @@ package com.hyperether.getgoing.ui.fragment;
 
 import android.app.AlertDialog;
 import android.app.Dialog;
+import android.content.DialogInterface;
+import android.content.SharedPreferences;
+import android.media.Image;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.Spinner;
@@ -31,12 +35,12 @@ public class ProfileFragment extends DialogFragment {
 
     private ImageButton genderBtn, ageBtn, heightBtn, weightBtn, backBtn;
     private TextView tvAge, tvGender, tvHeight, tvWeight;
-    private RadioGroup radioGroup;
-    private RadioButton rbMale, rbFemale, rbOther;
+    private ImageView genderImg;
 
     private CBDataFrame mDataFrame;
     private ViewGroup rootViewGroup;
 
+    private SharedPreferences settings;
 
     public ProfileFragment(CBDataFrame pDataFrame) {mDataFrame = pDataFrame;}
 
@@ -52,16 +56,21 @@ public class ProfileFragment extends DialogFragment {
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setStyle(DialogFragment.STYLE_NORMAL, R.style.FullScreenDialogStyle);
+
+        settings = getActivity().getSharedPreferences(Constants.PREF_FILE, 0);
     }
 
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         super.onCreateView(inflater, container, savedInstanceState);
-
         rootViewGroup = container;
 
         View rootView = inflater.inflate(R.layout.fragment_profile, container, false);
+        genderImg = rootView.findViewById(R.id.iv_fp_gender);
+
+        //genderImg.setImageDrawable();
+
         return rootView;
     }
 
@@ -144,59 +153,27 @@ public class ProfileFragment extends DialogFragment {
             case "gender":
             {
                 genderBuilder = new AlertDialog.Builder(pView.getContext());
-                inflater = LayoutInflater.from(pView.getContext());
+                final String[] newText = new String[1];
 
-                View toInflate = inflater.inflate(R.layout.alertdialog_gender, rootViewGroup);
-                radioGroup = toInflate.findViewById(R.id.dialog_radiogroup);
+                genderBuilder.setSingleChoiceItems(R.array.genders, settings.getInt("gender", 0), (dialog, which) -> {
+                    SharedPreferences.Editor editor = settings.edit();
 
-                rbMale = radioGroup.findViewById(R.id.dialog_rb_male);
-                rbFemale = radioGroup.findViewById(R.id.dialog_rb_female);
-                rbOther = radioGroup.findViewById(R.id.dialog_rb_other);
-
-                if (GetGoingActivity.getGender().equals(Constants.gender.Male))
-                {
-                    rbMale.setChecked(true);
-                    rbFemale.setChecked(false);
-                    rbOther.setChecked(false);
-                }
-                else if (GetGoingActivity.getGender().equals(Constants.gender.Female))
-                {
-                    rbMale.setChecked(false);
-                    rbFemale.setChecked(true);
-                    rbOther.setChecked(false);
-                }
-                else if (GetGoingActivity.getGender().equals(Constants.gender.Other))
-                {
-                    rbMale.setChecked(false);
-                    rbFemale.setChecked(false);
-                    rbOther.setChecked(true);
-                }
-
-                int checkedID = radioGroup.getCheckedRadioButtonId();
-                View radioButton = radioGroup.findViewById(checkedID);
-                int index = radioGroup.indexOfChild(radioButton);
-
-                genderBuilder.setView(toInflate)
-                        .setPositiveButton("Confirm", (dialogInterface, i) -> {
-                            //TODO: add model field for gender
-
-                            String newText;
-                            if (index == 0){
-                                newText = "Male";
-                                GetGoingActivity.setGender(Constants.gender.Male);
-                            }
-                            else if (index == 1){
-                                newText = "Female";
-                                GetGoingActivity.setGender(Constants.gender.Female);
-                            }
-                            else {
-                                newText = "Other";
-                                GetGoingActivity.setGender(Constants.gender.Other);
-                            }
-
-                            tvGender.setText(newText);
-                        })
-                        .setNegativeButton("Cancel", (dialogInterface, i) -> dialogInterface.cancel());
+                    if (which == 0){
+                        newText[0] = "Male";
+                        editor.putInt("gender", 0);
+                    }
+                    else if (which == 1){
+                        newText[0] = "Female";
+                        editor.putInt("gender", 1);
+                    }
+                    else {
+                        newText[0] = "Other";
+                        editor.putInt("gender", 2);
+                    }
+                    editor.apply();
+                })
+                .setPositiveButton("Confirm", (dialogInterface, i) -> tvGender.setText(newText[0]))
+                .setNegativeButton("Cancel", (dialogInterface, i) -> dialogInterface.cancel());
 
                 return genderBuilder;
             }
@@ -216,12 +193,14 @@ public class ProfileFragment extends DialogFragment {
                 Spinner ageSpinner = toInflate.findViewById(R.id.dialog_spinner_age);
                 ArrayAdapter<String> adapter = new ArrayAdapter<String>(pView.getContext(), android.R.layout.simple_list_item_1, ageList);
                 ageSpinner.setAdapter(adapter);
-                ageSpinner.setSelection(GetGoingActivity.getUserAge()- 1);
+                ageSpinner.setSelection(settings.getInt("age", 0) - 1);
 
                 ageBuilder.setPositiveButton("Confirm", (dialogInterface, i) -> {
-//                    mDataFrame.setAge(Integer.valueOf((String) ageSpinner.getSelectedItem())); //TODO: CHECK
                     tvAge.setText(ageSpinner.getSelectedItem() + getResources().getString(R.string.textview_age_end));
-                    GetGoingActivity.setUserAge(Integer.valueOf((String) ageSpinner.getSelectedItem()));
+
+                    SharedPreferences.Editor editor = settings.edit();
+                    editor.putInt("age", Integer.valueOf((String) ageSpinner.getSelectedItem()));
+                    editor.apply();
                 })
                         .setNegativeButton("Cancel", (dialogInterface, i) -> dialogInterface.cancel());
 
@@ -243,12 +222,14 @@ public class ProfileFragment extends DialogFragment {
                 Spinner weightSpinner = toInflate.findViewById(R.id.dialog_spinner_weight);
                 ArrayAdapter<String> adapter = new ArrayAdapter<String>(pView.getContext(), android.R.layout.simple_list_item_1, weightList);
                 weightSpinner.setAdapter(adapter);
-                weightSpinner.setSelection(GetGoingActivity.getUserWeight() - 40);
+                weightSpinner.setSelection(settings.getInt("weight", 0) - 40);
 
                 weightBuilder.setPositiveButton("Confirm", (dialogInterface, i) -> {
-                    //mDataFrame.setWeight(Integer.valueOf((String) weightSpinner.getSelectedItem())); //TODO: CHECK
                     tvWeight.setText(weightSpinner.getSelectedItem() + " kg");
-                    GetGoingActivity.setUserWeight(Integer.valueOf((String) weightSpinner.getSelectedItem())); //temp, prebaci na unos iz baze
+
+                    SharedPreferences.Editor editor = settings.edit();
+                    editor.putInt("weight", Integer.valueOf((String) weightSpinner.getSelectedItem()));
+                    editor.apply();
                 })
                 .setNegativeButton("Cancel", (dialogInterface, i) -> dialogInterface.cancel());
 
@@ -270,12 +251,15 @@ public class ProfileFragment extends DialogFragment {
                 Spinner heightSpinner = toInflate.findViewById(R.id.dialog_spinner_height);
                 ArrayAdapter<String> adapter = new ArrayAdapter<String>(pView.getContext(), android.R.layout.simple_list_item_1, heightList);
                 heightSpinner.setAdapter(adapter);
-                heightSpinner.setSelection(GetGoingActivity.getUserHeight() - 110);
+                heightSpinner.setSelection(settings.getInt("height", 0) - 110);
 
                 heightBuilder.setPositiveButton("Confirm", (dialogInterface, i) -> {
                             //TODO: modify model
                     tvHeight.setText(heightSpinner.getSelectedItem() + " cm");
-                    GetGoingActivity.setUserHeight(Integer.valueOf((String) heightSpinner.getSelectedItem()));
+
+                    SharedPreferences.Editor editor = settings.edit();
+                    editor.putInt("height", Integer.valueOf((String) heightSpinner.getSelectedItem()));
+                    editor.apply();
                 })
                 .setNegativeButton("Cancel", (dialogInterface, i) -> dialogInterface.cancel());
 
@@ -288,9 +272,19 @@ public class ProfileFragment extends DialogFragment {
 
     private void initLabels()
     {
-        tvAge.setText(GetGoingActivity.getUserAge() + " years");
-        tvHeight.setText(GetGoingActivity.getUserHeight() + "cm");
-        tvWeight.setText(GetGoingActivity.getUserWeight() + "kg");
-        tvGender.setText(GetGoingActivity.getGender().name());
+        tvAge.setText(settings.getInt("age", 0)+ " years");
+        tvHeight.setText(settings.getInt("height", 0) + "cm");
+        tvWeight.setText(settings.getInt("weight", 0) + "kg");
+
+        int gender = settings.getInt("gender", 0);
+        if (gender == 0) {
+            tvGender.setText(R.string.gender_male);
+        }
+        else if (gender == 1) {
+            tvGender.setText(R.string.gender_female);
+        }
+        else if (gender == 2) {
+            tvGender.setText(R.string.gender_other);
+        }
     }
 }

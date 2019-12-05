@@ -2,6 +2,7 @@ package com.hyperether.getgoing.ui.fragment;
 
 import android.annotation.SuppressLint;
 import android.app.Dialog;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.DisplayMetrics;
 import android.view.LayoutInflater;
@@ -28,14 +29,14 @@ public class ActivitiesFragment extends DialogFragment
 {
     public static final String DATA_KEY = "data_key";
 
-
-
     private View whiteView;
     private TextView goal;
     private SeekBar seekBar;
     private TextView low, medium, high;
     private TextView minutesRunning, minutesWalking, minutesCycling, kcal;
     private ImageButton backBtn;
+
+    private SharedPreferences settings;
 
     public static ActivitiesFragment newInstance(CBDataFrame dataFrame) {
         ActivitiesFragment activitiesFragment = new ActivitiesFragment();
@@ -49,6 +50,8 @@ public class ActivitiesFragment extends DialogFragment
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setStyle(DialogFragment.STYLE_NORMAL, R.style.FullScreenDialogStyle);
+
+        settings = getActivity().getSharedPreferences(Constants.PREF_FILE, 0);
     }
 
     @Nullable
@@ -159,7 +162,7 @@ public class ActivitiesFragment extends DialogFragment
                 minutesWalking.setText(timeEstimates[0] + " min");
                 minutesRunning.setText(timeEstimates[1] + " min");
                 minutesCycling.setText(timeEstimates[2] + " min");
-                kcal.setText("About " + (int) (i * 0.00112 * GetGoingActivity.getUserWeight()) + "kcal");
+                kcal.setText("About " + (int) (i * 0.00112 * settings.getInt("weight", 0)) + "kcal");
             }
 
             @Override
@@ -196,7 +199,7 @@ public class ActivitiesFragment extends DialogFragment
         minutesWalking.setText(timeEstimates[0] + " min");
         minutesRunning.setText(timeEstimates[1] + " min");
         minutesCycling.setText(timeEstimates[2] + " min");
-        kcal.setText("About " + (int) (progress * 0.00112 * GetGoingActivity.getUserWeight()) + "kcal");
+        kcal.setText("About " + (int) (progress * 0.00112 * settings.getInt("weight", 0)) + "kcal");
     }
 
 }

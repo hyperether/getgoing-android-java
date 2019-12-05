@@ -171,7 +171,7 @@ public class SettingsFragment extends Fragment implements OnItemSelectedListener
             iCountAdapterCalls++;
             // This section executes in onCreate, during the initialization
         } else {
-            cbDataFrameLocal.setMeasurementSystemId(arg2);
+            cbDataFrameLocal.setMeasurementSystemId(/*arg2*/ 1);
         }
     }
 

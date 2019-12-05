@@ -3,6 +3,8 @@ package com.hyperether.getgoing.model;
 import android.os.Parcel;
 import android.os.Parcelable;
 
+import com.hyperether.getgoing.util.Constants;
+
 public class CBDataFrame implements Parcelable {
 
     private int profileId;
@@ -10,6 +12,9 @@ public class CBDataFrame implements Parcelable {
     private int measurementSystemId;
     private int age;
     private int weight;
+    private int height;
+
+    private Constants.gender gender;
 
     public int getProfileId() {
         return profileId;
@@ -49,6 +54,22 @@ public class CBDataFrame implements Parcelable {
 
     public void setWeight(int weight) {
         this.weight = weight;
+    }
+
+    public int getHeight() {
+        return height;
+    }
+
+    public void setHeight(int height) {
+        this.height = height;
+    }
+
+    public Constants.gender getGender() {
+        return gender;
+    }
+
+    public void setGender(Constants.gender gender) {
+        this.gender = gender;
     }
 
     @Override

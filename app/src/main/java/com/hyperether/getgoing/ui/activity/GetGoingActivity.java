@@ -11,6 +11,7 @@ import android.util.DisplayMetrics;
 import android.util.SparseIntArray;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -51,11 +52,9 @@ public class GetGoingActivity extends AppCompatActivity implements
 
     public static float ratio = (float) 0.0;
 
-    /*TEMPORARY USER DATA VARIABLES*/
-    private static int userWeight = 0;
-    private static int userHeight = 0;
-    private static int userAge = 0;
-    public static Constants.gender gender = Constants.gender.Male;
+    /*USER DATA VARIABLES*/
+    private Constants.gender gender = Constants.gender.Male;
+    private int age, weight, height, measureUnitId;
 
     private ActivityMainBinding mBinding;
     private CBDataFrame cbDataFrameLocal;
@@ -67,11 +66,8 @@ public class GetGoingActivity extends AppCompatActivity implements
     private HorizontalListAdapter mAdapter;
     private ImageView blueRectangle;
     private ImageView selectorView;
-    private ImageView selectorViewTransparent;
-    private ImageView blueRecActivity;
     private TextView blueSentence;
     private TextView actLabel;
-    private View curvedBottomView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -84,13 +80,7 @@ public class GetGoingActivity extends AppCompatActivity implements
 
         actLabel = findViewById(R.id.tv_ma_mainact);
         selectorView = findViewById(R.id.imageView2);
-        selectorViewTransparent = findViewById(R.id.iv_am_circletransparent);
         circleProgressBar = findViewById(R.id.cpb_am_kmgoal);
-
-        initScreenDimen();
-        initRecyclerView();
-        initListeners();
-        initProgressBars();
 
         ActivityCompat.requestPermissions(this, new String[]{
                 Manifest.permission.ACCESS_FINE_LOCATION,
@@ -99,15 +89,11 @@ public class GetGoingActivity extends AppCompatActivity implements
 
         SharedPreferences currentSettings = getSharedPreferences(Constants.PREF_FILE, 0);
 
-        /*
-         * default value is metric
-         */
-//        int measureUnitId = currentSettings.getInt("measurementSystemId", Constants.METRIC);
-//        cbDataFrameLocal.setMeasurementSystemId(measureUnitId);
-//        int age = currentSettings.getInt("age", 0);
-//        cbDataFrameLocal.setAge(age);
-//        int weight = currentSettings.getInt("weight", 0);
-//        cbDataFrameLocal.setWeight(weight);
+        initScreenDimen();
+        initRecyclerView();
+        initListeners();
+        initProgressBars();
+        initModel(currentSettings);
     }
 
     @Override
@@ -132,19 +118,11 @@ public class GetGoingActivity extends AppCompatActivity implements
                 if (resultCode == Activity.RESULT_OK) {
                     if (data.hasExtra(DATA_KEY)) {
                         this.cbDataFrameLocal = data.getParcelableExtra(DATA_KEY);
-                        SharedPreferences settings = getSharedPreferences(
-                                Constants.PREF_FILE, 0);
-                        SharedPreferences.Editor editor = settings.edit();
-                        editor.putInt("measurementSystemId",
-                                this.cbDataFrameLocal.getMeasurementSystemId());
-                        editor.putInt("age", this.cbDataFrameLocal.getAge());
-                        editor.putInt("weight", this.cbDataFrameLocal.getWeight());
-                        editor.apply();
 
-                        int id = settings.getInt("meteringActivityRequestedId", 0);
-                        if (id > 0) {
-                            callMeteringActivity(id);
-                        }
+//                        int id = settings.getInt("meteringActivityRequestedId", 0);
+//                        if (id > 0) {
+//                            callMeteringActivity(id);
+//                        }
                     }
                 }
                 break;
@@ -201,6 +179,31 @@ public class GetGoingActivity extends AppCompatActivity implements
         editor.apply();
     }
 
+    private void initModel(SharedPreferences currentSettings) {
+        /*
+         * default value is metric
+         */
+        measureUnitId = currentSettings.getInt("measurementSystemId", Constants.METRIC);
+        cbDataFrameLocal.setMeasurementSystemId(measureUnitId);
+        age = currentSettings.getInt("age", 0);
+        cbDataFrameLocal.setAge(age);
+        weight = currentSettings.getInt("weight", 0);
+        cbDataFrameLocal.setWeight(weight);
+        height = currentSettings.getInt("height", 0);
+        cbDataFrameLocal.setHeight(height);
+
+        int genderInt = currentSettings.getInt("gender", 0);
+
+        if (genderInt == 0)
+            gender = Constants.gender.Male;
+        else if (genderInt == 1)
+            gender = Constants.gender.Female;
+        else
+            gender = Constants.gender.Other;
+
+        cbDataFrameLocal.setGender(gender);
+    }
+
     private void initRecyclerView()
     {
         recyclerView = findViewById(R.id.recyclerView);
@@ -218,13 +221,10 @@ public class GetGoingActivity extends AppCompatActivity implements
         mAdapter = new HorizontalListAdapter(DRAWABLE_MAP, getApplicationContext());
         recyclerView.setAdapter(mAdapter);
 
-        //((LinearLayoutManager) layoutManager).scrollToPositionWithOffset(15, 0);
-
         snapHelper = new LinearSnapHelper();
         snapHelper.attachToRecyclerView(recyclerView);
 
-        float screenwidth = Conversion.convertPixelToDp(this, getApplicationContext().getResources().getDisplayMetrics().widthPixels);
-        ((LinearLayoutManager) layoutManager).scrollToPositionWithOffset(layoutManager.getItemCount() / 2, /*(- Conversion.convertDpToPixel(50, this)) / 2*/-1);
+        ((LinearLayoutManager) layoutManager).scrollToPositionWithOffset(layoutManager.getItemCount() / 2,-1);
     }
 
     @Deprecated
@@ -233,6 +233,8 @@ public class GetGoingActivity extends AppCompatActivity implements
         ImageView ib_am_user = findViewById(R.id.ib_am_user);
         ImageView iv_am_arrows = findViewById(R.id.iv_am_arrow2actfrag);
         TextView tv_am_viewall = findViewById(R.id.tv_am_viewall);
+        Button startBtn = findViewById(R.id.materialButton);
+
 
         ib_am_user.setOnClickListener(view -> {
             ProfileFragment profileFragment = ProfileFragment.newInstance(null);
@@ -247,6 +249,13 @@ public class GetGoingActivity extends AppCompatActivity implements
         tv_am_viewall.setOnClickListener(view -> {
             ActivitiesFragment activitiesFragment = ActivitiesFragment.newInstance(null);
             activitiesFragment.show(getSupportFragmentManager(), "ActivitiesFragment");
+        });
+
+        startBtn.setOnClickListener(view -> {
+            Intent intent = new Intent(GetGoingActivity.this, ShowLocationActivity.class);
+            CacheManager.getInstance().setObDataFrameLocal(this.cbDataFrameLocal);
+            intent.putExtra("searchKey", this.cbDataFrameLocal);
+            startActivity(intent);
         });
 
         recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener()
@@ -358,10 +367,8 @@ public class GetGoingActivity extends AppCompatActivity implements
         DisplayMetrics metrics = getApplicationContext().getResources().getDisplayMetrics();
         ratio = (float)metrics.heightPixels / (float)metrics.widthPixels;
 
-        curvedBottomView = findViewById(R.id.customBottomBar);
         blueRectangle = findViewById(R.id.iv_am_bluerectangle);
         blueSentence = findViewById(R.id.tv_am_burn);
-        blueRecActivity = findViewById(R.id.iv_am_activity);
 
         if (ratio >= 1.8)
         {
@@ -372,38 +379,6 @@ public class GetGoingActivity extends AppCompatActivity implements
             params.bottomMargin = 100;
             blueSentence.setLayoutParams(params);
         }
-    }
-
-    public static int getUserWeight() {
-        return userWeight;
-    }
-
-    public static void setUserWeight(int pUserWeight) {
-        userWeight = pUserWeight;
-    }
-
-    public static int getUserAge() {
-        return userAge;
-    }
-
-    public static void setUserAge(int pUserAge) {
-        userAge = pUserAge;
-    }
-
-    public static int getUserHeight() {
-        return userHeight;
-    }
-
-    public static void setUserHeight(int pUserHeight) {
-        userHeight = pUserHeight;
-    }
-
-    public static Constants.gender getGender() {
-        return gender;
-    }
-
-    public static void setGender(Constants.gender gender) {
-        GetGoingActivity.gender = gender;
     }
 
     @Override
