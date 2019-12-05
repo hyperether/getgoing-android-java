@@ -1,6 +1,8 @@
 package com.hyperether.getgoing.ui.adapter;
 
 import android.content.Context;
+import android.content.res.Resources;
+import android.graphics.drawable.Drawable;
 import android.os.Build;
 import android.util.SparseIntArray;
 import android.view.LayoutInflater;
@@ -10,6 +12,7 @@ import android.widget.ImageView;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.vectordrawable.graphics.drawable.VectorDrawableCompat;
 
 import com.hyperether.getgoing.R;
 import com.hyperether.getgoing.util.Conversion;
@@ -34,12 +37,14 @@ public class HorizontalListAdapter extends RecyclerView.Adapter<HorizontalListAd
         View view = null;
         float screenwidth = Conversion.convertPixelToDp(mContext, mContext.getResources().getDisplayMetrics().widthPixels);
 
-        if (screenwidth == 360)
+        if (screenwidth >= 358 && screenwidth <= 362)
             view = mInflater.inflate(R.layout.hlist_row_item_360, parent, false);
         else if (screenwidth >= 410 && screenwidth <= 412)
             view = mInflater.inflate(R.layout.hlist_row_item_410, parent, false);
         else if (screenwidth >= 455 && screenwidth <= 462)
             view = mInflater.inflate(R.layout.hlist_row_item_460, parent, false);
+        else if (screenwidth >= 595 && screenwidth <= 605)
+            view = mInflater.inflate(R.layout.hlist_row_item_600, parent, false);
 
         return new ViewHolder(view);
     }
@@ -54,7 +59,6 @@ public class HorizontalListAdapter extends RecyclerView.Adapter<HorizontalListAd
             holder.img.setImageDrawable(mContext.getDrawable(img));
             holder.img.setTag(img);
         }
-
     }
 
     @Override

@@ -268,6 +268,8 @@ public class GetGoingActivity extends AppCompatActivity implements
                     actLabel.setText("Running");
                 else if (centralImg.getTag().equals(R.drawable.ic_light_walking_icon))
                     actLabel.setText("Walking");
+                else
+                    actLabel.setText("");
 
                 centralImg.getLocationOnScreen(centralImgPos);
 

@@ -2,7 +2,6 @@ package com.hyperether.getgoing;
 
 import android.app.Application;
 
-
 /**
  * Created by nikola on 07/07/17.
  */
