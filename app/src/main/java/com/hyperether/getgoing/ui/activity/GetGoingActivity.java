@@ -21,6 +21,7 @@ import androidx.core.app.ActivityCompat;
 import androidx.databinding.DataBindingUtil;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.LinearSnapHelper;
+import androidx.recyclerview.widget.OrientationHelper;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.recyclerview.widget.SnapHelper;
 
@@ -268,8 +269,9 @@ public class GetGoingActivity extends AppCompatActivity implements
             public void onScrolled(@NonNull RecyclerView recyclerView, int dx, int dy) {
                 super.onScrolled(recyclerView, dx, dy);
 
-                Integer k1 = ((LinearLayoutManager) layoutManager).findFirstCompletelyVisibleItemPosition();
-                ImageView centralImg = layoutManager.findViewByPosition(k1).findViewById(R.id.iv_ri_pic);
+                View centralLayout = findCenterView(layoutManager, OrientationHelper.createOrientationHelper(layoutManager, RecyclerView.HORIZONTAL));
+                ImageView centralImg = centralLayout.findViewById(R.id.iv_ri_pic);
+                int k1 = layoutManager.getPosition(centralLayout);
 
                 if (centralImg.getTag().equals(R.drawable.ic_light_bicycling_icon_inactive))
                     actLabel.setText("Cycling");
@@ -277,8 +279,6 @@ public class GetGoingActivity extends AppCompatActivity implements
                     actLabel.setText("Running");
                 else if (centralImg.getTag().equals(R.drawable.ic_light_walking_icon))
                     actLabel.setText("Walking");
-                else
-                    actLabel.setText("");
 
                 centralImg.getLocationOnScreen(centralImgPos);
 
@@ -379,6 +379,37 @@ public class GetGoingActivity extends AppCompatActivity implements
             params.bottomMargin = 100;
             blueSentence.setLayoutParams(params);
         }
+    }
+
+    private View findCenterView(RecyclerView.LayoutManager layoutManager,
+                                OrientationHelper helper) {
+        int childCount = layoutManager.getChildCount();
+        if (childCount == 0) {
+            return null;
+        }
+
+        View closestChild = null;
+        final int center;
+        if (layoutManager.getClipToPadding()) {
+            center = helper.getStartAfterPadding() + helper.getTotalSpace() / 2;
+        } else {
+            center = helper.getEnd() / 2;
+        }
+        int absClosest = Integer.MAX_VALUE;
+
+        for (int i = 0; i < childCount; i++) {
+            final View child = layoutManager.getChildAt(i);
+            int childCenter = helper.getDecoratedStart(child)
+                    + (helper.getDecoratedMeasurement(child) / 2);
+            int absDistance = Math.abs(childCenter - center);
+
+            /** if child center is closer than previous closest, set it as closest  **/
+            if (absDistance < absClosest) {
+                absClosest = absDistance;
+                closestChild = child;
+            }
+        }
+        return closestChild;
     }
 
     @Override
