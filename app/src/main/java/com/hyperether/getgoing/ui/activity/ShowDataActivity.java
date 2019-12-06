@@ -6,6 +6,11 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.ProgressBar;
 
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.lifecycle.ViewModelProviders;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+
 import com.github.mikephil.charting.animation.Easing;
 import com.github.mikephil.charting.charts.BarChart;
 import com.github.mikephil.charting.data.BarData;
@@ -23,11 +28,6 @@ import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
 
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.lifecycle.ViewModelProviders;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
-
 public class ShowDataActivity extends AppCompatActivity implements DbHelper.OnDataLoadListener {
 
     private final List<DbRoute> routes = new ArrayList<>();
@@ -40,7 +40,7 @@ public class ShowDataActivity extends AppCompatActivity implements DbHelper.OnDa
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.show_data);
-        getSupportActionBar().show();
+        //getSupportActionBar().show();
 
         chart = (BarChart) findViewById(R.id.barChart);
         chart.setNoDataText("");

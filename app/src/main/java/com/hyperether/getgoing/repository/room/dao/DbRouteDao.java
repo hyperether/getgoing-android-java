@@ -1,13 +1,13 @@
 package com.hyperether.getgoing.repository.room.dao;
 
-import com.hyperether.getgoing.repository.room.entity.DbRoute;
-
-import java.util.List;
-
 import androidx.room.Dao;
 import androidx.room.Delete;
 import androidx.room.Insert;
 import androidx.room.Query;
+
+import com.hyperether.getgoing.repository.room.entity.DbRoute;
+
+import java.util.List;
 
 @Dao
 public interface DbRouteDao {
@@ -26,4 +26,7 @@ public interface DbRouteDao {
 
     @Query("DELETE FROM DbRoute WHERE id = :id")
     void deleteRouteById(long id);
+
+    @Query("SELECT * FROM DbRoute ORDER BY id DESC LIMIT 1")
+    DbRoute getLatestRoute();
 }

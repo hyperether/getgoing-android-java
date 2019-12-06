@@ -2,9 +2,7 @@ package com.hyperether.getgoing.ui.fragment;
 
 import android.app.AlertDialog;
 import android.app.Dialog;
-import android.content.DialogInterface;
 import android.content.SharedPreferences;
-import android.media.Image;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -12,8 +10,6 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.ImageButton;
 import android.widget.ImageView;
-import android.widget.RadioButton;
-import android.widget.RadioGroup;
 import android.widget.Spinner;
 import android.widget.TextView;
 
@@ -25,7 +21,6 @@ import com.hyperether.getgoing.R;
 import com.hyperether.getgoing.model.CBDataFrame;
 import com.hyperether.getgoing.repository.room.DbHelper;
 import com.hyperether.getgoing.repository.room.entity.DbRoute;
-import com.hyperether.getgoing.ui.activity.GetGoingActivity;
 import com.hyperether.getgoing.util.Constants;
 
 import java.util.ArrayList;
@@ -58,7 +53,6 @@ public class ProfileFragment extends DialogFragment {
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setStyle(DialogFragment.STYLE_NORMAL, R.style.FullScreenDialogStyle);
-
         settings = getActivity().getSharedPreferences(Constants.PREF_FILE, 0);
     }
 
@@ -80,7 +74,7 @@ public class ProfileFragment extends DialogFragment {
             genderImg.setImageDrawable(getResources().getDrawable(R.drawable.ic_light_gender_female_icon));
         }
         else if (genderSel == 2) {
-            genderImg.setImageDrawable(getResources().getDrawable(R.drawable.ic_transgender));
+            genderImg.setImageDrawable(getResources().getDrawable(R.drawable.ic_light_gender_icon_trans));
         }
 
         return rootView;
@@ -196,11 +190,12 @@ public class ProfileFragment extends DialogFragment {
                             genderImg.setImageDrawable(getResources().getDrawable(R.drawable.ic_light_gender_female_icon));
                             break;
                         case "Other":
-                            genderImg.setImageDrawable(getResources().getDrawable(R.drawable.ic_transgender));
+                            genderImg.setImageDrawable(getResources().getDrawable(R.drawable.ic_light_gender_icon_trans));
                             break;
                     }
                 })
-                .setNegativeButton("Cancel", (dialogInterface, i) -> dialogInterface.cancel());
+                .setNegativeButton("Cancel", (dialogInterface, i) -> dialogInterface.cancel())
+                .setTitle("Please select your gender:");
 
                 return genderBuilder;
             }
@@ -229,7 +224,8 @@ public class ProfileFragment extends DialogFragment {
                     editor.putInt("age", Integer.valueOf((String) ageSpinner.getSelectedItem()));
                     editor.apply();
                 })
-                        .setNegativeButton("Cancel", (dialogInterface, i) -> dialogInterface.cancel());
+                .setNegativeButton("Cancel", (dialogInterface, i) -> dialogInterface.cancel())
+                .setTitle("How old are you?");
 
                 return ageBuilder;
             }
@@ -258,7 +254,8 @@ public class ProfileFragment extends DialogFragment {
                     editor.putInt("weight", Integer.valueOf((String) weightSpinner.getSelectedItem()));
                     editor.apply();
                 })
-                .setNegativeButton("Cancel", (dialogInterface, i) -> dialogInterface.cancel());
+                .setNegativeButton("Cancel", (dialogInterface, i) -> dialogInterface.cancel())
+                .setTitle("Enter your weight:");
 
                 return weightBuilder;
             }
@@ -288,7 +285,8 @@ public class ProfileFragment extends DialogFragment {
                     editor.putInt("height", Integer.valueOf((String) heightSpinner.getSelectedItem()));
                     editor.apply();
                 })
-                .setNegativeButton("Cancel", (dialogInterface, i) -> dialogInterface.cancel());
+                .setNegativeButton("Cancel", (dialogInterface, i) -> dialogInterface.cancel())
+                .setTitle("Enter your height:");
 
                 return heightBuilder;
             }

@@ -4,21 +4,12 @@
     android:layout_height="150dp"
     android:id="@+id/alertdialog_height">
 
-    <TextView
-        android:id="@+id/dialog_title"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/how_tall_are_you"
-        android:textSize="22sp"
-        android:textColor="@color/mat_gray"
-        android:padding="12dp"/>
-
     <Spinner
         android:id="@+id/dialog_spinner_height"
         android:layout_width="200dp"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
-        android:layout_marginTop="20dp"
+        android:layout_marginTop="15dp"
         />
 
 </LinearLayout>

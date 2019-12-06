@@ -4,12 +4,12 @@ import android.content.Context;
 import android.os.Handler;
 import android.os.HandlerThread;
 
+import androidx.room.Room;
+
 import com.hyperether.getgoing.repository.room.entity.DbNode;
 import com.hyperether.getgoing.repository.room.entity.DbRoute;
 
 import java.util.List;
-
-import androidx.room.Room;
 
 
 /**
@@ -92,6 +92,13 @@ public class DbHelper {
                 DbRoute r1 = db.dbRouteDao().getRouteById(id);
                 routes.add(r1);
             }
+        });
+    }
+
+    public void getLastRoute(final List<DbRoute> routes) {
+        getDbHandler().post(() -> {
+            DbRoute retVal = db.dbRouteDao().getLatestRoute();
+            routes.add(retVal);
         });
     }
 

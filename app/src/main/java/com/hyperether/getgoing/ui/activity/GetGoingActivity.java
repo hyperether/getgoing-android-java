@@ -14,6 +14,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
@@ -31,12 +32,16 @@ import com.hyperether.getgoing.R;
 import com.hyperether.getgoing.databinding.ActivityMainBinding;
 import com.hyperether.getgoing.manager.CacheManager;
 import com.hyperether.getgoing.model.CBDataFrame;
+import com.hyperether.getgoing.repository.room.DbHelper;
+import com.hyperether.getgoing.repository.room.entity.DbRoute;
 import com.hyperether.getgoing.ui.adapter.HorizontalListAdapter;
 import com.hyperether.getgoing.ui.fragment.ActivitiesFragment;
 import com.hyperether.getgoing.ui.fragment.ProfileFragment;
 import com.hyperether.getgoing.ui.fragment.old.SettingsFragment;
 import com.hyperether.getgoing.util.Constants;
-import com.hyperether.getgoing.util.Conversion;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import io.fabric.sdk.android.Fabric;
 
@@ -63,12 +68,15 @@ public class GetGoingActivity extends AppCompatActivity implements
     private RecyclerView recyclerView;
     private RecyclerView.LayoutManager layoutManager;
 
-    private CircleProgressBar circleProgressBar;
+    private CircleProgressBar circleProgressBar, circleProgressBar2;
     private HorizontalListAdapter mAdapter;
     private ImageView blueRectangle;
     private ImageView selectorView;
+    private ImageView centralImg;
     private TextView blueSentence;
     private TextView actLabel;
+
+    private SharedPreferences currentSettings;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -82,19 +90,25 @@ public class GetGoingActivity extends AppCompatActivity implements
         actLabel = findViewById(R.id.tv_ma_mainact);
         selectorView = findViewById(R.id.imageView2);
         circleProgressBar = findViewById(R.id.cpb_am_kmgoal);
+        circleProgressBar2 = findViewById(R.id.cpb_am_kmgoal1);
 
         ActivityCompat.requestPermissions(this, new String[]{
                 Manifest.permission.ACCESS_FINE_LOCATION,
                 Manifest.permission.ACCESS_COARSE_LOCATION}, Constants
                 .TAG_CODE_PERMISSION_LOCATION);
 
-        SharedPreferences currentSettings = getSharedPreferences(Constants.PREF_FILE, 0);
+        currentSettings = getSharedPreferences(Constants.PREF_FILE, 0);
 
+        initModel();
         initScreenDimen();
         initRecyclerView();
         initListeners();
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
         initProgressBars();
-        initModel(currentSettings);
     }
 
     @Override
@@ -119,11 +133,6 @@ public class GetGoingActivity extends AppCompatActivity implements
                 if (resultCode == Activity.RESULT_OK) {
                     if (data.hasExtra(DATA_KEY)) {
                         this.cbDataFrameLocal = data.getParcelableExtra(DATA_KEY);
-
-//                        int id = settings.getInt("meteringActivityRequestedId", 0);
-//                        if (id > 0) {
-//                            callMeteringActivity(id);
-//                        }
                     }
                 }
                 break;
@@ -139,18 +148,15 @@ public class GetGoingActivity extends AppCompatActivity implements
     }
 
     /**
-     * This method starts SettingsFragment
+     * This method starts ProfileFragment when user hasn't entered his data
      */
-    private void callSettingsFragment() {
-//        SettingsFragment settingsFragment = SettingsFragment.newInstance(this.cbDataFrameLocal);
-//        getFragmentManager()
-//                .beginTransaction()
-//                .replace(R.id.activity_main, settingsFragment)
-//                .commit();
+    private void callProfileFragment() {
+        ProfileFragment profileFragment = ProfileFragment.newInstance(null);
+        profileFragment.show(getSupportFragmentManager(), "ProfileFragment");
     }
 
     /**
-     * This method starts SettingsFragment
+     * This method starts tracking
      *
      * @param id mode id
      */
@@ -164,7 +170,8 @@ public class GetGoingActivity extends AppCompatActivity implements
             startActivity(intent);
         } else {
             setMeteringActivityRequested(id);
-            callSettingsFragment();
+            Toast.makeText(this, "You must enter your data first!", Toast.LENGTH_LONG).show();
+            callProfileFragment();
         }
     }
 
@@ -180,7 +187,7 @@ public class GetGoingActivity extends AppCompatActivity implements
         editor.apply();
     }
 
-    private void initModel(SharedPreferences currentSettings) {
+    private void initModel() {
         /*
          * default value is metric
          */
@@ -253,10 +260,12 @@ public class GetGoingActivity extends AppCompatActivity implements
         });
 
         startBtn.setOnClickListener(view -> {
-            Intent intent = new Intent(GetGoingActivity.this, ShowLocationActivity.class);
-            CacheManager.getInstance().setObDataFrameLocal(this.cbDataFrameLocal);
-            intent.putExtra("searchKey", this.cbDataFrameLocal);
-            startActivity(intent);
+            if (centralImg.getTag().equals(R.drawable.ic_light_walking_icon_active))
+                callMeteringActivity(WALK_ID);
+            else if (centralImg.getTag().equals(R.drawable.ic_light_running_icon_active))
+                callMeteringActivity(RUN_ID);
+            else if (centralImg.getTag().equals(R.drawable.ic_light_bicycling_icon_active))
+                callMeteringActivity(RIDE_ID);
         });
 
         recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener()
@@ -270,7 +279,7 @@ public class GetGoingActivity extends AppCompatActivity implements
                 super.onScrolled(recyclerView, dx, dy);
 
                 View centralLayout = findCenterView(layoutManager, OrientationHelper.createOrientationHelper(layoutManager, RecyclerView.HORIZONTAL));
-                ImageView centralImg = centralLayout.findViewById(R.id.iv_ri_pic);
+                centralImg = centralLayout.findViewById(R.id.iv_ri_pic);
                 int k1 = layoutManager.getPosition(centralLayout);
 
                 if (centralImg.getTag().equals(R.drawable.ic_light_bicycling_icon_inactive))
@@ -357,9 +366,22 @@ public class GetGoingActivity extends AppCompatActivity implements
         });
     }
 
-    private void initProgressBars()
+    public void initProgressBars()
     {
-        circleProgressBar.setProgress(42);
+        List<DbRoute> pointerList = new ArrayList<>();
+        DbHelper.getInstance(getApplicationContext()).getLastRoute(pointerList);
+
+        if (pointerList.size() > 0)
+        {
+            int lastRouteLen = (int) pointerList.get(0).getLength();
+            int lastRouteTime = Math.round(pointerList.get(0).getDuration() * 1000 / 60);
+
+            int goal = currentSettings.getInt("goal", 0); //ovo je temp, treba da se dohvati drugi goal koji se setuje pri pocetku merenja
+            int goalTime; //ovde treba da se dohvati time estimate koji ce se napraviti kad se setuje goal u merenju
+
+            circleProgressBar.setProgress(goal / lastRouteLen * 100);
+            //circleProgressBar2.setProgress(lastRouteTime);
+        }
     }
 
     private void initScreenDimen()

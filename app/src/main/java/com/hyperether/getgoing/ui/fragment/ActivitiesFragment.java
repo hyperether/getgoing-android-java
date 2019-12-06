@@ -2,16 +2,19 @@ package com.hyperether.getgoing.ui.fragment;
 
 import android.annotation.SuppressLint;
 import android.app.Dialog;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.util.DisplayMetrics;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.SeekBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -19,9 +22,13 @@ import androidx.fragment.app.DialogFragment;
 
 import com.hyperether.getgoing.R;
 import com.hyperether.getgoing.model.CBDataFrame;
-import com.hyperether.getgoing.ui.activity.GetGoingActivity;
-import com.hyperether.getgoing.util.CaloriesCalculation;
+import com.hyperether.getgoing.repository.room.DbHelper;
+import com.hyperether.getgoing.repository.room.entity.DbRoute;
+import com.hyperether.getgoing.ui.activity.ShowDataActivity;
 import com.hyperether.getgoing.util.Constants;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import static com.hyperether.getgoing.ui.activity.GetGoingActivity.ratio;
 
@@ -35,6 +42,9 @@ public class ActivitiesFragment extends DialogFragment
     private TextView low, medium, high;
     private TextView minutesRunning, minutesWalking, minutesCycling, kcal;
     private ImageButton backBtn;
+    private ImageView walkDetails, runDetails, rideDetails;
+    private ProgressBar prbWalk, prbRun, prbRide;
+    private Button saveChanges;
 
     private SharedPreferences settings;
 
@@ -88,6 +98,7 @@ public class ActivitiesFragment extends DialogFragment
         initLabels();
         initProgressStringColor();
         initListeners();
+        fillProgressBars();
     }
 
     private void initScreenDimen()
@@ -135,6 +146,10 @@ public class ActivitiesFragment extends DialogFragment
     private void initListeners()
     {
         backBtn = getView().findViewById(R.id.ib_fa_back);
+        walkDetails = getView().findViewById(R.id.iv_fa_rightarrow1);
+        runDetails = getView().findViewById(R.id.iv_fa_rightarrow2);
+        rideDetails = getView().findViewById(R.id.iv_fa_rightarrow3);
+        saveChanges = getView().findViewById(R.id.b_fa_save);
 
         seekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
             @Override
@@ -177,6 +192,29 @@ public class ActivitiesFragment extends DialogFragment
         high.setOnClickListener(view -> seekBar.setProgress(Constants.CONST_HIGH_DIST));
         backBtn.setOnClickListener(view -> this.getDialog().dismiss());
 
+        walkDetails.setOnClickListener(view -> {
+            Intent intent = new Intent(getContext(), ShowDataActivity.class);
+            startActivity(intent);
+        });
+
+        runDetails.setOnClickListener(view -> {
+            Intent intent = new Intent(getContext(), ShowDataActivity.class);
+            startActivity(intent);
+        });
+
+        rideDetails.setOnClickListener(view -> {
+            Intent intent = new Intent(getContext(), ShowDataActivity.class);
+            startActivity(intent);
+        });
+
+        saveChanges.setOnClickListener(view -> {
+            SharedPreferences.Editor editor = settings.edit();
+            editor.putInt("goal", seekBar.getProgress());
+            editor.apply();
+
+            Toast.makeText(getContext(), "Your goal is updated", Toast.LENGTH_SHORT).show();
+        });
+
     }
 
     private int[] getTimeEstimates(int dist)
@@ -200,6 +238,43 @@ public class ActivitiesFragment extends DialogFragment
         minutesRunning.setText(timeEstimates[1] + " min");
         minutesCycling.setText(timeEstimates[2] + " min");
         kcal.setText("About " + (int) (progress * 0.00112 * settings.getInt("weight", 0)) + "kcal");
+    }
+
+    private void fillProgressBars()
+    {
+        List<DbRoute> allRoutes = new ArrayList<>();
+
+        prbWalk = getView().findViewById(R.id.progressBar);
+        prbRun = getView().findViewById(R.id.progressBar2);
+        prbRide = getView().findViewById(R.id.progressBar3);
+
+        int goal = settings.getInt("goal", 0);
+        int sumWalk = 0, sumRun = 0, sumRide = 0;
+
+        DbHelper.getInstance(getContext()).getRoutes(allRoutes::addAll);
+
+        for (DbRoute route : allRoutes)
+        {
+            if (route.getActivity_id() == 1)
+                sumWalk += route.getLength();
+            else if (route.getActivity_id() == 2)
+                sumRun += route.getLength();
+            else if (route.getActivity_id() == 3)
+                sumRide += route.getLength();
+        }
+
+        int walkPercentage = 0, runPercentage = 0, ridePercentage = 0;
+
+        if (sumWalk != 0)
+            walkPercentage = goal / sumWalk * 100;
+        if (sumRun != 0)
+            runPercentage = goal / sumRun * 100;
+        if (sumRide != 0)
+            ridePercentage = goal / sumRide * 100;
+
+        prbWalk.setProgress(walkPercentage);
+        prbRun.setProgress(runPercentage);
+        prbRide.setProgress(ridePercentage);
     }
 
 }
