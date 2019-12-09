@@ -1,11 +1,11 @@
 package com.hyperether.getgoing.ui.activity;
 
 import android.Manifest;
-import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.DisplayMetrics;
 import android.util.SparseIntArray;
@@ -35,6 +35,9 @@ import com.hyperether.getgoing.model.CBDataFrame;
 import com.hyperether.getgoing.repository.room.DbHelper;
 import com.hyperether.getgoing.repository.room.entity.DbRoute;
 import com.hyperether.getgoing.ui.adapter.HorizontalListAdapter;
+import com.hyperether.getgoing.ui.adapter.formatter.MyProgressFormatter;
+import com.hyperether.getgoing.ui.adapter.formatter.MyProgressFormatter2;
+import com.hyperether.getgoing.ui.adapter.formatter.MyProgressFormatter3;
 import com.hyperether.getgoing.ui.fragment.ActivitiesFragment;
 import com.hyperether.getgoing.ui.fragment.ProfileFragment;
 import com.hyperether.getgoing.ui.fragment.old.SettingsFragment;
@@ -68,7 +71,7 @@ public class GetGoingActivity extends AppCompatActivity implements
     private RecyclerView recyclerView;
     private RecyclerView.LayoutManager layoutManager;
 
-    private CircleProgressBar circleProgressBar, circleProgressBar2;
+    private CircleProgressBar circleProgressBar, circleProgressBar2, circleProgressBar3;
     private HorizontalListAdapter mAdapter;
     private ImageView blueRectangle;
     private ImageView selectorView;
@@ -80,6 +83,7 @@ public class GetGoingActivity extends AppCompatActivity implements
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        setTheme(R.style.AppTheme);
         super.onCreate(savedInstanceState);
         Fabric.with(this, new Crashlytics());
         mBinding = DataBindingUtil.setContentView(this, R.layout.activity_main);
@@ -91,6 +95,7 @@ public class GetGoingActivity extends AppCompatActivity implements
         selectorView = findViewById(R.id.imageView2);
         circleProgressBar = findViewById(R.id.cpb_am_kmgoal);
         circleProgressBar2 = findViewById(R.id.cpb_am_kmgoal1);
+        circleProgressBar3 = findViewById(R.id.cpb_am_kmgoal2);
 
         ActivityCompat.requestPermissions(this, new String[]{
                 Manifest.permission.ACCESS_FINE_LOCATION,
@@ -368,20 +373,7 @@ public class GetGoingActivity extends AppCompatActivity implements
 
     public void initProgressBars()
     {
-        List<DbRoute> pointerList = new ArrayList<>();
-        DbHelper.getInstance(getApplicationContext()).getLastRoute(pointerList);
-
-        if (pointerList.size() > 0)
-        {
-            int lastRouteLen = (int) pointerList.get(0).getLength();
-            int lastRouteTime = Math.round(pointerList.get(0).getDuration() * 1000 / 60);
-
-            int goal = currentSettings.getInt("goal", 0); //ovo je temp, treba da se dohvati drugi goal koji se setuje pri pocetku merenja
-            int goalTime; //ovde treba da se dohvati time estimate koji ce se napraviti kad se setuje goal u merenju
-
-            circleProgressBar.setProgress(goal / lastRouteLen * 100);
-            //circleProgressBar2.setProgress(lastRouteTime);
-        }
+        new PullProgressData().execute(null, null, null);
     }
 
     private void initScreenDimen()
@@ -439,6 +431,88 @@ public class GetGoingActivity extends AppCompatActivity implements
         cbDataFrameLocal = dataFrame;
     }
 
+    private class PullProgressData extends AsyncTask<Void, Void, Void>
+    {
+        List<DbRoute> pointerList;
+        TextView kcalVal, progBar1Act;
+        ImageView progBar1Img;
+
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+
+            kcalVal = findViewById(R.id.tv_am_kcalval);
+            progBar1Act = findViewById(R.id.tv_am_progbar_act);
+            progBar1Img = findViewById(R.id.iv_am_activity);
+        }
+
+        @Override
+        protected Void doInBackground(Void... voids) {
+            pointerList = new ArrayList<>();
+            DbHelper.getInstance(getApplicationContext()).getLastRoute(pointerList);
+
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(Void aVoid) {
+            super.onPostExecute(aVoid);
+
+            if (pointerList.get(0) != null)
+            {
+                int lastRouteLen = (int) pointerList.get(0).getLength();
+                int lastRouteTime;
+
+                if (pointerList.get(0).getDuration() >= 60000)
+                    lastRouteTime = Math.round(pointerList.get(0).getDuration() / 1000);
+                else
+                    lastRouteTime = 0;
+
+                int goal = currentSettings.getInt("goal", 0); //ovo je temp, treba da se dohvati drugi goal koji se setuje pri pocetku merenja
+                int cpbProgress;
+
+                if (goal != 0)
+                    cpbProgress = Math.round(lastRouteLen * 100 / goal);
+                else
+                    cpbProgress = 0;
+
+                Integer kcal = (int) (lastRouteLen * 0.00112 * currentSettings.getInt("weight", 0));
+
+                circleProgressBar.setProgressFormatter(new MyProgressFormatter((double) lastRouteLen));
+                circleProgressBar.setProgress(cpbProgress);
+
+                circleProgressBar2.setProgressFormatter(new MyProgressFormatter2(lastRouteTime));
+                circleProgressBar2.setProgress(100);
+
+                circleProgressBar3.setProgressFormatter(new MyProgressFormatter3());
+
+                kcalVal.setText(kcal.toString());
+
+                switch (pointerList.get(0).getActivity_id())
+                {
+                    case 1:
+                    {
+                        progBar1Act.setText("Walking");
+                        progBar1Img.setImageDrawable(getResources().getDrawable(R.drawable.ic_walking_icon));
+                        break;
+                    }
+                    case 2:
+                    {
+                        progBar1Act.setText("Running");
+                        progBar1Img.setImageDrawable(getResources().getDrawable(R.drawable.ic_running_icon));
+                        break;
+                    }
+                    case 3:
+                    {
+                        progBar1Act.setText("Cycling");
+                        progBar1Img.setImageDrawable(getResources().getDrawable(R.drawable.ic_light_bicycling_icon));
+                        break;
+                    }
+                }
+            }
+        }
+    }
+
     public class ClickHandler {
 
         public void onWalk(View view) {
@@ -456,16 +530,6 @@ public class GetGoingActivity extends AppCompatActivity implements
         public void onProfileClick() {
             ProfileFragment profileFragment = ProfileFragment.newInstance(null);
             profileFragment.show(getSupportFragmentManager(), "ProfileFragment");
-        }
-    }
-
-    private static final class MyProgressFormatter implements CircleProgressBar.ProgressFormatter {
-        private static final String DEFAULT_PATTERN = "%d%%";
-
-        @SuppressLint("DefaultLocale")
-        @Override
-        public CharSequence format(int progress, int max) {
-            return String.format(DEFAULT_PATTERN, (int) ((float) progress / (float) max * 100));
         }
     }
 

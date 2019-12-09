@@ -103,7 +103,7 @@
             app:layout_constraintBottom_toTopOf="@+id/imageView2"
             app:layout_constraintStart_toStartOf="parent" />
 
-        <com.hyperether.getgoing.ui.CurvedBottomView
+        <com.hyperether.getgoing.ui.dynamicview.CurvedBottomView
             android:id="@+id/customBottomBar"
             android:layout_width="match_parent"
             android:layout_height="@dimen/curved_bottom_bar"
@@ -163,7 +163,7 @@
             android:layout_height="115dp"
             android:layout_marginStart="16dp"
             android:layout_marginLeft="16dp"
-            android:background="@android:color/transparent"
+            app:progress_background_color="#9fffffff"
             app:layout_constraintBottom_toBottomOf="@+id/iv_am_bluerectangle"
             app:layout_constraintStart_toStartOf="@+id/iv_am_bluerectangle"
             app:layout_constraintTop_toTopOf="@+id/iv_am_bluerectangle"
@@ -177,19 +177,36 @@
             app:style="solid_line" />
 
         <com.dinuscxj.progressbar.CircleProgressBar
+            android:id="@+id/cpb_am_kmgoal2"
+            android:layout_width="115dp"
+            android:layout_height="115dp"
+            android:layout_marginEnd="16dp"
+            android:layout_marginRight="16dp"
+            app:progress_background_color="#9fffffff"
+            app:layout_constraintBottom_toBottomOf="@+id/iv_am_bluerectangle"
+            app:layout_constraintEnd_toEndOf="@+id/iv_am_bluerectangle"
+            app:layout_constraintTop_toTopOf="@+id/iv_am_bluerectangle"
+            app:layout_constraintVertical_bias="0.478"
+            app:progress_end_color="#9fffffff"
+            app:progress_start_color="#9fffffff"
+            app:progress_stroke_width="5dp"
+            app:progress_text_color="@android:color/white"
+            app:progress_text_size="18sp"
+            app:style="solid_line" />
+
+        <com.dinuscxj.progressbar.CircleProgressBar
             android:id="@+id/cpb_am_kmgoal1"
             android:layout_width="115dp"
             android:layout_height="115dp"
             android:layout_marginEnd="16dp"
             android:layout_marginRight="16dp"
-            android:background="@android:color/transparent"
+            app:progress_background_color="#ffffffff"
             app:layout_constraintBottom_toBottomOf="@+id/iv_am_bluerectangle"
             app:layout_constraintEnd_toEndOf="@+id/iv_am_bluerectangle"
             app:layout_constraintTop_toTopOf="@+id/iv_am_bluerectangle"
             app:layout_constraintVertical_bias="0.478"
             app:line_count="12"
             app:progress_end_color="@android:color/white"
-            app:progress_shader="sweep"
             app:progress_start_color="@android:color/white"
             app:progress_stroke_width="3dp"
             app:progress_text_color="@android:color/white"
@@ -258,7 +275,7 @@
             android:id="@+id/iv_am_activity"
             android:layout_width="wrap_content"
             android:layout_height="0dp"
-            android:layout_marginTop="20dp"
+            android:layout_marginTop="17dp"
             app:layout_constraintEnd_toEndOf="@+id/cpb_am_kmgoal"
             app:layout_constraintStart_toStartOf="@+id/cpb_am_kmgoal"
             app:layout_constraintTop_toTopOf="@+id/cpb_am_kmgoal"
@@ -268,7 +285,7 @@
             android:id="@+id/imageView5"
             android:layout_width="wrap_content"
             android:layout_height="0dp"
-            android:layout_marginTop="20dp"
+            android:layout_marginTop="17dp"
             app:layout_constraintEnd_toEndOf="@+id/cpb_am_kmgoal1"
             app:layout_constraintStart_toStartOf="@+id/cpb_am_kmgoal1"
             app:layout_constraintTop_toTopOf="@+id/cpb_am_kmgoal1"

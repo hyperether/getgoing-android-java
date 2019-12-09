@@ -20,6 +20,8 @@ import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.Chronometer;
 
+import androidx.core.app.ActivityCompat;
+
 import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -46,8 +48,6 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Timer;
 import java.util.TimerTask;
-
-import androidx.core.app.ActivityCompat;
 
 import static android.provider.Settings.ACTION_LOCATION_SOURCE_SETTINGS;
 
@@ -319,7 +319,7 @@ public class ShowLocationActivity extends Activity implements OnMapReadyCallback
     private void stopTracking() {
         stopService(new Intent(this, GPSTrackingService.class));
 
-        timeWhenStopped = showTime.getBase() - SystemClock.elapsedRealtime();
+        timeWhenStopped = SystemClock.elapsedRealtime() - showTime.getBase();
         showTime.stop();
 
         button_start.setVisibility(View.VISIBLE);

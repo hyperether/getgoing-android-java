@@ -4,6 +4,7 @@ import android.annotation.SuppressLint;
 import android.app.Dialog;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -27,6 +28,7 @@ import com.hyperether.getgoing.repository.room.entity.DbRoute;
 import com.hyperether.getgoing.ui.activity.ShowDataActivity;
 import com.hyperether.getgoing.util.Constants;
 
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -41,6 +43,7 @@ public class ActivitiesFragment extends DialogFragment
     private SeekBar seekBar;
     private TextView low, medium, high;
     private TextView minutesRunning, minutesWalking, minutesCycling, kcal;
+    private TextView mileage1, mileage2, mileage3;
     private ImageButton backBtn;
     private ImageView walkDetails, runDetails, rideDetails;
     private ProgressBar prbWalk, prbRun, prbRide;
@@ -242,39 +245,68 @@ public class ActivitiesFragment extends DialogFragment
 
     private void fillProgressBars()
     {
-        List<DbRoute> allRoutes = new ArrayList<>();
+        new PullProgressData().execute(null, null, null);
+    }
 
-        prbWalk = getView().findViewById(R.id.progressBar);
-        prbRun = getView().findViewById(R.id.progressBar2);
-        prbRide = getView().findViewById(R.id.progressBar3);
-
+    private class PullProgressData extends AsyncTask<Void, Void, Void>
+    {
+        List<DbRoute> allRoutes;
         int goal = settings.getInt("goal", 0);
-        int sumWalk = 0, sumRun = 0, sumRide = 0;
-
-        DbHelper.getInstance(getContext()).getRoutes(allRoutes::addAll);
-
-        for (DbRoute route : allRoutes)
-        {
-            if (route.getActivity_id() == 1)
-                sumWalk += route.getLength();
-            else if (route.getActivity_id() == 2)
-                sumRun += route.getLength();
-            else if (route.getActivity_id() == 3)
-                sumRide += route.getLength();
-        }
-
+        Double sumWalk = 0.0, sumRun = 0.0, sumRide = 0.0;
         int walkPercentage = 0, runPercentage = 0, ridePercentage = 0;
 
-        if (sumWalk != 0)
-            walkPercentage = goal / sumWalk * 100;
-        if (sumRun != 0)
-            runPercentage = goal / sumRun * 100;
-        if (sumRide != 0)
-            ridePercentage = goal / sumRide * 100;
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
 
-        prbWalk.setProgress(walkPercentage);
-        prbRun.setProgress(runPercentage);
-        prbRide.setProgress(ridePercentage);
+            prbWalk = getView().findViewById(R.id.progressBar);
+            prbRun = getView().findViewById(R.id.progressBar2);
+            prbRide = getView().findViewById(R.id.progressBar3);
+
+            mileage1 = getView().findViewById(R.id.tv_fa_pb_mileage1);
+            mileage2 = getView().findViewById(R.id.tv_fa_pb_mileage2);
+            mileage3 = getView().findViewById(R.id.tv_fa_pb_mileage3);
+
+        }
+
+        @Override
+        protected Void doInBackground(Void... voids) {
+            allRoutes = new ArrayList<>();
+            DbHelper.getInstance(getContext()).getRoutes(allRoutes::addAll);
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(Void aVoid) {
+            super.onPostExecute(aVoid);
+
+            for (DbRoute route : allRoutes)
+            {
+                if (route.getActivity_id() == 1)
+                    sumWalk += route.getLength();
+                else if (route.getActivity_id() == 2)
+                    sumRun += route.getLength();
+                else if (route.getActivity_id() == 3)
+                    sumRide += route.getLength();
+            }
+
+            if (sumWalk != 0)
+                walkPercentage = (int) (sumWalk * 100 / goal);
+            if (sumRun != 0)
+                runPercentage = (int) (sumRun * 100 / goal);
+            if (sumRide != 0)
+                ridePercentage = (int) (sumRide * 100 / goal);
+
+            prbWalk.setProgress(walkPercentage);
+            prbRun.setProgress(runPercentage);
+            prbRide.setProgress(ridePercentage);
+
+            DecimalFormat df = new DecimalFormat("#.##");
+
+            mileage1.setText(df.format(sumWalk / 1000)+ "km");
+            mileage2.setText(df.format(sumRun / 1000) + "km");
+            mileage3.setText(df.format(sumRide / 1000) + "km");
+        }
     }
 
 }

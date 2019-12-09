@@ -1,4 +1,4 @@
-package com.hyperether.getgoing.ui;
+package com.hyperether.getgoing.ui.dynamicview;
 
 import android.content.Context;
 import android.graphics.Canvas;
@@ -8,8 +8,6 @@ import android.graphics.Path;
 import android.graphics.Point;
 import android.util.AttributeSet;
 import android.view.View;
-
-import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 public class CurvedBottomView extends View {
 
