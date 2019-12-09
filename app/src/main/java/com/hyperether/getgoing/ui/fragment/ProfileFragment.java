@@ -315,6 +315,7 @@ public class ProfileFragment extends DialogFragment {
 
     private void initTotals()
     {
+        //TODO: add threading here
         List<DbRoute> routeList = new ArrayList<>();
 
         DbHelper.getInstance(getContext()).getRoutes(routeList::addAll);

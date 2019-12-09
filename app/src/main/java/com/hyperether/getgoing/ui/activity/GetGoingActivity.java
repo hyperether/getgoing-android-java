@@ -464,7 +464,7 @@ public class GetGoingActivity extends AppCompatActivity implements
                 int lastRouteTime;
 
                 if (pointerList.get(0).getDuration() >= 60000)
-                    lastRouteTime = Math.round(pointerList.get(0).getDuration() / 1000);
+                    lastRouteTime = Math.round(pointerList.get(0).getDuration() / 1000 / 60);
                 else
                     lastRouteTime = 0;
 
