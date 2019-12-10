@@ -1,0 +1,222 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/color_background_new">
+
+    <ImageButton
+        android:id="@+id/ib_al_backbutton"
+        android:layout_width="62dp"
+        android:layout_height="62dp"
+        android:background="@android:color/transparent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:srcCompat="@drawable/ic_light_back_icon" />
+
+    <TextView
+        android:id="@+id/tv_al_activity"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:layout_marginLeft="8dp"
+        android:text="@string/walking"
+        android:textColor="@color/mat_gray"
+        android:textSize="24sp"
+        app:layout_constraintBottom_toBottomOf="@+id/ib_al_backbutton"
+        app:layout_constraintStart_toEndOf="@+id/ib_al_backbutton"
+        app:layout_constraintTop_toTopOf="@+id/ib_al_backbutton" />
+
+    <fragment
+        android:id="@+id/mapView"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        class="com.google.android.gms.maps.MapFragment"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/ib_al_backbutton">
+    </fragment>
+
+
+    <com.hyperether.getgoing.ui.dynamicview.CurvedBottomView
+        android:id="@+id/al_customBottomBar"
+        android:layout_width="match_parent"
+        android:layout_height="150dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent">
+
+    </com.hyperether.getgoing.ui.dynamicview.CurvedBottomView>
+
+    <ImageView
+        android:id="@+id/iv_al_circletransparent"
+        android:layout_width="120dp"
+        android:layout_height="120dp"
+        android:layout_marginBottom="140dp"
+        android:src="@drawable/ic_circle"
+        app:layout_constraintBottom_toBottomOf="@+id/al_customBottomBar"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
+
+    <ImageView
+        android:id="@+id/al_button"
+        android:layout_width="100dp"
+        android:layout_height="100dp"
+        android:elevation="1dp"
+        android:src="@drawable/ic_circle_white"
+        app:layout_constraintBottom_toBottomOf="@+id/iv_al_circletransparent"
+        app:layout_constraintEnd_toEndOf="@+id/iv_al_circletransparent"
+        app:layout_constraintStart_toStartOf="@+id/iv_al_circletransparent"
+        app:layout_constraintTop_toTopOf="@+id/iv_al_circletransparent" />
+
+    <ImageView
+        android:id="@+id/al_btn_start"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="@android:color/transparent"
+        android:elevation="2dp"
+        app:layout_constraintBottom_toBottomOf="@id/al_button"
+        app:layout_constraintTop_toTopOf="@id/al_button"
+        app:layout_constraintStart_toStartOf="@id/al_button"
+        app:layout_constraintEnd_toEndOf="@id/al_button"
+        app:layout_constraintHorizontal_bias="0.55"
+        app:srcCompat="@drawable/ic_light_start_icon"
+        android:visibility="visible"
+        />
+
+    <ImageView
+        android:id="@+id/al_btn_pause"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="@android:color/transparent"
+        android:elevation="2dp"
+        android:visibility="invisible"
+        app:layout_constraintBottom_toBottomOf="@id/al_button"
+        app:layout_constraintEnd_toEndOf="@id/al_button"
+        app:layout_constraintHorizontal_bias="0.55"
+        app:layout_constraintStart_toStartOf="@id/al_button"
+        app:layout_constraintTop_toTopOf="@id/al_button"
+        app:srcCompat="@drawable/ic_light_stop_icon" />
+
+    <TextView
+        android:id="@+id/tv_al_meters"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="40dp"
+        android:text="@string/tracking_start_0m"
+        android:textColor="@color/mat_gray"
+        android:textSize="28sp"
+        android:textStyle="bold"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@id/al_customBottomBar" />
+
+    <Chronometer
+        android:id="@+id/chr_al_speed"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toBottomOf="@id/tv_al_meters"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginTop="30dp"
+        android:textSize="22sp"
+        android:textColor="@color/mat_gray"
+        android:format="0.00m/s"
+        />
+
+    <Chronometer
+        android:id="@+id/chr_al_duration"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toBottomOf="@id/tv_al_meters"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toStartOf="@id/chr_al_speed"
+        android:layout_marginTop="30dp"
+        android:layout_marginEnd="10dp"
+        android:textSize="22sp"
+        android:textColor="@color/mat_gray"
+        android:format="00:00:00"
+        />
+
+    <Chronometer
+        android:id="@+id/chr_al_kcal"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toBottomOf="@id/tv_al_meters"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toEndOf="@id/chr_al_speed"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginTop="30dp"
+        android:layout_marginStart="10dp"
+        android:textSize="22sp"
+        android:textColor="@color/mat_gray"
+        android:format="0,00kcal"
+        />
+
+    <TextView
+        android:id="@+id/tv_al_speed"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="15dp"
+        android:text="@string/speed"
+        android:textColor="@color/mat_gray"
+        android:textSize="18sp"
+        app:layout_constraintBottom_toTopOf="@id/chr_al_speed"
+        app:layout_constraintEnd_toEndOf="@id/chr_al_speed"
+        app:layout_constraintStart_toStartOf="@id/chr_al_speed"
+        app:layout_constraintTop_toBottomOf="@id/tv_al_meters" />
+
+    <TextView
+        android:id="@+id/tv_al_duration"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="15dp"
+        android:text="@string/duration"
+        android:textColor="@color/mat_gray"
+        android:textSize="18sp"
+        app:layout_constraintBottom_toTopOf="@id/chr_al_duration"
+        app:layout_constraintEnd_toEndOf="@id/chr_al_duration"
+        app:layout_constraintStart_toStartOf="@id/chr_al_duration"
+        app:layout_constraintTop_toBottomOf="@id/tv_al_meters" />
+
+    <TextView
+        android:id="@+id/tv_al_kcal"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="15dp"
+        android:text="@string/calories"
+        android:textColor="@color/mat_gray"
+        android:textSize="18sp"
+        app:layout_constraintBottom_toTopOf="@id/chr_al_kcal"
+        app:layout_constraintEnd_toEndOf="@id/chr_al_kcal"
+        app:layout_constraintStart_toStartOf="@id/chr_al_kcal"
+        app:layout_constraintTop_toBottomOf="@id/tv_al_meters" />
+
+    <ImageButton
+        android:id="@+id/ib_al_save"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="@android:color/transparent"
+        app:srcCompat="@drawable/ic_light_save_icon"
+        app:layout_constraintStart_toStartOf="@id/tv_al_duration"
+        app:layout_constraintEnd_toEndOf="@id/tv_al_duration"
+        app:layout_constraintTop_toTopOf="@id/al_customBottomBar"
+        android:layout_marginTop="15dp"/>
+
+    <ImageButton
+        android:id="@+id/ib_al_reset"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="@android:color/transparent"
+        app:srcCompat="@drawable/ic_light_replay_icon"
+        app:layout_constraintStart_toStartOf="@id/tv_al_kcal"
+        app:layout_constraintEnd_toEndOf="@id/tv_al_kcal"
+        app:layout_constraintTop_toTopOf="@id/al_customBottomBar"
+        android:layout_marginTop="15dp"/>
+
+</androidx.constraintlayout.widget.ConstraintLayout>
+

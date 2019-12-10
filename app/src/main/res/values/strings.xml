@@ -72,7 +72,7 @@
 
     <!-- Reset button alert dialog -->
     <string name="alert_dialog_title_reset_btn">Clear route data</string>
-    <string name="alert_dialog_message_reset_btn">Clear map and rout data.</string>
+    <string name="alert_dialog_message_reset_btn">Clear map and route data.</string>
     <string name="alert_dialog_positive_reset_save_btn">OK</string>
     <string name="alert_dialog_negative_reset_save_btn">Cancel</string>
 
@@ -136,6 +136,11 @@
     <string name="gender_other">Other</string>
     <string name="totalkm_0km">0km</string>
     <string name="totalkcal_0kcal">0kcal</string>
+    <string name="walking">Walking</string>
+    <string name="tracking_start_0m">0.00m</string>
+    <string name="duration">Duration</string>
+    <string name="speed">Speed</string>
+    <string name="calories">Calories</string>
 
 </resources>
 

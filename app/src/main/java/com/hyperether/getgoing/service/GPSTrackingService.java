@@ -170,8 +170,8 @@ public class GPSTrackingService extends HyperLocationService {
                         CacheManager.getInstance().setVelocity(velocity);
                     }
 
-                    if (CacheManager.getInstance().getObDataFrameLocal() != null) {
-                        cbDataFrameLocal = CacheManager.getInstance().getObDataFrameLocal();
+                    if (CacheManager.getInstance().getObDataFrameGlobal() != null) {
+                        cbDataFrameLocal = CacheManager.getInstance().getObDataFrameGlobal();
                         kcalCurrent = calcCal
                                 .calculate(distance, velocity, cbDataFrameLocal,
                                         weight);

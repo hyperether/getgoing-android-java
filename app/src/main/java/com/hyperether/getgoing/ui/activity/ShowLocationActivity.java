@@ -1,6 +1,5 @@
 package com.hyperether.getgoing.ui.activity;
 
-import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -20,6 +19,7 @@ import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.Chronometer;
 
+import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 
 import com.google.android.gms.maps.CameraUpdate;
@@ -51,7 +51,7 @@ import java.util.TimerTask;
 
 import static android.provider.Settings.ACTION_LOCATION_SOURCE_SETTINGS;
 
-public class ShowLocationActivity extends Activity implements OnMapReadyCallback {
+public class ShowLocationActivity extends AppCompatActivity implements OnMapReadyCallback {
 
     private static final long UPDATE_INTERVAL_IN_MILLISECONDS = 3000;
     private static final long FASTEST_UPDATE_INTERVAL_IN_MILLISECONDS =
@@ -88,7 +88,7 @@ public class ShowLocationActivity extends Activity implements OnMapReadyCallback
         super.onCreate(savedInstanceState);
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
         // Keep screen on all the time
-        setContentView(R.layout.show_location);
+        setContentView(R.layout.activity_location);
 
         mRouteAlreadySaved = true;
 
@@ -101,14 +101,14 @@ public class ShowLocationActivity extends Activity implements OnMapReadyCallback
         Bundle b = getIntent().getExtras();
         cbDataFrameLocal = b.getParcelable("searchKey");
 
-        initLayoutDinamically();
+        //initLayoutDinamically();
 
         sdf = new SimpleDateFormat("dd.MM.yyyy.' 'HH:mm:ss", Locale.ENGLISH);
 
-        clearData();
+        //clearData();
 
         MapFragment mapFragment = (MapFragment) getFragmentManager()
-                .findFragmentById(R.id.show_map_page);
+                .findFragmentById(R.id.mapView);
         mapFragment.getMapAsync(this);
 
         if (mPrefs.contains("KEY_UPDATES_ON")) {
@@ -362,16 +362,16 @@ public class ShowLocationActivity extends Activity implements OnMapReadyCallback
      */
     private void showData(double distance, double kcal, double vel,
                           double velAvg) {
-        showCalories.setText(String.format("%.02f kcal", kcal));
-        if (cbDataFrameLocal.getMeasurementSystemId() == 1 ||
-                cbDataFrameLocal.getMeasurementSystemId() == 2)
-            showDistance
-                    .setText(String.format("%.02f ft", distance * 3.281)); // present data in feet
-        else
-            showDistance.setText(String.format("%.02f m", distance));
-
-        showVelocity.setText(String.format("%.02f m/s", vel));
-        showVelocityAvg.setText(String.format("%.02f m/s", velAvg));
+//        showCalories.setText(String.format("%.02f kcal", kcal));
+//        if (cbDataFrameLocal.getMeasurementSystemId() == 1 ||
+//                cbDataFrameLocal.getMeasurementSystemId() == 2)
+//            showDistance
+//                    .setText(String.format("%.02f ft", distance * 3.281)); // present data in feet
+//        else
+//            showDistance.setText(String.format("%.02f m", distance));
+//
+//        showVelocity.setText(String.format("%.02f m/s", vel));
+//        showVelocityAvg.setText(String.format("%.02f m/s", velAvg));
     }
 
     @Override
@@ -575,20 +575,20 @@ public class ShowLocationActivity extends Activity implements OnMapReadyCallback
      * Method for initiating layout.
      */
     private void initLayoutDinamically() {
-        button_start = (Button) findViewById(R.id.start_button);
-        button_start.setOnClickListener(mButtonStartListener);
-        button_pause = (Button) findViewById(R.id.end_button);
-        button_pause.setOnClickListener(mButtonPauseListener);
-        button_rst = (Button) findViewById(R.id.refresh_button);
-        button_rst.setOnClickListener(mButtonResetListener);
-        button_save = (Button) findViewById(R.id.save_button);
-        button_save.setOnClickListener(mButtonSaveListener);
-
-        showTime = (Chronometer) findViewById(R.id.showTime);
-        showCalories = (Chronometer) findViewById(R.id.showCalories);
-        showDistance = (Chronometer) findViewById(R.id.showDistance);
-        showVelocity = (Chronometer) findViewById(R.id.showVelocity);
-        showVelocityAvg = (Chronometer) findViewById(R.id.showVelocityAvg);
+//        button_start = (Button) findViewById(R.id.start_button);
+//        button_start.setOnClickListener(mButtonStartListener);
+//        button_pause = (Button) findViewById(R.id.end_button);
+//        button_pause.setOnClickListener(mButtonPauseListener);
+//        button_rst = (Button) findViewById(R.id.refresh_button);
+//        button_rst.setOnClickListener(mButtonResetListener);
+//        button_save = (Button) findViewById(R.id.save_button);
+//        button_save.setOnClickListener(mButtonSaveListener);
+//
+//        showTime = (Chronometer) findViewById(R.id.showTime);
+//        showCalories = (Chronometer) findViewById(R.id.showCalories);
+//        showDistance = (Chronometer) findViewById(R.id.showDistance);
+//        showVelocity = (Chronometer) findViewById(R.id.showVelocity);
+//        showVelocityAvg = (Chronometer) findViewById(R.id.showVelocityAvg);
     }
 
     /**

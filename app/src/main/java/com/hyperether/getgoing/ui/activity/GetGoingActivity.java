@@ -33,6 +33,7 @@ import com.hyperether.getgoing.databinding.ActivityMainBinding;
 import com.hyperether.getgoing.manager.CacheManager;
 import com.hyperether.getgoing.model.CBDataFrame;
 import com.hyperether.getgoing.repository.room.DbHelper;
+import com.hyperether.getgoing.repository.room.entity.DbNode;
 import com.hyperether.getgoing.repository.room.entity.DbRoute;
 import com.hyperether.getgoing.ui.adapter.HorizontalListAdapter;
 import com.hyperether.getgoing.ui.adapter.formatter.MyProgressFormatter;
@@ -87,9 +88,15 @@ public class GetGoingActivity extends AppCompatActivity implements
         super.onCreate(savedInstanceState);
         Fabric.with(this, new Crashlytics());
         mBinding = DataBindingUtil.setContentView(this, R.layout.activity_main);
-
-        cbDataFrameLocal = new CBDataFrame();
         mBinding.setViewModel(new ClickHandler());
+
+        cbDataFrameLocal = CacheManager.getInstance().getObDataFrameGlobal();
+
+        /*route init*/
+        List<DbNode> tmpRoute = new ArrayList<>();
+        DbNode tmpNode = new DbNode(0, 0, 0, 0, 0, 0);
+        tmpRoute.add(tmpNode);
+        roomStoreNodeZero(tmpRoute);
 
         actLabel = findViewById(R.id.tv_ma_mainact);
         selectorView = findViewById(R.id.imageView2);
@@ -104,7 +111,6 @@ public class GetGoingActivity extends AppCompatActivity implements
 
         currentSettings = getSharedPreferences(Constants.PREF_FILE, 0);
 
-        initModel();
         initScreenDimen();
         initRecyclerView();
         initListeners();
@@ -113,6 +119,8 @@ public class GetGoingActivity extends AppCompatActivity implements
     @Override
     protected void onResume() {
         super.onResume();
+
+        initModel();
         initProgressBars();
     }
 
@@ -166,12 +174,11 @@ public class GetGoingActivity extends AppCompatActivity implements
      * @param id mode id
      */
     private void callMeteringActivity(int id) {
-        if (getParametersStatus(this.cbDataFrameLocal)) {
+        if (getParametersStatus(CacheManager.getInstance().getObDataFrameGlobal())) {
             setMeteringActivityRequested(0);
             this.cbDataFrameLocal.setProfileId(id);
             Intent intent = new Intent(GetGoingActivity.this, ShowLocationActivity.class);
-            CacheManager.getInstance().setObDataFrameLocal(this.cbDataFrameLocal);
-            intent.putExtra("searchKey", this.cbDataFrameLocal);
+            intent.putExtra("searchKey", CacheManager.getInstance().getObDataFrameGlobal());
             startActivity(intent);
         } else {
             setMeteringActivityRequested(id);
@@ -198,23 +205,9 @@ public class GetGoingActivity extends AppCompatActivity implements
          */
         measureUnitId = currentSettings.getInt("measurementSystemId", Constants.METRIC);
         cbDataFrameLocal.setMeasurementSystemId(measureUnitId);
-        age = currentSettings.getInt("age", 0);
-        cbDataFrameLocal.setAge(age);
-        weight = currentSettings.getInt("weight", 0);
-        cbDataFrameLocal.setWeight(weight);
-        height = currentSettings.getInt("height", 0);
-        cbDataFrameLocal.setHeight(height);
-
-        int genderInt = currentSettings.getInt("gender", 0);
-
-        if (genderInt == 0)
-            gender = Constants.gender.Male;
-        else if (genderInt == 1)
-            gender = Constants.gender.Female;
-        else
-            gender = Constants.gender.Other;
-
-        cbDataFrameLocal.setGender(gender);
+        cbDataFrameLocal.setHeight(currentSettings.getInt("height", 0));
+        cbDataFrameLocal.setWeight(currentSettings.getInt("weight", 0));
+        cbDataFrameLocal.setAge(currentSettings.getInt("age", 0));
     }
 
     private void initRecyclerView()
@@ -431,6 +424,11 @@ public class GetGoingActivity extends AppCompatActivity implements
         cbDataFrameLocal = dataFrame;
     }
 
+    private void roomStoreNodeZero(List<DbNode> nodeList) {
+        DbRoute dbRoute = new DbRoute(0, 0,0,0,"null", 0, 1);
+        DbHelper.getInstance(getApplicationContext()).insertRoute(dbRoute, nodeList);
+    }
+
     private class PullProgressData extends AsyncTask<Void, Void, Void>
     {
         List<DbRoute> pointerList;
@@ -458,7 +456,7 @@ public class GetGoingActivity extends AppCompatActivity implements
         protected void onPostExecute(Void aVoid) {
             super.onPostExecute(aVoid);
 
-            if (pointerList.get(0) != null)
+            if (!pointerList.isEmpty())
             {
                 int lastRouteLen = (int) pointerList.get(0).getLength();
                 int lastRouteTime;
@@ -510,6 +508,21 @@ public class GetGoingActivity extends AppCompatActivity implements
                     }
                 }
             }
+            else
+                resetDisplay();
+        }
+
+        private void resetDisplay()
+        {
+            circleProgressBar.setProgressFormatter(new MyProgressFormatter(0));
+            circleProgressBar.setProgress(0);
+
+            circleProgressBar2.setProgressFormatter(new MyProgressFormatter2(0));
+            circleProgressBar2.setProgress(0);
+
+            circleProgressBar3.setProgressFormatter(new MyProgressFormatter3());
+
+            kcalVal.setText(Integer.toString(0));
         }
     }
 

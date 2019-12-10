@@ -18,6 +18,7 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.DialogFragment;
 
 import com.hyperether.getgoing.R;
+import com.hyperether.getgoing.manager.CacheManager;
 import com.hyperether.getgoing.model.CBDataFrame;
 import com.hyperether.getgoing.repository.room.DbHelper;
 import com.hyperether.getgoing.repository.room.entity.DbRoute;
@@ -32,6 +33,7 @@ public class ProfileFragment extends DialogFragment {
 
     private ImageButton genderBtn, ageBtn, heightBtn, weightBtn, backBtn;
     private TextView tvAge, tvGender, tvHeight, tvWeight;
+    private TextView totalMileage, totalCalories;
     private ImageView genderImg;
 
     private CBDataFrame mDataFrame;
@@ -39,7 +41,9 @@ public class ProfileFragment extends DialogFragment {
 
     private SharedPreferences settings;
 
-    public ProfileFragment(CBDataFrame pDataFrame) {mDataFrame = pDataFrame;}
+    public ProfileFragment(CBDataFrame pDataFrame) {
+        mDataFrame = pDataFrame;
+    }
 
     public static ProfileFragment newInstance(CBDataFrame dataFrame) {
         ProfileFragment profileFragment = new ProfileFragment(dataFrame);
@@ -54,6 +58,7 @@ public class ProfileFragment extends DialogFragment {
         super.onCreate(savedInstanceState);
         setStyle(DialogFragment.STYLE_NORMAL, R.style.FullScreenDialogStyle);
         settings = getActivity().getSharedPreferences(Constants.PREF_FILE, 0);
+        mDataFrame = CacheManager.getInstance().getObDataFrameGlobal();
     }
 
     @Nullable
@@ -69,11 +74,9 @@ public class ProfileFragment extends DialogFragment {
 
         if (genderSel == 0) {
             genderImg.setImageDrawable(getResources().getDrawable(R.drawable.ic_gendersign_male));
-        }
-        else if (genderSel == 1) {
+        } else if (genderSel == 1) {
             genderImg.setImageDrawable(getResources().getDrawable(R.drawable.ic_light_gender_female_icon));
-        }
-        else if (genderSel == 2) {
+        } else if (genderSel == 2) {
             genderImg.setImageDrawable(getResources().getDrawable(R.drawable.ic_light_gender_icon_trans));
         }
 
@@ -91,8 +94,7 @@ public class ProfileFragment extends DialogFragment {
 
         Dialog dialog = getDialog();
 
-        if (dialog != null)
-        {
+        if (dialog != null) {
             int width = ViewGroup.LayoutParams.MATCH_PARENT;
             int height = ViewGroup.LayoutParams.MATCH_PARENT;
 
@@ -104,8 +106,7 @@ public class ProfileFragment extends DialogFragment {
         initDialogs();
     }
 
-    private void initDialogs()
-    {
+    private void initDialogs() {
         genderBtn = getView().findViewById(R.id.ib_fp_gender);
         ageBtn = getView().findViewById(R.id.ib_fp_age);
         weightBtn = getView().findViewById(R.id.ib_fp_weight);
@@ -145,37 +146,37 @@ public class ProfileFragment extends DialogFragment {
             }
         });
 
-        backBtn.setOnClickListener(view -> this.getDialog().dismiss());
+        backBtn.setOnClickListener(view -> {
+            this.getDialog().dismiss();
+        });
     }
 
-    private AlertDialog.Builder createDialog(String pID, View pView)
-    {
+    private AlertDialog.Builder createDialog(String pID, View pView) {
         AlertDialog.Builder genderBuilder, ageBuilder,
                 weightBuilder, heightBuilder;
 
         LayoutInflater inflater;
 
-        switch (pID)
-        {
-            case "gender":
-            {
+        switch (pID) {
+            case "gender": {
                 genderBuilder = new AlertDialog.Builder(pView.getContext());
                 final String[] newText = new String[1];
 
                 genderBuilder.setSingleChoiceItems(R.array.genders, settings.getInt("gender", 0), (dialog, which) -> {
                     SharedPreferences.Editor editor = settings.edit();
 
-                    if (which == 0){
+                    if (which == 0) {
                         newText[0] = "Male";
                         editor.putInt("gender", 0);
-                    }
-                    else if (which == 1){
+                        mDataFrame.setGender(Constants.gender.Male);
+                    } else if (which == 1) {
                         newText[0] = "Female";
                         editor.putInt("gender", 1);
-                    }
-                    else {
+                        mDataFrame.setGender(Constants.gender.Female);
+                    } else {
                         newText[0] = "Other";
                         editor.putInt("gender", 2);
+                        mDataFrame.setGender(Constants.gender.Other);
                     }
                     editor.apply();
                 })
@@ -199,8 +200,7 @@ public class ProfileFragment extends DialogFragment {
 
                 return genderBuilder;
             }
-            case "age":
-            {
+            case "age": {
                 List ageList = new ArrayList<String>();
                 for (int i = 1; i <= 120; i++) {
                     ageList.add(Integer.toString(i));
@@ -223,14 +223,14 @@ public class ProfileFragment extends DialogFragment {
                     SharedPreferences.Editor editor = settings.edit();
                     editor.putInt("age", Integer.valueOf((String) ageSpinner.getSelectedItem()));
                     editor.apply();
+                    mDataFrame.setAge(Integer.valueOf((String) ageSpinner.getSelectedItem()));
                 })
                 .setNegativeButton("Cancel", (dialogInterface, i) -> dialogInterface.cancel())
                 .setTitle("How old are you?");
 
                 return ageBuilder;
             }
-            case "weight":
-            {
+            case "weight": {
                 List weightList = new ArrayList<String>();
                 for (int i = 40; i <= 150; i++) {
                     weightList.add(Integer.toString(i));
@@ -253,14 +253,14 @@ public class ProfileFragment extends DialogFragment {
                     SharedPreferences.Editor editor = settings.edit();
                     editor.putInt("weight", Integer.valueOf((String) weightSpinner.getSelectedItem()));
                     editor.apply();
+                    mDataFrame.setWeight(Integer.valueOf((String) weightSpinner.getSelectedItem()));
                 })
                 .setNegativeButton("Cancel", (dialogInterface, i) -> dialogInterface.cancel())
                 .setTitle("Enter your weight:");
 
                 return weightBuilder;
             }
-            case "height":
-            {
+            case "height": {
                 List heightList = new ArrayList<String>();
                 for (int i = 110; i <= 250; i++) {
                     heightList.add(Integer.toString(i));
@@ -278,12 +278,13 @@ public class ProfileFragment extends DialogFragment {
                 heightSpinner.setSelection(settings.getInt("height", 0) - 110);
 
                 heightBuilder.setPositiveButton("Confirm", (dialogInterface, i) -> {
-                            //TODO: modify model
+                    //TODO: modify model
                     tvHeight.setText(heightSpinner.getSelectedItem() + " cm");
 
                     SharedPreferences.Editor editor = settings.edit();
                     editor.putInt("height", Integer.valueOf((String) heightSpinner.getSelectedItem()));
                     editor.apply();
+                    mDataFrame.setHeight(Integer.valueOf((String) heightSpinner.getSelectedItem()));
                 })
                 .setNegativeButton("Cancel", (dialogInterface, i) -> dialogInterface.cancel())
                 .setTitle("Enter your height:");
@@ -295,44 +296,42 @@ public class ProfileFragment extends DialogFragment {
         return null;
     }
 
-    private void initLabels()
-    {
-        tvAge.setText(settings.getInt("age", 0)+ " years");
+    private void initLabels() {
+        tvAge.setText(settings.getInt("age", 0) + " years");
         tvHeight.setText(settings.getInt("height", 0) + "cm");
         tvWeight.setText(settings.getInt("weight", 0) + "kg");
 
         int gender = settings.getInt("gender", 0);
         if (gender == 0) {
             tvGender.setText(R.string.gender_male);
-        }
-        else if (gender == 1) {
+        } else if (gender == 1) {
             tvGender.setText(R.string.gender_female);
-        }
-        else if (gender == 2) {
+        } else if (gender == 2) {
             tvGender.setText(R.string.gender_other);
         }
     }
 
-    private void initTotals()
-    {
-        //TODO: add threading here
-        List<DbRoute> routeList = new ArrayList<>();
+    private void initTotals() {
+        final float[] totalRoute = new float[1];
+        final int[] totalKcal = new int[1];
 
-        DbHelper.getInstance(getContext()).getRoutes(routeList::addAll);
+        DbHelper.getInstance(getContext()).getRoutes(routes -> {
+            totalRoute[0] = 0;
+            totalKcal[0] = 0;
 
-        float totalRoute = 0;
-        int totalKcal = 0;
+            for (DbRoute route : routes) {
+                totalRoute[0] += route.getLength();
+                totalKcal[0] += route.getEnergy();
+            }
 
-        for (DbRoute route : routeList)
-        {
-            totalRoute += route.getLength();
-            totalKcal += route.getEnergy();
-        }
+            getActivity().runOnUiThread(() -> {
+                totalMileage.setText(totalRoute[0] + "km");
+                totalCalories.setText(totalKcal[0] + "kcal");
+            });
+        });
 
-        TextView totalMileage = getView().findViewById(R.id.tv_fp_mileage);
-        TextView totalCalories = getView().findViewById(R.id.tv_fp_calories);
-
-        totalMileage.setText(totalRoute + "km");
-        totalCalories.setText(totalKcal + "kcal");
+        totalMileage = getView().findViewById(R.id.tv_fp_mileage);
+        totalCalories = getView().findViewById(R.id.tv_fp_calories);
     }
+
 }
