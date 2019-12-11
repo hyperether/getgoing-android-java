@@ -91,7 +91,7 @@
         android:layout_height="wrap_content"
         android:background="@android:color/transparent"
         android:elevation="2dp"
-        android:visibility="invisible"
+        android:visibility="gone"
         app:layout_constraintBottom_toBottomOf="@id/al_button"
         app:layout_constraintEnd_toEndOf="@id/al_button"
         app:layout_constraintHorizontal_bias="0.55"
@@ -99,12 +99,12 @@
         app:layout_constraintTop_toTopOf="@id/al_button"
         app:srcCompat="@drawable/ic_light_stop_icon" />
 
-    <TextView
-        android:id="@+id/tv_al_meters"
+    <Chronometer
+        android:id="@+id/chr_al_meters"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginBottom="40dp"
-        android:text="@string/tracking_start_0m"
+        android:format="0.00m"
         android:textColor="@color/mat_gray"
         android:textSize="28sp"
         android:textStyle="bold"
@@ -117,7 +117,7 @@
         android:id="@+id/chr_al_speed"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        app:layout_constraintTop_toBottomOf="@id/tv_al_meters"
+        app:layout_constraintTop_toBottomOf="@id/chr_al_meters"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
@@ -131,7 +131,7 @@
         android:id="@+id/chr_al_duration"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        app:layout_constraintTop_toBottomOf="@id/tv_al_meters"
+        app:layout_constraintTop_toBottomOf="@id/chr_al_meters"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toStartOf="@id/chr_al_speed"
@@ -139,14 +139,13 @@
         android:layout_marginEnd="10dp"
         android:textSize="22sp"
         android:textColor="@color/mat_gray"
-        android:format="00:00:00"
         />
 
     <Chronometer
         android:id="@+id/chr_al_kcal"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        app:layout_constraintTop_toBottomOf="@id/tv_al_meters"
+        app:layout_constraintTop_toBottomOf="@id/chr_al_meters"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toEndOf="@id/chr_al_speed"
         app:layout_constraintEnd_toEndOf="parent"
@@ -168,7 +167,7 @@
         app:layout_constraintBottom_toTopOf="@id/chr_al_speed"
         app:layout_constraintEnd_toEndOf="@id/chr_al_speed"
         app:layout_constraintStart_toStartOf="@id/chr_al_speed"
-        app:layout_constraintTop_toBottomOf="@id/tv_al_meters" />
+        app:layout_constraintTop_toBottomOf="@id/chr_al_meters" />
 
     <TextView
         android:id="@+id/tv_al_duration"
@@ -181,7 +180,7 @@
         app:layout_constraintBottom_toTopOf="@id/chr_al_duration"
         app:layout_constraintEnd_toEndOf="@id/chr_al_duration"
         app:layout_constraintStart_toStartOf="@id/chr_al_duration"
-        app:layout_constraintTop_toBottomOf="@id/tv_al_meters" />
+        app:layout_constraintTop_toBottomOf="@id/chr_al_meters" />
 
     <TextView
         android:id="@+id/tv_al_kcal"
@@ -194,7 +193,7 @@
         app:layout_constraintBottom_toTopOf="@id/chr_al_kcal"
         app:layout_constraintEnd_toEndOf="@id/chr_al_kcal"
         app:layout_constraintStart_toStartOf="@id/chr_al_kcal"
-        app:layout_constraintTop_toBottomOf="@id/tv_al_meters" />
+        app:layout_constraintTop_toBottomOf="@id/chr_al_meters" />
 
     <ImageButton
         android:id="@+id/ib_al_save"
