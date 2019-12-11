@@ -425,7 +425,7 @@ public class GetGoingActivity extends AppCompatActivity implements
     }
 
     private void roomStoreNodeZero(List<DbNode> nodeList) {
-        DbRoute dbRoute = new DbRoute(0, 0,0,0,"null", 0, 1);
+        DbRoute dbRoute = new DbRoute(0, 0,0,0,"null", 0, 1, 0);
         DbHelper.getInstance(getApplicationContext()).insertRoute(dbRoute, nodeList);
     }
 
@@ -466,7 +466,7 @@ public class GetGoingActivity extends AppCompatActivity implements
                 else
                     lastRouteTime = 0;
 
-                int goal = currentSettings.getInt("goal", 0); //ovo je temp, treba da se dohvati drugi goal koji se setuje pri pocetku merenja
+                int goal = (int) pointerList.get(0).getGoal();
                 int cpbProgress;
 
                 if (goal != 0)
@@ -474,7 +474,7 @@ public class GetGoingActivity extends AppCompatActivity implements
                 else
                     cpbProgress = 0;
 
-                Integer kcal = (int) (lastRouteLen * 0.00112 * currentSettings.getInt("weight", 0));
+                int kcal = (int) pointerList.get(0).getEnergy();
 
                 circleProgressBar.setProgressFormatter(new MyProgressFormatter((double) lastRouteLen));
                 circleProgressBar.setProgress(cpbProgress);
@@ -484,7 +484,7 @@ public class GetGoingActivity extends AppCompatActivity implements
 
                 circleProgressBar3.setProgressFormatter(new MyProgressFormatter3());
 
-                kcalVal.setText(kcal.toString());
+                kcalVal.setText(String.valueOf(kcal));
 
                 switch (pointerList.get(0).getActivity_id())
                 {

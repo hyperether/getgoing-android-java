@@ -87,6 +87,8 @@ public class ActivitiesFragment extends DialogFragment
         minutesCycling = getView().findViewById(R.id.tv_fa_min3);
         kcal = getView().findViewById(R.id.tv_fa_kcal);
 
+        seekBar.incrementProgressBy(10);
+
         Dialog dialog = getDialog();
 
         if (dialog != null)
@@ -157,6 +159,9 @@ public class ActivitiesFragment extends DialogFragment
         seekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
             @Override
             public void onProgressChanged(SeekBar seekBar, int i, boolean b) {
+                i = i / 10;         /* arithmetic for setting value right */
+                i = i * 10;
+
                 goal.setText(Integer.toString(i));
 
                 if (i >= 0 && i <= 3333) {
@@ -233,13 +238,17 @@ public class ActivitiesFragment extends DialogFragment
 
     private void initLabels()
     {
+        seekBar.setProgress(settings.getInt("goal", 5000));
+
         int progress = seekBar.getProgress();
         int[] timeEstimates = getTimeEstimates(progress);
 
         goal.setText(Integer.toString(progress));
+
         minutesWalking.setText(timeEstimates[0] + " min");
         minutesRunning.setText(timeEstimates[1] + " min");
         minutesCycling.setText(timeEstimates[2] + " min");
+
         kcal.setText("About " + (int) (progress * 0.00112 * settings.getInt("weight", 0)) + "kcal");
     }
 

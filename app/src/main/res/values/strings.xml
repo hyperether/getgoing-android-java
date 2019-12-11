@@ -141,6 +141,8 @@
     <string name="duration">Duration</string>
     <string name="speed">Speed</string>
     <string name="calories">Calories</string>
+    <string name="set_goal_exercise">Set goal for this exercise</string>
+    <string name="dialog_hint">0000</string>
 
 </resources>
 

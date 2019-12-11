@@ -320,12 +320,12 @@ public class ProfileFragment extends DialogFragment {
             totalKcal[0] = 0;
 
             for (DbRoute route : routes) {
-                totalRoute[0] += route.getLength();
+                totalRoute[0] += (route.getLength() / 1000);
                 totalKcal[0] += route.getEnergy();
             }
 
             getActivity().runOnUiThread(() -> {
-                totalMileage.setText(totalRoute[0] + "km");
+                totalMileage.setText(String.format("%.02f km", totalRoute[0]));
                 totalCalories.setText(totalKcal[0] + "kcal");
             });
         });
