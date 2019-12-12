@@ -2,7 +2,6 @@ package com.hyperether.getgoing.ui.fragment;
 
 import android.annotation.SuppressLint;
 import android.app.Dialog;
-import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -25,7 +24,6 @@ import com.hyperether.getgoing.R;
 import com.hyperether.getgoing.model.CBDataFrame;
 import com.hyperether.getgoing.repository.room.DbHelper;
 import com.hyperether.getgoing.repository.room.entity.DbRoute;
-import com.hyperether.getgoing.ui.activity.ShowDataActivity;
 import com.hyperether.getgoing.util.Constants;
 
 import java.text.DecimalFormat;
@@ -39,7 +37,7 @@ public class ActivitiesFragment extends DialogFragment
     public static final String DATA_KEY = "data_key";
 
     private View whiteView;
-    private TextView goal;
+    private TextView goal, walkingLabel;
     private SeekBar seekBar;
     private TextView low, medium, high;
     private TextView minutesRunning, minutesWalking, minutesCycling, kcal;
@@ -112,13 +110,21 @@ public class ActivitiesFragment extends DialogFragment
         {
             whiteView = getView().findViewById(R.id.view);
             goal = getView().findViewById(R.id.tv_fa_goal);
+            walkingLabel = getView().findViewById(R.id.tv_fa_pb_walking);
 
-            whiteView.getLayoutParams().height = 1000;
+            whiteView.getLayoutParams().height = 900;
 
             ViewGroup.MarginLayoutParams params = (ViewGroup.MarginLayoutParams) goal.getLayoutParams();
-            params.topMargin = 90;
+            ViewGroup.MarginLayoutParams params1 = (ViewGroup.MarginLayoutParams) seekBar.getLayoutParams();
+            ViewGroup.MarginLayoutParams params2 = (ViewGroup.MarginLayoutParams) walkingLabel.getLayoutParams();
 
+            params.topMargin = 90;
+            params1.topMargin = 70;
+            params2.topMargin = 80;
+
+            walkingLabel.setLayoutParams(params2);
             goal.setLayoutParams(params);
+            seekBar.setLayoutParams(params1);
         }
     }
 
@@ -200,20 +206,21 @@ public class ActivitiesFragment extends DialogFragment
         high.setOnClickListener(view -> seekBar.setProgress(Constants.CONST_HIGH_DIST));
         backBtn.setOnClickListener(view -> this.getDialog().dismiss());
 
-        walkDetails.setOnClickListener(view -> {
-            Intent intent = new Intent(getContext(), ShowDataActivity.class);
-            startActivity(intent);
-        });
-
-        runDetails.setOnClickListener(view -> {
-            Intent intent = new Intent(getContext(), ShowDataActivity.class);
-            startActivity(intent);
-        });
-
-        rideDetails.setOnClickListener(view -> {
-            Intent intent = new Intent(getContext(), ShowDataActivity.class);
-            startActivity(intent);
-        });
+        /* ACTIVITY NOT IMPLEMENTED YET */
+//        walkDetails.setOnClickListener(view -> {
+//            Intent intent = new Intent(getContext(), ShowDataActivity.class);
+//            startActivity(intent);
+//        });
+//
+//        runDetails.setOnClickListener(view -> {
+//            Intent intent = new Intent(getContext(), ShowDataActivity.class);
+//            startActivity(intent);
+//        });
+//
+//        rideDetails.setOnClickListener(view -> {
+//            Intent intent = new Intent(getContext(), ShowDataActivity.class);
+//            startActivity(intent);
+//        });
 
         saveChanges.setOnClickListener(view -> {
             SharedPreferences.Editor editor = settings.edit();

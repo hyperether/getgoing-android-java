@@ -63,8 +63,7 @@ public class GetGoingActivity extends AppCompatActivity implements
     public static float ratio = (float) 0.0;
 
     /*USER DATA VARIABLES*/
-    private Constants.gender gender = Constants.gender.Male;
-    private int age, weight, height, measureUnitId;
+    private int measureUnitId;
 
     private ActivityMainBinding mBinding;
     private CBDataFrame cbDataFrameLocal;
@@ -78,7 +77,7 @@ public class GetGoingActivity extends AppCompatActivity implements
     private ImageView selectorView;
     private ImageView centralImg;
     private TextView blueSentence;
-    private TextView actLabel;
+    private TextView actLabel, lastExeLabel;
 
     private SharedPreferences currentSettings;
 
@@ -91,12 +90,6 @@ public class GetGoingActivity extends AppCompatActivity implements
         mBinding.setViewModel(new ClickHandler());
 
         cbDataFrameLocal = CacheManager.getInstance().getObDataFrameGlobal();
-
-        /*route init*/
-        List<DbNode> tmpRoute = new ArrayList<>();
-        DbNode tmpNode = new DbNode(0, 0, 0, 0, 0, 0);
-        tmpRoute.add(tmpNode);
-        roomStoreNodeZero(tmpRoute);
 
         actLabel = findViewById(R.id.tv_ma_mainact);
         selectorView = findViewById(R.id.imageView2);
@@ -111,6 +104,7 @@ public class GetGoingActivity extends AppCompatActivity implements
 
         currentSettings = getSharedPreferences(Constants.PREF_FILE, 0);
 
+        zeroNodeInit();
         initScreenDimen();
         initRecyclerView();
         initListeners();
@@ -149,6 +143,22 @@ public class GetGoingActivity extends AppCompatActivity implements
                     }
                 }
                 break;
+        }
+    }
+
+    private void zeroNodeInit()
+    {
+        if (currentSettings.getBoolean("zeroNode", false) == false)
+        {
+            /*route init*/
+            List<DbNode> tmpRoute = new ArrayList<>();
+            DbNode tmpNode = new DbNode(0, 0, 0, 0, 0, 0);
+            tmpRoute.add(tmpNode);
+            roomStoreNodeZero(tmpRoute);
+
+            SharedPreferences.Editor edit = currentSettings.edit();
+            edit.putBoolean("zeroNode", true);
+            edit.apply();
         }
     }
 
@@ -376,15 +386,24 @@ public class GetGoingActivity extends AppCompatActivity implements
 
         blueRectangle = findViewById(R.id.iv_am_bluerectangle);
         blueSentence = findViewById(R.id.tv_am_burn);
+        lastExeLabel = findViewById(R.id.tv_am_lastexercise);
 
         if (ratio >= 1.8)
         {
             ViewGroup.MarginLayoutParams params = (ViewGroup.MarginLayoutParams) blueSentence.getLayoutParams();
+            ViewGroup.MarginLayoutParams params1 = (ViewGroup.MarginLayoutParams) blueRectangle.getLayoutParams();
+            ViewGroup.MarginLayoutParams params2 = (ViewGroup.MarginLayoutParams) lastExeLabel.getLayoutParams();
 
             blueRectangle.getLayoutParams().height = (int) (circleProgressBar.getLayoutParams().height + circleProgressBar.getLayoutParams().height * 0.3);
             blueRectangle.getLayoutParams().height = 650;
-            params.bottomMargin = 100;
+
+            params.bottomMargin = 150;
+            params1.topMargin = 30;
+            params2.topMargin = 80;
+
             blueSentence.setLayoutParams(params);
+            blueRectangle.setLayoutParams(params1);
+            lastExeLabel.setLayoutParams(params2);
         }
     }
 

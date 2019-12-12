@@ -34,6 +34,7 @@ public class ProfileFragment extends DialogFragment {
     private ImageButton genderBtn, ageBtn, heightBtn, weightBtn, backBtn;
     private TextView tvAge, tvGender, tvHeight, tvWeight;
     private TextView totalMileage, totalCalories;
+    private TextView dataLabel;
     private ImageView genderImg;
 
     private CBDataFrame mDataFrame;
@@ -91,6 +92,7 @@ public class ProfileFragment extends DialogFragment {
         tvHeight = getView().findViewById(R.id.tv_fp_height);
         tvAge = getView().findViewById(R.id.tv_fp_age);
         tvWeight = getView().findViewById(R.id.tv_fp_weight);
+        genderBtn = getView().findViewById(R.id.ib_fp_gender);
 
         Dialog dialog = getDialog();
 
@@ -101,13 +103,27 @@ public class ProfileFragment extends DialogFragment {
             dialog.getWindow().setLayout(width, height);
         }
 
+        initScreenDimen();
         initLabels();
         initTotals();
         initDialogs();
     }
 
+    private void initScreenDimen()
+    {
+        dataLabel = getView().findViewById(R.id.tv_fp_mydata);
+
+        ViewGroup.MarginLayoutParams params = (ViewGroup.MarginLayoutParams) dataLabel.getLayoutParams();
+        ViewGroup.MarginLayoutParams params1 = (ViewGroup.MarginLayoutParams) genderBtn.getLayoutParams();
+
+        params.topMargin = 60;
+        params1.topMargin = 100;
+
+        dataLabel.setLayoutParams(params);
+        genderBtn.setLayoutParams(params1);
+    }
+
     private void initDialogs() {
-        genderBtn = getView().findViewById(R.id.ib_fp_gender);
         ageBtn = getView().findViewById(R.id.ib_fp_age);
         weightBtn = getView().findViewById(R.id.ib_fp_weight);
         heightBtn = getView().findViewById(R.id.ib_fp_height);
