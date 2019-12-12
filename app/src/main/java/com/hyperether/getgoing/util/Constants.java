@@ -54,4 +54,16 @@ public class Constants {
 
     // Requets TAG
     public static final int REQUEST_GPS_SETTINGS = 100;
+
+    //ActivitiesFragment
+    public static final float AVG_SPEED_WALK = (float) 1.5;
+    public static final float AVG_SPEED_RUN = (float) 2.5;
+    public static final float AVG_SPEED_CYCLING = 5;
+
+    public static final int CONST_LOW_DIST = 2500;
+    public static final int CONST_MEDIUM_DIST = 5000;
+    public static final int CONST_HIGH_DIST = 7500;
+
+    //ProfileFragment
+    public enum gender {Male, Female, Other}
 }

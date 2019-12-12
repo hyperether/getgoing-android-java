@@ -96,7 +96,7 @@ public class GPSTrackingService extends HyperLocationService {
         startForeground(1123, HyperNotification.getInstance().getForegroundServiceNotification(this,
                 getString(R.string.notification_title),
                 getString(R.string.notification_text),
-                R.drawable.ic_launher,
+                R.drawable.ic_logo_light,
                 R.mipmap.ic_logo,
                 pendingIntent));
     }
@@ -170,8 +170,8 @@ public class GPSTrackingService extends HyperLocationService {
                         CacheManager.getInstance().setVelocity(velocity);
                     }
 
-                    if (CacheManager.getInstance().getObDataFrameLocal() != null) {
-                        cbDataFrameLocal = CacheManager.getInstance().getObDataFrameLocal();
+                    if (CacheManager.getInstance().getObDataFrameGlobal() != null) {
+                        cbDataFrameLocal = CacheManager.getInstance().getObDataFrameGlobal();
                         kcalCurrent = calcCal
                                 .calculate(distance, velocity, cbDataFrameLocal,
                                         weight);

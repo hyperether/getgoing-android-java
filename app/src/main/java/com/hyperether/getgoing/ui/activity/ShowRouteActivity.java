@@ -1,36 +1,26 @@
 package com.hyperether.getgoing.ui.activity;
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.SharedPreferences;
-import android.graphics.Bitmap;
-import android.graphics.Canvas;
 import android.graphics.Color;
-import android.graphics.Matrix;
 import android.os.Bundle;
 import android.os.Handler;
-import android.view.View;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.facebook.AccessToken;
 import com.facebook.CallbackManager;
-import com.facebook.FacebookCallback;
-import com.facebook.FacebookException;
-import com.facebook.login.LoginManager;
-import com.facebook.login.LoginResult;
 import com.facebook.share.model.ShareContent;
-import com.facebook.share.model.ShareMediaContent;
 import com.facebook.share.model.SharePhoto;
 import com.facebook.share.widget.ShareButton;
 import com.facebook.share.widget.ShareDialog;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
-import com.google.android.gms.maps.MapFragment;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.LatLngBounds;
 import com.google.android.gms.maps.model.PolylineOptions;
-import com.hyperether.getgoing.R;
 import com.hyperether.getgoing.repository.room.DbHelper;
 import com.hyperether.getgoing.repository.room.entity.DbNode;
 import com.hyperether.getgoing.repository.room.entity.DbRoute;
@@ -64,43 +54,44 @@ public class ShowRouteActivity extends Activity implements OnMapReadyCallback,
     private ShareDialog shareDialog;
     private ShareButton shareButton;
 
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
+//    @Override
+//    protected void onCreate(Bundle savedInstanceState) {
 
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.show_route);
+//        super.onCreate(savedInstanceState);
+//        setContentView(R.layout.show_route);
+//
+//        progressBar = (ProgressBar) findViewById(R.id.progressMap);
+//
+//        extras = getIntent().getExtras();
+//        route_id = extras.getLong("ROUTE_ID");
+//        routesById = new ArrayList<>();
+//        nodes = new ArrayList<>();
+//
+//        showTime = (TextView) findViewById(R.id.showTime);
+//        showCalories = (TextView) findViewById(R.id.showCalories);
+//        showDistance = (TextView) findViewById(R.id.showDistance);
+//
+//        shareButton = (ShareButton) findViewById(R.id.btn_fb_share);
+//        shareButton.setVisibility(View.GONE);
+//
+//        DbHelper.getInstance(this).getRouteAndNodesRouteId(routesById, nodes, route_id, this);
 
-        progressBar = (ProgressBar) findViewById(R.id.progressMap);
-
-        extras = getIntent().getExtras();
-        route_id = extras.getLong("ROUTE_ID");
-        routesById = new ArrayList<>();
-        nodes = new ArrayList<>();
-
-        showTime = (TextView) findViewById(R.id.showTime);
-        showCalories = (TextView) findViewById(R.id.showCalories);
-        showDistance = (TextView) findViewById(R.id.showDistance);
-
-        shareButton = (ShareButton) findViewById(R.id.btn_fb_share);
-        shareButton.setVisibility(View.GONE);
-
-        DbHelper.getInstance(this).getRouteAndNodesRouteId(routesById, nodes, route_id, this);
-
-    }
+//    }
 
     @Override
     public void onLoad() {
         runOnUiThread(new Runnable() {
             @Override
             public void run() {
-                MapFragment mapFragment = (MapFragment) getFragmentManager()
-                        .findFragmentById(R.id.show_map_page);
-                mapFragment.getMapAsync(ShowRouteActivity.this);
-                progressBar.setVisibility(View.GONE);
+//                MapFragment mapFragment = (MapFragment) getFragmentManager()
+//                        .findFragmentById(R.id.show_map_page);
+//                mapFragment.getMapAsync(ShowRouteActivity.this);
+//                progressBar.setVisibility(View.GONE);
             }
         });
     }
 
+    @SuppressLint("DefaultLocale")
     @Override
     public void onMapReady(GoogleMap googleMap) {
         this.mMap = googleMap;
@@ -110,7 +101,7 @@ public class ShowRouteActivity extends Activity implements OnMapReadyCallback,
             route = routesById.get(0); // get the route
             // Show the general values for the current route
             showTime.setText(
-                    String.format(getDurationString(Math.abs(route.getDuration() / 1000))));
+                    getDurationString(Math.abs(route.getDuration() / 1000)));
             showCalories.setText(String.format("%.02f kcal", route.getEnergy()));
             showDistance.setText(String.format("%.02f m", route.getLength()));
 
@@ -132,7 +123,7 @@ public class ShowRouteActivity extends Activity implements OnMapReadyCallback,
 
             zoomRoute(mMap, getRouteLatLng(nodes));
 
-            takeMapRouteDataSnapshot();
+            //takeMapRouteDataSnapshot();
         }
     }
 
@@ -255,85 +246,85 @@ public class ShowRouteActivity extends Activity implements OnMapReadyCallback,
     /**
      * Take snapshot of map and specific layout.
      */
-    private void takeMapRouteDataSnapshot() {
-        final GoogleMap.SnapshotReadyCallback callback = new GoogleMap.SnapshotReadyCallback() {
-            Bitmap bitmap;
-
-            @Override
-            public void onSnapshotReady(Bitmap snapshot) {
-                bitmap = snapshot;
-                try {
-                    View mView = findViewById(R.id.data);
-                    mView.setDrawingCacheEnabled(true);
-
-                    Bitmap tmpBitmap = mView.getDrawingCache();
-                    Bitmap backBitmap = Bitmap
-                            .createBitmap(tmpBitmap, 0, 0, tmpBitmap.getWidth(), (int) (tmpBitmap
-                                    .getHeight() * 0.74));
-
-                    Bitmap bmOverlay = Bitmap.createBitmap(
-                            backBitmap.getWidth(), backBitmap.getHeight(),
-                            backBitmap.getConfig());
-
-                    Canvas canvas = new Canvas(bmOverlay);
-                    canvas.drawBitmap(snapshot, new Matrix(), null);
-                    canvas.drawBitmap(backBitmap, 0, 0, null);
-
-                    mapSnapshot = new SharePhoto.Builder()
-                            .setBitmap(bmOverlay)
-                            .build();
-
-                    shareContent = new ShareMediaContent.Builder()
-                            .addMedium(mapSnapshot)
-                            .build();
-
-                    shareButton.setVisibility(View.VISIBLE);
-                    shareButton.setShareContent(shareContent);
-                    shareButton.setOnClickListener(new View.OnClickListener() {
-                        @Override
-                        public void onClick(View view) {
-                            if (isLoggedIn()) {
-                                shareDialog = new ShareDialog(ShowRouteActivity.this);
-                                shareDialog.show(shareContent, ShareDialog.Mode.AUTOMATIC);
-                            } else {
-                                callbackManager = CallbackManager.Factory.create();
-
-                                LoginManager.getInstance().registerCallback(callbackManager,
-                                        new FacebookCallback<LoginResult>() {
-                                            @Override
-                                            public void onSuccess(LoginResult loginResult) {
-                                                shareDialog = new ShareDialog(
-                                                        ShowRouteActivity.this);
-                                                shareDialog.show(shareContent,
-                                                        ShareDialog.Mode.AUTOMATIC);
-                                            }
-
-                                            @Override
-                                            public void onCancel() {
-
-                                            }
-
-                                            @Override
-                                            public void onError(FacebookException error) {
-
-                                            }
-                                        });
-                            }
-                        }
-                    });
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-            }
-        };
-
-        new Handler().postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                mMap.snapshot(callback);
-            }
-        }, 1000);
-    }
+//    private void takeMapRouteDataSnapshot() {
+//        final GoogleMap.SnapshotReadyCallback callback = new GoogleMap.SnapshotReadyCallback() {
+//            Bitmap bitmap;
+//
+//            @Override
+//            public void onSnapshotReady(Bitmap snapshot) {
+//                bitmap = snapshot;
+//                try {
+//                    View mView = findViewById(R.id.data);
+//                    mView.setDrawingCacheEnabled(true);
+//
+//                    Bitmap tmpBitmap = mView.getDrawingCache();
+//                    Bitmap backBitmap = Bitmap
+//                            .createBitmap(tmpBitmap, 0, 0, tmpBitmap.getWidth(), (int) (tmpBitmap
+//                                    .getHeight() * 0.74));
+//
+//                    Bitmap bmOverlay = Bitmap.createBitmap(
+//                            backBitmap.getWidth(), backBitmap.getHeight(),
+//                            backBitmap.getConfig());
+//
+//                    Canvas canvas = new Canvas(bmOverlay);
+//                    canvas.drawBitmap(snapshot, new Matrix(), null);
+//                    canvas.drawBitmap(backBitmap, 0, 0, null);
+//
+//                    mapSnapshot = new SharePhoto.Builder()
+//                            .setBitmap(bmOverlay)
+//                            .build();
+//
+//                    shareContent = new ShareMediaContent.Builder()
+//                            .addMedium(mapSnapshot)
+//                            .build();
+//
+//                    shareButton.setVisibility(View.VISIBLE);
+//                    shareButton.setShareContent(shareContent);
+//                    shareButton.setOnClickListener(new View.OnClickListener() {
+//                        @Override
+//                        public void onClick(View view) {
+//                            if (isLoggedIn()) {
+//                                shareDialog = new ShareDialog(ShowRouteActivity.this);
+//                                shareDialog.show(shareContent, ShareDialog.Mode.AUTOMATIC);
+//                            } else {
+//                                callbackManager = CallbackManager.Factory.create();
+//
+//                                LoginManager.getInstance().registerCallback(callbackManager,
+//                                        new FacebookCallback<LoginResult>() {
+//                                            @Override
+//                                            public void onSuccess(LoginResult loginResult) {
+//                                                shareDialog = new ShareDialog(
+//                                                        ShowRouteActivity.this);
+//                                                shareDialog.show(shareContent,
+//                                                        ShareDialog.Mode.AUTOMATIC);
+//                                            }
+//
+//                                            @Override
+//                                            public void onCancel() {
+//
+//                                            }
+//
+//                                            @Override
+//                                            public void onError(FacebookException error) {
+//
+//                                            }
+//                                        });
+//                            }
+//                        }
+//                    });
+//                } catch (Exception e) {
+//                    e.printStackTrace();
+//                }
+//            }
+//        };
+//
+//        new Handler().postDelayed(new Runnable() {
+//            @Override
+//            public void run() {
+//                mMap.snapshot(callback);
+//            }
+//        }, 1000);
+//    }
 
     /**
      * This method check if user is logged in by fb

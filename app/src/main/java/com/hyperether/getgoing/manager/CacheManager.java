@@ -20,7 +20,7 @@ public class CacheManager {
     private Double kcalCumulative;
     private Double velocity;
     private Double velocityAvg;
-    private CBDataFrame obDataFrameLocal;
+    private CBDataFrame obDataFrameGlobal;
     private long timeCumulative;
     private int secondsCumulative;
     private long time = 0; // time between to position updates
@@ -30,6 +30,10 @@ public class CacheManager {
             instance = new CacheManager();
         }
         return instance;
+    }
+
+    CacheManager() {
+        obDataFrameGlobal = CBDataFrame.getInstance();
     }
 
     public void addRouteNode(DbNode dbNode) {
@@ -88,12 +92,12 @@ public class CacheManager {
         this.velocityAvg = velocityAvg;
     }
 
-    public CBDataFrame getObDataFrameLocal() {
-        return obDataFrameLocal;
+    public CBDataFrame getObDataFrameGlobal() {
+        return obDataFrameGlobal;
     }
 
     public void setObDataFrameLocal(CBDataFrame obDataFrameLocal) {
-        this.obDataFrameLocal = obDataFrameLocal;
+        this.obDataFrameGlobal = obDataFrameLocal;
     }
 
     public long getTimeCumulative() {

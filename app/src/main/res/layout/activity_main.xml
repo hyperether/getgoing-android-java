@@ -1,71 +1,322 @@
 <?xml version="1.0" encoding="utf-8"?>
-<layout
-    xmlns:android="http://schemas.android.com/apk/res/android">
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <data>
 
         <variable
             name="viewModel"
-            type="com.hyperether.getgoing.ui.activity.GetGoingActivity.ClickHandler"/>
+            type="com.hyperether.getgoing.ui.activity.GetGoingActivity.ClickHandler" />
     </data>
 
-    <LinearLayout
-        android:id="@+id/activity_main"
-        android:layout_width="fill_parent"
-        android:layout_height="fill_parent"
-        android:orientation="vertical">
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/color_background_new">
 
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="1dp"
-            android:background="@color/black"/>
+        <ImageView
+            android:id="@+id/iv_am_logo"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+            android:layout_marginLeft="16dp"
+            android:layout_marginTop="8dp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:srcCompat="@drawable/ic_logo_small"
+            android:contentDescription="@string/logo"/>
 
         <ImageButton
-            android:id="@+id/walk_button"
-            android:layout_width="match_parent"
+            android:id="@+id/ib_am_user"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
+            android:layout_marginEnd="16dp"
+            android:layout_marginRight="16dp"
             android:background="@android:color/transparent"
-            android:contentDescription="@string/button1_normal"
-            android:onClick="@{viewModel::onWalk}"
-            android:scaleType="fitXY"
-            android:src="@drawable/button_walk"/>
+            app:layout_constraintBottom_toBottomOf="@+id/iv_am_logo"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="@+id/iv_am_logo"
+            app:srcCompat="@drawable/ic_light_user_icon"
+            android:contentDescription="@string/profile_icon"/>
+        <!--android:onClick="@{viewModel.onProfileClick()}"-->
 
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="1dp"
-            android:background="@color/black"/>
+        <TextView
+            android:id="@+id/tv_am_lastexercise"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="19dp"
+            android:layout_marginLeft="19dp"
+            android:layout_marginTop="8dp"
+            android:text="@string/last_exercise"
+            android:textColor="@color/mat_gray"
+            android:textSize="22sp"
+            android:textStyle="bold"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/iv_am_logo" />
 
         <ImageButton
-            android:id="@+id/run_button"
-            android:layout_width="match_parent"
+            android:id="@+id/iv_am_arrow2actfrag"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
+            android:layout_marginEnd="16dp"
             android:background="@android:color/transparent"
-            android:contentDescription="@string/button2_normal"
-            android:onClick="@{viewModel::onRun}"
-            android:scaleType="fitXY"
-            android:src="@drawable/button_run"/>
+            app:layout_constraintBottom_toBottomOf="@+id/tv_am_viewall"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="@+id/tv_am_viewall"
+            app:srcCompat="@drawable/ic_light_chevron_icon" />
 
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="1dp"
-            android:background="@color/black"/>
-
-        <ImageButton
-            android:id="@+id/ride_button"
-            android:layout_width="match_parent"
+        <TextView
+            android:id="@+id/tv_am_viewall"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:background="@android:color/transparent"
-            android:contentDescription="@string/button3_normal"
-            android:onClick="@{viewModel::onRide}"
-            android:scaleType="fitXY"
-            android:src="@drawable/button_ride"/>
+            android:layout_marginEnd="4dp"
+            android:text="@string/view_all"
+            android:textColor="@color/light_theme_accent"
+            android:textSize="18sp"
+            app:layout_constraintBottom_toBottomOf="@+id/tv_am_lastexercise"
+            app:layout_constraintEnd_toStartOf="@+id/iv_am_arrow2actfrag"
+            app:layout_constraintTop_toTopOf="@+id/tv_am_lastexercise" />
 
-        <View
+        <TextView
+            android:id="@+id/tv_am_choose"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+            android:text="@string/choose_your_exercise"
+            android:textColor="@color/mat_gray"
+            android:textSize="22sp"
+            android:textStyle="bold"
+            app:layout_constraintBottom_toTopOf="@+id/tv_am_burn"
+            app:layout_constraintStart_toStartOf="parent" />
+
+        <TextView
+            android:id="@+id/tv_am_burn"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+            android:layout_marginBottom="16dp"
+            android:text="@string/can_we_burn_our_legs"
+            android:textColor="@color/light_theme_accent"
+            android:textSize="16sp"
+            app:layout_constraintBottom_toTopOf="@+id/imageView2"
+            app:layout_constraintStart_toStartOf="parent" />
+
+        <com.hyperether.getgoing.ui.dynamicview.CurvedBottomView
+            android:id="@+id/customBottomBar"
             android:layout_width="match_parent"
-            android:layout_height="1dp"
-            android:background="@color/black"/>
-    </LinearLayout>
+            android:layout_height="@dimen/curved_bottom_bar"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent" />
+
+        <ImageView
+            android:id="@+id/iv_am_bluerectangle"
+            android:layout_width="match_parent"
+            android:layout_height="160dp"
+            android:layout_marginStart="16dp"
+            android:layout_marginLeft="16dp"
+            android:layout_marginTop="8dp"
+            android:layout_marginEnd="16dp"
+            android:layout_marginRight="16dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/tv_am_lastexercise"
+            app:srcCompat="@drawable/ic_blue_rectangle_custom" />
+
+        <ImageView
+            android:id="@+id/iv_am_circletransparent"
+            android:layout_width="120dp"
+            android:layout_height="120dp"
+            android:layout_marginBottom="130dp"
+            android:src="@drawable/ic_circle"
+            app:layout_constraintBottom_toBottomOf="@+id/customBottomBar"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent" />
+
+        <ImageView
+            android:id="@+id/imageView2"
+            android:layout_width="100dp"
+            android:layout_height="100dp"
+            android:elevation="5dp"
+            android:src="@drawable/ic_circle_white"
+            app:layout_constraintBottom_toBottomOf="@+id/iv_am_circletransparent"
+            app:layout_constraintEnd_toEndOf="@+id/iv_am_circletransparent"
+            app:layout_constraintStart_toStartOf="@+id/iv_am_circletransparent"
+            app:layout_constraintTop_toTopOf="@+id/iv_am_circletransparent" />
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/recyclerView"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:elevation="10dp"
+            android:orientation="horizontal"
+            app:layout_constraintBottom_toBottomOf="@+id/imageView2"
+            app:layout_constraintEnd_toEndOf="@+id/customBottomBar"
+            app:layout_constraintStart_toStartOf="@+id/customBottomBar"
+            app:layout_constraintTop_toTopOf="@+id/imageView2" />
+
+        <com.dinuscxj.progressbar.CircleProgressBar
+            android:id="@+id/cpb_am_kmgoal"
+            android:layout_width="115dp"
+            android:layout_height="115dp"
+            android:layout_marginStart="16dp"
+            android:layout_marginLeft="16dp"
+            app:progress_background_color="#9fffffff"
+            app:layout_constraintBottom_toBottomOf="@+id/iv_am_bluerectangle"
+            app:layout_constraintStart_toStartOf="@+id/iv_am_bluerectangle"
+            app:layout_constraintTop_toTopOf="@+id/iv_am_bluerectangle"
+            app:layout_constraintVertical_bias="0.478"
+            app:progress_end_color="@android:color/white"
+            app:progress_shader="sweep"
+            app:progress_start_color="@android:color/white"
+            app:progress_stroke_width="5dp"
+            app:progress_text_color="@android:color/white"
+            app:progress_text_size="18sp"
+            app:style="solid_line" />
+
+        <com.dinuscxj.progressbar.CircleProgressBar
+            android:id="@+id/cpb_am_kmgoal2"
+            android:layout_width="115dp"
+            android:layout_height="115dp"
+            android:layout_marginEnd="16dp"
+            app:progress_background_color="#9fffffff"
+            app:layout_constraintBottom_toBottomOf="@+id/iv_am_bluerectangle"
+            app:layout_constraintEnd_toEndOf="@+id/iv_am_bluerectangle"
+            app:layout_constraintTop_toTopOf="@+id/iv_am_bluerectangle"
+            app:layout_constraintVertical_bias="0.478"
+            app:progress_end_color="#9fffffff"
+            app:progress_start_color="#9fffffff"
+            app:progress_stroke_width="5dp"
+            app:progress_text_color="@android:color/white"
+            app:progress_text_size="18sp"
+            app:style="solid_line" />
+
+        <com.dinuscxj.progressbar.CircleProgressBar
+            android:id="@+id/cpb_am_kmgoal1"
+            android:layout_width="115dp"
+            android:layout_height="115dp"
+            android:layout_marginEnd="16dp"
+            app:progress_background_color="#ffffffff"
+            app:layout_constraintBottom_toBottomOf="@+id/iv_am_bluerectangle"
+            app:layout_constraintEnd_toEndOf="@+id/iv_am_bluerectangle"
+            app:layout_constraintTop_toTopOf="@+id/iv_am_bluerectangle"
+            app:layout_constraintVertical_bias="0.478"
+            app:line_count="12"
+            app:progress_end_color="@android:color/white"
+            app:progress_start_color="@android:color/white"
+            app:progress_stroke_width="3dp"
+            app:progress_text_color="@android:color/white"
+            app:progress_text_size="18sp"
+            app:style="line" />
+
+        <TextView
+            android:id="@+id/tv_am_kcal"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:layout_marginLeft="8dp"
+            android:layout_marginEnd="8dp"
+            android:layout_marginRight="8dp"
+            android:layout_marginBottom="48dp"
+            android:text="@string/kcal"
+            android:textColor="@android:color/white"
+            android:textSize="18sp"
+            app:layout_constraintBottom_toTopOf="@+id/tv_am_kcalval"
+            app:layout_constraintEnd_toStartOf="@+id/cpb_am_kmgoal1"
+            app:layout_constraintStart_toEndOf="@+id/cpb_am_kmgoal"
+            app:layout_constraintTop_toBottomOf="@+id/tv_am_kcalval" />
+
+        <TextView
+            android:id="@+id/tv_am_kcalval"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:layout_marginLeft="8dp"
+            android:layout_marginTop="24dp"
+            android:layout_marginEnd="8dp"
+            android:layout_marginRight="8dp"
+            android:text="0"
+            android:textColor="@android:color/white"
+            android:textSize="18sp"
+            android:textStyle="bold"
+            app:layout_constraintBottom_toBottomOf="@+id/iv_am_bluerectangle"
+            app:layout_constraintEnd_toStartOf="@+id/cpb_am_kmgoal1"
+            app:layout_constraintStart_toEndOf="@+id/cpb_am_kmgoal"
+            app:layout_constraintTop_toTopOf="@+id/iv_am_bluerectangle" />
+
+        <TextView
+            android:id="@+id/tv_am_progbar_act"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="32dp"
+            android:text="@string/running"
+            android:textColor="@android:color/white"
+            android:textSize="14sp"
+            app:layout_constraintEnd_toEndOf="@+id/cpb_am_kmgoal"
+            app:layout_constraintStart_toStartOf="@+id/cpb_am_kmgoal"
+            app:layout_constraintTop_toBottomOf="@+id/iv_am_activity" />
+
+        <TextView
+            android:id="@+id/tv_am_progbar_time"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="32dp"
+            android:text="@string/min"
+            android:textColor="@android:color/white"
+            app:layout_constraintEnd_toEndOf="@+id/cpb_am_kmgoal1"
+            app:layout_constraintStart_toStartOf="@+id/cpb_am_kmgoal1"
+            app:layout_constraintTop_toBottomOf="@+id/imageView5" />
+
+        <ImageView
+            android:id="@+id/iv_am_activity"
+            android:layout_width="wrap_content"
+            android:layout_height="0dp"
+            android:layout_marginTop="17dp"
+            app:layout_constraintEnd_toEndOf="@+id/cpb_am_kmgoal"
+            app:layout_constraintStart_toStartOf="@+id/cpb_am_kmgoal"
+            app:layout_constraintTop_toTopOf="@+id/cpb_am_kmgoal"
+            app:srcCompat="@drawable/ic_light_running_icon_white" />
+
+        <ImageView
+            android:id="@+id/imageView5"
+            android:layout_width="wrap_content"
+            android:layout_height="0dp"
+            android:layout_marginTop="17dp"
+            app:layout_constraintEnd_toEndOf="@+id/cpb_am_kmgoal1"
+            app:layout_constraintStart_toStartOf="@+id/cpb_am_kmgoal1"
+            app:layout_constraintTop_toTopOf="@+id/cpb_am_kmgoal1"
+            app:srcCompat="@drawable/ic_timer_icon" />
+
+        <Button
+            android:id="@+id/materialButton"
+            android:layout_width="160dp"
+            android:layout_height="45dp"
+            android:layout_marginBottom="16dp"
+            android:background="@drawable/ic_button_layout"
+            android:text="@string/get_ready"
+            android:textAlignment="center"
+            android:textAllCaps="false"
+            android:textColor="@android:color/white"
+            android:textSize="18sp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.505"
+            app:layout_constraintStart_toStartOf="parent" />
+
+        <TextView
+            android:id="@+id/tv_ma_mainact"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:layout_marginLeft="8dp"
+            android:layout_marginEnd="8dp"
+            android:layout_marginRight="8dp"
+            android:layout_marginBottom="15dp"
+            android:text="@string/placeholder_running"
+            android:textColor="@color/black"
+            android:textSize="20sp"
+            app:layout_constraintBottom_toTopOf="@+id/materialButton"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

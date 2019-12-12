@@ -20,9 +20,11 @@ public class DbRoute {
     private double avgSpeed;  // average speed during this route
     @ColumnInfo
     private int activity_id;   // actitivy called for this route walk = 1, run = 2, ride = 3
+    @ColumnInfo
+    private long goal;
 
     public DbRoute(long id, long duration, double energy, double length,
-                   String date, double avgSpeed, int activity_id) {
+                   String date, double avgSpeed, int activity_id, long goal) {
         super();
         this.id = id;
         this.duration = duration;
@@ -31,6 +33,7 @@ public class DbRoute {
         this.date = date;
         this.avgSpeed = avgSpeed;
         this.activity_id = activity_id;
+        this.goal = goal;
     }
 
     public long getId() {
@@ -88,4 +91,8 @@ public class DbRoute {
     public void setActivity_id(int activity_id) {
         this.activity_id = activity_id;
     }
+
+    public void setGoal(int goal) { this.goal = goal; }
+
+    public long getGoal() { return goal; }
 }

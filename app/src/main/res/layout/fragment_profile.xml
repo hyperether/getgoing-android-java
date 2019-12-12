@@ -1,0 +1,253 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/layout">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/color_background_new">
+
+        <ImageButton
+            android:id="@+id/ib_fp_backbutton"
+            android:layout_width="62dp"
+            android:layout_height="62dp"
+            android:layout_marginTop="8dp"
+            android:background="@android:color/transparent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:srcCompat="@drawable/ic_light_back_icon" />
+
+        <TextView
+            android:id="@+id/tv_fp_profile"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:layout_marginLeft="8dp"
+            android:text="@string/my_profile"
+            android:textColor="@color/mat_gray"
+            android:textSize="24sp"
+            app:layout_constraintBottom_toBottomOf="@+id/ib_fp_backbutton"
+            app:layout_constraintStart_toEndOf="@+id/ib_fp_backbutton"
+            app:layout_constraintTop_toTopOf="@+id/ib_fp_backbutton" />
+
+        <TextView
+            android:id="@+id/tv_fp_mydata"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+            android:layout_marginLeft="16dp"
+            android:layout_marginTop="8dp"
+            android:text="@string/my_data"
+            android:textColor="@color/mat_gray"
+            android:textSize="24sp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/ib_fp_backbutton" />
+
+        <ImageButton
+            android:id="@+id/ib_fp_gender"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
+            android:background="@android:color/transparent"
+            app:layout_constraintEnd_toStartOf="@+id/ib_fp_age"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/tv_fp_mydata"
+            app:srcCompat="@drawable/ic_ellipse_2" />
+
+        <ImageButton
+            android:id="@+id/ib_fp_age"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:layout_marginLeft="8dp"
+            android:background="@android:color/transparent"
+            app:layout_constraintBottom_toBottomOf="@+id/ib_fp_gender"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.6"
+            app:layout_constraintStart_toEndOf="@+id/tv_fp_mydata"
+            app:layout_constraintTop_toTopOf="@+id/ib_fp_gender"
+            app:layout_constraintVertical_bias="0.0"
+            app:srcCompat="@drawable/ic_ellipse_2" />
+
+        <ImageButton
+            android:id="@+id/ib_fp_height"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="24dp"
+            android:background="@android:color/transparent"
+            app:layout_constraintEnd_toEndOf="@+id/ib_fp_gender"
+            app:layout_constraintStart_toStartOf="@+id/ib_fp_gender"
+            app:layout_constraintTop_toBottomOf="@+id/tv_fp_gender"
+            app:srcCompat="@drawable/ic_ellipse_2" />
+
+        <ImageButton
+            android:id="@+id/ib_fp_weight"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@android:color/transparent"
+            app:layout_constraintBottom_toBottomOf="@+id/ib_fp_height"
+            app:layout_constraintEnd_toEndOf="@+id/ib_fp_age"
+            app:layout_constraintStart_toStartOf="@+id/ib_fp_age"
+            app:layout_constraintTop_toTopOf="@+id/ib_fp_height"
+            app:srcCompat="@drawable/ic_ellipse_2" />
+
+        <TextView
+            android:id="@+id/tv_fp_gender"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="6dp"
+            android:text="@string/placeholder_male"
+            android:textColor="@color/mat_gray"
+            app:layout_constraintEnd_toEndOf="@+id/ib_fp_gender"
+            app:layout_constraintStart_toStartOf="@+id/ib_fp_gender"
+            app:layout_constraintTop_toBottomOf="@+id/ib_fp_gender" />
+
+        <TextView
+            android:id="@+id/tv_fp_age"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="6dp"
+            android:text="@string/placeholder_21_year"
+            android:textColor="@color/mat_gray"
+            app:layout_constraintEnd_toEndOf="@+id/ib_fp_age"
+            app:layout_constraintHorizontal_bias="0.485"
+            app:layout_constraintStart_toStartOf="@+id/ib_fp_age"
+            app:layout_constraintTop_toBottomOf="@+id/ib_fp_age" />
+
+        <TextView
+            android:id="@+id/tv_fp_height"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="6dp"
+            android:text="@string/placeholder_185cm"
+            android:textColor="@color/mat_gray"
+            app:layout_constraintEnd_toEndOf="@+id/ib_fp_height"
+            app:layout_constraintHorizontal_bias="0.485"
+            app:layout_constraintStart_toStartOf="@+id/ib_fp_height"
+            app:layout_constraintTop_toBottomOf="@+id/ib_fp_height" />
+
+        <TextView
+            android:id="@+id/tv_fp_weight"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="6dp"
+            android:text="@string/placeholder_85kg"
+            android:textColor="@color/mat_gray"
+            app:layout_constraintEnd_toEndOf="@+id/ib_fp_weight"
+            app:layout_constraintHorizontal_bias="0.485"
+            app:layout_constraintStart_toStartOf="@+id/ib_fp_weight"
+            app:layout_constraintTop_toBottomOf="@+id/ib_fp_weight" />
+
+        <ImageView
+            android:id="@+id/iv_fp_gender"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintBottom_toBottomOf="@+id/ib_fp_gender"
+            app:layout_constraintEnd_toEndOf="@+id/ib_fp_gender"
+            app:layout_constraintStart_toStartOf="@+id/ib_fp_gender"
+            app:layout_constraintTop_toTopOf="@+id/ib_fp_gender"
+            app:srcCompat="@drawable/ic_gendersign_male" />
+
+        <ImageView
+            android:id="@+id/iv_fp_age"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:layout_marginBottom="8dp"
+            app:layout_constraintBottom_toBottomOf="@+id/ib_fp_age"
+            app:layout_constraintEnd_toEndOf="@+id/ib_fp_age"
+            app:layout_constraintStart_toStartOf="@+id/ib_fp_age"
+            app:layout_constraintTop_toTopOf="@+id/ib_fp_age"
+            app:srcCompat="@drawable/ic_birthday_cake" />
+
+        <ImageView
+            android:id="@+id/iv_fp_height"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:layout_marginBottom="16dp"
+            app:layout_constraintBottom_toTopOf="@+id/tv_fp_height"
+            app:layout_constraintEnd_toEndOf="@+id/ib_fp_height"
+            app:layout_constraintStart_toStartOf="@+id/ib_fp_height"
+            app:layout_constraintTop_toTopOf="@+id/ib_fp_height"
+            app:srcCompat="@drawable/ic_measure_tape" />
+
+        <ImageView
+            android:id="@+id/iv_fp_weight"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:layout_marginBottom="12dp"
+            app:layout_constraintBottom_toBottomOf="@+id/ib_fp_weight"
+            app:layout_constraintEnd_toEndOf="@+id/ib_fp_weight"
+            app:layout_constraintStart_toStartOf="@+id/ib_fp_weight"
+            app:layout_constraintTop_toTopOf="@+id/ib_fp_weight"
+            app:layout_constraintVertical_bias="0.714"
+            app:srcCompat="@drawable/ic_scale" />
+
+        <TextView
+            android:id="@+id/tv_fp_activities"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="8dp"
+            android:layout_marginBottom="12dp"
+            android:text="@string/total_activities"
+            android:textColor="@color/mat_gray"
+            android:textSize="24sp"
+            app:layout_constraintBottom_toTopOf="@+id/iv_fp_road"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/tv_fp_height" />
+
+        <ImageButton
+            android:id="@+id/iv_fp_road"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:layout_marginBottom="8dp"
+            android:background="@android:color/transparent"
+            app:layout_constraintBottom_toBottomOf="@+id/iv_fp_calories"
+            app:layout_constraintEnd_toEndOf="@+id/ib_fp_height"
+            app:layout_constraintStart_toStartOf="@+id/ib_fp_height"
+            app:layout_constraintTop_toTopOf="@+id/iv_fp_calories"
+            app:srcCompat="@drawable/ic_road_" />
+
+        <ImageButton
+            android:id="@+id/iv_fp_calories"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="24dp"
+            android:background="@android:color/transparent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="@+id/ib_fp_weight"
+            app:layout_constraintStart_toStartOf="@+id/ib_fp_weight"
+            app:layout_constraintTop_toBottomOf="@+id/tv_fp_weight"
+            app:layout_constraintVertical_bias="0.4"
+            app:srcCompat="@drawable/ic_calories" />
+
+        <TextView
+            android:id="@+id/tv_fp_mileage"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:text="@string/totalkm_0km"
+            android:textColor="@color/mat_gray"
+            app:layout_constraintEnd_toEndOf="@+id/iv_fp_road"
+            app:layout_constraintStart_toStartOf="@+id/iv_fp_road"
+            app:layout_constraintTop_toBottomOf="@+id/iv_fp_road" />
+
+        <TextView
+            android:id="@+id/tv_fp_calories"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:text="@string/totalkcal_0kcal"
+            android:textColor="@color/mat_gray"
+            app:layout_constraintEnd_toEndOf="@+id/iv_fp_calories"
+            app:layout_constraintStart_toStartOf="@+id/iv_fp_calories"
+            app:layout_constraintTop_toBottomOf="@+id/iv_fp_calories" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>

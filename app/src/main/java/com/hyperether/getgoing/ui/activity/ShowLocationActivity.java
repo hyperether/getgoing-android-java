@@ -1,6 +1,6 @@
 package com.hyperether.getgoing.ui.activity;
 
-import android.app.Activity;
+import android.annotation.SuppressLint;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -14,12 +14,20 @@ import android.location.Location;
 import android.location.LocationManager;
 import android.os.Bundle;
 import android.os.SystemClock;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.Chronometer;
+import android.widget.EditText;
+import android.widget.ImageButton;
+import android.widget.ImageView;
+import android.widget.TextView;
 
-import com.google.android.gms.maps.CameraUpdate;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
+
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapFragment;
@@ -46,11 +54,9 @@ import java.util.Locale;
 import java.util.Timer;
 import java.util.TimerTask;
 
-import androidx.core.app.ActivityCompat;
-
 import static android.provider.Settings.ACTION_LOCATION_SOURCE_SETTINGS;
 
-public class ShowLocationActivity extends Activity implements OnMapReadyCallback {
+public class ShowLocationActivity extends AppCompatActivity implements OnMapReadyCallback {
 
     private static final long UPDATE_INTERVAL_IN_MILLISECONDS = 3000;
     private static final long FASTEST_UPDATE_INTERVAL_IN_MILLISECONDS =
@@ -68,28 +74,38 @@ public class ShowLocationActivity extends Activity implements OnMapReadyCallback
     private CBDataFrame cbDataFrameLocal;
 
     // U/I variables
-    private Button button_start, button_pause, button_rst, button_save;
-    private Chronometer showTime, showCalories, showDistance;
-    private Chronometer showVelocity, showVelocityAvg;
+    private Button set_goal;
+    private TextView activity_id, labelDuration, labelVelocity, labelCalories;
+    private ImageView button_start, button_pause;
+    private ImageButton button_rst, button_save, button_back;
+    private Chronometer showTime, showCalories, showDistance, showVelocity;
 
     // timer for data show
     private Timer timer;
     long timeWhenStopped = 0;
+    long timeWhenStopped4Storage = 0;
 
     // Route storage variables
     private SimpleDateFormat sdf;
     private String currentDateandTime;
     private boolean timeFlg = true;
 
+    private int cnt;
+    private long goalStore;
+
+    private LayoutInflater inflater;
+    private View toInflate;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
 
         super.onCreate(savedInstanceState);
-        // getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
+        getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
         // Keep screen on all the time
-        setContentView(R.layout.show_location);
+        setContentView(R.layout.activity_location);
 
         mRouteAlreadySaved = true;
+        cnt = 0;
 
         // Open the shared preferences
         mPrefs = getSharedPreferences("SharedPreferences", Context.MODE_PRIVATE);
@@ -101,13 +117,15 @@ public class ShowLocationActivity extends Activity implements OnMapReadyCallback
         cbDataFrameLocal = b.getParcelable("searchKey");
 
         initLayoutDinamically();
+        setActivityLabel();
+        setVisibilities();
 
         sdf = new SimpleDateFormat("dd.MM.yyyy.' 'HH:mm:ss", Locale.ENGLISH);
 
         clearData();
 
         MapFragment mapFragment = (MapFragment) getFragmentManager()
-                .findFragmentById(R.id.show_map_page);
+                .findFragmentById(R.id.mapView);
         mapFragment.getMapAsync(this);
 
         if (mPrefs.contains("KEY_UPDATES_ON")) {
@@ -118,6 +136,8 @@ public class ShowLocationActivity extends Activity implements OnMapReadyCallback
             mEditor.putBoolean("KEY_UPDATES_ON", mLocTrackingRunning);
             mEditor.apply();
         }
+
+        toInflate = getLayoutInflater().inflate(R.layout.alertdialog_goal, null, false);
     }
 
     @Override
@@ -159,17 +179,73 @@ public class ShowLocationActivity extends Activity implements OnMapReadyCallback
         currentDateandTime = savedInstanceState.getString("currentDateandTime");
     }
 
+    private void setActivityLabel()
+    {
+        int id = cbDataFrameLocal.getProfileId();
+
+        switch (id)
+        {
+            case 1: {
+                activity_id.setText("Walking");
+                break;
+            }
+            case 2: {
+                activity_id.setText("Running");
+                break;
+            }
+            case 3: {
+                activity_id.setText("Cycling");
+                break;
+            }
+        }
+    }
+
+    private void setVisibilities()
+    {
+        if (cnt++ == 0)
+        {
+            set_goal.setVisibility(View.VISIBLE);
+            button_save.setVisibility(View.GONE);
+            button_rst.setVisibility(View.GONE);
+            button_start.setClickable(false);
+            showDistance.setVisibility(View.GONE);
+            showTime.setVisibility(View.GONE);
+            showCalories.setVisibility(View.GONE);
+            showVelocity.setVisibility(View.GONE);
+            labelDuration.setVisibility(View.GONE);
+            labelVelocity.setVisibility(View.GONE);
+            labelCalories.setVisibility(View.GONE);
+        }
+        else
+        {
+            set_goal.setVisibility(View.GONE);
+            button_save.setVisibility(View.VISIBLE);
+            button_rst.setVisibility(View.VISIBLE);
+            button_start.setClickable(true);
+            showDistance.setVisibility(View.VISIBLE);
+            showTime.setVisibility(View.VISIBLE);
+            showCalories.setVisibility(View.VISIBLE);
+            showVelocity.setVisibility(View.VISIBLE);
+            labelDuration.setVisibility(View.VISIBLE);
+            labelVelocity.setVisibility(View.VISIBLE);
+            labelCalories.setVisibility(View.VISIBLE);
+        }
+    }
+
     /**
      * This method handle button click on Start button.
      */
     private final OnClickListener mButtonStartListener = new OnClickListener() {
         @Override
         public void onClick(View v) {
-            startTracking();
-            if (timeFlg) {
-                // Get date and time on which the tracking started
-                currentDateandTime = sdf.format(new Date());
-                timeFlg = false;
+            if (goalStore > 0)
+            {
+                startTracking();
+                if (timeFlg) {
+                    // Get date and time on which the tracking started
+                    currentDateandTime = sdf.format(new Date());
+                    timeFlg = false;
+                }
             }
         }
     };
@@ -271,6 +347,29 @@ public class ShowLocationActivity extends Activity implements OnMapReadyCallback
         }
     };
 
+    private final OnClickListener mButtonBackListener = v -> onAnyBackButtonPressed();
+
+    private final OnClickListener mButtonSetGoalListener = new OnClickListener() {
+        @Override
+        public void onClick(View v) {
+            AlertDialog.Builder dialog = new AlertDialog.Builder(v.getContext());
+            dialog.setCancelable(false);
+            dialog.setTitle("Set goal");
+            dialog.setView(toInflate);
+
+            EditText goal = toInflate.findViewById(R.id.dialog_et_goal);
+
+            dialog.setPositiveButton("CONFIRM", (paramDialogInterface, paramInt) -> {
+                if (!goal.getText().toString().trim().equals(""))
+                    goalStore = Long.valueOf(goal.getText().toString().trim());
+                setVisibilities();
+            });
+
+            dialog.setNegativeButton("CANCEL", (paramDialogInterface, paramInt) -> {});
+            dialog.show();
+        }
+    };
+
     private void clearCacheData() {
         CacheManager.getInstance().setTimeCumulative(0);
         CacheManager.getInstance().clearmRoute();
@@ -284,7 +383,7 @@ public class ShowLocationActivity extends Activity implements OnMapReadyCallback
      * Via this method recorded data is clear..
      */
     private void clearData() {
-        showData(0, 0, 0, 0);
+        showData(0, 0, 0);
     }
 
     /**
@@ -313,11 +412,12 @@ public class ShowLocationActivity extends Activity implements OnMapReadyCallback
     }
 
     /**
-     * This method starts timer and enable visibility of start button.
+     * This method stops timer and disables visibility of start button.
      */
     private void stopTracking() {
         stopService(new Intent(this, GPSTrackingService.class));
 
+        timeWhenStopped4Storage = SystemClock.elapsedRealtime() - showTime.getBase();
         timeWhenStopped = showTime.getBase() - SystemClock.elapsedRealtime();
         showTime.stop();
 
@@ -339,13 +439,13 @@ public class ShowLocationActivity extends Activity implements OnMapReadyCallback
                 @Override
                 public void run() {
                     CacheManager cacheMngr = CacheManager.getInstance();
-                    cacheMngr.setTimeCumulative(timeWhenStopped);
+                    cacheMngr.setTimeCumulative(timeWhenStopped4Storage);
                     mMap.clear();
                     drawRoute(cacheMngr.getmRoute());
 
                     if (cacheMngr.getVelocity() != null) {
                         showData(cacheMngr.getDistanceCumulative(), cacheMngr.getKcalCumulative(),
-                                cacheMngr.getVelocity(), cacheMngr.getVelocityAvg());
+                                cacheMngr.getVelocity());
                     }
                 }
             });
@@ -359,8 +459,8 @@ public class ShowLocationActivity extends Activity implements OnMapReadyCallback
      * @param kcal calories burned
      * @param vel average velocity
      */
-    private void showData(double distance, double kcal, double vel,
-                          double velAvg) {
+    @SuppressLint("DefaultLocale")
+    private void showData(double distance, double kcal, double vel) {
         showCalories.setText(String.format("%.02f kcal", kcal));
         if (cbDataFrameLocal.getMeasurementSystemId() == 1 ||
                 cbDataFrameLocal.getMeasurementSystemId() == 2)
@@ -370,7 +470,6 @@ public class ShowLocationActivity extends Activity implements OnMapReadyCallback
             showDistance.setText(String.format("%.02f m", distance));
 
         showVelocity.setText(String.format("%.02f m/s", vel));
-        showVelocityAvg.setText(String.format("%.02f m/s", velAvg));
     }
 
     @Override
@@ -429,35 +528,7 @@ public class ShowLocationActivity extends Activity implements OnMapReadyCallback
     @Override
     public void onBackPressed() {
 //        backPressed = false;
-        if (mLocTrackingRunning || !mRouteAlreadySaved) {
-            AlertDialog.Builder dialog = new AlertDialog.Builder(this);
-            dialog.setCancelable(false);
-            dialog.setTitle(R.string.alert_dialog_title_back_pressed);
-            dialog.setMessage(getString(R.string.alert_dialog_message_back_pressed));
-            dialog.setPositiveButton(R.string.alert_dialog_positive_back_pressed, new
-                    DialogInterface
-                            .OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface paramDialogInterface, int paramInt) {
-                            stopService(new Intent(GetGoingApp.getInstance()
-                                    .getApplicationContext(),
-                                    GPSTrackingService.class));
-                            clearCacheData();
-                            finish();
-                        }
-                    });
-
-            dialog.setNegativeButton(getString(R.string.alert_dialog_negative_back_pressed),
-                    new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface paramDialogInterface, int paramInt) {
-                        }
-                    });
-
-            dialog.show();
-        } else {
-            super.onBackPressed();
-        }
+        onAnyBackButtonPressed();
     }
 
     /**
@@ -472,7 +543,7 @@ public class ShowLocationActivity extends Activity implements OnMapReadyCallback
                         .ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
 
             googleMap.setMyLocationEnabled(true);
-            googleMap.setTrafficEnabled(true);
+            googleMap.setTrafficEnabled(false);
             googleMap.setIndoorEnabled(true);
             googleMap.setBuildingsEnabled(true);
             googleMap.getUiSettings().setZoomControlsEnabled(true);
@@ -486,14 +557,8 @@ public class ShowLocationActivity extends Activity implements OnMapReadyCallback
      **/
     private void zoomOverCurrentLocation(GoogleMap googleMap, Location location) {
         if (location != null) {
-            double latitude = location.getLatitude();
-            double longitude = location.getLongitude();
-
-            CameraUpdate center = CameraUpdateFactory.newLatLng(new LatLng(latitude, longitude));
-            CameraUpdate zoom = CameraUpdateFactory.zoomTo(15);
-
-            googleMap.moveCamera(center);
-            googleMap.animateCamera(zoom);
+            LatLng latLng = new LatLng(location.getLatitude(), location.getLongitude());
+            googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(latLng, 15));
         }
     }
 
@@ -562,11 +627,11 @@ public class ShowLocationActivity extends Activity implements OnMapReadyCallback
      * Store the every node in the RoomDB
      * */
     private void roomStore(List<DbNode> nodeList) {
-        DbRoute dbRoute = new DbRoute(0, timeWhenStopped,
+        DbRoute dbRoute = new DbRoute(0, timeWhenStopped4Storage,
                 CacheManager.getInstance().getKcalCumulative(),
                 CacheManager.getInstance().getDistanceCumulative(), currentDateandTime,
                 CacheManager.getInstance().getVelocityAvg(), cbDataFrameLocal
-                .getProfileId());
+                .getProfileId(), goalStore);
         DbHelper.getInstance(getApplicationContext()).insertRoute(dbRoute, nodeList);
     }
 
@@ -574,20 +639,29 @@ public class ShowLocationActivity extends Activity implements OnMapReadyCallback
      * Method for initiating layout.
      */
     private void initLayoutDinamically() {
-        button_start = (Button) findViewById(R.id.start_button);
+        button_back = findViewById(R.id.ib_al_backbutton);
+        button_back.setOnClickListener(mButtonBackListener);
+        button_start = findViewById(R.id.al_btn_start);
         button_start.setOnClickListener(mButtonStartListener);
-        button_pause = (Button) findViewById(R.id.end_button);
+        button_pause = findViewById(R.id.al_btn_pause);
         button_pause.setOnClickListener(mButtonPauseListener);
-        button_rst = (Button) findViewById(R.id.refresh_button);
+        button_rst = findViewById(R.id.ib_al_reset);
         button_rst.setOnClickListener(mButtonResetListener);
-        button_save = (Button) findViewById(R.id.save_button);
+        button_save = findViewById(R.id.ib_al_save);
         button_save.setOnClickListener(mButtonSaveListener);
 
-        showTime = (Chronometer) findViewById(R.id.showTime);
-        showCalories = (Chronometer) findViewById(R.id.showCalories);
-        showDistance = (Chronometer) findViewById(R.id.showDistance);
-        showVelocity = (Chronometer) findViewById(R.id.showVelocity);
-        showVelocityAvg = (Chronometer) findViewById(R.id.showVelocityAvg);
+        showTime = findViewById(R.id.chr_al_duration);
+        showCalories = findViewById(R.id.chr_al_kcal);
+        showDistance = findViewById(R.id.chr_al_meters);
+        showVelocity = findViewById(R.id.chr_al_speed);
+
+        activity_id = findViewById(R.id.tv_al_activity);
+        labelCalories = findViewById(R.id.tv_al_kcal);
+        labelDuration = findViewById(R.id.tv_al_duration);
+        labelVelocity = findViewById(R.id.tv_al_speed);
+
+        set_goal = findViewById(R.id.al_btn_setgoal);
+        set_goal.setOnClickListener(mButtonSetGoalListener);
     }
 
     /**
@@ -596,5 +670,38 @@ public class ShowLocationActivity extends Activity implements OnMapReadyCallback
     public void openGPSSettings() {
         Intent i = new Intent(ACTION_LOCATION_SOURCE_SETTINGS);
         startActivityForResult(i, Constants.REQUEST_GPS_SETTINGS);
+    }
+
+    private void onAnyBackButtonPressed()
+    {
+        if (mLocTrackingRunning || !mRouteAlreadySaved) {
+            AlertDialog.Builder dialog = new AlertDialog.Builder(this);
+            dialog.setCancelable(false);
+            dialog.setTitle(R.string.alert_dialog_title_back_pressed);
+            dialog.setMessage(getString(R.string.alert_dialog_message_back_pressed));
+            dialog.setPositiveButton(R.string.alert_dialog_positive_back_pressed, new
+                    DialogInterface
+                            .OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface paramDialogInterface, int paramInt) {
+                            stopService(new Intent(GetGoingApp.getInstance()
+                                    .getApplicationContext(),
+                                    GPSTrackingService.class));
+                            clearCacheData();
+                            finish();
+                        }
+                    });
+
+            dialog.setNegativeButton(getString(R.string.alert_dialog_negative_back_pressed),
+                    new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface paramDialogInterface, int paramInt) {
+                        }
+                    });
+
+            dialog.show();
+        } else {
+            super.onBackPressed();
+        }
     }
 }

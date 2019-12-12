@@ -11,6 +11,7 @@
     <!-- My Location -->
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+    <uses-permission android:name="android.permission.ACCESS_BACKGROUND_LOCATION"/>
     <!-- Foreground service (API 28) -->
     <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
     <!-- Maps API needs OpenGL ES 2.0. -->
@@ -22,10 +23,10 @@
     <application
         android:name=".GetGoingApp"
         android:allowBackup="true"
-        android:icon="@drawable/ic_launher"
+        android:icon="@drawable/ic_logo_light"
         android:label="@string/app_name"
         android:logo="@mipmap/ic_logo"
-        android:theme="@style/AppTheme">
+        android:theme="@style/AppTheme.Launcher">
         <uses-library
             android:name="com.google.android.maps"
             android:required="true" />

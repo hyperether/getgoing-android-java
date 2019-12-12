@@ -1,26 +1,10 @@
 <resources>
     <!-- Default screen margins, per the Android Design guidelines. -->
-    <dimen name="text_size">20sp</dimen>
 
     <!-- List element -->
-    <dimen name="date_padding">20dp</dimen>
-    <dimen name="element_padding">45dp</dimen>
-    <dimen name="element_text_size">25sp</dimen>
-    <dimen name="element_energy_text_size">35sp</dimen>
 
     <!-- Show Location -->
-    <dimen name="location_margin_left">30dp</dimen>
-    <dimen name="location_buttons_layout_margin">20dp</dimen>
-    <dimen name="location_buttons_layout_margin_left_right">50dp</dimen>
-    <dimen name="location_text_size">22sp</dimen>
 
     <!-- Activity settings -->
-    <dimen name="settings_layout_margin">50dp</dimen>
-    <dimen name="settings_txt_margin_left">55dp</dimen>
-    <dimen name="settings_margin_port">40dp</dimen>
-    <dimen name="settings_txt_age_margin_left">70dp</dimen>
-    <dimen name="settings_edit_margin_left">35dp</dimen>
-    <dimen name="settings_spinner_width">180dp</dimen>
-    <dimen name="settings_arrow_margin_right">10dp</dimen>
-    <dimen name="settings_btn_arrow_size">40dp</dimen>
+
 </resources>
