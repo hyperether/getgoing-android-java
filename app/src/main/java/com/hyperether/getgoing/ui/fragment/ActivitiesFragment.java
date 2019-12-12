@@ -29,6 +29,7 @@ import com.hyperether.getgoing.util.Constants;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 import static com.hyperether.getgoing.ui.activity.GetGoingActivity.ratio;
 
@@ -62,7 +63,7 @@ public class ActivitiesFragment extends DialogFragment
         super.onCreate(savedInstanceState);
         setStyle(DialogFragment.STYLE_NORMAL, R.style.FullScreenDialogStyle);
 
-        settings = getActivity().getSharedPreferences(Constants.PREF_FILE, 0);
+        settings = Objects.requireNonNull(getActivity()).getSharedPreferences(Constants.PREF_FILE, 0);
     }
 
     @Nullable
@@ -70,8 +71,7 @@ public class ActivitiesFragment extends DialogFragment
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         super.onCreateView(inflater, container, savedInstanceState);
 
-        View rootView = inflater.inflate(R.layout.fragment_activities, container, false);
-        return rootView;
+        return inflater.inflate(R.layout.fragment_activities, container, false);
     }
 
     @Override

@@ -18,11 +18,11 @@ import java.util.List;
 public class DbHelper {
 
     public interface OnDataLoadListener {
-        public void onLoad();
+        void onLoad();
     }
 
     public interface OnDataLoadedListener {
-        public void onLoad(List<DbRoute> routes);
+        void onLoad(List<DbRoute> routes);
     }
 
     private static final String DATABASE_NAME = "getgoing_db";

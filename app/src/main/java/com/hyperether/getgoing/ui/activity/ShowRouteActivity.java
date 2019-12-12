@@ -1,36 +1,26 @@
 package com.hyperether.getgoing.ui.activity;
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.SharedPreferences;
-import android.graphics.Bitmap;
-import android.graphics.Canvas;
 import android.graphics.Color;
-import android.graphics.Matrix;
 import android.os.Bundle;
 import android.os.Handler;
-import android.view.View;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.facebook.AccessToken;
 import com.facebook.CallbackManager;
-import com.facebook.FacebookCallback;
-import com.facebook.FacebookException;
-import com.facebook.login.LoginManager;
-import com.facebook.login.LoginResult;
 import com.facebook.share.model.ShareContent;
-import com.facebook.share.model.ShareMediaContent;
 import com.facebook.share.model.SharePhoto;
 import com.facebook.share.widget.ShareButton;
 import com.facebook.share.widget.ShareDialog;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
-import com.google.android.gms.maps.MapFragment;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.LatLngBounds;
 import com.google.android.gms.maps.model.PolylineOptions;
-import com.hyperether.getgoing.R;
 import com.hyperether.getgoing.repository.room.DbHelper;
 import com.hyperether.getgoing.repository.room.entity.DbNode;
 import com.hyperether.getgoing.repository.room.entity.DbRoute;
@@ -101,6 +91,7 @@ public class ShowRouteActivity extends Activity implements OnMapReadyCallback,
         });
     }
 
+    @SuppressLint("DefaultLocale")
     @Override
     public void onMapReady(GoogleMap googleMap) {
         this.mMap = googleMap;
@@ -110,7 +101,7 @@ public class ShowRouteActivity extends Activity implements OnMapReadyCallback,
             route = routesById.get(0); // get the route
             // Show the general values for the current route
             showTime.setText(
-                    String.format(getDurationString(Math.abs(route.getDuration() / 1000))));
+                    getDurationString(Math.abs(route.getDuration() / 1000)));
             showCalories.setText(String.format("%.02f kcal", route.getEnergy()));
             showDistance.setText(String.format("%.02f m", route.getLength()));
 

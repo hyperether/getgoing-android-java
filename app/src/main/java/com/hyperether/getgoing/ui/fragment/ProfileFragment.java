@@ -1,5 +1,6 @@
 package com.hyperether.getgoing.ui.fragment;
 
+import android.annotation.SuppressLint;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.SharedPreferences;
@@ -327,6 +328,7 @@ public class ProfileFragment extends DialogFragment {
         }
     }
 
+    @SuppressLint("DefaultLocale")
     private void initTotals() {
         final float[] totalRoute = new float[1];
         final int[] totalKcal = new int[1];

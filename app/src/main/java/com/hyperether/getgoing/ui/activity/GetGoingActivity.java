@@ -84,14 +84,17 @@ public class GetGoingActivity extends AppCompatActivity implements
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         setTheme(R.style.AppTheme);
+
         super.onCreate(savedInstanceState);
         Fabric.with(this, new Crashlytics());
+
         mBinding = DataBindingUtil.setContentView(this, R.layout.activity_main);
         mBinding.setViewModel(new ClickHandler());
 
         cbDataFrameLocal = CacheManager.getInstance().getObDataFrameGlobal();
 
         actLabel = findViewById(R.id.tv_ma_mainact);
+        blueSentence = findViewById(R.id.tv_am_burn);
         selectorView = findViewById(R.id.imageView2);
         circleProgressBar = findViewById(R.id.cpb_am_kmgoal);
         circleProgressBar2 = findViewById(R.id.cpb_am_kmgoal1);
@@ -121,28 +124,24 @@ public class GetGoingActivity extends AppCompatActivity implements
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions,
                                            @NonNull int[] grantResults) {
-        switch (requestCode) {
-            case Constants.TAG_CODE_PERMISSION_LOCATION:
-                if (grantResults.length > 0 && grantResults[0] == PackageManager
-                        .PERMISSION_GRANTED) {
-                } else {
-                    finish();
-                }
-                break;
+        if (requestCode == Constants.TAG_CODE_PERMISSION_LOCATION) {
+            if (grantResults.length > 0 && grantResults[0] == PackageManager
+                    .PERMISSION_GRANTED) {
+            } else {
+                finish();
+            }
         }
     }
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        switch (requestCode) {
-            case (Constants.RESULT_REQUESTED):
-                if (resultCode == Activity.RESULT_OK) {
-                    if (data.hasExtra(DATA_KEY)) {
-                        this.cbDataFrameLocal = data.getParcelableExtra(DATA_KEY);
-                    }
+        if (requestCode == Constants.RESULT_REQUESTED) {
+            if (resultCode == Activity.RESULT_OK) {
+                if (data.hasExtra(DATA_KEY)) {
+                    this.cbDataFrameLocal = data.getParcelableExtra(DATA_KEY);
                 }
-                break;
+            }
         }
     }
 
@@ -385,8 +384,10 @@ public class GetGoingActivity extends AppCompatActivity implements
         ratio = (float)metrics.heightPixels / (float)metrics.widthPixels;
 
         blueRectangle = findViewById(R.id.iv_am_bluerectangle);
-        blueSentence = findViewById(R.id.tv_am_burn);
         lastExeLabel = findViewById(R.id.tv_am_lastexercise);
+
+        int unicode = 0x1F605;  /* emoji */
+        blueSentence.append(" " + String.valueOf(Character.toChars(unicode)));
 
         if (ratio >= 1.8)
         {

@@ -1,7 +1,6 @@
 package com.hyperether.getgoing.util;
 
 import android.content.Context;
-import android.util.DisplayMetrics;
 
 public class Conversion {
     /**

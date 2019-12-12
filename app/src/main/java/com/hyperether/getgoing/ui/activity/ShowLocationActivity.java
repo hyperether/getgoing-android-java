@@ -1,5 +1,6 @@
 package com.hyperether.getgoing.ui.activity;
 
+import android.annotation.SuppressLint;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -458,6 +459,7 @@ public class ShowLocationActivity extends AppCompatActivity implements OnMapRead
      * @param kcal calories burned
      * @param vel average velocity
      */
+    @SuppressLint("DefaultLocale")
     private void showData(double distance, double kcal, double vel) {
         showCalories.setText(String.format("%.02f kcal", kcal));
         if (cbDataFrameLocal.getMeasurementSystemId() == 1 ||

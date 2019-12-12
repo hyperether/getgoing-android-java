@@ -12,7 +12,8 @@
         android:background="@android:color/transparent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:srcCompat="@drawable/ic_light_back_icon" />
+        app:srcCompat="@drawable/ic_light_back_icon"
+        android:contentDescription="@string/back_button"/>
 
     <TextView
         android:id="@+id/tv_al_activity"
@@ -57,7 +58,8 @@
         android:src="@drawable/ic_circle"
         app:layout_constraintBottom_toBottomOf="@+id/al_customBottomBar"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent" />
+        app:layout_constraintStart_toStartOf="parent"
+        android:contentDescription="@string/background_drawable_for_a_button"/>
 
     <ImageView
         android:id="@+id/al_button"
@@ -68,7 +70,8 @@
         app:layout_constraintBottom_toBottomOf="@+id/iv_al_circletransparent"
         app:layout_constraintEnd_toEndOf="@+id/iv_al_circletransparent"
         app:layout_constraintStart_toStartOf="@+id/iv_al_circletransparent"
-        app:layout_constraintTop_toTopOf="@+id/iv_al_circletransparent" />
+        app:layout_constraintTop_toTopOf="@+id/iv_al_circletransparent"
+        android:contentDescription="@string/button"/>
 
     <ImageView
         android:id="@+id/al_btn_start"
@@ -83,6 +86,7 @@
         app:layout_constraintHorizontal_bias="0.55"
         app:srcCompat="@drawable/ic_light_start_icon"
         android:visibility="visible"
+        android:contentDescription="@string/start_tracking"
         />
 
     <ImageView
@@ -96,7 +100,8 @@
         app:layout_constraintEnd_toEndOf="@id/al_button"
         app:layout_constraintStart_toStartOf="@id/al_button"
         app:layout_constraintTop_toTopOf="@id/al_button"
-        app:srcCompat="@drawable/ic_light_stop_icon" />
+        app:srcCompat="@drawable/ic_light_stop_icon"
+        android:contentDescription="@string/stop_tracking"/>
 
     <Chronometer
         android:id="@+id/chr_al_meters"
@@ -211,7 +216,8 @@
         app:layout_constraintEnd_toEndOf="@id/tv_al_duration"
         app:layout_constraintTop_toTopOf="@id/al_customBottomBar"
         android:layout_marginTop="15dp"
-        android:visibility="gone"/>
+        android:visibility="gone"
+        android:contentDescription="@string/save_exercise"/>
 
     <ImageButton
         android:id="@+id/ib_al_reset"
@@ -223,7 +229,8 @@
         app:layout_constraintEnd_toEndOf="@id/tv_al_kcal"
         app:layout_constraintTop_toTopOf="@id/al_customBottomBar"
         android:layout_marginTop="15dp"
-        android:visibility="gone"/>
+        android:visibility="gone"
+        android:contentDescription="@string/reset_progress"/>
 
     <Button
         android:id="@+id/al_btn_setgoal"

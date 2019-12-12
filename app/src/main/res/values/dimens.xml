@@ -1,75 +1,16 @@
 <resources>
     <!-- Default screen margins, per the Android Design guidelines. -->
-    <dimen name="activity_horizontal_margin">16dp</dimen>
-    <dimen name="activity_vertical_margin">16dp</dimen>
-    <dimen name="text_size">45sp</dimen>
 
     <!-- List element -->
-    <dimen name="date_padding">15dp</dimen>
-    <dimen name="date_margin">5dp</dimen>
-    <dimen name="date_padding_land">20dp</dimen>
-    <dimen name="element_padding">8dp</dimen>
-    <dimen name="element_padding_land">35dp</dimen>
-    <dimen name="element_text_size">15sp</dimen>
-    <dimen name="element_energy_text_size">18sp</dimen>
-    <dimen name="element_text_size_land">20sp</dimen>
 
     <!-- Default values-->
-    <dimen name="default_margin_10">10dp</dimen>
-    <dimen name="default_margin_20">20dp</dimen>
-    <dimen name="default_padding_10">10dp</dimen>
-    <dimen name="default_padding_30">30dp</dimen>
 
     <!-- Show Location -->
-    <dimen name="location_margin_left">15dp</dimen>
-    <dimen name="location_img_margin_bottom">10dp</dimen>
-    <dimen name="location_buttons_layout_margin">20dp</dimen>
-    <dimen name="location_buttons_layout_margin_left_right">20dp</dimen>
-    <dimen name="location_text_size">16sp</dimen>
-    <dimen name="location_img_padding">10dp</dimen>
-    <dimen name="location_img_margin_left">15dp</dimen>
 
     <!-- Activity settings -->
-    <dimen name="settings_layout_margin">20dp</dimen>
-    <dimen name="settings_margin_port">15dp</dimen>
-    <dimen name="settings_layout_margin_top">10dp</dimen>
-    <dimen name="settings_layout_weight_margin_top">8dp</dimen>
-    <dimen name="settings_layout_age_margin_top">8dp</dimen>
-    <dimen name="settings_layout_accept_margin">20dp</dimen>
-    <dimen name="settings_weight_layout_margin">60dp</dimen>
-    <dimen name="settings_txt_margin_left">20dp</dimen>
-    <dimen name="settings_txt_age_margin_left">30dp</dimen>
-    <dimen name="settings_edit_margin_left">25dp</dimen>
-    <dimen name="settings_spinner_width">140dp</dimen>
-    <dimen name="settings_text_size">30sp</dimen>
-    <dimen name="settings_arrow_margin_right">0dp</dimen>
-    <dimen name="settings_layout_margin_left_right">10dp</dimen>
-    <dimen name="settings_beam_scale_width">65dp</dimen>
-    <dimen name="settings_beam_scale_height">74dp</dimen>
-    <dimen name="settings_sandglass_width">43dp</dimen>
-    <dimen name="settings_sandglass_height">65dp</dimen>
-    <dimen name="settings_measure_width">65dp</dimen>
-    <dimen name="settings_measure_height">79dp</dimen>
-    <dimen name="settings_arrow_width">44dp</dimen>
-    <dimen name="settings_arrow_height">39dp</dimen>
-    <dimen name="settings_edit_height">40dp</dimen>
-    <dimen name="settings_edit_width">50dp</dimen>
-    <dimen name="settings_age_layout_margin">10dp</dimen>
-    <dimen name="settings_btn_arrow_size">30dp</dimen>
-    <dimen name="measure_units">90dp</dimen>
-    <dimen name="measure_spinner_width">100dp</dimen>
-    <dimen name="measure_icon_width">80dp</dimen>
-    <dimen name="settings_weight_icon_width">30dp</dimen>
-    <dimen name="number_picker_width">60dp</dimen>
-    <dimen name="settings_age_icon_width">30dp</dimen>
-    <dimen name="accept_btn_width_landscape">120dp</dimen>
 
     <!-- Show Route -->
-    <dimen name="route_margin">5dp</dimen>
-    <dimen name="route_margin_top">10dp</dimen>
-    <dimen name="route_img_size">30dp</dimen>
 
     <!-- New UI dimensions -->
     <dimen name="curved_bottom_bar">140dp</dimen>
-    <dimen name="blue_rectangle">200dp</dimen>
 </resources>

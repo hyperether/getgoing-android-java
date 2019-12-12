@@ -42,7 +42,7 @@ public class ShowDataActivity extends AppCompatActivity implements DbHelper.OnDa
         setContentView(R.layout.show_data);
         //getSupportActionBar().show();
 
-        chart = (BarChart) findViewById(R.id.barChart);
+        chart = findViewById(R.id.barChart);
         chart.setNoDataText("");
         chart.setNoDataTextDescription("");
         progress = findViewById(R.id.progress);
@@ -66,7 +66,7 @@ public class ShowDataActivity extends AppCompatActivity implements DbHelper.OnDa
      * This method is for populating list view
      */
     private void populateListView() {
-        recyclerView = (RecyclerView) findViewById(R.id.recyclerList);
+        recyclerView = findViewById(R.id.recyclerList);
         //recyclerAdapter = new DbRecyclerAdapter(this, routes);
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
         linearLayoutManager.setOrientation(RecyclerView.VERTICAL);
