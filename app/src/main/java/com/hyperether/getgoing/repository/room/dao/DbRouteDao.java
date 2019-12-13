@@ -1,5 +1,6 @@
 package com.hyperether.getgoing.repository.room.dao;
 
+import androidx.lifecycle.LiveData;
 import androidx.room.Dao;
 import androidx.room.Delete;
 import androidx.room.Insert;
@@ -20,6 +21,9 @@ public interface DbRouteDao {
 
     @Query("SELECT * FROM DbRoute WHERE id = :id")
     DbRoute getRouteById(long id);
+
+    @Query("SELECT * FROM DbRoute WHERE id = :id")
+    LiveData<DbRoute> getRouteByIdAsLiveData(long id);
 
     @Delete
     void deleteRoutes(DbRoute... routes);

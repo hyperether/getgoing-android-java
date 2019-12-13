@@ -4,8 +4,6 @@ import android.content.Context;
 import android.os.Handler;
 import android.os.HandlerThread;
 
-import androidx.room.Room;
-
 import com.hyperether.getgoing.repository.room.entity.DbNode;
 import com.hyperether.getgoing.repository.room.entity.DbRoute;
 
@@ -25,15 +23,13 @@ public class DbHelper {
         void onLoad(List<DbRoute> routes);
     }
 
-    private static final String DATABASE_NAME = "getgoing_db";
     private static DbHelper instance;
     private Handler mHandler;
 
     private AppDatabase db;
 
     private DbHelper(Context ctxt) {
-        db = Room.databaseBuilder(ctxt, AppDatabase.class, DATABASE_NAME)
-                .fallbackToDestructiveMigration().build();
+        db = AppDatabase.getInstance(ctxt);
     }
 
     public static DbHelper getInstance(Context ctxt) {

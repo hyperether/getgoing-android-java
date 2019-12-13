@@ -14,7 +14,6 @@ import android.location.Location;
 import android.location.LocationManager;
 import android.os.Bundle;
 import android.os.SystemClock;
-import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.WindowManager;
@@ -27,6 +26,7 @@ import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
+import androidx.lifecycle.ViewModelProviders;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -38,15 +38,15 @@ import com.hyperether.getgoing.GetGoingApp;
 import com.hyperether.getgoing.R;
 import com.hyperether.getgoing.manager.CacheManager;
 import com.hyperether.getgoing.model.CBDataFrame;
-import com.hyperether.getgoing.repository.room.DbHelper;
+import com.hyperether.getgoing.repository.room.GgRepository;
 import com.hyperether.getgoing.repository.room.entity.DbNode;
 import com.hyperether.getgoing.repository.room.entity.DbRoute;
 import com.hyperether.getgoing.service.GPSTrackingService;
 import com.hyperether.getgoing.util.Constants;
+import com.hyperether.getgoing.viewmodel.NodeListViewModel;
 import com.hyperether.toolbox.HyperConst;
 
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
@@ -72,6 +72,7 @@ public class ShowLocationActivity extends AppCompatActivity implements OnMapRead
     private Editor mEditor;
     // to store the current settings
     private CBDataFrame cbDataFrameLocal;
+    private NodeListViewModel nodeListViewModel;
 
     // U/I variables
     private Button set_goal;
@@ -79,6 +80,8 @@ public class ShowLocationActivity extends AppCompatActivity implements OnMapRead
     private ImageView button_start, button_pause;
     private ImageButton button_rst, button_save, button_back;
     private Chronometer showTime, showCalories, showDistance, showVelocity;
+
+    private List<DbNode> nodeList;
 
     // timer for data show
     private Timer timer;
@@ -93,7 +96,6 @@ public class ShowLocationActivity extends AppCompatActivity implements OnMapRead
     private int cnt;
     private long goalStore;
 
-    private LayoutInflater inflater;
     private View toInflate;
 
     @Override
@@ -115,6 +117,14 @@ public class ShowLocationActivity extends AppCompatActivity implements OnMapRead
         cbDataFrameLocal = new CBDataFrame();
         Bundle b = getIntent().getExtras();
         cbDataFrameLocal = b.getParcelable("searchKey");
+
+        nodeListViewModel = ViewModelProviders.of(this).get(NodeListViewModel.class);
+        nodeListViewModel.getNodeList().observe(this, dbNodes -> {
+            nodeList = dbNodes;
+
+            mMap.clear();
+            drawRoute(nodeList);
+        });
 
         initLayoutDinamically();
         setActivityLabel();
@@ -138,20 +148,6 @@ public class ShowLocationActivity extends AppCompatActivity implements OnMapRead
         }
 
         toInflate = getLayoutInflater().inflate(R.layout.alertdialog_goal, null, false);
-    }
-
-    @Override
-    protected void onResume() {
-        super.onResume();
-
-        /*
-         * Get any previous setting for location updates
-         * Gets "false" if an error occurs
-         */
-        if (mLocTrackingRunning && mMap != null) {
-            mMap.clear();
-            drawRoute(CacheManager.getInstance().getmRoute());
-        }
     }
 
     @Override
@@ -274,23 +270,23 @@ public class ShowLocationActivity extends AppCompatActivity implements OnMapRead
                     new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface paramDialogInterface, int paramInt) {
-                            // Save the current route in DB*/
-                            if (!CacheManager.getInstance().getmRoute().isEmpty()) {
-                                // Save the current route in DB*/
-                                roomStore(CacheManager.getInstance().getmRoute());
-                            } else {
-                                CacheManager.getInstance().setKcalCumulative(0.0);
-                                CacheManager.getInstance().setDistanceCumulative(0.0);
-                                CacheManager.getInstance().setVelocity(0.0);
-                                CacheManager.getInstance().setVelocityAvg(0.0);
-
-                                List<DbNode> tmpRoute = new ArrayList<>();
-                                DbNode tmpNode = new DbNode(0, 0, 0, 0, 0, 0);
-                                tmpRoute.add(tmpNode);
-                                roomStore(tmpRoute);
-                            }
-
-                            mRouteAlreadySaved = true;
+//                            // Save the current route in DB*/
+//                            if (!CacheManager.getInstance().getmRoute().isEmpty()) {
+//                                // Save the current route in DB*/
+//                                roomStore(CacheManager.getInstance().getmRoute());
+//                            } else {
+//                                CacheManager.getInstance().setKcalCumulative(0.0);
+//                                CacheManager.getInstance().setDistanceCumulative(0.0);
+//                                CacheManager.getInstance().setVelocity(0.0);
+//                                CacheManager.getInstance().setVelocityAvg(0.0);
+//
+//                                List<DbNode> tmpRoute = new ArrayList<>();
+//                                DbNode tmpNode = new DbNode(0, 0, 0, 0, 0, 0);
+//                                tmpRoute.add(tmpNode);
+//                                roomStore(tmpRoute);
+//                            }
+//
+//                            mRouteAlreadySaved = true;
                         }
                     });
 
@@ -390,6 +386,9 @@ public class ShowLocationActivity extends AppCompatActivity implements OnMapRead
      * This method starts timer and enable visibility of pause button.
      */
     private void startTracking() {
+        long currentid = GgRepository.getInstance().insertRoute(new DbRoute(0, 0, 0, 0, "", 0, 0, 0));
+        CacheManager.getInstance().setCurrentRouteId(currentid);
+
         Intent intent = new Intent(this, GPSTrackingService.class);
         intent.putExtra(HyperConst.LOC_INTERVAL, UPDATE_INTERVAL_IN_MILLISECONDS);
         intent.putExtra(HyperConst.LOC_FASTEST_INTERVAL, FASTEST_UPDATE_INTERVAL_IN_MILLISECONDS);
@@ -428,6 +427,8 @@ public class ShowLocationActivity extends AppCompatActivity implements OnMapRead
         mRouteAlreadySaved = false;
         mEditor.putBoolean("KEY_UPDATES_ON", mLocTrackingRunning);
         mEditor.apply();
+
+        CacheManager.getInstance().setCurrentRouteId(0);
     }
 
     class RefreshData extends TimerTask {
@@ -440,8 +441,6 @@ public class ShowLocationActivity extends AppCompatActivity implements OnMapRead
                 public void run() {
                     CacheManager cacheMngr = CacheManager.getInstance();
                     cacheMngr.setTimeCumulative(timeWhenStopped4Storage);
-                    mMap.clear();
-                    drawRoute(cacheMngr.getmRoute());
 
                     if (cacheMngr.getVelocity() != null) {
                         showData(cacheMngr.getDistanceCumulative(), cacheMngr.getKcalCumulative(),
@@ -632,7 +631,7 @@ public class ShowLocationActivity extends AppCompatActivity implements OnMapRead
                 CacheManager.getInstance().getDistanceCumulative(), currentDateandTime,
                 CacheManager.getInstance().getVelocityAvg(), cbDataFrameLocal
                 .getProfileId(), goalStore);
-        DbHelper.getInstance(getApplicationContext()).insertRoute(dbRoute, nodeList);
+        GgRepository.getInstance().insertRoute(dbRoute);
     }
 
     /**

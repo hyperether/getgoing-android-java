@@ -33,6 +33,7 @@ import com.hyperether.getgoing.databinding.ActivityMainBinding;
 import com.hyperether.getgoing.manager.CacheManager;
 import com.hyperether.getgoing.model.CBDataFrame;
 import com.hyperether.getgoing.repository.room.DbHelper;
+import com.hyperether.getgoing.repository.room.GgRepository;
 import com.hyperether.getgoing.repository.room.entity.DbNode;
 import com.hyperether.getgoing.repository.room.entity.DbRoute;
 import com.hyperether.getgoing.ui.adapter.HorizontalListAdapter;
@@ -445,8 +446,10 @@ public class GetGoingActivity extends AppCompatActivity implements
     }
 
     private void roomStoreNodeZero(List<DbNode> nodeList) {
-        DbRoute dbRoute = new DbRoute(0, 0,0,0,"null", 0, 1, 0);
-        DbHelper.getInstance(getApplicationContext()).insertRoute(dbRoute, nodeList);
+        new Thread(() -> {
+            DbRoute dbRoute = new DbRoute(0, 0,0,0,"null", 0, 1, 0);
+            GgRepository.getInstance().insertRouteInit(dbRoute, nodeList);
+        }).start();
     }
 
     private class PullProgressData extends AsyncTask<Void, Void, Void>
@@ -468,6 +471,7 @@ public class GetGoingActivity extends AppCompatActivity implements
         protected Void doInBackground(Void... voids) {
             pointerList = new ArrayList<>();
             DbHelper.getInstance(getApplicationContext()).getLastRoute(pointerList);
+            //TODO: OVDE ZAMENI DA NIJE DB HELPER NEGO REPO
 
             return null;
         }

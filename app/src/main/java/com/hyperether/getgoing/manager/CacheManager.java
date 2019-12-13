@@ -24,6 +24,7 @@ public class CacheManager {
     private long timeCumulative;
     private int secondsCumulative;
     private long time = 0; // time between to position updates
+    private long currentRouteId;
 
     public static CacheManager getInstance() {
         if (instance == null) {
@@ -122,5 +123,13 @@ public class CacheManager {
 
     public void setTime(long time) {
         this.time = time;
+    }
+
+    public long getCurrentRouteId() {
+        return currentRouteId;
+    }
+
+    public void setCurrentRouteId(long currentRouteId) {
+        this.currentRouteId = currentRouteId;
     }
 }
