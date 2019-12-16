@@ -38,6 +38,7 @@ import com.hyperether.getgoing.GetGoingApp;
 import com.hyperether.getgoing.R;
 import com.hyperether.getgoing.manager.CacheManager;
 import com.hyperether.getgoing.model.CBDataFrame;
+import com.hyperether.getgoing.repository.room.DbRouteAddedCallback;
 import com.hyperether.getgoing.repository.room.GgRepository;
 import com.hyperether.getgoing.repository.room.entity.DbNode;
 import com.hyperether.getgoing.repository.room.entity.DbRoute;
@@ -97,6 +98,7 @@ public class ShowLocationActivity extends AppCompatActivity implements OnMapRead
     private long goalStore;
 
     private View toInflate;
+    private Context classContext;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -120,11 +122,24 @@ public class ShowLocationActivity extends AppCompatActivity implements OnMapRead
 
         nodeListViewModel = ViewModelProviders.of(this).get(NodeListViewModel.class);
         nodeListViewModel.getNodeList().observe(this, dbNodes -> {
-            nodeList = dbNodes;
+            int rtId = (int) CacheManager.getInstance().getCurrentRouteId();
 
-            mMap.clear();
-            drawRoute(nodeList);
+            if (rtId != 0) {
+                nodeList = dbNodes.subList(dbNodes.size() - 1, dbNodes.size());
+                mMap.clear();
+                drawRoute(nodeList);
+
+                CacheManager cacheMngr = CacheManager.getInstance();
+                cacheMngr.setTimeCumulative(timeWhenStopped4Storage);
+
+                if (cacheMngr.getVelocity() != null) {
+                    showData(cacheMngr.getDistanceCumulative(), cacheMngr.getKcalCumulative(),
+                            cacheMngr.getVelocity());
+                }
+            }
         });
+
+        classContext = this;
 
         initLayoutDinamically();
         setActivityLabel();
@@ -175,12 +190,10 @@ public class ShowLocationActivity extends AppCompatActivity implements OnMapRead
         currentDateandTime = savedInstanceState.getString("currentDateandTime");
     }
 
-    private void setActivityLabel()
-    {
+    private void setActivityLabel() {
         int id = cbDataFrameLocal.getProfileId();
 
-        switch (id)
-        {
+        switch (id) {
             case 1: {
                 activity_id.setText("Walking");
                 break;
@@ -196,10 +209,8 @@ public class ShowLocationActivity extends AppCompatActivity implements OnMapRead
         }
     }
 
-    private void setVisibilities()
-    {
-        if (cnt++ == 0)
-        {
+    private void setVisibilities() {
+        if (cnt++ == 0) {
             set_goal.setVisibility(View.VISIBLE);
             button_save.setVisibility(View.GONE);
             button_rst.setVisibility(View.GONE);
@@ -211,9 +222,7 @@ public class ShowLocationActivity extends AppCompatActivity implements OnMapRead
             labelDuration.setVisibility(View.GONE);
             labelVelocity.setVisibility(View.GONE);
             labelCalories.setVisibility(View.GONE);
-        }
-        else
-        {
+        } else {
             set_goal.setVisibility(View.GONE);
             button_save.setVisibility(View.VISIBLE);
             button_rst.setVisibility(View.VISIBLE);
@@ -234,9 +243,8 @@ public class ShowLocationActivity extends AppCompatActivity implements OnMapRead
     private final OnClickListener mButtonStartListener = new OnClickListener() {
         @Override
         public void onClick(View v) {
-            if (goalStore > 0)
-            {
-                startTracking();
+            if (goalStore > 0) {
+                startTracking(classContext);
                 if (timeFlg) {
                     // Get date and time on which the tracking started
                     currentDateandTime = sdf.format(new Date());
@@ -361,7 +369,8 @@ public class ShowLocationActivity extends AppCompatActivity implements OnMapRead
                 setVisibilities();
             });
 
-            dialog.setNegativeButton("CANCEL", (paramDialogInterface, paramInt) -> {});
+            dialog.setNegativeButton("CANCEL", (paramDialogInterface, paramInt) -> {
+            });
             dialog.show();
         }
     };
@@ -385,29 +394,32 @@ public class ShowLocationActivity extends AppCompatActivity implements OnMapRead
     /**
      * This method starts timer and enable visibility of pause button.
      */
-    private void startTracking() {
-        long currentid = GgRepository.getInstance().insertRoute(new DbRoute(0, 0, 0, 0, "", 0, 0, 0));
-        CacheManager.getInstance().setCurrentRouteId(currentid);
+    private void startTracking(Context context) {
+        GgRepository.getInstance().insertRoute(new DbRoute(0, 0, 0, 0, "", 0, 0, 0), new DbRouteAddedCallback() {
+            @Override
+            public void onRouteAdded(long currentid) {
+                CacheManager.getInstance().setCurrentRouteId(currentid);
 
-        Intent intent = new Intent(this, GPSTrackingService.class);
-        intent.putExtra(HyperConst.LOC_INTERVAL, UPDATE_INTERVAL_IN_MILLISECONDS);
-        intent.putExtra(HyperConst.LOC_FASTEST_INTERVAL, FASTEST_UPDATE_INTERVAL_IN_MILLISECONDS);
-        intent.putExtra(HyperConst.LOC_DISTANCE, LOCATION_DISTANCE);
-        startService(intent);
+                Intent intent = new Intent(context, GPSTrackingService.class);
+                intent.putExtra(HyperConst.LOC_INTERVAL, UPDATE_INTERVAL_IN_MILLISECONDS);
+                intent.putExtra(HyperConst.LOC_FASTEST_INTERVAL, FASTEST_UPDATE_INTERVAL_IN_MILLISECONDS);
+                intent.putExtra(HyperConst.LOC_DISTANCE, LOCATION_DISTANCE);
+                startService(intent);
 
-        showTime.setBase(SystemClock.elapsedRealtime() + timeWhenStopped);
-        showTime.start();
+                runOnUiThread(() -> {
+                    showTime.setBase(SystemClock.elapsedRealtime() + timeWhenStopped);
+                    showTime.start();
 
-        timer = new Timer();
-        timer.schedule(new RefreshData(), 0, 1000);
+                    button_start.setVisibility(View.GONE);
+                    button_pause.setVisibility(View.VISIBLE);
+                });
 
-        button_start.setVisibility(View.GONE);
-        button_pause.setVisibility(View.VISIBLE);
-
-        mLocTrackingRunning = true;
-        mRouteAlreadySaved = false;
-        mEditor.putBoolean("KEY_UPDATES_ON", mLocTrackingRunning);
-        mEditor.apply();
+                mLocTrackingRunning = true;
+                mRouteAlreadySaved = false;
+                mEditor.putBoolean("KEY_UPDATES_ON", mLocTrackingRunning);
+                mEditor.apply();
+            }
+        });
     }
 
     /**
@@ -439,13 +451,13 @@ public class ShowLocationActivity extends AppCompatActivity implements OnMapRead
 
                 @Override
                 public void run() {
-                    CacheManager cacheMngr = CacheManager.getInstance();
-                    cacheMngr.setTimeCumulative(timeWhenStopped4Storage);
-
-                    if (cacheMngr.getVelocity() != null) {
-                        showData(cacheMngr.getDistanceCumulative(), cacheMngr.getKcalCumulative(),
-                                cacheMngr.getVelocity());
-                    }
+//                    CacheManager cacheMngr = CacheManager.getInstance();
+//                    cacheMngr.setTimeCumulative(timeWhenStopped4Storage);
+//
+//                    if (cacheMngr.getVelocity() != null) {
+//                        showData(cacheMngr.getDistanceCumulative(), cacheMngr.getKcalCumulative(),
+//                                cacheMngr.getVelocity());
+//                    }
                 }
             });
         }
@@ -455,8 +467,8 @@ public class ShowLocationActivity extends AppCompatActivity implements OnMapRead
      * This method show measured data.
      *
      * @param distance passed distance
-     * @param kcal calories burned
-     * @param vel average velocity
+     * @param kcal     calories burned
+     * @param vel      average velocity
      */
     @SuppressLint("DefaultLocale")
     private void showData(double distance, double kcal, double vel) {
@@ -588,7 +600,7 @@ public class ShowLocationActivity extends AppCompatActivity implements OnMapRead
     /**
      * This method draws a segment of the route and coloring it in accordance with the speed
      *
-     * @param firstNode first point of the rout
+     * @param firstNode  first point of the rout
      * @param secondNode second point of the rout
      */
     private void drawSegment(DbNode firstNode, DbNode secondNode) {
@@ -620,18 +632,6 @@ public class ShowLocationActivity extends AppCompatActivity implements OnMapRead
                     .width(10)
                     .color(Color.rgb(255, 0, 0))); // Red color
         }
-    }
-
-    /*
-     * Store the every node in the RoomDB
-     * */
-    private void roomStore(List<DbNode> nodeList) {
-        DbRoute dbRoute = new DbRoute(0, timeWhenStopped4Storage,
-                CacheManager.getInstance().getKcalCumulative(),
-                CacheManager.getInstance().getDistanceCumulative(), currentDateandTime,
-                CacheManager.getInstance().getVelocityAvg(), cbDataFrameLocal
-                .getProfileId(), goalStore);
-        GgRepository.getInstance().insertRoute(dbRoute);
     }
 
     /**
@@ -671,8 +671,7 @@ public class ShowLocationActivity extends AppCompatActivity implements OnMapRead
         startActivityForResult(i, Constants.REQUEST_GPS_SETTINGS);
     }
 
-    private void onAnyBackButtonPressed()
-    {
+    private void onAnyBackButtonPressed() {
         if (mLocTrackingRunning || !mRouteAlreadySaved) {
             AlertDialog.Builder dialog = new AlertDialog.Builder(this);
             dialog.setCancelable(false);

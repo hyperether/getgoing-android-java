@@ -24,9 +24,8 @@ public class GgRepository {
     private LiveData<List<DbNode>> allNodes;
 
     private Handler mHandler;
-    private Object lock = new Object();
 
-    public GgRepository() {
+    private GgRepository() {
         db = AppDatabase.getInstance(GetGoingApp.getInstance().getApplicationContext());
         nodeDao = db.dbNodeDao();
         routeDao = db.dbRouteDao();
@@ -48,26 +47,13 @@ public class GgRepository {
         return allNodes;
     }
 
-    public long insertRoute(final DbRoute dbRoute) {
+    public void insertRoute(final DbRoute dbRoute, DbRouteAddedCallback listener) {
         AtomicLong routeId = new AtomicLong();
 
         getRepoHandler().post(() -> {
-            synchronized (getRepoHandler()) {
-                routeId.set(routeDao.insertRoute(dbRoute));
-                getRepoHandler().notify();
-            }
+            routeId.set(routeDao.insertRoute(dbRoute));
+            listener.onRouteAdded(routeId.get());
         });
-
-        try {
-            synchronized (getRepoHandler()){
-                while (routeId.get() == 0)
-                    getRepoHandler().wait();
-            }
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
-
-        return routeId.get();
     }
 
     public void insertRouteInit(final DbRoute dbRoute, List<DbNode> nodeList) {
