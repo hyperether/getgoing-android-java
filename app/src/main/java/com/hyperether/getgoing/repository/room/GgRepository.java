@@ -24,6 +24,7 @@ public class GgRepository {
     private LiveData<List<DbNode>> allNodes;
 
     private Handler mHandler;
+    private Object lock = new Object();
 
     public GgRepository() {
         db = AppDatabase.getInstance(GetGoingApp.getInstance().getApplicationContext());
@@ -40,7 +41,7 @@ public class GgRepository {
     }
 
     public void daoInsertNode(DbNode node) {
-        nodeDao.insertNode(node);
+        getRepoHandler().post(() -> nodeDao.insertNode(node));
     }
 
     public LiveData<List<DbNode>> getAllNodes() {
@@ -50,18 +51,21 @@ public class GgRepository {
     public long insertRoute(final DbRoute dbRoute) {
         AtomicLong routeId = new AtomicLong();
 
-        new Thread(() -> {
-            routeId.set(routeDao.insertRoute(dbRoute));
-//            LiveData<DbRoute> route = routeDao.getRouteByIdAsLiveData(routeId);
+        getRepoHandler().post(() -> {
+            synchronized (getRepoHandler()) {
+                routeId.set(routeDao.insertRoute(dbRoute));
+                getRepoHandler().notify();
+            }
+        });
 
-//            if (route.getValue() != null) {
-//                for (DbNode currentNode : nodeList) {
-//                    daoInsertNode(new DbNode(0, currentNode.getLatitude(), currentNode.getLongitude(),
-//                                    currentNode.getVelocity(), currentNode.getIndex(),
-//                                    routeId));
-//                }
-//            }
-        }).start();
+        try {
+            synchronized (getRepoHandler()){
+                while (routeId.get() == 0)
+                    getRepoHandler().wait();
+            }
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
 
         return routeId.get();
     }
