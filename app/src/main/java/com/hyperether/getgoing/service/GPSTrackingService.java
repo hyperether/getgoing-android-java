@@ -125,7 +125,7 @@ public class GPSTrackingService extends HyperLocationService {
 
                 DbNode tmp = new DbNode(0, latitude, longitude, 0, nodeIndex++, CacheManager.getInstance().getCurrentRouteId());
                 CacheManager.getInstance().addRouteNode(tmp);
-                saveNodeAsync(tmp);
+                GgRepository.getInstance().daoInsertNode(tmp);
             } else {
                 latitude_old = latitude;
                 longitude_old = longitude;
@@ -191,7 +191,7 @@ public class GPSTrackingService extends HyperLocationService {
                                 nodeIndex++, CacheManager.getInstance().getCurrentRouteId());
                         if (velocity < 30) {
                             CacheManager.getInstance().addRouteNode(tmp);
-                            saveNodeAsync(tmp);
+                            GgRepository.getInstance().daoInsertNode(tmp);
                         }
                     }
                 } else {
@@ -217,10 +217,5 @@ public class GPSTrackingService extends HyperLocationService {
         if (velocity < 30) {
             CacheManager.getInstance().setDistanceCumulative(distanceCumulative);
         }
-    }
-
-    private void saveNodeAsync(DbNode nd)
-    {
-        GgRepository.getInstance().daoInsertNode(nd);
     }
 }

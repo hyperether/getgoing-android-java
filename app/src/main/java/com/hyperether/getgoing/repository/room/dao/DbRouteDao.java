@@ -5,6 +5,7 @@ import androidx.room.Dao;
 import androidx.room.Delete;
 import androidx.room.Insert;
 import androidx.room.Query;
+import androidx.room.Update;
 
 import com.hyperether.getgoing.repository.room.entity.DbRoute;
 
@@ -33,4 +34,7 @@ public interface DbRouteDao {
 
     @Query("SELECT * FROM DbRoute ORDER BY id DESC LIMIT 1")
     DbRoute getLatestRoute();
+
+    @Update
+    void updateRoute(DbRoute route);
 }

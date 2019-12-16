@@ -278,33 +278,19 @@ public class ShowLocationActivity extends AppCompatActivity implements OnMapRead
                     new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface paramDialogInterface, int paramInt) {
-//                            // Save the current route in DB*/
-//                            if (!CacheManager.getInstance().getmRoute().isEmpty()) {
-//                                // Save the current route in DB*/
-//                                roomStore(CacheManager.getInstance().getmRoute());
-//                            } else {
-//                                CacheManager.getInstance().setKcalCumulative(0.0);
-//                                CacheManager.getInstance().setDistanceCumulative(0.0);
-//                                CacheManager.getInstance().setVelocity(0.0);
-//                                CacheManager.getInstance().setVelocityAvg(0.0);
-//
-//                                List<DbNode> tmpRoute = new ArrayList<>();
-//                                DbNode tmpNode = new DbNode(0, 0, 0, 0, 0, 0);
-//                                tmpRoute.add(tmpNode);
-//                                roomStore(tmpRoute);
-//                            }
-//
-//                            mRouteAlreadySaved = true;
+                            CacheManager cm = CacheManager.getInstance();
+
+                            DbRoute updatedRoute = new DbRoute(cm.getCurrentRouteId(), timeWhenStopped4Storage,
+                                    cm.getKcalCumulative(), cm.getDistanceCumulative(), currentDateandTime,
+                                    cm.getVelocityAvg(), cbDataFrameLocal.getProfileId(), goalStore);
+
+                            GgRepository.getInstance().updateRoute(updatedRoute);
+                            CacheManager.getInstance().setCurrentRouteId(0);
                         }
                     });
 
             dialog.setNegativeButton(getString(R.string.alert_dialog_negative_button_save_btn),
-                    new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface paramDialogInterface, int paramInt) {
-
-                        }
-                    });
+                    (paramDialogInterface, paramInt) -> {});
 
             dialog.show();
         }
@@ -337,6 +323,9 @@ public class ShowLocationActivity extends AppCompatActivity implements OnMapRead
 
                             timeFlg = true; // ready for the new round
                             clearData();
+
+                            GgRepository.getInstance().deleteRouteById(CacheManager.getInstance().getCurrentRouteId());
+                            CacheManager.getInstance().setCurrentRouteId(0);
                         }
                     });
 
@@ -439,8 +428,6 @@ public class ShowLocationActivity extends AppCompatActivity implements OnMapRead
         mRouteAlreadySaved = false;
         mEditor.putBoolean("KEY_UPDATES_ON", mLocTrackingRunning);
         mEditor.apply();
-
-        CacheManager.getInstance().setCurrentRouteId(0);
     }
 
     class RefreshData extends TimerTask {

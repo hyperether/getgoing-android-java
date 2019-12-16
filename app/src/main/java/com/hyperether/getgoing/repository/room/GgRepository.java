@@ -56,6 +56,14 @@ public class GgRepository {
         });
     }
 
+    public void updateRoute(DbRoute dbRoute) {
+        getRepoHandler().post(() -> routeDao.updateRoute(dbRoute));
+    }
+
+    public void deleteRouteById(long id) {
+        getRepoHandler().post(() -> routeDao.deleteRouteById(id));
+    }
+
     public void insertRouteInit(final DbRoute dbRoute, List<DbNode> nodeList) {
         getRepoHandler().post(new Runnable() {
             @Override
@@ -77,7 +85,7 @@ public class GgRepository {
 
     }
 
-    public Handler getRepoHandler() {
+    private Handler getRepoHandler() {
         if (mHandler == null) {
             HandlerThread mThread = new HandlerThread("db-thread");
             mThread.start();
