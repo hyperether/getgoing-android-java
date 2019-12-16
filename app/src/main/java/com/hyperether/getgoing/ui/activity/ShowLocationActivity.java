@@ -48,6 +48,7 @@ import com.hyperether.getgoing.viewmodel.NodeListViewModel;
 import com.hyperether.toolbox.HyperConst;
 
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
@@ -120,12 +121,18 @@ public class ShowLocationActivity extends AppCompatActivity implements OnMapRead
         Bundle b = getIntent().getExtras();
         cbDataFrameLocal = b.getParcelable("searchKey");
 
+        nodeList = new ArrayList<>();
         nodeListViewModel = ViewModelProviders.of(this).get(NodeListViewModel.class);
         nodeListViewModel.getNodeList().observe(this, dbNodes -> {
             int rtId = (int) CacheManager.getInstance().getCurrentRouteId();
 
             if (rtId != 0) {
-                nodeList = dbNodes.subList(dbNodes.size() - 1, dbNodes.size());
+
+                for (int i = 1; i < dbNodes.size(); i++) {
+                    if (dbNodes.get(i).getRouteId() == rtId)
+                        nodeList.add(dbNodes.get(i));
+                }
+
                 mMap.clear();
                 drawRoute(nodeList);
 
@@ -290,7 +297,8 @@ public class ShowLocationActivity extends AppCompatActivity implements OnMapRead
                     });
 
             dialog.setNegativeButton(getString(R.string.alert_dialog_negative_button_save_btn),
-                    (paramDialogInterface, paramInt) -> {});
+                    (paramDialogInterface, paramInt) -> {
+                    });
 
             dialog.show();
         }
