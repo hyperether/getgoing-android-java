@@ -8,6 +8,7 @@ import android.location.Location;
 import com.hyperether.getgoing.R;
 import com.hyperether.getgoing.manager.CacheManager;
 import com.hyperether.getgoing.model.CBDataFrame;
+import com.hyperether.getgoing.repository.room.GgRepository;
 import com.hyperether.getgoing.repository.room.entity.DbNode;
 import com.hyperether.getgoing.ui.activity.ShowLocationActivity;
 import com.hyperether.getgoing.util.CaloriesCalculation;
@@ -122,8 +123,9 @@ public class GPSTrackingService extends HyperLocationService {
                 longitude = longitude_old = dLong;
                 firstPass = false;
 
-                DbNode tmp = new DbNode(0, latitude, longitude, 0, nodeIndex++, 0);
+                DbNode tmp = new DbNode(0, latitude, longitude, 0, nodeIndex++, CacheManager.getInstance().getCurrentRouteId());
                 CacheManager.getInstance().addRouteNode(tmp);
+                GgRepository.getInstance().daoInsertNode(tmp);
             } else {
                 latitude_old = latitude;
                 longitude_old = longitude;
@@ -186,9 +188,10 @@ public class GPSTrackingService extends HyperLocationService {
                         // add new point to the route
                         // node and route database _ids are intentionally 0
                         DbNode tmp = new DbNode(0, latitude, longitude, (float) velocity,
-                                nodeIndex++, 0);
+                                nodeIndex++, CacheManager.getInstance().getCurrentRouteId());
                         if (velocity < 30) {
                             CacheManager.getInstance().addRouteNode(tmp);
+                            GgRepository.getInstance().daoInsertNode(tmp);
                         }
                     }
                 } else {

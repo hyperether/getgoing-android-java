@@ -113,7 +113,7 @@ public class CBDataFrame implements Parcelable {
 
     }
 
-    public CBDataFrame(boolean initZeros) {
+    private CBDataFrame(boolean initZeros) {
         this.age = 0;
         this.gender = Constants.gender.Male;
         this.height = 0;

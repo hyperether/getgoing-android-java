@@ -14,7 +14,6 @@ import android.location.Location;
 import android.location.LocationManager;
 import android.os.Bundle;
 import android.os.SystemClock;
-import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.WindowManager;
@@ -27,6 +26,7 @@ import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
+import androidx.lifecycle.ViewModelProviders;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -38,11 +38,13 @@ import com.hyperether.getgoing.GetGoingApp;
 import com.hyperether.getgoing.R;
 import com.hyperether.getgoing.manager.CacheManager;
 import com.hyperether.getgoing.model.CBDataFrame;
-import com.hyperether.getgoing.repository.room.DbHelper;
+import com.hyperether.getgoing.repository.room.DbRouteAddedCallback;
+import com.hyperether.getgoing.repository.room.GgRepository;
 import com.hyperether.getgoing.repository.room.entity.DbNode;
 import com.hyperether.getgoing.repository.room.entity.DbRoute;
 import com.hyperether.getgoing.service.GPSTrackingService;
 import com.hyperether.getgoing.util.Constants;
+import com.hyperether.getgoing.viewmodel.NodeListViewModel;
 import com.hyperether.toolbox.HyperConst;
 
 import java.text.SimpleDateFormat;
@@ -52,7 +54,6 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
 import java.util.Timer;
-import java.util.TimerTask;
 
 import static android.provider.Settings.ACTION_LOCATION_SOURCE_SETTINGS;
 
@@ -72,6 +73,7 @@ public class ShowLocationActivity extends AppCompatActivity implements OnMapRead
     private Editor mEditor;
     // to store the current settings
     private CBDataFrame cbDataFrameLocal;
+    private NodeListViewModel nodeListViewModel;
 
     // U/I variables
     private Button set_goal;
@@ -79,6 +81,8 @@ public class ShowLocationActivity extends AppCompatActivity implements OnMapRead
     private ImageView button_start, button_pause;
     private ImageButton button_rst, button_save, button_back;
     private Chronometer showTime, showCalories, showDistance, showVelocity;
+
+    private List<DbNode> nodeList;
 
     // timer for data show
     private Timer timer;
@@ -93,8 +97,8 @@ public class ShowLocationActivity extends AppCompatActivity implements OnMapRead
     private int cnt;
     private long goalStore;
 
-    private LayoutInflater inflater;
     private View toInflate;
+    private Context classContext;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -115,6 +119,11 @@ public class ShowLocationActivity extends AppCompatActivity implements OnMapRead
         cbDataFrameLocal = new CBDataFrame();
         Bundle b = getIntent().getExtras();
         cbDataFrameLocal = b.getParcelable("searchKey");
+
+        nodeList = new ArrayList<>();
+        nodeListViewModel = ViewModelProviders.of(this).get(NodeListViewModel.class);
+
+        classContext = this;
 
         initLayoutDinamically();
         setActivityLabel();
@@ -138,20 +147,6 @@ public class ShowLocationActivity extends AppCompatActivity implements OnMapRead
         }
 
         toInflate = getLayoutInflater().inflate(R.layout.alertdialog_goal, null, false);
-    }
-
-    @Override
-    protected void onResume() {
-        super.onResume();
-
-        /*
-         * Get any previous setting for location updates
-         * Gets "false" if an error occurs
-         */
-        if (mLocTrackingRunning && mMap != null) {
-            mMap.clear();
-            drawRoute(CacheManager.getInstance().getmRoute());
-        }
     }
 
     @Override
@@ -179,12 +174,28 @@ public class ShowLocationActivity extends AppCompatActivity implements OnMapRead
         currentDateandTime = savedInstanceState.getString("currentDateandTime");
     }
 
-    private void setActivityLabel()
-    {
+    private void setupVMObserver() {
+        nodeListViewModel.getNodeListById(CacheManager.getInstance().getCurrentRouteId()).observe(this, dbNodes -> {
+            if (CacheManager.getInstance().getCurrentRouteId() != 0) {
+
+                mMap.clear();
+                drawRoute(dbNodes);
+
+                CacheManager cacheMngr = CacheManager.getInstance();
+                cacheMngr.setTimeCumulative(timeWhenStopped4Storage);
+
+                if (cacheMngr.getVelocity() != null) {
+                    showData(cacheMngr.getDistanceCumulative(), cacheMngr.getKcalCumulative(),
+                            cacheMngr.getVelocity());
+                }
+            }
+        });
+    }
+
+    private void setActivityLabel() {
         int id = cbDataFrameLocal.getProfileId();
 
-        switch (id)
-        {
+        switch (id) {
             case 1: {
                 activity_id.setText("Walking");
                 break;
@@ -200,10 +211,8 @@ public class ShowLocationActivity extends AppCompatActivity implements OnMapRead
         }
     }
 
-    private void setVisibilities()
-    {
-        if (cnt++ == 0)
-        {
+    private void setVisibilities() {
+        if (cnt++ == 0) {
             set_goal.setVisibility(View.VISIBLE);
             button_save.setVisibility(View.GONE);
             button_rst.setVisibility(View.GONE);
@@ -215,9 +224,7 @@ public class ShowLocationActivity extends AppCompatActivity implements OnMapRead
             labelDuration.setVisibility(View.GONE);
             labelVelocity.setVisibility(View.GONE);
             labelCalories.setVisibility(View.GONE);
-        }
-        else
-        {
+        } else {
             set_goal.setVisibility(View.GONE);
             button_save.setVisibility(View.VISIBLE);
             button_rst.setVisibility(View.VISIBLE);
@@ -238,9 +245,8 @@ public class ShowLocationActivity extends AppCompatActivity implements OnMapRead
     private final OnClickListener mButtonStartListener = new OnClickListener() {
         @Override
         public void onClick(View v) {
-            if (goalStore > 0)
-            {
-                startTracking();
+            if (goalStore > 0) {
+                startTracking(classContext);
                 if (timeFlg) {
                     // Get date and time on which the tracking started
                     currentDateandTime = sdf.format(new Date());
@@ -274,32 +280,19 @@ public class ShowLocationActivity extends AppCompatActivity implements OnMapRead
                     new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface paramDialogInterface, int paramInt) {
-                            // Save the current route in DB*/
-                            if (!CacheManager.getInstance().getmRoute().isEmpty()) {
-                                // Save the current route in DB*/
-                                roomStore(CacheManager.getInstance().getmRoute());
-                            } else {
-                                CacheManager.getInstance().setKcalCumulative(0.0);
-                                CacheManager.getInstance().setDistanceCumulative(0.0);
-                                CacheManager.getInstance().setVelocity(0.0);
-                                CacheManager.getInstance().setVelocityAvg(0.0);
+                            CacheManager cm = CacheManager.getInstance();
 
-                                List<DbNode> tmpRoute = new ArrayList<>();
-                                DbNode tmpNode = new DbNode(0, 0, 0, 0, 0, 0);
-                                tmpRoute.add(tmpNode);
-                                roomStore(tmpRoute);
-                            }
+                            DbRoute updatedRoute = new DbRoute(cm.getCurrentRouteId(), timeWhenStopped4Storage,
+                                    cm.getKcalCumulative(), cm.getDistanceCumulative(), currentDateandTime,
+                                    cm.getVelocityAvg(), cbDataFrameLocal.getProfileId(), goalStore);
 
-                            mRouteAlreadySaved = true;
+                            GgRepository.getInstance().updateRoute(updatedRoute);
+                            CacheManager.getInstance().setCurrentRouteId(0);
                         }
                     });
 
             dialog.setNegativeButton(getString(R.string.alert_dialog_negative_button_save_btn),
-                    new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface paramDialogInterface, int paramInt) {
-
-                        }
+                    (paramDialogInterface, paramInt) -> {
                     });
 
             dialog.show();
@@ -333,6 +326,9 @@ public class ShowLocationActivity extends AppCompatActivity implements OnMapRead
 
                             timeFlg = true; // ready for the new round
                             clearData();
+
+                            GgRepository.getInstance().deleteRouteById(CacheManager.getInstance().getCurrentRouteId());
+                            CacheManager.getInstance().setCurrentRouteId(0);
                         }
                     });
 
@@ -365,7 +361,8 @@ public class ShowLocationActivity extends AppCompatActivity implements OnMapRead
                 setVisibilities();
             });
 
-            dialog.setNegativeButton("CANCEL", (paramDialogInterface, paramInt) -> {});
+            dialog.setNegativeButton("CANCEL", (paramDialogInterface, paramInt) -> {
+            });
             dialog.show();
         }
     };
@@ -389,26 +386,34 @@ public class ShowLocationActivity extends AppCompatActivity implements OnMapRead
     /**
      * This method starts timer and enable visibility of pause button.
      */
-    private void startTracking() {
-        Intent intent = new Intent(this, GPSTrackingService.class);
-        intent.putExtra(HyperConst.LOC_INTERVAL, UPDATE_INTERVAL_IN_MILLISECONDS);
-        intent.putExtra(HyperConst.LOC_FASTEST_INTERVAL, FASTEST_UPDATE_INTERVAL_IN_MILLISECONDS);
-        intent.putExtra(HyperConst.LOC_DISTANCE, LOCATION_DISTANCE);
-        startService(intent);
+    private void startTracking(Context context) {
+        GgRepository.getInstance().insertRoute(new DbRoute(0, 0, 0, 0, "", 0, 0, 0), new DbRouteAddedCallback() {
+            @Override
+            public void onRouteAdded(long currentid) {
+                CacheManager.getInstance().setCurrentRouteId(currentid);
 
-        showTime.setBase(SystemClock.elapsedRealtime() + timeWhenStopped);
-        showTime.start();
+                Intent intent = new Intent(context, GPSTrackingService.class);
+                intent.putExtra(HyperConst.LOC_INTERVAL, UPDATE_INTERVAL_IN_MILLISECONDS);
+                intent.putExtra(HyperConst.LOC_FASTEST_INTERVAL, FASTEST_UPDATE_INTERVAL_IN_MILLISECONDS);
+                intent.putExtra(HyperConst.LOC_DISTANCE, LOCATION_DISTANCE);
+                startService(intent);
 
-        timer = new Timer();
-        timer.schedule(new RefreshData(), 0, 1000);
+                runOnUiThread(() -> {
+                    setupVMObserver();
 
-        button_start.setVisibility(View.GONE);
-        button_pause.setVisibility(View.VISIBLE);
+                    showTime.setBase(SystemClock.elapsedRealtime() + timeWhenStopped);
+                    showTime.start();
 
-        mLocTrackingRunning = true;
-        mRouteAlreadySaved = false;
-        mEditor.putBoolean("KEY_UPDATES_ON", mLocTrackingRunning);
-        mEditor.apply();
+                    button_start.setVisibility(View.GONE);
+                    button_pause.setVisibility(View.VISIBLE);
+                });
+
+                mLocTrackingRunning = true;
+                mRouteAlreadySaved = false;
+                mEditor.putBoolean("KEY_UPDATES_ON", mLocTrackingRunning);
+                mEditor.apply();
+            }
+        });
     }
 
     /**
@@ -430,34 +435,12 @@ public class ShowLocationActivity extends AppCompatActivity implements OnMapRead
         mEditor.apply();
     }
 
-    class RefreshData extends TimerTask {
-
-        @Override
-        public void run() {
-            ShowLocationActivity.this.runOnUiThread(new Runnable() {
-
-                @Override
-                public void run() {
-                    CacheManager cacheMngr = CacheManager.getInstance();
-                    cacheMngr.setTimeCumulative(timeWhenStopped4Storage);
-                    mMap.clear();
-                    drawRoute(cacheMngr.getmRoute());
-
-                    if (cacheMngr.getVelocity() != null) {
-                        showData(cacheMngr.getDistanceCumulative(), cacheMngr.getKcalCumulative(),
-                                cacheMngr.getVelocity());
-                    }
-                }
-            });
-        }
-    }
-
     /**
      * This method show measured data.
      *
      * @param distance passed distance
-     * @param kcal calories burned
-     * @param vel average velocity
+     * @param kcal     calories burned
+     * @param vel      average velocity
      */
     @SuppressLint("DefaultLocale")
     private void showData(double distance, double kcal, double vel) {
@@ -500,16 +483,7 @@ public class ShowLocationActivity extends AppCompatActivity implements OnMapRead
                     }
                 });
 
-                dialog.setNegativeButton(R.string.alert_dialog_negative_button, new
-                        DialogInterface.OnClickListener() {
-
-                            @Override
-                            public void onClick(DialogInterface paramDialogInterface, int
-                                    paramInt) {
-                                // TODO Auto-generated method stub
-                                finish();
-                            }
-                        });
+                dialog.setNegativeButton(R.string.alert_dialog_negative_button, (paramDialogInterface, paramInt) -> finish());
 
                 dialog.show();
             }
@@ -589,7 +563,7 @@ public class ShowLocationActivity extends AppCompatActivity implements OnMapRead
     /**
      * This method draws a segment of the route and coloring it in accordance with the speed
      *
-     * @param firstNode first point of the rout
+     * @param firstNode  first point of the rout
      * @param secondNode second point of the rout
      */
     private void drawSegment(DbNode firstNode, DbNode secondNode) {
@@ -621,18 +595,6 @@ public class ShowLocationActivity extends AppCompatActivity implements OnMapRead
                     .width(10)
                     .color(Color.rgb(255, 0, 0))); // Red color
         }
-    }
-
-    /*
-     * Store the every node in the RoomDB
-     * */
-    private void roomStore(List<DbNode> nodeList) {
-        DbRoute dbRoute = new DbRoute(0, timeWhenStopped4Storage,
-                CacheManager.getInstance().getKcalCumulative(),
-                CacheManager.getInstance().getDistanceCumulative(), currentDateandTime,
-                CacheManager.getInstance().getVelocityAvg(), cbDataFrameLocal
-                .getProfileId(), goalStore);
-        DbHelper.getInstance(getApplicationContext()).insertRoute(dbRoute, nodeList);
     }
 
     /**
@@ -672,31 +634,21 @@ public class ShowLocationActivity extends AppCompatActivity implements OnMapRead
         startActivityForResult(i, Constants.REQUEST_GPS_SETTINGS);
     }
 
-    private void onAnyBackButtonPressed()
-    {
+    private void onAnyBackButtonPressed() {
         if (mLocTrackingRunning || !mRouteAlreadySaved) {
             AlertDialog.Builder dialog = new AlertDialog.Builder(this);
             dialog.setCancelable(false);
             dialog.setTitle(R.string.alert_dialog_title_back_pressed);
             dialog.setMessage(getString(R.string.alert_dialog_message_back_pressed));
-            dialog.setPositiveButton(R.string.alert_dialog_positive_back_pressed, new
-                    DialogInterface
-                            .OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface paramDialogInterface, int paramInt) {
-                            stopService(new Intent(GetGoingApp.getInstance()
-                                    .getApplicationContext(),
-                                    GPSTrackingService.class));
-                            clearCacheData();
-                            finish();
-                        }
-                    });
+            dialog.setPositiveButton(R.string.alert_dialog_positive_back_pressed, (paramDialogInterface, paramInt) -> {
+                stopService(new Intent(GetGoingApp.getInstance().getApplicationContext(),
+                        GPSTrackingService.class));
+                clearCacheData();
+                finish();
+            });
 
             dialog.setNegativeButton(getString(R.string.alert_dialog_negative_back_pressed),
-                    new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface paramDialogInterface, int paramInt) {
-                        }
+                    (paramDialogInterface, paramInt) -> {
                     });
 
             dialog.show();

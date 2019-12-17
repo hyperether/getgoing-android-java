@@ -20,7 +20,7 @@ import com.github.mikephil.charting.interfaces.datasets.IBarDataSet;
 import com.hyperether.getgoing.R;
 import com.hyperether.getgoing.repository.room.DbHelper;
 import com.hyperether.getgoing.repository.room.entity.DbRoute;
-import com.hyperether.getgoing.viewmodel.NodeViewModel;
+import com.hyperether.getgoing.viewmodel.RouteViewModel;
 
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
@@ -53,7 +53,7 @@ public class ShowDataActivity extends AppCompatActivity implements DbHelper.OnDa
 
 //        DbHelper.getInstance(this).populateRoutes(routes, this);
 
-        NodeViewModel model = ViewModelProviders.of(this).get(NodeViewModel.class);
+        RouteViewModel model = ViewModelProviders.of(this).get(RouteViewModel.class);
         model.getRouteList().observe(this, routeList -> {
             // update UI
             routes.clear();

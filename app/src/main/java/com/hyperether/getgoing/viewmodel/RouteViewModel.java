@@ -2,17 +2,17 @@ package com.hyperether.getgoing.viewmodel;
 
 import android.content.Context;
 
+import androidx.lifecycle.LiveData;
+import androidx.lifecycle.MutableLiveData;
+import androidx.lifecycle.ViewModel;
+
 import com.hyperether.getgoing.GetGoingApp;
 import com.hyperether.getgoing.repository.room.DbHelper;
 import com.hyperether.getgoing.repository.room.entity.DbRoute;
 
 import java.util.List;
 
-import androidx.lifecycle.LiveData;
-import androidx.lifecycle.MutableLiveData;
-import androidx.lifecycle.ViewModel;
-
-public class NodeViewModel extends ViewModel {
+public class RouteViewModel extends ViewModel {
 
     private MutableLiveData<List<DbRoute>> routeList;
 

@@ -32,7 +32,7 @@ import com.hyperether.getgoing.R;
 import com.hyperether.getgoing.databinding.ActivityMainBinding;
 import com.hyperether.getgoing.manager.CacheManager;
 import com.hyperether.getgoing.model.CBDataFrame;
-import com.hyperether.getgoing.repository.room.DbHelper;
+import com.hyperether.getgoing.repository.room.GgRepository;
 import com.hyperether.getgoing.repository.room.entity.DbNode;
 import com.hyperether.getgoing.repository.room.entity.DbRoute;
 import com.hyperether.getgoing.ui.adapter.HorizontalListAdapter;
@@ -446,12 +446,12 @@ public class GetGoingActivity extends AppCompatActivity implements
 
     private void roomStoreNodeZero(List<DbNode> nodeList) {
         DbRoute dbRoute = new DbRoute(0, 0,0,0,"null", 0, 1, 0);
-        DbHelper.getInstance(getApplicationContext()).insertRoute(dbRoute, nodeList);
+        GgRepository.getInstance().insertRouteInit(dbRoute, nodeList);
     }
 
     private class PullProgressData extends AsyncTask<Void, Void, Void>
     {
-        List<DbRoute> pointerList;
+        DbRoute lastRoute;
         TextView kcalVal, progBar1Act;
         ImageView progBar1Img;
 
@@ -466,8 +466,8 @@ public class GetGoingActivity extends AppCompatActivity implements
 
         @Override
         protected Void doInBackground(Void... voids) {
-            pointerList = new ArrayList<>();
-            DbHelper.getInstance(getApplicationContext()).getLastRoute(pointerList);
+            //DbHelper.getInstance(getApplicationContext()).getLastRoute(lastRoute);
+            lastRoute = GgRepository.getInstance().getLastRoute().getValue();
 
             return null;
         }
@@ -476,17 +476,17 @@ public class GetGoingActivity extends AppCompatActivity implements
         protected void onPostExecute(Void aVoid) {
             super.onPostExecute(aVoid);
 
-            if (!pointerList.isEmpty())
+            if (lastRoute != null)
             {
-                int lastRouteLen = (int) pointerList.get(0).getLength();
+                int lastRouteLen = (int) lastRoute.getLength();
                 int lastRouteTime;
 
-                if (pointerList.get(0).getDuration() >= 60000)
-                    lastRouteTime = Math.round(pointerList.get(0).getDuration() / 1000 / 60);
+                if (lastRoute.getDuration() >= 60000)
+                    lastRouteTime = Math.round(lastRoute.getDuration() / 1000 / 60);
                 else
                     lastRouteTime = 0;
 
-                int goal = (int) pointerList.get(0).getGoal();
+                int goal = (int) lastRoute.getGoal();
                 int cpbProgress;
 
                 if (goal != 0)
@@ -494,7 +494,7 @@ public class GetGoingActivity extends AppCompatActivity implements
                 else
                     cpbProgress = 0;
 
-                int kcal = (int) pointerList.get(0).getEnergy();
+                int kcal = (int) lastRoute.getEnergy();
 
                 circleProgressBar.setProgressFormatter(new MyProgressFormatter((double) lastRouteLen));
                 circleProgressBar.setProgress(cpbProgress);
@@ -506,7 +506,7 @@ public class GetGoingActivity extends AppCompatActivity implements
 
                 kcalVal.setText(String.valueOf(kcal));
 
-                switch (pointerList.get(0).getActivity_id())
+                switch (lastRoute.getActivity_id())
                 {
                     case 1:
                     {
