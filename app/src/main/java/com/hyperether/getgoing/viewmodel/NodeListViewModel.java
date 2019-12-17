@@ -16,4 +16,8 @@ public class NodeListViewModel extends ViewModel {
     public LiveData<List<DbNode>> getNodeList() {
         return GgRepository.getInstance().getAllNodes();
     }
+
+    public LiveData<List<DbNode>> getNodeListById(long id) {
+        return GgRepository.getInstance().getAllNodesById(id);
+    }
 }

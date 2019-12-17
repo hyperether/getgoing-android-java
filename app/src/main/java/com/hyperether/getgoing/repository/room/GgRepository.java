@@ -22,6 +22,7 @@ public class GgRepository {
     private DbNodeDao nodeDao;
     private DbRouteDao routeDao;
     private LiveData<List<DbNode>> allNodes;
+    private LiveData<List<DbNode>> allNodesById;
 
     private Handler mHandler;
 
@@ -47,6 +48,11 @@ public class GgRepository {
         return allNodes;
     }
 
+    public LiveData<List<DbNode>> getAllNodesById(long id) {
+        allNodesById = nodeDao.getAllByRouteIdAsLiveData(id);
+        return allNodesById;
+    }
+
     public void insertRoute(final DbRoute dbRoute, DbRouteAddedCallback listener) {
         AtomicLong routeId = new AtomicLong();
 
@@ -64,7 +70,7 @@ public class GgRepository {
         getRepoHandler().post(() -> routeDao.deleteRouteById(id));
     }
 
-    public void insertRouteInit(final DbRoute dbRoute, List<DbNode> nodeList) {
+    public void insertRouteInit(final DbRoute dbRoute, List<DbNode> nodeList) { //TODO
         getRepoHandler().post(new Runnable() {
             @Override
             public void run() {

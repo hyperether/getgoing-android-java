@@ -54,7 +54,6 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
 import java.util.Timer;
-import java.util.TimerTask;
 
 import static android.provider.Settings.ACTION_LOCATION_SOURCE_SETTINGS;
 
@@ -123,28 +122,6 @@ public class ShowLocationActivity extends AppCompatActivity implements OnMapRead
 
         nodeList = new ArrayList<>();
         nodeListViewModel = ViewModelProviders.of(this).get(NodeListViewModel.class);
-        nodeListViewModel.getNodeList().observe(this, dbNodes -> {
-            int rtId = (int) CacheManager.getInstance().getCurrentRouteId();
-
-            if (rtId != 0) {
-
-                for (int i = 1; i < dbNodes.size(); i++) {
-                    if (dbNodes.get(i).getRouteId() == rtId)
-                        nodeList.add(dbNodes.get(i));
-                }
-
-                mMap.clear();
-                drawRoute(nodeList);
-
-                CacheManager cacheMngr = CacheManager.getInstance();
-                cacheMngr.setTimeCumulative(timeWhenStopped4Storage);
-
-                if (cacheMngr.getVelocity() != null) {
-                    showData(cacheMngr.getDistanceCumulative(), cacheMngr.getKcalCumulative(),
-                            cacheMngr.getVelocity());
-                }
-            }
-        });
 
         classContext = this;
 
@@ -195,6 +172,24 @@ public class ShowLocationActivity extends AppCompatActivity implements OnMapRead
         // This bundle has also been passed to onCreate.
         mLocTrackingRunning = savedInstanceState.getBoolean("mLocTrackingRunning");
         currentDateandTime = savedInstanceState.getString("currentDateandTime");
+    }
+
+    private void setupVMObserver() {
+        nodeListViewModel.getNodeListById(CacheManager.getInstance().getCurrentRouteId()).observe(this, dbNodes -> {
+            if (CacheManager.getInstance().getCurrentRouteId() != 0) {
+
+                mMap.clear();
+                drawRoute(dbNodes);
+
+                CacheManager cacheMngr = CacheManager.getInstance();
+                cacheMngr.setTimeCumulative(timeWhenStopped4Storage);
+
+                if (cacheMngr.getVelocity() != null) {
+                    showData(cacheMngr.getDistanceCumulative(), cacheMngr.getKcalCumulative(),
+                            cacheMngr.getVelocity());
+                }
+            }
+        });
     }
 
     private void setActivityLabel() {
@@ -404,6 +399,8 @@ public class ShowLocationActivity extends AppCompatActivity implements OnMapRead
                 startService(intent);
 
                 runOnUiThread(() -> {
+                    setupVMObserver();
+
                     showTime.setBase(SystemClock.elapsedRealtime() + timeWhenStopped);
                     showTime.start();
 
@@ -436,26 +433,6 @@ public class ShowLocationActivity extends AppCompatActivity implements OnMapRead
         mRouteAlreadySaved = false;
         mEditor.putBoolean("KEY_UPDATES_ON", mLocTrackingRunning);
         mEditor.apply();
-    }
-
-    class RefreshData extends TimerTask {
-
-        @Override
-        public void run() {
-            ShowLocationActivity.this.runOnUiThread(new Runnable() {
-
-                @Override
-                public void run() {
-//                    CacheManager cacheMngr = CacheManager.getInstance();
-//                    cacheMngr.setTimeCumulative(timeWhenStopped4Storage);
-//
-//                    if (cacheMngr.getVelocity() != null) {
-//                        showData(cacheMngr.getDistanceCumulative(), cacheMngr.getKcalCumulative(),
-//                                cacheMngr.getVelocity());
-//                    }
-                }
-            });
-        }
     }
 
     /**
@@ -506,16 +483,7 @@ public class ShowLocationActivity extends AppCompatActivity implements OnMapRead
                     }
                 });
 
-                dialog.setNegativeButton(R.string.alert_dialog_negative_button, new
-                        DialogInterface.OnClickListener() {
-
-                            @Override
-                            public void onClick(DialogInterface paramDialogInterface, int
-                                    paramInt) {
-                                // TODO Auto-generated method stub
-                                finish();
-                            }
-                        });
+                dialog.setNegativeButton(R.string.alert_dialog_negative_button, (paramDialogInterface, paramInt) -> finish());
 
                 dialog.show();
             }
@@ -672,24 +640,15 @@ public class ShowLocationActivity extends AppCompatActivity implements OnMapRead
             dialog.setCancelable(false);
             dialog.setTitle(R.string.alert_dialog_title_back_pressed);
             dialog.setMessage(getString(R.string.alert_dialog_message_back_pressed));
-            dialog.setPositiveButton(R.string.alert_dialog_positive_back_pressed, new
-                    DialogInterface
-                            .OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface paramDialogInterface, int paramInt) {
-                            stopService(new Intent(GetGoingApp.getInstance()
-                                    .getApplicationContext(),
-                                    GPSTrackingService.class));
-                            clearCacheData();
-                            finish();
-                        }
-                    });
+            dialog.setPositiveButton(R.string.alert_dialog_positive_back_pressed, (paramDialogInterface, paramInt) -> {
+                stopService(new Intent(GetGoingApp.getInstance().getApplicationContext(),
+                        GPSTrackingService.class));
+                clearCacheData();
+                finish();
+            });
 
             dialog.setNegativeButton(getString(R.string.alert_dialog_negative_back_pressed),
-                    new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface paramDialogInterface, int paramInt) {
-                        }
+                    (paramDialogInterface, paramInt) -> {
                     });
 
             dialog.show();

@@ -24,7 +24,7 @@ public class CacheManager {
     private long timeCumulative;
     private int secondsCumulative;
     private long time = 0; // time between to position updates
-    private long currentRouteId;
+    private long currentRouteId = 0;
 
     public static CacheManager getInstance() {
         if (instance == null) {
@@ -33,7 +33,7 @@ public class CacheManager {
         return instance;
     }
 
-    CacheManager() {
+    private CacheManager() {
         obDataFrameGlobal = CBDataFrame.getInstance();
     }
 

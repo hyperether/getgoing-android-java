@@ -446,10 +446,8 @@ public class GetGoingActivity extends AppCompatActivity implements
     }
 
     private void roomStoreNodeZero(List<DbNode> nodeList) {
-        new Thread(() -> {
-            DbRoute dbRoute = new DbRoute(0, 0,0,0,"null", 0, 1, 0);
-            GgRepository.getInstance().insertRouteInit(dbRoute, nodeList);
-        }).start();
+        DbRoute dbRoute = new DbRoute(0, 0,0,0,"null", 0, 1, 0);
+        GgRepository.getInstance().insertRouteInit(dbRoute, nodeList);
     }
 
     private class PullProgressData extends AsyncTask<Void, Void, Void>
@@ -471,7 +469,6 @@ public class GetGoingActivity extends AppCompatActivity implements
         protected Void doInBackground(Void... voids) {
             pointerList = new ArrayList<>();
             DbHelper.getInstance(getApplicationContext()).getLastRoute(pointerList);
-            //TODO: OVDE ZAMENI DA NIJE DB HELPER NEGO REPO
 
             return null;
         }
