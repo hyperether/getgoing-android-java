@@ -70,7 +70,7 @@ public class GgRepository {
         getRepoHandler().post(() -> routeDao.deleteRouteById(id));
     }
 
-    public void insertRouteInit(final DbRoute dbRoute, List<DbNode> nodeList) { //TODO
+    public void insertRouteInit(final DbRoute dbRoute, List<DbNode> nodeList) {
         getRepoHandler().post(new Runnable() {
             @Override
             public void run() {
@@ -89,6 +89,10 @@ public class GgRepository {
             }
         });
 
+    }
+
+    public LiveData<DbRoute> getLastRoute() {
+        return routeDao.getLatestRoute();
     }
 
     private Handler getRepoHandler() {

@@ -17,7 +17,6 @@ public class FragmentDialog extends DialogFragment {
                 .setPositiveButton(R.string.confirm, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int id) {
-                        //TODO: return to main activity
                     }
                 });
         // Create the AlertDialog object and return it

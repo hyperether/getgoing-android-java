@@ -295,7 +295,6 @@ public class ProfileFragment extends DialogFragment {
                 heightSpinner.setSelection(settings.getInt("height", 0) - 110);
 
                 heightBuilder.setPositiveButton("Confirm", (dialogInterface, i) -> {
-                    //TODO: modify model
                     tvHeight.setText(heightSpinner.getSelectedItem() + " cm");
 
                     SharedPreferences.Editor editor = settings.edit();

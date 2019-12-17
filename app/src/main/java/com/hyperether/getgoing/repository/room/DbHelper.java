@@ -91,13 +91,6 @@ public class DbHelper {
         });
     }
 
-    public void getLastRoute(final List<DbRoute> routes) {
-        getDbHandler().post(() -> {
-            DbRoute retVal = db.dbRouteDao().getLatestRoute();
-            routes.add(retVal);
-        });
-    }
-
     public void deleteRouteById(final long id) {
 
         getDbHandler().post(new Runnable() {
