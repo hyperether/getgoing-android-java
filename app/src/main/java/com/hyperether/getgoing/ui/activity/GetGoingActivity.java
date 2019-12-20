@@ -145,10 +145,8 @@ public class GetGoingActivity extends AppCompatActivity implements
         }
     }
 
-    private void zeroNodeInit()
-    {
-        if (currentSettings.getBoolean("zeroNode", false) == false)
-        {
+    private void zeroNodeInit() {
+        if (currentSettings.getBoolean("zeroNode", false) == false) {
             /*route init*/
             List<DbNode> tmpRoute = new ArrayList<>();
             DbNode tmpNode = new DbNode(0, 0, 0, 0, 0, 0);
@@ -219,8 +217,7 @@ public class GetGoingActivity extends AppCompatActivity implements
         cbDataFrameLocal.setAge(currentSettings.getInt("age", 0));
     }
 
-    private void initRecyclerView()
-    {
+    private void initRecyclerView() {
         recyclerView = findViewById(R.id.recyclerView);
         recyclerView.setHasFixedSize(true);
 
@@ -239,12 +236,11 @@ public class GetGoingActivity extends AppCompatActivity implements
         snapHelper = new LinearSnapHelper();
         snapHelper.attachToRecyclerView(recyclerView);
 
-        ((LinearLayoutManager) layoutManager).scrollToPositionWithOffset(layoutManager.getItemCount() / 2,-1);
+        ((LinearLayoutManager) layoutManager).scrollToPositionWithOffset(layoutManager.getItemCount() / 2, -1);
     }
 
     @Deprecated
-    private void initListeners()
-    {
+    private void initListeners() {
         ImageView ib_am_user = findViewById(R.id.ib_am_user);
         ImageView iv_am_arrows = findViewById(R.id.iv_am_arrow2actfrag);
         TextView tv_am_viewall = findViewById(R.id.tv_am_viewall);
@@ -275,8 +271,7 @@ public class GetGoingActivity extends AppCompatActivity implements
                 callMeteringActivity(RIDE_ID);
         });
 
-        recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener()
-        {
+        recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
             int i = 0;
             int[] centralImgPos = new int[2];
             int[] selectorViewPos = new int[2];
@@ -298,27 +293,20 @@ public class GetGoingActivity extends AppCompatActivity implements
 
                 centralImg.getLocationOnScreen(centralImgPos);
 
-                if (i++ == 0)
-                {
+                if (i++ == 0) {
                     selectorView.getLocationOnScreen(selectorViewPos);
                 }
 
                 int centralImgWidthParam = centralImg.getLayoutParams().width / 2;
 
-                if (centralImgPos[0] > selectorViewPos[0] - centralImgWidthParam && centralImgPos[0] < selectorViewPos[0] + centralImgWidthParam)
-                {
-                    if (centralImg.getTag().equals(R.drawable.ic_light_bicycling_icon_inactive))
-                    {
+                if (centralImgPos[0] > selectorViewPos[0] - centralImgWidthParam && centralImgPos[0] < selectorViewPos[0] + centralImgWidthParam) {
+                    if (centralImg.getTag().equals(R.drawable.ic_light_bicycling_icon_inactive)) {
                         centralImg.setImageDrawable(getApplicationContext().getResources().getDrawable(R.drawable.ic_light_bicycling_icon_active));
                         centralImg.setTag(R.drawable.ic_light_bicycling_icon_active);
-                    }
-                    else if (centralImg.getTag().equals(R.drawable.ic_light_running_icon_inactive))
-                    {
+                    } else if (centralImg.getTag().equals(R.drawable.ic_light_running_icon_inactive)) {
                         centralImg.setImageDrawable(getApplicationContext().getResources().getDrawable(R.drawable.ic_light_running_icon_active));
                         centralImg.setTag(R.drawable.ic_light_running_icon_active);
-                    }
-                    else if (centralImg.getTag().equals(R.drawable.ic_light_walking_icon))
-                    {
+                    } else if (centralImg.getTag().equals(R.drawable.ic_light_walking_icon)) {
                         centralImg.setImageDrawable(getApplicationContext().getResources().getDrawable(R.drawable.ic_light_walking_icon_active));
                         centralImg.setTag(R.drawable.ic_light_walking_icon_active);
                     }
@@ -329,59 +317,47 @@ public class GetGoingActivity extends AppCompatActivity implements
                 try {
                     leftImg = layoutManager.findViewByPosition(k1 - 1).findViewById(R.id.iv_ri_pic);
 
-                    if (leftImg.getTag().equals(R.drawable.ic_light_bicycling_icon_active))
-                    {
+                    if (leftImg.getTag().equals(R.drawable.ic_light_bicycling_icon_active)) {
                         leftImg.setImageDrawable(getApplicationContext().getResources().getDrawable(R.drawable.ic_light_bicycling_icon_inactive));
                         leftImg.setTag(R.drawable.ic_light_bicycling_icon_inactive);
-                    }
-                    else if (leftImg.getTag().equals(R.drawable.ic_light_running_icon_active))
-                    {
+                    } else if (leftImg.getTag().equals(R.drawable.ic_light_running_icon_active)) {
                         leftImg.setImageDrawable(getApplicationContext().getResources().getDrawable(R.drawable.ic_light_running_icon_inactive));
                         leftImg.setTag(R.drawable.ic_light_running_icon_inactive);
-                    }
-                    else if (leftImg.getTag().equals(R.drawable.ic_light_walking_icon_active))
-                    {
+                    } else if (leftImg.getTag().equals(R.drawable.ic_light_walking_icon_active)) {
                         leftImg.setImageDrawable(getApplicationContext().getResources().getDrawable(R.drawable.ic_light_walking_icon));
                         leftImg.setTag(R.drawable.ic_light_walking_icon);
                     }
-                } catch (NullPointerException e){
+                } catch (NullPointerException e) {
                     e.printStackTrace();
                 }
 
                 try {
                     rightImg = layoutManager.findViewByPosition(k1 + 1).findViewById(R.id.iv_ri_pic);
 
-                    if (rightImg.getTag().equals(R.drawable.ic_light_bicycling_icon_active))
-                    {
+                    if (rightImg.getTag().equals(R.drawable.ic_light_bicycling_icon_active)) {
                         rightImg.setImageDrawable(getApplicationContext().getResources().getDrawable(R.drawable.ic_light_bicycling_icon_inactive));
                         rightImg.setTag(R.drawable.ic_light_bicycling_icon_inactive);
-                    }
-                    else if (rightImg.getTag().equals(R.drawable.ic_light_running_icon_active))
-                    {
+                    } else if (rightImg.getTag().equals(R.drawable.ic_light_running_icon_active)) {
                         rightImg.setImageDrawable(getApplicationContext().getResources().getDrawable(R.drawable.ic_light_running_icon_inactive));
                         rightImg.setTag(R.drawable.ic_light_running_icon_inactive);
-                    }
-                    else if (rightImg.getTag().equals(R.drawable.ic_light_walking_icon_active))
-                    {
+                    } else if (rightImg.getTag().equals(R.drawable.ic_light_walking_icon_active)) {
                         rightImg.setImageDrawable(getApplicationContext().getResources().getDrawable(R.drawable.ic_light_walking_icon));
                         rightImg.setTag(R.drawable.ic_light_walking_icon);
                     }
-                } catch (NullPointerException e){
+                } catch (NullPointerException e) {
                     e.printStackTrace();
                 }
             }
         });
     }
 
-    public void initProgressBars()
-    {
+    public void initProgressBars() {
         new PullProgressData().execute(null, null, null);
     }
 
-    private void initScreenDimen()
-    {
+    private void initScreenDimen() {
         DisplayMetrics metrics = getApplicationContext().getResources().getDisplayMetrics();
-        ratio = (float)metrics.heightPixels / (float)metrics.widthPixels;
+        ratio = (float) metrics.heightPixels / (float) metrics.widthPixels;
 
         blueRectangle = findViewById(R.id.iv_am_bluerectangle);
         lastExeLabel = findViewById(R.id.tv_am_lastexercise);
@@ -389,8 +365,7 @@ public class GetGoingActivity extends AppCompatActivity implements
         int unicode = 0x1F605;  /* emoji */
         blueSentence.append(" " + String.valueOf(Character.toChars(unicode)));
 
-        if (ratio >= 1.8)
-        {
+        if (ratio >= 1.8) {
             ViewGroup.MarginLayoutParams params = (ViewGroup.MarginLayoutParams) blueSentence.getLayoutParams();
             ViewGroup.MarginLayoutParams params1 = (ViewGroup.MarginLayoutParams) blueRectangle.getLayoutParams();
             ViewGroup.MarginLayoutParams params2 = (ViewGroup.MarginLayoutParams) lastExeLabel.getLayoutParams();
@@ -445,12 +420,11 @@ public class GetGoingActivity extends AppCompatActivity implements
     }
 
     private void roomStoreNodeZero(List<DbNode> nodeList) {
-        DbRoute dbRoute = new DbRoute(0, 0,0,0,"null", 0, 1, 0);
+        DbRoute dbRoute = new DbRoute(0, 0, 0, 0, "null", 0, 1, 0);
         GgRepository.getInstance().insertRouteInit(dbRoute, nodeList);
     }
 
-    private class PullProgressData extends AsyncTask<Void, Void, Void>
-    {
+    private class PullProgressData extends AsyncTask<Void, Void, Void> {
         DbRoute lastRoute;
         TextView kcalVal, progBar1Act;
         ImageView progBar1Img;
@@ -476,8 +450,7 @@ public class GetGoingActivity extends AppCompatActivity implements
         protected void onPostExecute(Void aVoid) {
             super.onPostExecute(aVoid);
 
-            if (lastRoute != null)
-            {
+            if (lastRoute != null) {
                 int lastRouteLen = (int) lastRoute.getLength();
                 int lastRouteTime;
 
@@ -506,34 +479,28 @@ public class GetGoingActivity extends AppCompatActivity implements
 
                 kcalVal.setText(String.valueOf(kcal));
 
-                switch (lastRoute.getActivity_id())
-                {
-                    case 1:
-                    {
+                switch (lastRoute.getActivity_id()) {
+                    case 1: {
                         progBar1Act.setText("Walking");
                         progBar1Img.setImageDrawable(getResources().getDrawable(R.drawable.ic_walking_icon));
                         break;
                     }
-                    case 2:
-                    {
+                    case 2: {
                         progBar1Act.setText("Running");
                         progBar1Img.setImageDrawable(getResources().getDrawable(R.drawable.ic_running_icon));
                         break;
                     }
-                    case 3:
-                    {
+                    case 3: {
                         progBar1Act.setText("Cycling");
                         progBar1Img.setImageDrawable(getResources().getDrawable(R.drawable.ic_light_bicycling_icon));
                         break;
                     }
                 }
-            }
-            else
+            } else
                 resetDisplay();
         }
 
-        private void resetDisplay()
-        {
+        private void resetDisplay() {
             circleProgressBar.setProgressFormatter(new MyProgressFormatter(0));
             circleProgressBar.setProgress(0);
 

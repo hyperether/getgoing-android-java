@@ -5,6 +5,9 @@
     <!-- fb app id -->
     <string name="facebook_app_id">213193922545275</string>
 
+    <!-- google maps id-->
+    <string name="google_maps_key" templateMergeStrategy="preserve" translatable="false">AIzaSyBRAMHwl-f6Agb9iP7wUx5gTuIVjBy5k-Q</string>
+
     <string name="dialog_message" translatable="false">No saved data. Press OK to continue.</string>
     <string name="confirm" translatable="false">OK</string>
     <string name="delete_message" translatable="false">Delete record</string>

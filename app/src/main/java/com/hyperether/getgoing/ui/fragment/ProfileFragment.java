@@ -23,6 +23,7 @@ import com.hyperether.getgoing.manager.CacheManager;
 import com.hyperether.getgoing.model.CBDataFrame;
 import com.hyperether.getgoing.repository.room.DbHelper;
 import com.hyperether.getgoing.repository.room.entity.DbRoute;
+import com.hyperether.getgoing.ui.activity.GetGoingActivity;
 import com.hyperether.getgoing.util.Constants;
 
 import java.util.ArrayList;
@@ -110,18 +111,19 @@ public class ProfileFragment extends DialogFragment {
         initDialogs();
     }
 
-    private void initScreenDimen()
-    {
-        dataLabel = getView().findViewById(R.id.tv_fp_mydata);
+    private void initScreenDimen() {
+        if (GetGoingActivity.ratio > 1.8) {
+            dataLabel = getView().findViewById(R.id.tv_fp_mydata);
 
-        ViewGroup.MarginLayoutParams params = (ViewGroup.MarginLayoutParams) dataLabel.getLayoutParams();
-        ViewGroup.MarginLayoutParams params1 = (ViewGroup.MarginLayoutParams) genderBtn.getLayoutParams();
+            ViewGroup.MarginLayoutParams params = (ViewGroup.MarginLayoutParams) dataLabel.getLayoutParams();
+            ViewGroup.MarginLayoutParams params1 = (ViewGroup.MarginLayoutParams) genderBtn.getLayoutParams();
 
-        params.topMargin = 60;
-        params1.topMargin = 100;
+            params.topMargin = 60;
+            params1.topMargin = 100;
 
-        dataLabel.setLayoutParams(params);
-        genderBtn.setLayoutParams(params1);
+            dataLabel.setLayoutParams(params);
+            genderBtn.setLayoutParams(params1);
+        }
     }
 
     private void initDialogs() {
@@ -197,23 +199,23 @@ public class ProfileFragment extends DialogFragment {
                     }
                     editor.apply();
                 })
-                .setPositiveButton("Confirm", (dialogInterface, i) -> {
-                    tvGender.setText(newText[0]);
+                        .setPositiveButton("Confirm", (dialogInterface, i) -> {
+                            tvGender.setText(newText[0]);
 
-                    switch (newText[0]) {
-                        case "Male":
-                            genderImg.setImageDrawable(getResources().getDrawable(R.drawable.ic_gendersign_male));
-                            break;
-                        case "Female":
-                            genderImg.setImageDrawable(getResources().getDrawable(R.drawable.ic_light_gender_female_icon));
-                            break;
-                        case "Other":
-                            genderImg.setImageDrawable(getResources().getDrawable(R.drawable.ic_light_gender_icon_trans));
-                            break;
-                    }
-                })
-                .setNegativeButton("Cancel", (dialogInterface, i) -> dialogInterface.cancel())
-                .setTitle("Please select your gender:");
+                            switch (newText[0]) {
+                                case "Male":
+                                    genderImg.setImageDrawable(getResources().getDrawable(R.drawable.ic_gendersign_male));
+                                    break;
+                                case "Female":
+                                    genderImg.setImageDrawable(getResources().getDrawable(R.drawable.ic_light_gender_female_icon));
+                                    break;
+                                case "Other":
+                                    genderImg.setImageDrawable(getResources().getDrawable(R.drawable.ic_light_gender_icon_trans));
+                                    break;
+                            }
+                        })
+                        .setNegativeButton("Cancel", (dialogInterface, i) -> dialogInterface.cancel())
+                        .setTitle("Please select your gender:");
 
                 return genderBuilder;
             }
@@ -242,8 +244,8 @@ public class ProfileFragment extends DialogFragment {
                     editor.apply();
                     mDataFrame.setAge(Integer.valueOf((String) ageSpinner.getSelectedItem()));
                 })
-                .setNegativeButton("Cancel", (dialogInterface, i) -> dialogInterface.cancel())
-                .setTitle("How old are you?");
+                        .setNegativeButton("Cancel", (dialogInterface, i) -> dialogInterface.cancel())
+                        .setTitle("How old are you?");
 
                 return ageBuilder;
             }
@@ -272,8 +274,8 @@ public class ProfileFragment extends DialogFragment {
                     editor.apply();
                     mDataFrame.setWeight(Integer.valueOf((String) weightSpinner.getSelectedItem()));
                 })
-                .setNegativeButton("Cancel", (dialogInterface, i) -> dialogInterface.cancel())
-                .setTitle("Enter your weight:");
+                        .setNegativeButton("Cancel", (dialogInterface, i) -> dialogInterface.cancel())
+                        .setTitle("Enter your weight:");
 
                 return weightBuilder;
             }
@@ -302,8 +304,8 @@ public class ProfileFragment extends DialogFragment {
                     editor.apply();
                     mDataFrame.setHeight(Integer.valueOf((String) heightSpinner.getSelectedItem()));
                 })
-                .setNegativeButton("Cancel", (dialogInterface, i) -> dialogInterface.cancel())
-                .setTitle("Enter your height:");
+                        .setNegativeButton("Cancel", (dialogInterface, i) -> dialogInterface.cancel())
+                        .setTitle("Enter your height:");
 
                 return heightBuilder;
             }

@@ -33,8 +33,7 @@ import java.util.Objects;
 
 import static com.hyperether.getgoing.ui.activity.GetGoingActivity.ratio;
 
-public class ActivitiesFragment extends DialogFragment
-{
+public class ActivitiesFragment extends DialogFragment {
     public static final String DATA_KEY = "data_key";
 
     private View whiteView;
@@ -89,8 +88,7 @@ public class ActivitiesFragment extends DialogFragment
 
         Dialog dialog = getDialog();
 
-        if (dialog != null)
-        {
+        if (dialog != null) {
             int width = ViewGroup.LayoutParams.MATCH_PARENT;
             int height = ViewGroup.LayoutParams.MATCH_PARENT;
 
@@ -104,10 +102,8 @@ public class ActivitiesFragment extends DialogFragment
         fillProgressBars();
     }
 
-    private void initScreenDimen()
-    {
-        if (ratio >= 1.8)
-        {
+    private void initScreenDimen() {
+        if (ratio >= 1.8) {
             whiteView = getView().findViewById(R.id.view);
             goal = getView().findViewById(R.id.tv_fa_goal);
             walkingLabel = getView().findViewById(R.id.tv_fa_pb_walking);
@@ -128,8 +124,7 @@ public class ActivitiesFragment extends DialogFragment
         }
     }
 
-    private void initProgressStringColor()
-    {
+    private void initProgressStringColor() {
         int progress = seekBar.getProgress();
 
         low = getView().findViewById(R.id.tv_fa_low);
@@ -140,13 +135,11 @@ public class ActivitiesFragment extends DialogFragment
             low.setTextColor(getResources().getColor(R.color.light_theme_accent));
             medium.setTextColor(getResources().getColor(R.color.mat_gray));
             high.setTextColor(getResources().getColor(R.color.mat_gray));
-        }
-        else if (progress > 3333 && progress <= 6666) {
+        } else if (progress > 3333 && progress <= 6666) {
             low.setTextColor(getResources().getColor(R.color.mat_gray));
             medium.setTextColor(getResources().getColor(R.color.light_theme_accent));
             high.setTextColor(getResources().getColor(R.color.mat_gray));
-        }
-        else if (progress > 6666 && progress <= 10000) {
+        } else if (progress > 6666 && progress <= 10000) {
             low.setTextColor(getResources().getColor(R.color.mat_gray));
             medium.setTextColor(getResources().getColor(R.color.mat_gray));
             high.setTextColor(getResources().getColor(R.color.light_theme_accent));
@@ -154,8 +147,7 @@ public class ActivitiesFragment extends DialogFragment
     }
 
     @SuppressLint("SetTextI18n")
-    private void initListeners()
-    {
+    private void initListeners() {
         backBtn = getView().findViewById(R.id.ib_fa_back);
         walkDetails = getView().findViewById(R.id.iv_fa_rightarrow1);
         runDetails = getView().findViewById(R.id.iv_fa_rightarrow2);
@@ -174,13 +166,11 @@ public class ActivitiesFragment extends DialogFragment
                     low.setTextColor(getResources().getColor(R.color.light_theme_accent));
                     medium.setTextColor(getResources().getColor(R.color.mat_gray));
                     high.setTextColor(getResources().getColor(R.color.mat_gray));
-                }
-                else if (i > 3333 && i <= 6666) {
+                } else if (i > 3333 && i <= 6666) {
                     low.setTextColor(getResources().getColor(R.color.mat_gray));
                     medium.setTextColor(getResources().getColor(R.color.light_theme_accent));
                     high.setTextColor(getResources().getColor(R.color.mat_gray));
-                }
-                else if (i > 6666 && i <= 10000) {
+                } else if (i > 6666 && i <= 10000) {
                     low.setTextColor(getResources().getColor(R.color.mat_gray));
                     medium.setTextColor(getResources().getColor(R.color.mat_gray));
                     high.setTextColor(getResources().getColor(R.color.light_theme_accent));
@@ -195,10 +185,12 @@ public class ActivitiesFragment extends DialogFragment
             }
 
             @Override
-            public void onStartTrackingTouch(SeekBar seekBar) {}
+            public void onStartTrackingTouch(SeekBar seekBar) {
+            }
 
             @Override
-            public void onStopTrackingTouch(SeekBar seekBar) {}
+            public void onStopTrackingTouch(SeekBar seekBar) {
+            }
         });
 
         low.setOnClickListener(view -> seekBar.setProgress(Constants.CONST_LOW_DIST));
@@ -232,8 +224,7 @@ public class ActivitiesFragment extends DialogFragment
 
     }
 
-    private int[] getTimeEstimates(int dist)
-    {
+    private int[] getTimeEstimates(int dist) {
         int[] returnValues = new int[3];
 
         returnValues[0] = (int) (dist / (Constants.AVG_SPEED_WALK * 60));
@@ -243,8 +234,7 @@ public class ActivitiesFragment extends DialogFragment
         return returnValues;
     }
 
-    private void initLabels()
-    {
+    private void initLabels() {
         seekBar.setProgress(settings.getInt("goal", 5000));
 
         int progress = seekBar.getProgress();
@@ -259,13 +249,11 @@ public class ActivitiesFragment extends DialogFragment
         kcal.setText("About " + (int) (progress * 0.00112 * settings.getInt("weight", 0)) + "kcal");
     }
 
-    private void fillProgressBars()
-    {
+    private void fillProgressBars() {
         new PullProgressData().execute(null, null, null);
     }
 
-    private class PullProgressData extends AsyncTask<Void, Void, Void>
-    {
+    private class PullProgressData extends AsyncTask<Void, Void, Void> {
         List<DbRoute> allRoutes;
         int goal = settings.getInt("goal", 0);
         Double sumWalk = 0.0, sumRun = 0.0, sumRide = 0.0;
@@ -296,8 +284,7 @@ public class ActivitiesFragment extends DialogFragment
         protected void onPostExecute(Void aVoid) {
             super.onPostExecute(aVoid);
 
-            for (DbRoute route : allRoutes)
-            {
+            for (DbRoute route : allRoutes) {
                 if (route.getActivity_id() == 1)
                     sumWalk += route.getLength();
                 else if (route.getActivity_id() == 2)
@@ -319,7 +306,7 @@ public class ActivitiesFragment extends DialogFragment
 
             DecimalFormat df = new DecimalFormat("#.##");
 
-            mileage1.setText(df.format(sumWalk / 1000)+ "km");
+            mileage1.setText(df.format(sumWalk / 1000) + "km");
             mileage2.setText(df.format(sumRun / 1000) + "km");
             mileage3.setText(df.format(sumRide / 1000) + "km");
         }
