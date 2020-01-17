@@ -50,7 +50,7 @@
         android:layout_marginStart="16dp"
         android:layout_marginLeft="16dp"
         android:layout_marginTop="12dp"
-        android:text="Walking"
+        android:text="@string/walking"
         android:textColor="@color/mat_gray"
         android:textSize="18sp"
         app:layout_constraintStart_toStartOf="parent"

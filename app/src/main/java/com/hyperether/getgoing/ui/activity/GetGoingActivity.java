@@ -422,6 +422,31 @@ public class GetGoingActivity extends AppCompatActivity implements
     private void roomStoreNodeZero(List<DbNode> nodeList) {
         DbRoute dbRoute = new DbRoute(0, 0, 0, 0, "null", 0, 1, 0);
         GgRepository.getInstance().insertRouteInit(dbRoute, nodeList);
+
+        // dummy data - delete this - Ivana
+//        dbRoute = new DbRoute(0, 0, 333, 400, "17.01.2020", 0, 1, 200);
+//        GgRepository.getInstance().insertRouteInit(dbRoute, nodeList);
+//
+//        dbRoute = new DbRoute(0, 0, 0, 50, "18.01.2020", 0, 1, 150);
+//        GgRepository.getInstance().insertRouteInit(dbRoute, nodeList);
+//
+//        dbRoute = new DbRoute(0, 0, 0, 220, "19.01.2020", 0, 1, 300);
+//        GgRepository.getInstance().insertRouteInit(dbRoute, nodeList);
+//
+//        dbRoute = new DbRoute(0, 0, 0, 400, "20.01.2020", 0, 1, 200);
+//        GgRepository.getInstance().insertRouteInit(dbRoute, nodeList);
+//
+//        dbRoute = new DbRoute(0, 0, 0, 50, "22.01.2020", 0, 1, 150);
+//        GgRepository.getInstance().insertRouteInit(dbRoute, nodeList);
+//
+//        dbRoute = new DbRoute(0, 0, 0, 220, "23.01.2020", 0, 1, 300);
+//        GgRepository.getInstance().insertRouteInit(dbRoute, nodeList);
+//
+//        dbRoute = new DbRoute(0, 0, 0, 400, "24.01.2020", 0, 1, 200);
+//        GgRepository.getInstance().insertRouteInit(dbRoute, nodeList);
+//
+//        dbRoute = new DbRoute(0, 0, 0, 50, "25.01.2020", 0, 1, 150);
+//        GgRepository.getInstance().insertRouteInit(dbRoute, nodeList);
     }
 
     private class PullProgressData extends AsyncTask<Void, Void, Void> {

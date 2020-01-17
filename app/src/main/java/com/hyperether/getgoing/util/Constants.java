@@ -66,4 +66,8 @@ public class Constants {
 
     //ProfileFragment
     public enum gender {Male, Female, Other}
+
+    // Intent extras
+    public static final String DATA_DETAILS_LABEL = "data details label";
+    public static final String BUNDLE_PARCELABLE = "bundle_parcelable";
 }

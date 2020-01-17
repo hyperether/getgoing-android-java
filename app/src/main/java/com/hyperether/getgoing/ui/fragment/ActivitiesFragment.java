@@ -2,6 +2,7 @@ package com.hyperether.getgoing.ui.fragment;
 
 import android.annotation.SuppressLint;
 import android.app.Dialog;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -24,6 +25,7 @@ import com.hyperether.getgoing.R;
 import com.hyperether.getgoing.model.CBDataFrame;
 import com.hyperether.getgoing.repository.room.DbHelper;
 import com.hyperether.getgoing.repository.room.entity.DbRoute;
+import com.hyperether.getgoing.ui.activity.ShowDataActivity;
 import com.hyperether.getgoing.util.Constants;
 
 import java.text.DecimalFormat;
@@ -32,6 +34,7 @@ import java.util.List;
 import java.util.Objects;
 
 import static com.hyperether.getgoing.ui.activity.GetGoingActivity.ratio;
+import static com.hyperether.getgoing.util.Constants.DATA_DETAILS_LABEL;
 
 public class ActivitiesFragment extends DialogFragment {
     public static final String DATA_KEY = "data_key";
@@ -198,12 +201,15 @@ public class ActivitiesFragment extends DialogFragment {
         high.setOnClickListener(view -> seekBar.setProgress(Constants.CONST_HIGH_DIST));
         backBtn.setOnClickListener(view -> this.getDialog().dismiss());
 
+
+        walkDetails.setOnClickListener(view -> {
+            Intent intent = new Intent(getContext(), ShowDataActivity.class);
+            intent.putExtra(DATA_DETAILS_LABEL, getString(R.string.walking));
+            startActivity(intent);
+        });
+
+
         /* ACTIVITY NOT IMPLEMENTED YET */
-//        walkDetails.setOnClickListener(view -> {
-//            Intent intent = new Intent(getContext(), ShowDataActivity.class);
-//            startActivity(intent);
-//        });
-//
 //        runDetails.setOnClickListener(view -> {
 //            Intent intent = new Intent(getContext(), ShowDataActivity.class);
 //            startActivity(intent);
@@ -220,6 +226,8 @@ public class ActivitiesFragment extends DialogFragment {
             editor.apply();
 
             Toast.makeText(getContext(), "Your goal is updated", Toast.LENGTH_SHORT).show();
+
+            fillProgressBars();
         });
 
     }
@@ -247,6 +255,7 @@ public class ActivitiesFragment extends DialogFragment {
         minutesCycling.setText(timeEstimates[2] + " min");
 
         kcal.setText("About " + (int) (progress * 0.00112 * settings.getInt("weight", 0)) + "kcal");
+
     }
 
     private void fillProgressBars() {
