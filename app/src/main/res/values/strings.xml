@@ -99,7 +99,8 @@
     <string name="dist_unit">km</string>
     <string name="toggle_map_button">Toggle map button</string>
     <string name="goal">Goal</string>
-
+    <string name="progress_bar_img">progress bar image</string>
+    <string name="progress_bar_goal_img">progress bar goal icon</string>
 
 
 </resources>

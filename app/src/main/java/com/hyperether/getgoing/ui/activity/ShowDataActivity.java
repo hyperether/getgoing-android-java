@@ -1,16 +1,30 @@
 package com.hyperether.getgoing.ui.activity;
 
 import android.app.AlertDialog;
+import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.content.res.Resources;
 import android.graphics.Bitmap;
+import android.graphics.Point;
+import android.location.Criteria;
+import android.location.Location;
+import android.location.LocationManager;
 import android.os.Bundle;
+import android.transition.TransitionManager;
+import android.util.DisplayMetrics;
+import android.view.Display;
 import android.view.View;
+import android.view.WindowManager;
 import android.widget.ImageButton;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.constraintlayout.widget.ConstraintLayout;
+import androidx.constraintlayout.widget.ConstraintSet;
+import androidx.core.app.ActivityCompat;
 import androidx.databinding.DataBindingUtil;
 import androidx.lifecycle.ViewModelProviders;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -19,29 +33,39 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.github.mikephil.charting.data.BarDataSet;
 import com.github.mikephil.charting.data.BarEntry;
 import com.github.mikephil.charting.interfaces.datasets.IBarDataSet;
+import com.google.android.gms.maps.CameraUpdateFactory;
+import com.google.android.gms.maps.GoogleMap;
+import com.google.android.gms.maps.MapFragment;
+import com.google.android.gms.maps.OnMapReadyCallback;
+import com.google.android.gms.maps.model.LatLng;
 import com.hyperether.getgoing.R;
 import com.hyperether.getgoing.databinding.ShowDataBinding;
 import com.hyperether.getgoing.repository.room.DbHelper;
 import com.hyperether.getgoing.repository.room.entity.DbRoute;
 import com.hyperether.getgoing.ui.adapter.DbRecyclerAdapter;
+import com.hyperether.getgoing.util.Constants;
 import com.hyperether.getgoing.util.ProgressBarBitmap;
 import com.hyperether.getgoing.viewmodel.RouteViewModel;
 
+import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
 
+import static android.provider.Settings.ACTION_LOCATION_SOURCE_SETTINGS;
 import static com.hyperether.getgoing.util.Constants.BUNDLE_PARCELABLE;
 import static com.hyperether.getgoing.util.Constants.DATA_DETAILS_LABEL;
 
 
 // TODO remove unused code
 public class ShowDataActivity extends AppCompatActivity
-        implements DbHelper.OnDataLoadListener, OnListItemClick {
+        implements DbHelper.OnDataLoadListener, OnListItemClick, OnMapReadyCallback {
 
     private ShowDataBinding binding;
+
+    private GoogleMap mMap;
 
     private final List<DbRoute> routes = new ArrayList<>();
     private RecyclerView.Adapter recyclerAdapter;
@@ -80,15 +104,21 @@ public class ShowDataActivity extends AppCompatActivity
                 routes.addAll(routeList);
 //            }
 
-            binding.showDataCdsInfoLayout.setVar(routes.get(0));
-            Bitmap bm = ProgressBarBitmap.getWidgetBitmap(getApplicationContext(), 50, 800, 800, 30, 0);
+            binding.setVar(routes.get(0));
+            Bitmap bm = ProgressBarBitmap.getWidgetBitmap(getApplicationContext(), 50, 800, 800, 50, 0);
             binding.progress.setImageBitmap(bm);
             // TODO if getting all records, remove 0th Node - Ivana
             routes.remove(0);
             recyclerAdapter.notifyDataSetChanged();
         });
 
+        MapFragment mapFragment = (MapFragment) getFragmentManager()
+                .findFragmentById(R.id.sd_map_view);
+        mapFragment.getMapAsync(this);
+
+
     }
+
 
     private void initializeViews() {
 //        progress = findViewById(R.id.progress);
@@ -103,24 +133,33 @@ public class ShowDataActivity extends AppCompatActivity
         binding.ibSdBackBtn.setOnClickListener(v -> onBackPressed());
         binding.btnToggleMap.setOnClickListener(v -> toogleMap());
 
+        binding.mapFragmentHolder.animate().scaleYBy(-1);
+
     }
+
+
 
     // TODO translation values for different screen sizes??
     private void toogleMap() {
+
         if(!mapToogleDown) {
 //            binding.btnToggleMap.setImageResource(R.drawable.ic_gray_angle_down_icon);
             binding.btnToggleMap.animate().rotationBy(180).setDuration(500);
             mapToogleDown = true;
-            binding.sdMapBg.animate().translationY(-800).setDuration(500);
-            binding.sdChartLayout.animate().translationY(-800).setDuration(500);
+            binding.mapFragmentHolder.animate().scaleYBy(1).setStartDelay(200).setDuration(500);
+            binding.displayMap.animate().y((int)((70*(Resources.getSystem().getDisplayMetrics().density)))).setDuration(500);
 //            binding.progress.animate().alpha(0).setDuration(800);
+//            binding.mapFragmentHolder.animate().translationYBy(-150).setDuration(500);
+//            binding.mapBg.animate().translationYBy(-150).setDuration(500);
         } else {
 //            binding.btnToggleMap.setImageResource(R.drawable.ic_gray_angle_up_icon);
             binding.btnToggleMap.animate().rotationBy(180).setDuration(500);
             mapToogleDown = false;
-            binding.sdMapBg.animate().translationY(0).setDuration(500);
-            binding.sdChartLayout.animate().translationY(0).setDuration(500);
+            binding.mapFragmentHolder.animate().scaleYBy(-1).setDuration(500);
+            binding.displayMap.animate().translationY(0).setDuration(500);
 //            binding.progress.animate().alpha(1).setDuration(400);
+//            binding.mapFragmentHolder.animate().translationY(0).setDuration(500);
+//            binding.mapBg.animate().translationY(0).setDuration(500);
         }
     }
 
@@ -257,10 +296,93 @@ public class ShowDataActivity extends AppCompatActivity
     @Override
     public void onListItemClick(Bundle bundle) {
         DbRoute route = bundle.getParcelable(BUNDLE_PARCELABLE);
-        binding.showDataCdsInfoLayout.setVar(route);
         binding.setVar(route);
 
     }
+
+    @Override
+    public void onMapReady(GoogleMap googleMap) {
+
+        if (ActivityCompat.checkSelfPermission(this, android.Manifest.permission
+                .ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED &&
+                ActivityCompat.checkSelfPermission(this, android.Manifest.permission
+                        .ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
+
+            this.mMap = googleMap;
+            initMapComponents(googleMap);
+
+            LocationManager locationManager = (LocationManager) getSystemService(
+                    Context.LOCATION_SERVICE);
+
+            boolean gpsEnabled = locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER);
+            if (!gpsEnabled) {
+                AlertDialog.Builder dialog = new AlertDialog.Builder(this);
+                dialog.setCancelable(false);
+                dialog.setTitle(R.string.alert_dialog_title);
+                dialog.setMessage(getString(R.string.alert_dialog_message));
+                dialog.setPositiveButton(R.string.alert_dialog_positive_button, new DialogInterface
+                        .OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface paramDialogInterface, int paramInt) {
+                        // TODO Auto-generated method stub
+                        openGPSSettings();
+                    }
+                });
+
+                dialog.setNegativeButton(R.string.alert_dialog_negative_button, (paramDialogInterface, paramInt) -> finish());
+
+                dialog.show();
+            }
+
+            Criteria criteria = new Criteria();
+            criteria.setAccuracy(Criteria.ACCURACY_FINE);
+            criteria.setPowerRequirement(Criteria.POWER_LOW);
+            String bestProvider = locationManager.getBestProvider(criteria, false);
+            Location location = locationManager.getLastKnownLocation(bestProvider);
+            zoomOverCurrentLocation(mMap, location);
+        } else {
+            finish();
+        }
+    }
+    /**
+     * This method is used for init of map components
+     *
+     * @param googleMap google map v2
+     **/
+    private void initMapComponents(GoogleMap googleMap) {
+        if (ActivityCompat.checkSelfPermission(this, android.Manifest.permission
+                .ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED &&
+                ActivityCompat.checkSelfPermission(this, android.Manifest.permission
+                        .ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
+
+            googleMap.setMyLocationEnabled(true);
+            googleMap.setTrafficEnabled(false);
+            googleMap.setIndoorEnabled(true);
+            googleMap.setBuildingsEnabled(true);
+            googleMap.getUiSettings().setZoomControlsEnabled(true);
+        }
+    }
+
+    /**
+     * This method is used for zooming over user current location or last known location.
+     *
+     * @param googleMap google map v2
+     **/
+    private void zoomOverCurrentLocation(GoogleMap googleMap, Location location) {
+        if (location != null) {
+            LatLng latLng = new LatLng(location.getLatitude(), location.getLongitude());
+            googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(latLng, 15));
+        }
+    }
+
+    /**
+     * Method to open settings.
+     */
+    public void openGPSSettings() {
+        Intent i = new Intent(ACTION_LOCATION_SOURCE_SETTINGS);
+        startActivityForResult(i, Constants.REQUEST_GPS_SETTINGS);
+    }
+
 
     /* delete this */
 //    private void populateChart() {
