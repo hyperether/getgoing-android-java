@@ -2,6 +2,7 @@ package com.hyperether.getgoing.ui.fragment;
 
 import android.annotation.SuppressLint;
 import android.app.Dialog;
+import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.AsyncTask;
@@ -11,7 +12,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageButton;
-import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.SeekBar;
 import android.widget.TextView;
@@ -22,6 +22,7 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.DialogFragment;
 
 import com.hyperether.getgoing.R;
+import com.hyperether.getgoing.listeners.GgOnClickListener;
 import com.hyperether.getgoing.model.CBDataFrame;
 import com.hyperether.getgoing.repository.room.DbHelper;
 import com.hyperether.getgoing.repository.room.entity.DbRoute;
@@ -34,19 +35,26 @@ import java.util.List;
 import java.util.Objects;
 
 import static com.hyperether.getgoing.ui.activity.GetGoingActivity.ratio;
+import static com.hyperether.getgoing.util.Constants.ACTION_OPEN_ACTIVITY_DETAILS;
+import static com.hyperether.getgoing.util.Constants.ACTIVITY_RIDE_ID;
+import static com.hyperether.getgoing.util.Constants.ACTIVITY_RUN_ID;
+import static com.hyperether.getgoing.util.Constants.ACTIVITY_WALK_ID;
+import static com.hyperether.getgoing.util.Constants.BUNDLE_ACTION;
+import static com.hyperether.getgoing.util.Constants.BUNDLE_ACTIVITY_ID;
 import static com.hyperether.getgoing.util.Constants.DATA_DETAILS_LABEL;
 
 public class ActivitiesFragment extends DialogFragment {
     public static final String DATA_KEY = "data_key";
+
+    private GgOnClickListener listener;
 
     private View whiteView;
     private TextView goal, walkingLabel;
     private SeekBar seekBar;
     private TextView low, medium, high;
     private TextView minutesRunning, minutesWalking, minutesCycling, kcal;
-    private TextView mileage1, mileage2, mileage3;
+    private TextView mileageWalk, mileageRun, mileageRide;
     private ImageButton backBtn;
-    private ImageView walkDetails, runDetails, rideDetails;
     private ProgressBar prbWalk, prbRun, prbRide;
     private Button saveChanges;
 
@@ -97,6 +105,10 @@ public class ActivitiesFragment extends DialogFragment {
 
             dialog.getWindow().setLayout(width, height);
         }
+
+        mileageWalk = getView().findViewById(R.id.tv_fa_pb_mileage_walk);
+        mileageRun = getView().findViewById(R.id.tv_fa_pb_mileage_run);
+        mileageRide = getView().findViewById(R.id.tv_fa_pb_mileage_ride);
 
         initScreenDimen();
         initLabels();
@@ -152,9 +164,6 @@ public class ActivitiesFragment extends DialogFragment {
     @SuppressLint("SetTextI18n")
     private void initListeners() {
         backBtn = getView().findViewById(R.id.ib_fa_back);
-        walkDetails = getView().findViewById(R.id.iv_fa_rightarrow1);
-        runDetails = getView().findViewById(R.id.iv_fa_rightarrow2);
-        rideDetails = getView().findViewById(R.id.iv_fa_rightarrow3);
         saveChanges = getView().findViewById(R.id.b_fa_save);
 
         seekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
@@ -202,23 +211,7 @@ public class ActivitiesFragment extends DialogFragment {
         backBtn.setOnClickListener(view -> this.getDialog().dismiss());
 
 
-        walkDetails.setOnClickListener(view -> {
-            Intent intent = new Intent(getContext(), ShowDataActivity.class);
-            intent.putExtra(DATA_DETAILS_LABEL, getString(R.string.walking));
-            startActivity(intent);
-        });
-
-
-        /* ACTIVITY NOT IMPLEMENTED YET */
-//        runDetails.setOnClickListener(view -> {
-//            Intent intent = new Intent(getContext(), ShowDataActivity.class);
-//            startActivity(intent);
-//        });
-//
-//        rideDetails.setOnClickListener(view -> {
-//            Intent intent = new Intent(getContext(), ShowDataActivity.class);
-//            startActivity(intent);
-//        });
+        openActivityDetails();
 
         saveChanges.setOnClickListener(view -> {
             SharedPreferences.Editor editor = settings.edit();
@@ -229,6 +222,29 @@ public class ActivitiesFragment extends DialogFragment {
 
             fillProgressBars();
         });
+
+    }
+
+    private void openActivityDetails() {
+
+        Bundle bundle = new Bundle();
+        bundle.putInt(BUNDLE_ACTION, ACTION_OPEN_ACTIVITY_DETAILS);
+
+        mileageWalk.setOnClickListener(view -> {
+            bundle.putInt(BUNDLE_ACTIVITY_ID, ACTIVITY_WALK_ID);
+            listener.onClick(bundle);
+        });
+
+        mileageRun.setOnClickListener(view -> {
+            bundle.putInt(BUNDLE_ACTIVITY_ID, ACTIVITY_RUN_ID);
+            listener.onClick(bundle);
+        });
+
+        mileageRide.setOnClickListener(view -> {
+            bundle.putInt(BUNDLE_ACTIVITY_ID, ACTIVITY_RIDE_ID);
+            listener.onClick(bundle);
+        });
+
 
     }
 
@@ -276,10 +292,6 @@ public class ActivitiesFragment extends DialogFragment {
             prbRun = getView().findViewById(R.id.progressBar2);
             prbRide = getView().findViewById(R.id.progressBar3);
 
-            mileage1 = getView().findViewById(R.id.tv_fa_pb_mileage1);
-            mileage2 = getView().findViewById(R.id.tv_fa_pb_mileage2);
-            mileage3 = getView().findViewById(R.id.tv_fa_pb_mileage3);
-
         }
 
         @Override
@@ -315,10 +327,23 @@ public class ActivitiesFragment extends DialogFragment {
 
             DecimalFormat df = new DecimalFormat("#.##");
 
-            mileage1.setText(df.format(sumWalk / 1000) + "km");
-            mileage2.setText(df.format(sumRun / 1000) + "km");
-            mileage3.setText(df.format(sumRide / 1000) + "km");
+            mileageWalk.setText(df.format(sumWalk / 1000) + "km");
+            mileageRun.setText(df.format(sumRun / 1000) + "km");
+            mileageRide.setText(df.format(sumRide / 1000) + "km");
         }
     }
 
+    @Override
+    public void onAttach(Context context) {
+        super.onAttach(context);
+        if (context instanceof GgOnClickListener) {
+            listener = (GgOnClickListener) context;
+        }
+    }
+
+    @Override
+    public void onDetach() {
+        super.onDetach();
+        listener = null;
+    }
 }

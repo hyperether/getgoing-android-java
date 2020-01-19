@@ -28,8 +28,10 @@ import androidx.recyclerview.widget.SnapHelper;
 
 import com.crashlytics.android.Crashlytics;
 import com.dinuscxj.progressbar.CircleProgressBar;
+import com.hyperether.getgoing.DummyData;
 import com.hyperether.getgoing.R;
 import com.hyperether.getgoing.databinding.ActivityMainBinding;
+import com.hyperether.getgoing.listeners.GgOnClickListener;
 import com.hyperether.getgoing.manager.CacheManager;
 import com.hyperether.getgoing.model.CBDataFrame;
 import com.hyperether.getgoing.repository.room.GgRepository;
@@ -41,6 +43,7 @@ import com.hyperether.getgoing.ui.adapter.formatter.MyProgressFormatter2;
 import com.hyperether.getgoing.ui.adapter.formatter.MyProgressFormatter3;
 import com.hyperether.getgoing.ui.fragment.ActivitiesFragment;
 import com.hyperether.getgoing.ui.fragment.ProfileFragment;
+import com.hyperether.getgoing.ui.fragment.ShowDataFragment;
 import com.hyperether.getgoing.ui.fragment.old.SettingsFragment;
 import com.hyperether.getgoing.util.Constants;
 
@@ -50,9 +53,16 @@ import java.util.List;
 import io.fabric.sdk.android.Fabric;
 
 import static com.hyperether.getgoing.ui.fragment.old.SettingsFragment.DATA_KEY;
+import static com.hyperether.getgoing.util.Constants.ACTION_OPEN_ACTIVITY_DETAILS;
+import static com.hyperether.getgoing.util.Constants.ACTIVITY_RIDE_ID;
+import static com.hyperether.getgoing.util.Constants.ACTIVITY_RUN_ID;
+import static com.hyperether.getgoing.util.Constants.ACTIVITY_WALK_ID;
+import static com.hyperether.getgoing.util.Constants.BUNDLE_ACTION;
+import static com.hyperether.getgoing.util.Constants.BUNDLE_ACTIVITY_ID;
+import static com.hyperether.getgoing.util.Constants.DATA_DETAILS_LABEL;
 
 public class GetGoingActivity extends AppCompatActivity implements
-        SettingsFragment.SettingsFragmentListener {
+        SettingsFragment.SettingsFragmentListener, GgOnClickListener {
 
     private static final int WALK_ID = 1;
     private static final int RUN_ID = 2;
@@ -424,29 +434,43 @@ public class GetGoingActivity extends AppCompatActivity implements
         GgRepository.getInstance().insertRouteInit(dbRoute, nodeList);
 
         // TODO dummy data - delete this - Ivana
-//        dbRoute = new DbRoute(0, 0, 333, 400, "17.01.2020", 0, 1, 200);
-//        GgRepository.getInstance().insertRouteInit(dbRoute, nodeList);
-//
-//        dbRoute = new DbRoute(0, 0, 0, 50, "18.01.2020", 0, 1, 150);
-//        GgRepository.getInstance().insertRouteInit(dbRoute, nodeList);
-//
-//        dbRoute = new DbRoute(0, 0, 0, 220, "19.01.2020", 0, 1, 300);
-//        GgRepository.getInstance().insertRouteInit(dbRoute, nodeList);
-//
-//        dbRoute = new DbRoute(0, 0, 0, 400, "20.01.2020", 0, 1, 200);
-//        GgRepository.getInstance().insertRouteInit(dbRoute, nodeList);
-//
-//        dbRoute = new DbRoute(0, 0, 0, 50, "22.01.2020", 0, 1, 150);
-//        GgRepository.getInstance().insertRouteInit(dbRoute, nodeList);
-//
-//        dbRoute = new DbRoute(0, 0, 0, 220, "23.01.2020", 0, 1, 300);
-//        GgRepository.getInstance().insertRouteInit(dbRoute, nodeList);
-//
-//        dbRoute = new DbRoute(0, 0, 0, 400, "24.01.2020", 0, 1, 200);
-//        GgRepository.getInstance().insertRouteInit(dbRoute, nodeList);
-//
-//        dbRoute = new DbRoute(0, 0, 0, 50, "25.01.2020", 0, 1, 150);
-//        GgRepository.getInstance().insertRouteInit(dbRoute, nodeList);
+//        DummyData.insertDummyData();
+    }
+
+
+    @Override
+    public void onClick(Bundle bundle) {
+
+        int action = bundle.getInt(BUNDLE_ACTION);
+        switch (action) {
+            case ACTION_OPEN_ACTIVITY_DETAILS:
+                openActivityDetails(bundle);
+                break;
+        }
+
+
+    }
+
+    private void openActivityDetails(Bundle bundle) {
+
+        int acId = bundle.getInt(BUNDLE_ACTIVITY_ID);
+
+        Intent intent = new Intent(this, ShowDataActivity.class);
+
+        switch (acId) {
+            case ACTIVITY_WALK_ID:
+                intent.putExtra(DATA_DETAILS_LABEL, getString(R.string.walking));
+                break;
+            case ACTIVITY_RUN_ID:
+                intent.putExtra(DATA_DETAILS_LABEL, getString(R.string.running));
+                break;
+            default:
+                intent.putExtra(DATA_DETAILS_LABEL, getString(R.string.cycling));
+                break;
+        }
+
+        startActivity(intent);
+
     }
 
     private class PullProgressData extends AsyncTask<Void, Void, Void> {

@@ -5,4 +5,6 @@
     <color name="color_background_new">#EDF1F1</color>
     <color name="color_button_background">#CDDDDD</color>
 
+    <color name="transparent_light_theme_accent">#8020BAFF</color>
+
 </resources>

@@ -7,14 +7,13 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ProgressBar;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.hyperether.getgoing.R;
 import com.hyperether.getgoing.repository.room.entity.DbRoute;
-import com.hyperether.getgoing.ui.activity.OnListItemClick;
+import com.hyperether.getgoing.listeners.GgOnClickListener;
 
 import java.util.List;
 
@@ -24,18 +23,18 @@ import static com.hyperether.getgoing.util.Constants.BUNDLE_PARCELABLE;
 public class DbRecyclerAdapter extends RecyclerView.Adapter<DbRecyclerAdapter.ViewHolder> {
 
     private List<DbRoute> routes;
-    private OnListItemClick listener;
+    private GgOnClickListener listener;
 
 
     public DbRecyclerAdapter(Context context, List<DbRoute> routes) {
         this.routes = routes;
-        listener = (OnListItemClick) context;
+        listener = (GgOnClickListener) context;
     }
 
     @NonNull
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        // TODO setup diff screen sizes?
+        // TODO setup diff screen sizes? -Ivana
 
         View view = LayoutInflater.from(parent.getContext())
                 .inflate(R.layout.show_data_row_item, parent, false);
@@ -59,7 +58,7 @@ public class DbRecyclerAdapter extends RecyclerView.Adapter<DbRecyclerAdapter.Vi
                         Bundle bundle = new Bundle();
                         bundle.putParcelable(BUNDLE_PARCELABLE, routes.get(position));
 
-                        listener.onListItemClick(bundle);
+                        listener.onClick(bundle);
                     }
                 }));
             }

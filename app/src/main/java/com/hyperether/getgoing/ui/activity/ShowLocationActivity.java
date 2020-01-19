@@ -359,11 +359,9 @@ public class ShowLocationActivity extends AppCompatActivity implements OnMapRead
                 if (!goal.getText().toString().trim().equals(""))
                     goalStore = Long.valueOf(goal.getText().toString().trim());
                 setVisibilities();
-            });
-
-            dialog.setNegativeButton("CANCEL", (paramDialogInterface, paramInt) -> {
-            });
-            dialog.show();
+            }).setNegativeButton("CANCEL", (paramDialogInterface, paramInt) -> {
+                finish();
+            }).show();
         }
     };
 

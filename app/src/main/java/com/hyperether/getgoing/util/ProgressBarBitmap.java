@@ -3,22 +3,20 @@ package com.hyperether.getgoing.util;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
-import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.RectF;
 
 import com.hyperether.getgoing.R;
 
-//TODO clean up this mess - Ivana
+
 public class ProgressBarBitmap {
 
-    public static Bitmap getWidgetBitmap(Context context, int goal, int width, int height, int stroke, int padding) {
+    public static Bitmap getWidgetBitmap(Context context, long goal, double length, int width, int height, float startAngle, float sweepAngle, int stroke, int padding) {
 
-//        int width = 800;
-//        int height = 800;
-//        int stroke = 30;
-//        int padding = 0;
-//        float density = context.getResources().getDisplayMetrics().density;
+        float percentage = 0;
+        if(goal > 0 && length >= 0) {
+            percentage = (float) (length / goal);
+        }
 
 
         //Paint for arc stroke.
@@ -26,49 +24,33 @@ public class ProgressBarBitmap {
         paint.setStrokeWidth(stroke);
         paint.setStyle(Paint.Style.STROKE);
         paint.setStrokeCap(Paint.Cap.ROUND);
-        //paint.setStrokeJoin(Paint.Join.ROUND);
-        //paint.setPathEffect(new CornerPathEffect(10) );
-
-        //Paint for text values.
-        Paint mTextPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
-//        mTextPaint.setTextSize((int) (context.getResources().getDimension(R.dimen.widget_text_large_value) / density));
-//        mTextPaint.setColor(context.getResources().getColor(R.color.light_theme_accent));
-//        mTextPaint.setTextAlign(Paint.Align.CENTER);
 
         final RectF arc = new RectF();
-        arc.set((stroke/2) + padding, (stroke/2) + padding, width-padding-(stroke/2), height-padding-(stroke/2));
+        arc.set((stroke / 2) + padding, (stroke / 2) + padding, width - padding - (stroke / 2), height - padding - (stroke / 2));
 
         Bitmap bitmap = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888);
         Canvas canvas = new Canvas(bitmap);
-        //First draw full arc as background.
-//        paint.setColor(Color.argb(75, 255, 255, 255));
+
+        //draw full arc as background.
         paint.setColor(context.getResources().getColor(R.color.color_button_background));
-        canvas.drawArc(arc, 160, 220, false, paint);
-        //Then draw arc progress with actual value.
+        canvas.drawArc(arc, startAngle, sweepAngle, false, paint);
+
+        //draw arc progress with actual value.
         paint.setColor(context.getResources().getColor(R.color.light_theme_accent));
 
-        int temp = 0;
-        if(goal <= 50) {
-            if(goal > 0) {
-                temp = 220 / (100 / goal);
-            } else {
-                temp = 0;
-            }
+
+        float temp = 0;
+        if (percentage <= 1 && percentage >= 0) {
+            temp = sweepAngle * percentage;
+        } else if (percentage < 0) {
+            temp = 0;
         } else {
-            if(goal == 100) {
-                temp = 220;
-            } else {
-                temp = 220 - (220 / (100 / (100 - goal)));
-            }
+            temp = sweepAngle;
         }
 
-        canvas.drawArc(arc, 160, temp, false, paint);
-        //Draw text value.
-        canvas.drawText(goal + "%", bitmap.getWidth() / 2, (bitmap.getHeight() - mTextPaint.ascent()) / 2, mTextPaint);
-        //Draw widget title.
-//        mTextPaint.setTextSize((int) (context.getResources().getDimension(R.dimen.widget_text_large_title) / density));
-//        canvas.drawText(context.getString(R.string.widget_text_arc_battery), bitmap.getWidth() / 2, bitmap.getHeight()-(stroke+padding), mTextPaint);
 
-        return  bitmap;
+        canvas.drawArc(arc, startAngle, temp, false, paint);
+
+        return bitmap;
     }
 }

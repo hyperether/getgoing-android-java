@@ -202,9 +202,9 @@ public class ProfileFragment extends DialogFragment {
                         .setPositiveButton("Confirm", (dialogInterface, i) -> {
                             tvGender.setText(newText[0]);
 
-                            /* TODO
-                            Attempt to invoke virtual method 'int java.lang.String.hashCode()' on a null object reference
-                            line 210
+                            /* TODO fix NPE - Ivana
+                                Attempt to invoke virtual method 'int java.lang.String.hashCode()' on a null object reference
+                                line 210
                              */
 
                             switch (newText[0]) {
