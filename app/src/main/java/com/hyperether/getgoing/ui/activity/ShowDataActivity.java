@@ -1,21 +1,12 @@
 package com.hyperether.getgoing.ui.activity;
 
 import android.app.AlertDialog;
-import android.content.Context;
 import android.content.DialogInterface;
-import android.content.Intent;
-import android.content.pm.PackageManager;
 import android.content.res.Resources;
 import android.graphics.Bitmap;
-import android.graphics.Color;
-import android.location.Criteria;
-import android.location.Location;
-import android.location.LocationManager;
 import android.os.Bundle;
-import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.app.ActivityCompat;
 import androidx.databinding.DataBindingUtil;
 import androidx.lifecycle.ViewModelProviders;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -25,28 +16,22 @@ import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapFragment;
 import com.google.android.gms.maps.OnMapReadyCallback;
-import com.google.android.gms.maps.model.Cap;
 import com.google.android.gms.maps.model.CircleOptions;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.LatLngBounds;
-import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.maps.model.PolylineOptions;
 import com.hyperether.getgoing.R;
 import com.hyperether.getgoing.databinding.ShowDataBinding;
 import com.hyperether.getgoing.listeners.GgOnClickListener;
-import com.hyperether.getgoing.repository.room.DbHelper;
 import com.hyperether.getgoing.repository.room.entity.DbNode;
 import com.hyperether.getgoing.repository.room.entity.DbRoute;
 import com.hyperether.getgoing.ui.adapter.DbRecyclerAdapter;
-import com.hyperether.getgoing.util.Constants;
 import com.hyperether.getgoing.util.ProgressBarBitmap;
-import com.hyperether.getgoing.viewmodel.NodeListViewModel;
 import com.hyperether.getgoing.viewmodel.RouteViewModel;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import static android.provider.Settings.ACTION_LOCATION_SOURCE_SETTINGS;
 import static com.hyperether.getgoing.util.Constants.ACTIVITY_RIDE_ID;
 import static com.hyperether.getgoing.util.Constants.ACTIVITY_RUN_ID;
 import static com.hyperether.getgoing.util.Constants.ACTIVITY_WALK_ID;
@@ -69,7 +54,6 @@ public class ShowDataActivity extends AppCompatActivity
     private boolean mapToogleDown;
     private int activityId;
     private RouteViewModel routeViewModel;
-    private NodeListViewModel nodesViewModel;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -102,7 +86,7 @@ public class ShowDataActivity extends AppCompatActivity
         routeViewModel.getRouteList().observe(this, routeList -> {
             routes.clear();
 
-            Bitmap bm = null;
+            Bitmap bm;
             if (routeList.size() > 1) {
                 routeList.remove(0); // remove 0th node
 
@@ -112,8 +96,13 @@ public class ShowDataActivity extends AppCompatActivity
                     }
                 }
 
-                bm = ProgressBarBitmap.getWidgetBitmap(getApplicationContext(), routes.get(0).getGoal(), routes.get(0).getLength(), 400, 400, 160, 220, 20, 0);
+            } else {
+                routes.addAll(routeList);
+            }
 
+            if (routes.size() > 0) {
+                bm = ProgressBarBitmap.getWidgetBitmap(getApplicationContext(), routes.get(0).getGoal(), routes.get(0).getLength(), 400, 400, 160, 220, 20, 0);
+                binding.setVar(routes.get(0));
             } else {
                 new AlertDialog.Builder(ShowDataActivity.this)
                         .setTitle(R.string.alert_dialog_empty_title)
@@ -121,12 +110,9 @@ public class ShowDataActivity extends AppCompatActivity
                                 (DialogInterface dialog, int whichButton) -> finish())
                         .create()
                         .show();
-
                 bm = ProgressBarBitmap.getWidgetBitmap(getApplicationContext(), 0, 0, 400, 400, 160, 220, 20, 0);
-
             }
 
-            binding.setVar(routes.get(0));
             binding.progress.setImageBitmap(bm);
             recyclerAdapter.notifyDataSetChanged();
         });
@@ -163,9 +149,7 @@ public class ShowDataActivity extends AppCompatActivity
 
         DbRoute route = binding.getVar();
 
-        nodesViewModel = ViewModelProviders.of(this).get(NodeListViewModel.class);
-
-        nodesViewModel.getNodeListById(route.getId())
+        routeViewModel.getNodeListById(route.getId())
                 .observe(this, dbNodes -> {
 
                     PolylineOptions pOptions = new PolylineOptions();

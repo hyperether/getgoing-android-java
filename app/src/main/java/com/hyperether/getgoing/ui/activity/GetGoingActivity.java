@@ -28,7 +28,6 @@ import androidx.recyclerview.widget.SnapHelper;
 
 import com.crashlytics.android.Crashlytics;
 import com.dinuscxj.progressbar.CircleProgressBar;
-import com.hyperether.getgoing.DummyData;
 import com.hyperether.getgoing.R;
 import com.hyperether.getgoing.databinding.ActivityMainBinding;
 import com.hyperether.getgoing.listeners.GgOnClickListener;
@@ -43,7 +42,6 @@ import com.hyperether.getgoing.ui.adapter.formatter.MyProgressFormatter2;
 import com.hyperether.getgoing.ui.adapter.formatter.MyProgressFormatter3;
 import com.hyperether.getgoing.ui.fragment.ActivitiesFragment;
 import com.hyperether.getgoing.ui.fragment.ProfileFragment;
-import com.hyperether.getgoing.ui.fragment.ShowDataFragment;
 import com.hyperether.getgoing.ui.fragment.old.SettingsFragment;
 import com.hyperether.getgoing.util.Constants;
 
@@ -54,7 +52,6 @@ import io.fabric.sdk.android.Fabric;
 
 import static com.hyperether.getgoing.ui.fragment.old.SettingsFragment.DATA_KEY;
 import static com.hyperether.getgoing.util.Constants.ACTION_OPEN_ACTIVITY_DETAILS;
-import static com.hyperether.getgoing.util.Constants.ACTIVITY_RIDE_ID;
 import static com.hyperether.getgoing.util.Constants.ACTIVITY_RUN_ID;
 import static com.hyperether.getgoing.util.Constants.ACTIVITY_WALK_ID;
 import static com.hyperether.getgoing.util.Constants.BUNDLE_ACTION;
@@ -432,9 +429,6 @@ public class GetGoingActivity extends AppCompatActivity implements
     private void roomStoreNodeZero(List<DbNode> nodeList) {
         DbRoute dbRoute = new DbRoute(0, 0, 0, 0, "null", 0, 1, 0);
         GgRepository.getInstance().insertRouteInit(dbRoute, nodeList);
-
-        // TODO dummy data - delete this - Ivana
-//        DummyData.insertDummyData();
     }
 
 
