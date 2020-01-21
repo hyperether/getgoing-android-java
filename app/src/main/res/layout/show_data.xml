@@ -1,28 +1,361 @@
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:orientation="vertical">
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
 
-    <ProgressBar
-        android:id="@+id/progress"
-        style="?android:attr/progressBarStyle"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_centerHorizontal="true"
-        android:layout_centerVertical="true"/>
+    <data>
 
-    <com.github.mikephil.charting.charts.BarChart
-        android:id="@+id/barChart"
-        android:layout_width="match_parent"
-        android:layout_height="250dp">
+        <variable
+            name="var"
+            type="com.hyperether.getgoing.repository.room.entity.DbRoute" />
+    </data>
 
-    </com.github.mikephil.charting.charts.BarChart>
-
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/recyclerList"
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/sd_root_layout"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_below="@+id/barChart">
+        android:background="@color/color_background_new">
 
-    </androidx.recyclerview.widget.RecyclerView>
-</RelativeLayout>
+        <!-- screen label -->
+
+        <ImageButton
+            android:id="@+id/ib_sd_back_btn"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:background="@android:color/transparent"
+            android:contentDescription="@string/back_button"
+            app:layout_constraintBottom_toBottomOf="@+id/tv_sd_label"
+            app:layout_constraintDimensionRatio="1:1"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_bias="0.49"
+            app:srcCompat="@drawable/ic_light_back_icon" />
+
+        <TextView
+            android:id="@+id/tv_sd_label"
+            android:layout_width="0dp"
+            android:layout_height="?attr/actionBarSize"
+            android:gravity="center|start"
+            android:textColor="@color/mat_gray"
+            android:textSize="24sp"
+            app:layout_constraintEnd_toStartOf="@+id/ib_sd_share_btn"
+            app:layout_constraintStart_toEndOf="@+id/ib_sd_back_btn"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:text="@string/walking" />
+
+        <ImageButton
+            android:id="@+id/ib_sd_share_btn"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:background="@android:color/transparent"
+            android:contentDescription="@string/com_facebook_share_button_text"
+            app:layout_constraintBottom_toBottomOf="@+id/tv_sd_label"
+            app:layout_constraintDimensionRatio="1:1"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:srcCompat="@drawable/ic_light_share_icon" />
+
+        <!-- goal progress bar -->
+
+        <ImageView
+            android:id="@+id/progress"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:layout_marginTop="48dp"
+            android:contentDescription="@string/progress_bar_img"
+            app:layout_constraintDimensionRatio="w,1:1"
+            app:layout_constraintEnd_toEndOf="@+id/tv_sd_label"
+            app:layout_constraintStart_toStartOf="@+id/tv_sd_label"
+            app:layout_constraintTop_toBottomOf="@+id/tv_sd_label"
+            app:layout_constraintWidth_percent="0.7" />
+
+        <ImageView
+            android:id="@+id/goal_img"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="16dp"
+            android:contentDescription="@string/progress_bar_goal_img"
+            android:src="@drawable/ic_light_goal_icon"
+            app:layout_constraintBottom_toTopOf="@+id/progress"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.0"
+            app:layout_constraintStart_toStartOf="@+id/ib_sd_share_btn"
+            app:layout_constraintTop_toBottomOf="@+id/progress"
+            app:layout_constraintVertical_bias="0.383" />
+
+
+        <androidx.constraintlayout.widget.Barrier
+            android:id="@+id/barrier2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="24dp"
+            app:barrierDirection="top"
+            app:constraint_referenced_ids="display_map"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/goal_img" />
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/display_map"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_marginTop="24dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/goal_img"
+            android:elevation="1dp">
+
+            <View
+                android:id="@+id/show_data_cds_info"
+                android:layout_width="match_parent"
+                android:layout_height="100dp"
+                android:layout_marginTop="24dp"
+                android:background="@color/color_background_new"
+                app:layout_constraintBottom_toBottomOf="@id/tv_sd_dist_unit"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <TextView
+                android:id="@+id/tv_sd_kcal_label"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:text="@string/calories"
+                android:textSize="16sp"
+                app:layout_constraintEnd_toEndOf="@id/show_data_cds_info"
+                app:layout_constraintEnd_toStartOf="@+id/tv_sd_dist"
+                app:layout_constraintHorizontal_bias="0.5"
+                app:layout_constraintStart_toStartOf="@id/show_data_cds_info"
+                app:layout_constraintTop_toTopOf="@id/show_data_cds_info" />
+
+            <TextView
+                android:id="@+id/tv_sd_dist_label"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:text="@string/distance"
+                android:textSize="16sp"
+                app:layout_constraintEnd_toStartOf="@+id/tv_sd_speed"
+                app:layout_constraintHorizontal_bias="0.5"
+                app:layout_constraintStart_toEndOf="@+id/tv_sd_kcal"
+                app:layout_constraintTop_toTopOf="@id/show_data_cds_info" />
+
+            <TextView
+                android:id="@+id/tv_sd_speed_label"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:text="@string/speed"
+                android:textSize="16sp"
+                app:layout_constraintEnd_toEndOf="@id/show_data_cds_info"
+                app:layout_constraintHorizontal_bias="0.5"
+                app:layout_constraintStart_toEndOf="@+id/tv_sd_dist"
+                app:layout_constraintTop_toTopOf="@id/show_data_cds_info" />
+
+            <TextView
+                android:id="@+id/tv_sd_kcal"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                displayKcal="@{var.energy}"
+                android:textSize="22sp"
+                android:textStyle="bold"
+                app:layout_constraintEnd_toEndOf="@id/show_data_cds_info"
+                app:layout_constraintEnd_toStartOf="@+id/tv_sd_dist"
+                app:layout_constraintHorizontal_bias="0.5"
+                app:layout_constraintStart_toStartOf="@id/show_data_cds_info"
+                app:layout_constraintTop_toBottomOf="@id/tv_sd_kcal_label" />
+
+            <TextView
+                android:id="@+id/tv_sd_dist"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                displayDistance="@{var.length}"
+                android:textSize="22sp"
+                android:textStyle="bold"
+                app:layout_constraintEnd_toStartOf="@+id/tv_sd_speed"
+                app:layout_constraintHorizontal_bias="0.5"
+                app:layout_constraintStart_toEndOf="@+id/tv_sd_kcal"
+                app:layout_constraintTop_toBottomOf="@id/tv_sd_dist_label" />
+
+            <TextView
+                android:id="@+id/tv_sd_speed"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text='@{String.format("%.2f", var.avgSpeed)}'
+                android:gravity="center"
+                android:textSize="22sp"
+                android:textStyle="bold"
+                app:layout_constraintEnd_toEndOf="@id/show_data_cds_info"
+                app:layout_constraintHorizontal_bias="0.5"
+                app:layout_constraintStart_toEndOf="@+id/tv_sd_dist"
+                app:layout_constraintTop_toBottomOf="@id/tv_sd_speed_label" />
+
+            <TextView
+                android:id="@+id/tv_sd_kcal_unit"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:text="@string/energy_unit"
+                android:textSize="14sp"
+                app:layout_constraintEnd_toStartOf="@+id/tv_sd_dist"
+                app:layout_constraintHorizontal_bias="0.5"
+                app:layout_constraintStart_toStartOf="@id/show_data_cds_info"
+                app:layout_constraintTop_toBottomOf="@id/tv_sd_kcal" />
+
+            <TextView
+                android:id="@+id/tv_sd_dist_unit"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                displayDistanceUnit="@{var.length}"
+                android:textSize="14sp"
+                app:layout_constraintEnd_toStartOf="@+id/tv_sd_speed"
+                app:layout_constraintHorizontal_bias="0.5"
+                app:layout_constraintStart_toEndOf="@+id/tv_sd_kcal"
+                app:layout_constraintTop_toBottomOf="@id/tv_sd_dist" />
+
+            <TextView
+                android:id="@+id/tv_sd_speed_unit"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:text="@string/speed_unit"
+                android:textSize="14sp"
+                app:layout_constraintEnd_toEndOf="@id/show_data_cds_info"
+                app:layout_constraintHorizontal_bias="0.5"
+                app:layout_constraintStart_toEndOf="@+id/tv_sd_dist"
+                app:layout_constraintTop_toBottomOf="@id/tv_sd_speed" />
+
+
+            <!-- progress chart data -->
+
+            <ImageButton
+                android:id="@+id/btn_toggle_map"
+                android:layout_width="32dp"
+                android:layout_height="32dp"
+                android:layout_marginTop="4dp"
+                android:background="@android:color/transparent"
+                android:contentDescription="@string/toggle_map_button"
+                android:elevation="2dp"
+                app:layout_constraintEnd_toStartOf="@+id/sd_chart_bg"
+                app:layout_constraintStart_toEndOf="@+id/sd_chart_bg"
+                app:layout_constraintTop_toTopOf="@id/sd_chart_bg"
+                app:srcCompat="@drawable/ic_gray_angle_up_icon" />
+
+
+            <View
+                android:id="@+id/sd_chart_bg"
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                android:background="@drawable/rounded_top_data_background"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.0"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/show_data_cds_info"
+                android:layout_marginBottom="32dp"/>
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/recyclerList"
+                android:layout_width="wrap_content"
+                android:layout_height="0dp"
+                android:layout_marginTop="8dp"
+                android:layout_marginBottom="8dp"
+                android:paddingStart="32dp"
+                android:paddingEnd="32dp"
+                app:layout_constraintBottom_toBottomOf="@id/sd_chart_bg"
+                app:layout_constraintEnd_toStartOf="@+id/sd_chart_bg"
+                app:layout_constraintStart_toEndOf="@id/sd_chart_bg"
+                app:layout_constraintTop_toTopOf="@id/btn_toggle_map"
+                android:elevation="1dp">
+
+            </androidx.recyclerview.widget.RecyclerView>
+
+
+            <TextView
+                android:id="@+id/tv_goal"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="16dp"
+                android:text="@string/goal"
+                android:textSize="12sp"
+                app:layout_constraintBottom_toTopOf="@+id/sd_dashed_line"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/sd_dashed_line"/>
+
+            <View
+                android:id="@+id/sd_dashed_line"
+                android:layout_width="0dp"
+                android:layout_height="2dp"
+                android:layout_marginStart="8dp"
+                android:layout_marginTop="42dp"
+                android:layout_marginEnd="8dp"
+                android:background="@drawable/dashed_line"
+                android:layerType="software"
+                app:layout_constraintEnd_toStartOf="@+id/tv_goal_value"
+                app:layout_constraintHorizontal_bias="0.453"
+                app:layout_constraintStart_toEndOf="@+id/tv_goal"
+                app:layout_constraintTop_toTopOf="@+id/recyclerList"/>
+
+            <TextView
+                android:id="@+id/tv_goal_value"
+                goal="@{var.goal}"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="16dp"
+                android:textSize="12sp"
+                app:layout_constraintBottom_toTopOf="@+id/sd_dashed_line"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/sd_dashed_line"/>
+
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+        <!-- map display -->
+
+        <View
+            android:id="@+id/map_bg"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:background="@android:color/white"
+            android:elevation="0dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toStartOf="parent"
+            app:layout_constraintStart_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/barrier2" />
+
+
+        <androidx.cardview.widget.CardView
+            android:id="@+id/map_fragment_holder"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:elevation="0dp"
+            app:cardCornerRadius="12dp"
+            app:cardElevation="0dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintDimensionRatio="w,1:1"
+            app:layout_constraintEnd_toEndOf="@+id/tv_sd_label"
+            app:layout_constraintStart_toStartOf="@+id/tv_sd_label"
+            app:layout_constraintTop_toTopOf="@id/map_bg"
+            app:layout_constraintVertical_bias="0.75">
+
+            <fragment
+                android:id="@+id/sd_map_view"
+                class="com.google.android.gms.maps.MapFragment"
+                android:layout_width="250dp"
+                android:layout_height="250dp"
+                app:layout_constraintBottom_toTopOf="@+id/map_bg"
+                app:layout_constraintDimensionRatio="w,1:1"
+                app:layout_constraintEnd_toStartOf="parent"
+                app:layout_constraintHorizontal_bias="0.5"
+                app:layout_constraintStart_toEndOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/map_bg" />
+
+        </androidx.cardview.widget.CardView>
+
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</layout>

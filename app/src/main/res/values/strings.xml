@@ -77,6 +77,7 @@
     <string name="totalkm_0km">0km</string>
     <string name="totalkcal_0kcal">0kcal</string>
     <string name="walking">Walking</string>
+    <string name="cycling">Cycling</string>
     <string name="duration">Duration</string>
     <string name="speed">Speed</string>
     <string name="calories">Calories</string>
@@ -91,6 +92,19 @@
     <string name="reset_progress">Reset progress</string>
     <string name="logo">Logo</string>
     <string name="profile_icon">Profile icon</string>
+    <string name="distance">Distance</string>
+
+    <string name="energy_unit">kcal</string>
+    <string name="speed_unit">m/s</string>
+    <string name="dist_unit">km</string>
+    <string name="toggle_map_button">Toggle map button</string>
+    <string name="goal">Goal</string>
+    <string name="progress_bar_img">progress bar image</string>
+    <string name="progress_bar_goal_img">progress bar goal icon</string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+
 
 </resources>
 

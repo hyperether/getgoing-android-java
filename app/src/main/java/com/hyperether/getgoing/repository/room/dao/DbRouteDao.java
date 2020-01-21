@@ -37,4 +37,5 @@ public interface DbRouteDao {
 
     @Update
     void updateRoute(DbRoute route);
+
 }

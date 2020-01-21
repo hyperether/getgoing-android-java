@@ -8,6 +8,8 @@ import androidx.lifecycle.ViewModel;
 
 import com.hyperether.getgoing.GetGoingApp;
 import com.hyperether.getgoing.repository.room.DbHelper;
+import com.hyperether.getgoing.repository.room.GgRepository;
+import com.hyperether.getgoing.repository.room.entity.DbNode;
 import com.hyperether.getgoing.repository.room.entity.DbRoute;
 
 import java.util.List;
@@ -33,5 +35,9 @@ public class RouteViewModel extends ViewModel {
                 routeList.postValue(routes);
             }
         });
+    }
+
+    public LiveData<List<DbNode>> getNodeListById(long id) {
+        return GgRepository.getInstance().getAllNodesById(id);
     }
 }

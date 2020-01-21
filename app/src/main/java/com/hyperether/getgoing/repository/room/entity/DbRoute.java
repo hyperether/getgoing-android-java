@@ -1,11 +1,14 @@
 package com.hyperether.getgoing.repository.room.entity;
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
 import androidx.room.ColumnInfo;
 import androidx.room.Entity;
 import androidx.room.PrimaryKey;
 
 @Entity
-public class DbRoute {
+public class DbRoute implements Parcelable {
     @PrimaryKey(autoGenerate = true)
     private long id;
     @ColumnInfo
@@ -35,6 +38,29 @@ public class DbRoute {
         this.activity_id = activity_id;
         this.goal = goal;
     }
+
+    protected DbRoute(Parcel in) {
+        id = in.readLong();
+        duration = in.readLong();
+        energy = in.readDouble();
+        length = in.readDouble();
+        date = in.readString();
+        avgSpeed = in.readDouble();
+        activity_id = in.readInt();
+        goal = in.readLong();
+    }
+
+    public static final Creator<DbRoute> CREATOR = new Creator<DbRoute>() {
+        @Override
+        public DbRoute createFromParcel(Parcel in) {
+            return new DbRoute(in);
+        }
+
+        @Override
+        public DbRoute[] newArray(int size) {
+            return new DbRoute[size];
+        }
+    };
 
     public long getId() {
         return id;
@@ -95,4 +121,21 @@ public class DbRoute {
     public void setGoal(int goal) { this.goal = goal; }
 
     public long getGoal() { return goal; }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel parcel, int i) {
+        parcel.writeLong(id);
+        parcel.writeLong(duration);
+        parcel.writeDouble(energy);
+        parcel.writeDouble(length);
+        parcel.writeString(date);
+        parcel.writeDouble(avgSpeed);
+        parcel.writeInt(activity_id);
+        parcel.writeLong(goal);
+    }
 }

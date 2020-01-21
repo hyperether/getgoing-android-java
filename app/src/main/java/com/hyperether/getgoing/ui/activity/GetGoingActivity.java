@@ -30,6 +30,7 @@ import com.crashlytics.android.Crashlytics;
 import com.dinuscxj.progressbar.CircleProgressBar;
 import com.hyperether.getgoing.R;
 import com.hyperether.getgoing.databinding.ActivityMainBinding;
+import com.hyperether.getgoing.listeners.GgOnClickListener;
 import com.hyperether.getgoing.manager.CacheManager;
 import com.hyperether.getgoing.model.CBDataFrame;
 import com.hyperether.getgoing.repository.room.GgRepository;
@@ -50,9 +51,15 @@ import java.util.List;
 import io.fabric.sdk.android.Fabric;
 
 import static com.hyperether.getgoing.ui.fragment.old.SettingsFragment.DATA_KEY;
+import static com.hyperether.getgoing.util.Constants.ACTION_OPEN_ACTIVITY_DETAILS;
+import static com.hyperether.getgoing.util.Constants.ACTIVITY_RUN_ID;
+import static com.hyperether.getgoing.util.Constants.ACTIVITY_WALK_ID;
+import static com.hyperether.getgoing.util.Constants.BUNDLE_ACTION;
+import static com.hyperether.getgoing.util.Constants.BUNDLE_ACTIVITY_ID;
+import static com.hyperether.getgoing.util.Constants.DATA_DETAILS_LABEL;
 
 public class GetGoingActivity extends AppCompatActivity implements
-        SettingsFragment.SettingsFragmentListener {
+        SettingsFragment.SettingsFragmentListener, GgOnClickListener {
 
     private static final int WALK_ID = 1;
     private static final int RUN_ID = 2;
@@ -285,11 +292,11 @@ public class GetGoingActivity extends AppCompatActivity implements
                 int k1 = layoutManager.getPosition(centralLayout);
 
                 if (centralImg.getTag().equals(R.drawable.ic_light_bicycling_icon_inactive))
-                    actLabel.setText("Cycling");
+                    actLabel.setText(getString(R.string.cycling));
                 else if (centralImg.getTag().equals(R.drawable.ic_light_running_icon_inactive))
-                    actLabel.setText("Running");
+                    actLabel.setText(getString(R.string.running));
                 else if (centralImg.getTag().equals(R.drawable.ic_light_walking_icon))
-                    actLabel.setText("Walking");
+                    actLabel.setText(getString(R.string.walking));
 
                 centralImg.getLocationOnScreen(centralImgPos);
 
@@ -424,6 +431,42 @@ public class GetGoingActivity extends AppCompatActivity implements
         GgRepository.getInstance().insertRouteInit(dbRoute, nodeList);
     }
 
+
+    @Override
+    public void onClick(Bundle bundle) {
+
+        int action = bundle.getInt(BUNDLE_ACTION);
+        switch (action) {
+            case ACTION_OPEN_ACTIVITY_DETAILS:
+                openActivityDetails(bundle);
+                break;
+        }
+
+
+    }
+
+    private void openActivityDetails(Bundle bundle) {
+
+        int acId = bundle.getInt(BUNDLE_ACTIVITY_ID);
+
+        Intent intent = new Intent(this, ShowDataActivity.class);
+
+        switch (acId) {
+            case ACTIVITY_WALK_ID:
+                intent.putExtra(DATA_DETAILS_LABEL, getString(R.string.walking));
+                break;
+            case ACTIVITY_RUN_ID:
+                intent.putExtra(DATA_DETAILS_LABEL, getString(R.string.running));
+                break;
+            default:
+                intent.putExtra(DATA_DETAILS_LABEL, getString(R.string.cycling));
+                break;
+        }
+
+        startActivity(intent);
+
+    }
+
     private class PullProgressData extends AsyncTask<Void, Void, Void> {
         DbRoute lastRoute;
         TextView kcalVal, progBar1Act;
@@ -481,17 +524,17 @@ public class GetGoingActivity extends AppCompatActivity implements
 
                 switch (lastRoute.getActivity_id()) {
                     case 1: {
-                        progBar1Act.setText("Walking");
+                        progBar1Act.setText(getString(R.string.walking));
                         progBar1Img.setImageDrawable(getResources().getDrawable(R.drawable.ic_walking_icon));
                         break;
                     }
                     case 2: {
-                        progBar1Act.setText("Running");
+                        progBar1Act.setText(getString(R.string.running));
                         progBar1Img.setImageDrawable(getResources().getDrawable(R.drawable.ic_running_icon));
                         break;
                     }
                     case 3: {
-                        progBar1Act.setText("Cycling");
+                        progBar1Act.setText(getString(R.string.cycling));
                         progBar1Img.setImageDrawable(getResources().getDrawable(R.drawable.ic_light_bicycling_icon));
                         break;
                     }

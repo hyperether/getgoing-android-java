@@ -197,15 +197,15 @@ public class ShowLocationActivity extends AppCompatActivity implements OnMapRead
 
         switch (id) {
             case 1: {
-                activity_id.setText("Walking");
+                activity_id.setText(getString(R.string.walking));
                 break;
             }
             case 2: {
-                activity_id.setText("Running");
+                activity_id.setText(getString(R.string.running));
                 break;
             }
             case 3: {
-                activity_id.setText("Cycling");
+                activity_id.setText(getString(R.string.cycling));
                 break;
             }
         }
@@ -359,11 +359,9 @@ public class ShowLocationActivity extends AppCompatActivity implements OnMapRead
                 if (!goal.getText().toString().trim().equals(""))
                     goalStore = Long.valueOf(goal.getText().toString().trim());
                 setVisibilities();
-            });
-
-            dialog.setNegativeButton("CANCEL", (paramDialogInterface, paramInt) -> {
-            });
-            dialog.show();
+            }).setNegativeButton("CANCEL", (paramDialogInterface, paramInt) -> {
+                finish();
+            }).show();
         }
     };
 
