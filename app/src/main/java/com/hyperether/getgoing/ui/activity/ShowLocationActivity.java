@@ -43,6 +43,7 @@ import com.hyperether.getgoing.repository.room.GgRepository;
 import com.hyperether.getgoing.repository.room.entity.DbNode;
 import com.hyperether.getgoing.repository.room.entity.DbRoute;
 import com.hyperether.getgoing.service.GPSTrackingService;
+import com.hyperether.getgoing.ui.fragment.ActivitiesFragment;
 import com.hyperether.getgoing.util.Constants;
 import com.hyperether.getgoing.viewmodel.NodeListViewModel;
 import com.hyperether.toolbox.HyperConst;
@@ -70,6 +71,7 @@ public class ShowLocationActivity extends AppCompatActivity implements OnMapRead
     private boolean mRouteAlreadySaved = false;
 
     private SharedPreferences mPrefs;
+    private SharedPreferences cbPrefs;
     private Editor mEditor;
     // to store the current settings
     private CBDataFrame cbDataFrameLocal;
@@ -94,7 +96,6 @@ public class ShowLocationActivity extends AppCompatActivity implements OnMapRead
     private String currentDateandTime;
     private boolean timeFlg = true;
 
-    private int cnt;
     private long goalStore;
 
     private View toInflate;
@@ -109,12 +110,13 @@ public class ShowLocationActivity extends AppCompatActivity implements OnMapRead
         setContentView(R.layout.activity_location);
 
         mRouteAlreadySaved = true;
-        cnt = 0;
 
         // Open the shared preferences
         mPrefs = getSharedPreferences("SharedPreferences", Context.MODE_PRIVATE);
         // Get a SharedPreferences editor
         mEditor = mPrefs.edit();
+        // Get user data shared prefs
+        cbPrefs = getSharedPreferences("CBUserDataPref.txt", Context.MODE_PRIVATE);
 
         cbDataFrameLocal = new CBDataFrame();
         Bundle b = getIntent().getExtras();
@@ -154,6 +156,18 @@ public class ShowLocationActivity extends AppCompatActivity implements OnMapRead
         super.onDestroy();
         clearCacheData();
         stopService(new Intent(this, GPSTrackingService.class));
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        cbPrefs.registerOnSharedPreferenceChangeListener(sharedPrefsListener);
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        cbPrefs.unregisterOnSharedPreferenceChangeListener(sharedPrefsListener);
     }
 
     @Override
@@ -212,7 +226,7 @@ public class ShowLocationActivity extends AppCompatActivity implements OnMapRead
     }
 
     private void setVisibilities() {
-        if (cnt++ == 0) {
+        if(!cbPrefs.contains("goal")) {
             set_goal.setVisibility(View.VISIBLE);
             button_save.setVisibility(View.GONE);
             button_rst.setVisibility(View.GONE);
@@ -225,6 +239,7 @@ public class ShowLocationActivity extends AppCompatActivity implements OnMapRead
             labelVelocity.setVisibility(View.GONE);
             labelCalories.setVisibility(View.GONE);
         } else {
+            goalStore = cbPrefs.getInt("goal", 0);
             set_goal.setVisibility(View.GONE);
             button_save.setVisibility(View.VISIBLE);
             button_rst.setVisibility(View.VISIBLE);
@@ -348,20 +363,9 @@ public class ShowLocationActivity extends AppCompatActivity implements OnMapRead
     private final OnClickListener mButtonSetGoalListener = new OnClickListener() {
         @Override
         public void onClick(View v) {
-            AlertDialog.Builder dialog = new AlertDialog.Builder(v.getContext());
-            dialog.setCancelable(false);
-            dialog.setTitle("Set goal");
-            dialog.setView(toInflate);
 
-            EditText goal = toInflate.findViewById(R.id.dialog_et_goal);
-
-            dialog.setPositiveButton("CONFIRM", (paramDialogInterface, paramInt) -> {
-                if (!goal.getText().toString().trim().equals(""))
-                    goalStore = Long.valueOf(goal.getText().toString().trim());
-                setVisibilities();
-            }).setNegativeButton("CANCEL", (paramDialogInterface, paramInt) -> {
-                finish();
-            }).show();
+            ActivitiesFragment activitiesFragment = ActivitiesFragment.newInstance(null);
+            activitiesFragment.show(getSupportFragmentManager(), "ActivitiesFragment");
         }
     };
 
@@ -654,4 +658,13 @@ public class ShowLocationActivity extends AppCompatActivity implements OnMapRead
             super.onBackPressed();
         }
     }
+
+    private SharedPreferences.OnSharedPreferenceChangeListener sharedPrefsListener =
+            new SharedPreferences.OnSharedPreferenceChangeListener() {
+                @Override
+                public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, java.lang.String key) {
+                    setVisibilities();
+                }
+            };
+
 }
