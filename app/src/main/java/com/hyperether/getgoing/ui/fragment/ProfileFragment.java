@@ -13,6 +13,7 @@ import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.Spinner;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -43,6 +44,7 @@ public class ProfileFragment extends DialogFragment {
     private ViewGroup rootViewGroup;
 
     private SharedPreferences settings;
+    private SharedPreferences.Editor editor;
 
     public ProfileFragment(CBDataFrame pDataFrame) {
         mDataFrame = pDataFrame;
@@ -61,6 +63,13 @@ public class ProfileFragment extends DialogFragment {
         super.onCreate(savedInstanceState);
         setStyle(DialogFragment.STYLE_NORMAL, R.style.FullScreenDialogStyle);
         settings = getActivity().getSharedPreferences(Constants.PREF_FILE, 0);
+
+        // default gender selection in shared prefs if nothing is set
+        editor = settings.edit();
+        if(!settings.contains("gender")) {
+            editor.putInt("gender", 0).apply();
+        }
+
         mDataFrame = CacheManager.getInstance().getObDataFrameGlobal();
     }
 
@@ -180,9 +189,9 @@ public class ProfileFragment extends DialogFragment {
             case "gender": {
                 genderBuilder = new AlertDialog.Builder(pView.getContext());
                 final String[] newText = new String[1];
+                newText[0] = "Male";
 
                 genderBuilder.setSingleChoiceItems(R.array.genders, settings.getInt("gender", 0), (dialog, which) -> {
-                    SharedPreferences.Editor editor = settings.edit();
 
                     if (which == 0) {
                         newText[0] = "Male";
@@ -201,11 +210,6 @@ public class ProfileFragment extends DialogFragment {
                 })
                         .setPositiveButton("Confirm", (dialogInterface, i) -> {
                             tvGender.setText(newText[0]);
-
-                            /* TODO fix NPE - Ivana
-                                Attempt to invoke virtual method 'int java.lang.String.hashCode()' on a null object reference
-                                line 210
-                             */
 
                             switch (newText[0]) {
                                 case "Male":

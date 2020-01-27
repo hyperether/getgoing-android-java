@@ -37,13 +37,13 @@
             android:gravity="center|start"
             android:textColor="@color/mat_gray"
             android:textSize="24sp"
-            app:layout_constraintEnd_toStartOf="@+id/ib_sd_share_btn"
+            app:layout_constraintEnd_toStartOf="@+id/ib_sd_delete_btn"
             app:layout_constraintStart_toEndOf="@+id/ib_sd_back_btn"
             app:layout_constraintTop_toTopOf="parent"
             tools:text="@string/walking" />
 
         <ImageButton
-            android:id="@+id/ib_sd_share_btn"
+            android:id="@+id/ib_sd_delete_btn"
             android:layout_width="0dp"
             android:layout_height="0dp"
             android:background="@android:color/transparent"
@@ -52,7 +52,8 @@
             app:layout_constraintDimensionRatio="1:1"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            app:srcCompat="@drawable/ic_light_share_icon" />
+            app:srcCompat="@drawable/ic_material_delete_outline"
+            android:tint="@color/light_theme_accent"/>
 
         <!-- goal progress bar -->
 
@@ -78,7 +79,7 @@
             app:layout_constraintBottom_toTopOf="@+id/progress"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.0"
-            app:layout_constraintStart_toStartOf="@+id/ib_sd_share_btn"
+            app:layout_constraintStart_toStartOf="@+id/ib_sd_delete_btn"
             app:layout_constraintTop_toBottomOf="@+id/progress"
             app:layout_constraintVertical_bias="0.383" />
 

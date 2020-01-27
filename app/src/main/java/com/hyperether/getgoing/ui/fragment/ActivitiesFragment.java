@@ -1,8 +1,10 @@
 package com.hyperether.getgoing.ui.fragment;
 
 import android.annotation.SuppressLint;
+import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.AsyncTask;
@@ -42,9 +44,12 @@ import static com.hyperether.getgoing.util.Constants.ACTIVITY_WALK_ID;
 import static com.hyperether.getgoing.util.Constants.BUNDLE_ACTION;
 import static com.hyperether.getgoing.util.Constants.BUNDLE_ACTIVITY_ID;
 import static com.hyperether.getgoing.util.Constants.DATA_DETAILS_LABEL;
+import static com.hyperether.getgoing.util.Constants.OPENED_FROM_LOCATION_ACT;
 
 public class ActivitiesFragment extends DialogFragment {
+
     public static final String DATA_KEY = "data_key";
+    public static final String FROM_KEY = "from_key";
 
     private GgOnClickListener listener;
 
@@ -60,10 +65,13 @@ public class ActivitiesFragment extends DialogFragment {
 
     private SharedPreferences settings;
 
-    public static ActivitiesFragment newInstance(CBDataFrame dataFrame) {
+    private int openedFrom;
+
+    public static ActivitiesFragment newInstance(CBDataFrame dataFrame, int openedFrom) {
         ActivitiesFragment activitiesFragment = new ActivitiesFragment();
         Bundle bundle = new Bundle();
         bundle.putParcelable(DATA_KEY, dataFrame);
+        bundle.putInt(FROM_KEY, openedFrom);
         activitiesFragment.setArguments(bundle);
         return activitiesFragment;
     }
@@ -74,6 +82,9 @@ public class ActivitiesFragment extends DialogFragment {
         setStyle(DialogFragment.STYLE_NORMAL, R.style.FullScreenDialogStyle);
 
         settings = Objects.requireNonNull(getActivity()).getSharedPreferences(Constants.PREF_FILE, 0);
+        if (getArguments() != null) {
+            openedFrom = getArguments().getInt(FROM_KEY);
+        }
     }
 
     @Nullable
@@ -169,8 +180,12 @@ public class ActivitiesFragment extends DialogFragment {
         seekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
             @Override
             public void onProgressChanged(SeekBar seekBar, int i, boolean b) {
-                i = i / 10;         /* arithmetic for setting value right */
-                i = i * 10;
+                /* TODO
+                    this is changing already stored value in shared preferences
+                    ex. when we store 2390 -> next time activity is displayed, it will show some increased value
+                 */
+//                i = i / 10;         /* arithmetic for setting value right */
+//                i = i * 10;
 
                 goal.setText(Integer.toString(i));
 
@@ -214,13 +229,33 @@ public class ActivitiesFragment extends DialogFragment {
         openActivityDetails();
 
         saveChanges.setOnClickListener(view -> {
-            SharedPreferences.Editor editor = settings.edit();
-            editor.putInt("goal", seekBar.getProgress());
-            editor.apply();
 
-            Toast.makeText(getContext(), "Your goal is updated", Toast.LENGTH_SHORT).show();
+            if (seekBar.getProgress() == 0) {
+                AlertDialog.Builder dialog = new AlertDialog.Builder(view.getContext());
+                dialog.setCancelable(false)
+                        .setTitle(getResources().getString(R.string.alert_dialog_title_incorrect_value))
+                        .setMessage(getResources().getString(R.string.alert_dialog_goal_0))
+                        .setPositiveButton(R.string.alert_dialog_positive_button_save_btn,
+                                new DialogInterface.OnClickListener() {
+                                    @Override
+                                    public void onClick(DialogInterface paramDialogInterface, int paramInt) {
+                                        seekBar.setProgress(settings.getInt("goal", 0));
+                                    }
+                                }).show();
+            } else {
 
-            fillProgressBars();
+                SharedPreferences.Editor editor = settings.edit();
+                editor.putInt("goal", seekBar.getProgress());
+                editor.apply();
+
+                Toast.makeText(getContext(), "Your goal is updated", Toast.LENGTH_SHORT).show();
+
+                if (openedFrom == OPENED_FROM_LOCATION_ACT) {
+                    dismiss();
+                } else {
+                    fillProgressBars();
+                }
+            }
         });
 
     }

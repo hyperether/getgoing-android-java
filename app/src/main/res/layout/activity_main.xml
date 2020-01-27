@@ -1,12 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto">
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
 
     <data>
 
         <variable
             name="viewModel"
             type="com.hyperether.getgoing.ui.activity.GetGoingActivity.ClickHandler" />
+
+        <variable
+            name="lastRoute"
+            type="com.hyperether.getgoing.repository.room.entity.DbRoute" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -54,28 +59,19 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/iv_am_logo" />
 
-        <ImageButton
-            android:id="@+id/iv_am_arrow2actfrag"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginEnd="16dp"
-            android:background="@android:color/transparent"
-            app:layout_constraintBottom_toBottomOf="@+id/tv_am_viewall"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="@+id/tv_am_viewall"
-            app:srcCompat="@drawable/ic_light_chevron_icon" />
-
         <TextView
             android:id="@+id/tv_am_viewall"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginEnd="4dp"
+            android:layout_marginEnd="16dp"
             android:text="@string/view_all"
             android:textColor="@color/light_theme_accent"
             android:textSize="18sp"
             app:layout_constraintBottom_toBottomOf="@+id/tv_am_lastexercise"
-            app:layout_constraintEnd_toStartOf="@+id/iv_am_arrow2actfrag"
-            app:layout_constraintTop_toTopOf="@+id/tv_am_lastexercise" />
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="@+id/tv_am_lastexercise"
+            android:drawableEnd="@drawable/ic_light_chevron_icon"
+            android:drawablePadding="8dp"/>
 
         <TextView
             android:id="@+id/tv_am_choose"
@@ -114,10 +110,8 @@
             android:layout_width="match_parent"
             android:layout_height="160dp"
             android:layout_marginStart="16dp"
-            android:layout_marginLeft="16dp"
             android:layout_marginTop="8dp"
             android:layout_marginEnd="16dp"
-            android:layout_marginRight="16dp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/tv_am_lastexercise"
@@ -172,7 +166,8 @@
             app:progress_stroke_width="5dp"
             app:progress_text_color="@android:color/white"
             app:progress_text_size="18sp"
-            app:style="solid_line" />
+            app:style="solid_line"
+            progress_activity="@{lastRoute}"/>
 
         <com.dinuscxj.progressbar.CircleProgressBar
             android:id="@+id/cpb_am_kmgoal2"
@@ -207,7 +202,8 @@
             app:progress_stroke_width="3dp"
             app:progress_text_color="@android:color/white"
             app:progress_text_size="18sp"
-            app:style="line" />
+            app:style="line"
+            progress_time="@{lastRoute.duration}" />
 
         <TextView
             android:id="@+id/tv_am_kcal"
@@ -235,37 +231,40 @@
             android:layout_marginTop="24dp"
             android:layout_marginEnd="8dp"
             android:layout_marginRight="8dp"
-            android:text="0"
+            displayKcal="@{lastRoute.energy}"
             android:textColor="@android:color/white"
             android:textSize="18sp"
             android:textStyle="bold"
             app:layout_constraintBottom_toBottomOf="@+id/iv_am_bluerectangle"
             app:layout_constraintEnd_toStartOf="@+id/cpb_am_kmgoal1"
             app:layout_constraintStart_toEndOf="@+id/cpb_am_kmgoal"
-            app:layout_constraintTop_toTopOf="@+id/iv_am_bluerectangle" />
+            app:layout_constraintTop_toTopOf="@+id/iv_am_bluerectangle"
+            tools:text="0"/>
 
         <TextView
             android:id="@+id/tv_am_progbar_act"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="32dp"
-            android:text="@string/running"
+            android:layout_marginBottom="24dp"
+            progress_activity_name="@{lastRoute.activity_id}"
             android:textColor="@android:color/white"
             android:textSize="14sp"
+            app:layout_constraintBottom_toBottomOf="@+id/cpb_am_kmgoal"
             app:layout_constraintEnd_toEndOf="@+id/cpb_am_kmgoal"
+            app:layout_constraintHorizontal_bias="0.531"
             app:layout_constraintStart_toStartOf="@+id/cpb_am_kmgoal"
-            app:layout_constraintTop_toBottomOf="@+id/iv_am_activity" />
+            tools:text="Running"/>
 
         <TextView
             android:id="@+id/tv_am_progbar_time"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="32dp"
+            android:layout_marginBottom="24dp"
             android:text="@string/min"
             android:textColor="@android:color/white"
+            app:layout_constraintBottom_toBottomOf="@+id/cpb_am_kmgoal2"
             app:layout_constraintEnd_toEndOf="@+id/cpb_am_kmgoal1"
-            app:layout_constraintStart_toStartOf="@+id/cpb_am_kmgoal1"
-            app:layout_constraintTop_toBottomOf="@+id/imageView5" />
+            app:layout_constraintStart_toStartOf="@+id/cpb_am_kmgoal1" />
 
         <ImageView
             android:id="@+id/iv_am_activity"
@@ -275,15 +274,16 @@
             app:layout_constraintEnd_toEndOf="@+id/cpb_am_kmgoal"
             app:layout_constraintStart_toStartOf="@+id/cpb_am_kmgoal"
             app:layout_constraintTop_toTopOf="@+id/cpb_am_kmgoal"
-            app:srcCompat="@drawable/ic_light_running_icon_white" />
+            progress_activity_icon="@{lastRoute.activity_id}"
+            tools:src="@drawable/ic_running_icon"/>
 
         <ImageView
             android:id="@+id/imageView5"
             android:layout_width="wrap_content"
             android:layout_height="0dp"
             android:layout_marginTop="17dp"
-            app:layout_constraintEnd_toEndOf="@+id/cpb_am_kmgoal1"
-            app:layout_constraintStart_toStartOf="@+id/cpb_am_kmgoal1"
+            app:layout_constraintEnd_toStartOf="@+id/cpb_am_kmgoal1"
+            app:layout_constraintStart_toEndOf="@+id/cpb_am_kmgoal1"
             app:layout_constraintTop_toTopOf="@+id/cpb_am_kmgoal1"
             app:srcCompat="@drawable/ic_timer_icon" />
 

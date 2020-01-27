@@ -222,7 +222,8 @@
         android:textSize="22sp"
         android:textStyle="bold"
         app:layout_constraintEnd_toStartOf="@+id/tv_fa_units"
-        app:layout_constraintTop_toBottomOf="@+id/tv_fa_mygoal" />
+        app:layout_constraintTop_toBottomOf="@+id/tv_fa_mygoal"
+        android:layout_marginRight="4dp"/>
 
     <TextView
         android:id="@+id/tv_fa_kcal"

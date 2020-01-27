@@ -40,4 +40,9 @@ public class RouteViewModel extends ViewModel {
     public LiveData<List<DbNode>> getNodeListById(long id) {
         return GgRepository.getInstance().getAllNodesById(id);
     }
+
+    public void removeRouteById(long id) {
+        GgRepository.getInstance().deleteRouteById(id);
+    }
+
 }

@@ -1,4 +1,4 @@
-package com.hyperether.getgoing.util;
+package com.hyperether.getgoing.ui.adapter.bindingadapter;
 
 import android.view.View;
 import android.widget.TextView;
@@ -6,7 +6,7 @@ import android.widget.TextView;
 import java.util.Formatter;
 import java.util.logging.SimpleFormatter;
 
-public class BindingAdapter {
+public class ShowDataBindingAdapter {
 
     @androidx.databinding.BindingAdapter("goal")
     public static void displayGoalValue(View view, double pGoal) {
@@ -15,7 +15,7 @@ public class BindingAdapter {
             goal.append((int)pGoal)
                     .append(" m");
         } else {
-            goal.append(pGoal/1000)
+            goal.append(String.format("%.2f", pGoal/1000))
                     .append(" km");
         }
 

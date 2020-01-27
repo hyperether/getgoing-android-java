@@ -2,7 +2,7 @@
 
     <!-- Base application theme. -->
     <style name="AppTheme" parent="Theme.Design.Light.NoActionBar">
-        <!-- Customize your theme here. -->
+        <item name="colorPrimaryDark">@color/light_theme_accent</item>
     </style>
 
     <style name="AppTheme.Launcher">
@@ -16,6 +16,8 @@
         <item name="android:windowIsFloating">false</item>
 
         <item name="android:windowBackground">@color/color_background_new</item>
+
+        <item name="colorPrimaryDark">@color/light_theme_accent</item>
     </style>
 
     <style name="WidgetProgressBarHorizontalCustom" parent="Widget.AppCompat.ProgressBar.Horizontal">
