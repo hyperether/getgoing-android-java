@@ -2,7 +2,6 @@ package com.hyperether.getgoing.repository.room;
 
 import android.os.Handler;
 import android.os.HandlerThread;
-import android.util.Log;
 
 import androidx.lifecycle.LiveData;
 

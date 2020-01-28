@@ -19,7 +19,6 @@ import android.view.View.OnClickListener;
 import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.Chronometer;
-import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -451,7 +450,7 @@ public class ShowLocationActivity extends AppCompatActivity implements OnMapRead
 
                     button_start.setVisibility(View.GONE);
                     button_pause.setVisibility(View.VISIBLE);
-                    if(mLocTrackingRunning) {
+                    if (mLocTrackingRunning) {
                         button_save.setImageDrawable(getDrawable(R.drawable.ic_light_save_icon_disabled));
                         button_save.setClickable(false);
                         button_rst.setImageDrawable(getDrawable(R.drawable.ic_light_replay_icon_disabled));

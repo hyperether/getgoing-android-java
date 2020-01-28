@@ -13,7 +13,6 @@ import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.Spinner;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -66,7 +65,7 @@ public class ProfileFragment extends DialogFragment {
 
         // default gender selection in shared prefs if nothing is set
         editor = settings.edit();
-        if(!settings.contains("gender")) {
+        if (!settings.contains("gender")) {
             editor.putInt("gender", 0).apply();
         }
 

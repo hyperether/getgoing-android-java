@@ -5,7 +5,6 @@ import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
-import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -28,7 +27,6 @@ import com.hyperether.getgoing.listeners.GgOnClickListener;
 import com.hyperether.getgoing.model.CBDataFrame;
 import com.hyperether.getgoing.repository.room.DbHelper;
 import com.hyperether.getgoing.repository.room.entity.DbRoute;
-import com.hyperether.getgoing.ui.activity.ShowDataActivity;
 import com.hyperether.getgoing.util.Constants;
 
 import java.text.DecimalFormat;
@@ -43,7 +41,6 @@ import static com.hyperether.getgoing.util.Constants.ACTIVITY_RUN_ID;
 import static com.hyperether.getgoing.util.Constants.ACTIVITY_WALK_ID;
 import static com.hyperether.getgoing.util.Constants.BUNDLE_ACTION;
 import static com.hyperether.getgoing.util.Constants.BUNDLE_ACTIVITY_ID;
-import static com.hyperether.getgoing.util.Constants.DATA_DETAILS_LABEL;
 import static com.hyperether.getgoing.util.Constants.OPENED_FROM_LOCATION_ACT;
 
 public class ActivitiesFragment extends DialogFragment {
