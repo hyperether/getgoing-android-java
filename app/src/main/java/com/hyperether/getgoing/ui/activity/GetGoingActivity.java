@@ -111,9 +111,6 @@ public class GetGoingActivity extends AppCompatActivity implements
         actLabel = findViewById(R.id.tv_ma_mainact);
         blueSentence = findViewById(R.id.tv_am_burn);
         selectorView = findViewById(R.id.imageView2);
-//        circleProgressBar = findViewById(R.id.cpb_am_kmgoal);
-//        circleProgressBar2 = findViewById(R.id.cpb_am_kmgoal1);
-//        circleProgressBar3 = findViewById(R.id.cpb_am_kmgoal2);
 
         ActivityCompat.requestPermissions(this, new String[]{
                 Manifest.permission.ACCESS_FINE_LOCATION,
@@ -506,95 +503,7 @@ public class GetGoingActivity extends AppCompatActivity implements
                 .show();
     }
 
-//    private class PullProgressData extends AsyncTask<Void, Void, Void> {
-//        DbRoute lastRoute;
-//        TextView kcalVal, progBar1Act;
-//        ImageView progBar1Img;
-//
-//        @Override
-//        protected void onPreExecute() {
-//            super.onPreExecute();
-//
-//            kcalVal = findViewById(R.id.tv_am_kcalval);
-//            progBar1Act = findViewById(R.id.tv_am_progbar_act);
-//            progBar1Img = findViewById(R.id.iv_am_activity);
-//
-//        }
-//
-//        @Override
-//        protected Void doInBackground(Void... voids) {
-////            DbHelper.getInstance(getApplicationContext()).getLastRoute(lastRoute);
-//            lastRoute = GgRepository.getInstance().getLastRoute().getValue();
-//
-//            return null;
-//        }
-//
-//        @Override
-//        protected void onPostExecute(Void aVoid) {
-//            super.onPostExecute(aVoid);
-//
-//            if (lastRoute != null) {
-//                int lastRouteLen = (int) lastRoute.getLength();
-//                int lastRouteTime;
-//
-//                if (lastRoute.getDuration() >= 60000)
-//                    lastRouteTime = Math.round(lastRoute.getDuration() / 1000 / 60);
-//                else
-//                    lastRouteTime = 0;
-//
-//                int goal = (int) lastRoute.getGoal();
-//                int cpbProgress;
-//
-//                if (goal != 0)
-//                    cpbProgress = Math.round(lastRouteLen * 100 / goal);
-//                else
-//                    cpbProgress = 0;
-//
-//                int kcal = (int) lastRoute.getEnergy();
-//
-//                circleProgressBar.setProgressFormatter(new DistanceProgressFormatter((double) lastRouteLen));
-//                circleProgressBar.setProgress(cpbProgress);
-//
-//                circleProgressBar2.setProgressFormatter(new MyProgressFormatter2(lastRouteTime));
-//                circleProgressBar2.setProgress(100);
-//
-//                circleProgressBar3.setProgressFormatter(new TimeProgressFormatterInvisible());
-//
-//                kcalVal.setText(String.valueOf(kcal));
-//
-//                switch (lastRoute.getActivity_id()) {
-//                    case 1: {
-//                        progBar1Act.setText(getString(R.string.walking));
-//                        progBar1Img.setImageDrawable(getResources().getDrawable(R.drawable.ic_walking_icon));
-//                        break;
-//                    }
-//                    case 2: {
-//                        progBar1Act.setText(getString(R.string.running));
-//                        progBar1Img.setImageDrawable(getResources().getDrawable(R.drawable.ic_running_icon));
-//                        break;
-//                    }
-//                    case 3: {
-//                        progBar1Act.setText(getString(R.string.cycling));
-//                        progBar1Img.setImageDrawable(getResources().getDrawable(R.drawable.ic_light_bicycling_icon));
-//                        break;
-//                    }
-//                }
-//            } else
-//                resetDisplay();
-//        }
-//
-//        private void resetDisplay() {
-//            circleProgressBar.setProgressFormatter(new DistanceProgressFormatter(0));
-//            circleProgressBar.setProgress(0);
-//
-//            circleProgressBar2.setProgressFormatter(new MyProgressFormatter2(0));
-//            circleProgressBar2.setProgress(0);
-//
-//            circleProgressBar3.setProgressFormatter(new TimeProgressFormatterInvisible());
-//
-//            kcalVal.setText(Integer.toString(0));
-//        }
-//    }
+
 
     public class ClickHandler {
 

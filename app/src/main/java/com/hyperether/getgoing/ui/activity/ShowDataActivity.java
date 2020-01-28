@@ -44,6 +44,7 @@ import static com.hyperether.getgoing.util.Constants.ACTIVITY_RUN_ID;
 import static com.hyperether.getgoing.util.Constants.ACTIVITY_WALK_ID;
 import static com.hyperether.getgoing.util.Constants.BUNDLE_PARCELABLE;
 import static com.hyperether.getgoing.util.Constants.DATA_DETAILS_LABEL;
+import static com.hyperether.getgoing.util.Constants.PREF_FILE;
 import static com.hyperether.getgoing.util.Constants.PREF_RIDE_ROUTE_EXISTING;
 import static com.hyperether.getgoing.util.Constants.PREF_RUN_ROUTE_EXISTING;
 import static com.hyperether.getgoing.util.Constants.PREF_WALK_ROUTE_EXISTING;
@@ -108,14 +109,18 @@ public class ShowDataActivity extends AppCompatActivity
 
             }
 
-            bm = ProgressBarBitmap.getWidgetBitmap(getApplicationContext(), routes.get(0).getGoal(), routes.get(0).getLength(), 400, 400, 160, 220, 20, 0);
-            binding.setVar(routes.get(0));
-            binding.progress.setImageBitmap(bm);
+            if (routes.size() == 0) {
+                showNoRoutesDialog();
+            } else {
+                bm = ProgressBarBitmap.getWidgetBitmap(getApplicationContext(), routes.get(routes.size() - 1).getGoal(), routes.get(0).getLength(), 400, 400, 160, 220, 20, 0);
+                binding.setVar(routes.get(routes.size() - 1));
+                binding.progress.setImageBitmap(bm);
+                binding.recyclerList.smoothScrollToPosition(routes.size() - 1);
+            }
 
-//            populateListView();
             recyclerAdapter.notifyDataSetChanged();
 
-            Log.i("TAG", "viewmodel observed " + routeList.size());
+
         });
     }
 
@@ -128,41 +133,51 @@ public class ShowDataActivity extends AppCompatActivity
         binding.ibSdDeleteBtn.setOnClickListener(v -> deleteRoute());
     }
 
+
     private void deleteRoute() {
 
         AlertDialog.Builder dialog = new AlertDialog.Builder(this);
         dialog.setCancelable(false);
         dialog.setMessage(getResources().getString(R.string.alert_dialog_delete_route));
         dialog.setPositiveButton(R.string.alert_dialog_positive_button_save_btn,
-                new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface paramDialogInterface, int paramInt) {
-//                        GgRepository.getInstance().deleteRouteById(binding.getVar().getId());
-                        routeViewModel.removeRouteById(binding.getVar().getId());
-                        recyclerAdapter.notifyDataSetChanged();
-//                        routeViewModel.getRouteList()
-//                                .observe(ShowDataActivity.this, new Observer<List<DbRoute>>() {
-//                                    @Override
-//                                    public void onChanged(List<DbRoute> list) {
-////                                        if(list.size() <= 0) {
-////                                            ShowDataActivity.this.finish();
-////                                        } else {
-////                                            recyclerAdapter = new DbRecyclerAdapter(ShowDataActivity.this, list);
-////                                            binding.recyclerList.setAdapter(recyclerAdapter);
-////                                            recyclerAdapter.notifyDataSetChanged();
-////                                            binding.setVar(list.get(0));
-//                                            Log.i("TAG", "notify delete triggered");
-////                                        }
-//                                    }
-//                                });
-//                        Toast.makeText(ShowDataActivity.this, getResources().getString(R.string.route_deleted_msg), Toast.LENGTH_SHORT).show();
-                    }
-                })
-                .setNegativeButton(getString(R.string.alert_dialog_negative_button_save_btn),
-                        (paramDialogInterface, paramInt) -> {
+                (DialogInterface paramDialogInterface, int paramInt) -> {
+                    routeViewModel.removeRouteById(binding.getVar().getId());
+                    Toast.makeText(this, "Route deleted", Toast.LENGTH_SHORT).show();
+                });
+
+        dialog.setNegativeButton(getString(R.string.alert_dialog_negative_button_save_btn),
+                (paramDialogInterface, paramInt) -> {
+                });
+        dialog.show();
+
+
+    }
+
+    private void showNoRoutesDialog() {
+        new AlertDialog.Builder(this)
+                .setCancelable(false)
+                .setMessage(getResources().getString(R.string.alert_dialog_no_routes))
+                .setPositiveButton(R.string.alert_dialog_positive_button_save_btn,
+                        (DialogInterface paramDialogInterface, int paramInt) -> {
+                            SharedPreferences prefs = getSharedPreferences(PREF_FILE, MODE_PRIVATE);
+                            SharedPreferences.Editor editor = prefs.edit();
+
+                            switch (activityId) {
+                                case ACTIVITY_WALK_ID:
+                                    editor.putBoolean(PREF_WALK_ROUTE_EXISTING, false);
+                                    break;
+                                case ACTIVITY_RUN_ID:
+                                    editor.putBoolean(PREF_RUN_ROUTE_EXISTING, false);
+                                    break;
+                                case ACTIVITY_RIDE_ID:
+                                    editor.putBoolean(PREF_RIDE_ROUTE_EXISTING, false);
+                                    break;
+                            }
+                            editor.apply();
+
+                            ShowDataActivity.this.finish();
                         })
                 .show();
-
     }
 
     private void toogleMap() {

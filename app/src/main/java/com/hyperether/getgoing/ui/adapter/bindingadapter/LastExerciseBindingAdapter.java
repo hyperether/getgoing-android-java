@@ -20,18 +20,27 @@ public class LastExerciseBindingAdapter {
     @androidx.databinding.BindingAdapter("progress_activity_icon")
     public static void displayActivityProgressIcon(View view, int pAcId) {
 
-        // default running icon
-        Drawable drawable = view.getResources().getDrawable(R.drawable.ic_light_running_icon_white);
+        Drawable drawable;
+        view.setVisibility(View.VISIBLE);
 
         switch (pAcId) {
             case ACTIVITY_WALK_ID:
                 drawable = view.getResources().getDrawable(R.drawable.ic_light_walking_icon_white);
+                ((ImageView) view).setImageDrawable(drawable);
+                break;
+            case ACTIVITY_RUN_ID:
+                drawable = view.getResources().getDrawable(R.drawable.ic_light_running_icon_white);
+                ((ImageView) view).setImageDrawable(drawable);
                 break;
             case ACTIVITY_RIDE_ID:
                 drawable = view.getResources().getDrawable(R.drawable.ic_light_bicycling_icon);
+                ((ImageView) view).setImageDrawable(drawable);
+                break;
+            default:
+                view.setVisibility(View.INVISIBLE);
+
         }
 
-        ((ImageView) view).setImageDrawable(drawable);
     }
 
     @androidx.databinding.BindingAdapter("progress_activity_name")
@@ -59,12 +68,12 @@ public class LastExerciseBindingAdapter {
         int progress = 0;
         double distance = 0;
 
-        if(lastRoute != null) {
-            if(lastRoute.getLength() >= 0) {
+        if (lastRoute != null) {
+            if (lastRoute.getLength() >= 0) {
                 distance = lastRoute.getLength();
             }
 
-            if(lastRoute.getGoal() > 0) {
+            if (lastRoute.getGoal() > 0) {
                 progress = (int) (distance / lastRoute.getGoal() * 100);
             } else {
                 // goal will never be 0 with current implementation, this check is not necessary
@@ -72,13 +81,13 @@ public class LastExerciseBindingAdapter {
             }
         }
 
-        ((CircleProgressBar)view).setProgressFormatter(new DistanceProgressFormatter(distance));
-        ((CircleProgressBar)view).setProgress(progress);
+        ((CircleProgressBar) view).setProgressFormatter(new DistanceProgressFormatter(distance));
+        ((CircleProgressBar) view).setProgress(progress);
     }
 
     @androidx.databinding.BindingAdapter("progress_time")
     public static void displayTimeProgress(View view, long pDuration) {
-        ((CircleProgressBar)view).setProgressFormatter(new TimeProgressFormatter(pDuration));
+        ((CircleProgressBar) view).setProgressFormatter(new TimeProgressFormatter(pDuration));
     }
 
 }

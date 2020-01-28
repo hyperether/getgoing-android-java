@@ -34,7 +34,6 @@ public class DbRecyclerAdapter extends RecyclerView.Adapter<DbRecyclerAdapter.Vi
     @NonNull
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        // TODO setup diff screen sizes? -Ivana
 
         View view = LayoutInflater.from(parent.getContext())
                 .inflate(R.layout.show_data_row_item, parent, false);

@@ -346,7 +346,7 @@ public class ShowLocationActivity extends AppCompatActivity implements OnMapRead
             dialog.setNegativeButton(getString(R.string.alert_dialog_negative_button_save_btn),
                     (paramDialogInterface, paramInt) -> {
                         mRouteAlreadySaved = false;
-                        GgRepository.getInstance().deleteRouteById(CacheManager.getInstance().getCurrentRouteId());
+                        // TODO delete current route and nodes? - Ivana
                     });
 
             dialog.show();
@@ -380,7 +380,7 @@ public class ShowLocationActivity extends AppCompatActivity implements OnMapRead
                             timeFlg = true; // ready for the new round
                             clearData();
 
-                            GgRepository.getInstance().deleteRouteById(CacheManager.getInstance().getCurrentRouteId());
+                            // TODO delete current route and nodes? - Ivana
                             CacheManager.getInstance().setCurrentRouteId(0);
 
                             button_save.setClickable(false);
@@ -451,6 +451,12 @@ public class ShowLocationActivity extends AppCompatActivity implements OnMapRead
 
                     button_start.setVisibility(View.GONE);
                     button_pause.setVisibility(View.VISIBLE);
+                    if(mLocTrackingRunning) {
+                        button_save.setImageDrawable(getDrawable(R.drawable.ic_light_save_icon_disabled));
+                        button_save.setClickable(false);
+                        button_rst.setImageDrawable(getDrawable(R.drawable.ic_light_replay_icon_disabled));
+                        button_rst.setClickable(false);
+                    }
                 });
 
                 mLocTrackingRunning = true;
@@ -523,7 +529,6 @@ public class ShowLocationActivity extends AppCompatActivity implements OnMapRead
                         .OnClickListener() {
                     @Override
                     public void onClick(DialogInterface paramDialogInterface, int paramInt) {
-                        // TODO Auto-generated method stub
                         openGPSSettings();
                     }
                 });
@@ -689,7 +694,7 @@ public class ShowLocationActivity extends AppCompatActivity implements OnMapRead
                 stopService(new Intent(GetGoingApp.getInstance().getApplicationContext(),
                         GPSTrackingService.class));
                 clearCacheData();
-                // TODO remove temporary route from database
+                // TODO remove temporary route and nodes from database - Ivana
                 finish();
             });
 

@@ -71,7 +71,8 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="@+id/tv_am_lastexercise"
             android:drawableEnd="@drawable/ic_light_chevron_icon"
-            android:drawablePadding="8dp"/>
+            android:drawablePadding="8dp"
+            android:padding="10dp"/>
 
         <TextView
             android:id="@+id/tv_am_choose"
@@ -252,8 +253,7 @@
             app:layout_constraintBottom_toBottomOf="@+id/cpb_am_kmgoal"
             app:layout_constraintEnd_toEndOf="@+id/cpb_am_kmgoal"
             app:layout_constraintHorizontal_bias="0.531"
-            app:layout_constraintStart_toStartOf="@+id/cpb_am_kmgoal"
-            tools:text="Running"/>
+            app:layout_constraintStart_toStartOf="@+id/cpb_am_kmgoal"/>
 
         <TextView
             android:id="@+id/tv_am_progbar_time"

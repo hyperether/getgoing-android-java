@@ -64,12 +64,12 @@
         android:text="0km"
         android:textColor="@color/mat_gray"
         android:textSize="18sp"
-        app:layout_constraintBottom_toBottomOf="@+id/tv_fa_pb_walking"
+        app:layout_constraintBottom_toTopOf="@+id/tv_fa_pb_walking"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/tv_fa_pb_walking"
-        app:layout_constraintVertical_bias="0.0"
+        app:layout_constraintTop_toBottomOf="@+id/tv_fa_pb_walking"
         android:drawableEnd="@drawable/ic_light_angle_icon"
-        android:drawablePadding="5dp"/>
+        android:drawablePadding="5dp"
+        android:padding="10dp"/>
 
 
     <ProgressBar
@@ -116,7 +116,8 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="@+id/tv_fa_pb_running"
         android:drawableEnd="@drawable/ic_light_angle_icon"
-        android:drawablePadding="5dp"/>
+        android:drawablePadding="5dp"
+        android:padding="10dp"/>
 
     <TextView
         android:id="@+id/tv_fa_pb_cycling"
@@ -160,7 +161,8 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="@+id/tv_fa_pb_cycling"
         android:drawableEnd="@drawable/ic_light_angle_icon"
-        android:drawablePadding="5dp"/>
+        android:drawablePadding="5dp"
+        android:padding="10dp"/>
 
     <View
         android:id="@+id/view"

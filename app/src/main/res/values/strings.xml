@@ -108,6 +108,7 @@
     <string name="alert_dialog_title_incorrect_value">Incorrect value</string>
     <string name="alert_dialog_delete_route">Delete permanently this route?</string>
     <string name="route_deleted_msg">Route deleted</string>
+    <string name="alert_dialog_no_routes">No routes to display</string>
 
 
 </resources>
