@@ -8,10 +8,13 @@ import androidx.lifecycle.ViewModel;
 
 import com.hyperether.getgoing.GetGoingApp;
 import com.hyperether.getgoing.repository.room.DbHelper;
+import com.hyperether.getgoing.repository.room.DbRouteAddedCallback;
+import com.hyperether.getgoing.repository.room.DbRouteDeletedCallback;
 import com.hyperether.getgoing.repository.room.GgRepository;
 import com.hyperether.getgoing.repository.room.entity.DbNode;
 import com.hyperether.getgoing.repository.room.entity.DbRoute;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class RouteViewModel extends ViewModel {
@@ -40,4 +43,10 @@ public class RouteViewModel extends ViewModel {
     public LiveData<List<DbNode>> getNodeListById(long id) {
         return GgRepository.getInstance().getAllNodesById(id);
     }
+
+
+    public void removeRouteById(long id) {
+        GgRepository.getInstance().deleteRouteById(id, this::loadRoutes);
+    }
+
 }

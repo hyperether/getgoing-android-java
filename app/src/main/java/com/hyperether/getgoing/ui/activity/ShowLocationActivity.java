@@ -19,10 +19,10 @@ import android.view.View.OnClickListener;
 import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.Chronometer;
-import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
@@ -57,6 +57,13 @@ import java.util.Locale;
 import java.util.Timer;
 
 import static android.provider.Settings.ACTION_LOCATION_SOURCE_SETTINGS;
+import static com.hyperether.getgoing.util.Constants.ACTIVITY_RIDE_ID;
+import static com.hyperether.getgoing.util.Constants.ACTIVITY_RUN_ID;
+import static com.hyperether.getgoing.util.Constants.ACTIVITY_WALK_ID;
+import static com.hyperether.getgoing.util.Constants.OPENED_FROM_LOCATION_ACT;
+import static com.hyperether.getgoing.util.Constants.PREF_RIDE_ROUTE_EXISTING;
+import static com.hyperether.getgoing.util.Constants.PREF_RUN_ROUTE_EXISTING;
+import static com.hyperether.getgoing.util.Constants.PREF_WALK_ROUTE_EXISTING;
 
 public class ShowLocationActivity extends AppCompatActivity implements OnMapReadyCallback {
 
@@ -98,8 +105,10 @@ public class ShowLocationActivity extends AppCompatActivity implements OnMapRead
 
     private long goalStore;
 
-    private View toInflate;
+    //    private View toInflate;
     private Context classContext;
+
+    private DbRoute updatedRoute;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -148,7 +157,7 @@ public class ShowLocationActivity extends AppCompatActivity implements OnMapRead
             mEditor.apply();
         }
 
-        toInflate = getLayoutInflater().inflate(R.layout.alertdialog_goal, null, false);
+//        toInflate = getLayoutInflater().inflate(R.layout.alertdialog_goal, null, false);
     }
 
     @Override
@@ -226,7 +235,7 @@ public class ShowLocationActivity extends AppCompatActivity implements OnMapRead
     }
 
     private void setVisibilities() {
-        if(!cbPrefs.contains("goal")) {
+        if (!cbPrefs.contains("goal")) {
             set_goal.setVisibility(View.VISIBLE);
             button_save.setVisibility(View.GONE);
             button_rst.setVisibility(View.GONE);
@@ -242,7 +251,9 @@ public class ShowLocationActivity extends AppCompatActivity implements OnMapRead
             goalStore = cbPrefs.getInt("goal", 0);
             set_goal.setVisibility(View.GONE);
             button_save.setVisibility(View.VISIBLE);
+            button_save.setClickable(false);
             button_rst.setVisibility(View.VISIBLE);
+            button_rst.setClickable(false);
             button_start.setClickable(true);
             showDistance.setVisibility(View.VISIBLE);
             showTime.setVisibility(View.VISIBLE);
@@ -278,6 +289,10 @@ public class ShowLocationActivity extends AppCompatActivity implements OnMapRead
         @Override
         public void onClick(View v) {
             stopTracking();
+            button_save.setClickable(true);
+            button_save.setImageDrawable(getDrawable(R.drawable.ic_light_save_icon));
+            button_rst.setClickable(true);
+            button_rst.setImageDrawable(getDrawable(R.drawable.ic_light_replay_icon));
         }
     };
 
@@ -287,9 +302,9 @@ public class ShowLocationActivity extends AppCompatActivity implements OnMapRead
     private final OnClickListener mButtonSaveListener = new OnClickListener() {
         @Override
         public void onClick(View v) {
+
             AlertDialog.Builder dialog = new AlertDialog.Builder(v.getContext());
             dialog.setCancelable(false);
-            dialog.setTitle(R.string.alert_dialog_title_save_btn);
             dialog.setMessage(getString(R.string.alert_dialog_message_save_btn));
             dialog.setPositiveButton(R.string.alert_dialog_positive_button_save_btn,
                     new DialogInterface.OnClickListener() {
@@ -297,17 +312,40 @@ public class ShowLocationActivity extends AppCompatActivity implements OnMapRead
                         public void onClick(DialogInterface paramDialogInterface, int paramInt) {
                             CacheManager cm = CacheManager.getInstance();
 
-                            DbRoute updatedRoute = new DbRoute(cm.getCurrentRouteId(), timeWhenStopped4Storage,
+                            mRouteAlreadySaved = true;
+
+                            updatedRoute = new DbRoute(cm.getCurrentRouteId(), timeWhenStopped4Storage,
                                     cm.getKcalCumulative(), cm.getDistanceCumulative(), currentDateandTime,
                                     cm.getVelocityAvg(), cbDataFrameLocal.getProfileId(), goalStore);
 
                             GgRepository.getInstance().updateRoute(updatedRoute);
                             CacheManager.getInstance().setCurrentRouteId(0);
+
+                            Editor editor = cbPrefs.edit();
+                            if (updatedRoute.getActivity_id() == ACTIVITY_WALK_ID &&
+                                    !cbPrefs.getBoolean(PREF_WALK_ROUTE_EXISTING, false)) {
+                                editor.putBoolean(PREF_WALK_ROUTE_EXISTING, true);
+                                editor.apply();
+                            } else if (updatedRoute.getActivity_id() == ACTIVITY_RUN_ID &&
+                                    !cbPrefs.getBoolean(PREF_RUN_ROUTE_EXISTING, false)) {
+                                editor.putBoolean(PREF_RUN_ROUTE_EXISTING, true);
+                                editor.apply();
+                            } else if (updatedRoute.getActivity_id() == ACTIVITY_RIDE_ID &&
+                                    !cbPrefs.getBoolean(PREF_RIDE_ROUTE_EXISTING, false)) {
+                                editor.putBoolean(PREF_RIDE_ROUTE_EXISTING, true);
+                                editor.apply();
+                            }
+
+                            button_save.setClickable(false);
+                            button_save.setImageDrawable(getDrawable(R.drawable.ic_light_save_icon_disabled));
+                            Toast.makeText(classContext, getString(R.string.alert_dialog_route_saved), Toast.LENGTH_SHORT).show();
                         }
                     });
 
             dialog.setNegativeButton(getString(R.string.alert_dialog_negative_button_save_btn),
                     (paramDialogInterface, paramInt) -> {
+                        mRouteAlreadySaved = false;
+                        // TODO delete current route and nodes? - Ivana
                     });
 
             dialog.show();
@@ -322,7 +360,6 @@ public class ShowLocationActivity extends AppCompatActivity implements OnMapRead
         public void onClick(View v) {
             AlertDialog.Builder dialog = new AlertDialog.Builder(v.getContext());
             dialog.setCancelable(false);
-            dialog.setTitle(R.string.alert_dialog_title_reset_btn);
             dialog.setMessage(getString(R.string.alert_dialog_message_reset_btn));
             dialog.setPositiveButton(R.string.alert_dialog_positive_reset_save_btn,
                     new DialogInterface.OnClickListener() {
@@ -342,8 +379,14 @@ public class ShowLocationActivity extends AppCompatActivity implements OnMapRead
                             timeFlg = true; // ready for the new round
                             clearData();
 
-                            GgRepository.getInstance().deleteRouteById(CacheManager.getInstance().getCurrentRouteId());
+                            // TODO delete current route and nodes? - Ivana
                             CacheManager.getInstance().setCurrentRouteId(0);
+
+                            button_save.setClickable(false);
+                            button_save.setImageDrawable(getDrawable(R.drawable.ic_light_save_icon_disabled));
+                            button_rst.setClickable(false);
+                            button_rst.setImageDrawable(getDrawable(R.drawable.ic_light_replay_icon_disabled));
+                            mRouteAlreadySaved = true;
                         }
                     });
 
@@ -363,8 +406,7 @@ public class ShowLocationActivity extends AppCompatActivity implements OnMapRead
     private final OnClickListener mButtonSetGoalListener = new OnClickListener() {
         @Override
         public void onClick(View v) {
-
-            ActivitiesFragment activitiesFragment = ActivitiesFragment.newInstance(null);
+            ActivitiesFragment activitiesFragment = ActivitiesFragment.newInstance(null, OPENED_FROM_LOCATION_ACT);
             activitiesFragment.show(getSupportFragmentManager(), "ActivitiesFragment");
         }
     };
@@ -408,6 +450,12 @@ public class ShowLocationActivity extends AppCompatActivity implements OnMapRead
 
                     button_start.setVisibility(View.GONE);
                     button_pause.setVisibility(View.VISIBLE);
+                    if (mLocTrackingRunning) {
+                        button_save.setImageDrawable(getDrawable(R.drawable.ic_light_save_icon_disabled));
+                        button_save.setClickable(false);
+                        button_rst.setImageDrawable(getDrawable(R.drawable.ic_light_replay_icon_disabled));
+                        button_rst.setClickable(false);
+                    }
                 });
 
                 mLocTrackingRunning = true;
@@ -480,7 +528,6 @@ public class ShowLocationActivity extends AppCompatActivity implements OnMapRead
                         .OnClickListener() {
                     @Override
                     public void onClick(DialogInterface paramDialogInterface, int paramInt) {
-                        // TODO Auto-generated method stub
                         openGPSSettings();
                     }
                 });
@@ -646,6 +693,7 @@ public class ShowLocationActivity extends AppCompatActivity implements OnMapRead
                 stopService(new Intent(GetGoingApp.getInstance().getApplicationContext(),
                         GPSTrackingService.class));
                 clearCacheData();
+                // TODO remove temporary route and nodes from database - Ivana
                 finish();
             });
 
@@ -660,11 +708,7 @@ public class ShowLocationActivity extends AppCompatActivity implements OnMapRead
     }
 
     private SharedPreferences.OnSharedPreferenceChangeListener sharedPrefsListener =
-            new SharedPreferences.OnSharedPreferenceChangeListener() {
-                @Override
-                public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, java.lang.String key) {
-                    setVisibilities();
-                }
-            };
+            (SharedPreferences sharedPreferences, String key) -> setVisibilities();
+
 
 }

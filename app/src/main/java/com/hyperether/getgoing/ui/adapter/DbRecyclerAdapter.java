@@ -34,7 +34,6 @@ public class DbRecyclerAdapter extends RecyclerView.Adapter<DbRecyclerAdapter.Vi
     @NonNull
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        // TODO setup diff screen sizes? -Ivana
 
         View view = LayoutInflater.from(parent.getContext())
                 .inflate(R.layout.show_data_row_item, parent, false);
@@ -47,7 +46,7 @@ public class DbRecyclerAdapter extends RecyclerView.Adapter<DbRecyclerAdapter.Vi
 
             DbRoute route = routes.get(position);
 
-            if (!"null".equals(route.getDate())) {
+            if (!"null".equals(route.getDate()) || route.getDate() != null) {
                 holder.chartProgress.setMax((int) route.getGoal());
                 holder.chartProgress.setProgress((int) route.getLength());
                 holder.chartDate.setText(route.getDate().substring(0, 5));

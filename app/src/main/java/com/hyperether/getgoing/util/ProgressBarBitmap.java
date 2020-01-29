@@ -13,9 +13,9 @@ public class ProgressBarBitmap {
 
     public static Bitmap getWidgetBitmap(Context context, long goal, double length, int width, int height, float startAngle, float sweepAngle, int stroke, int padding) {
 
-        float percentage = 0;
+        float scale = 0;
         if(goal > 0 && length >= 0) {
-            percentage = (float) (length / goal);
+            scale = (float) (length / goal);
         }
 
 
@@ -40,9 +40,9 @@ public class ProgressBarBitmap {
 
 
         float temp = 0;
-        if (percentage <= 1 && percentage >= 0) {
-            temp = sweepAngle * percentage;
-        } else if (percentage < 0) {
+        if (scale <= 1 && scale >= 0) {
+            temp = sweepAngle * scale;
+        } else if (scale < 0) {
             temp = 0;
         } else {
             temp = sweepAngle;

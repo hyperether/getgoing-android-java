@@ -93,13 +93,11 @@ public class DbNode implements Parcelable {
 
     @Override
     public int describeContents() {
-        // TODO Auto-generated method stub
         return 0;
     }
 
     @Override
     public void writeToParcel(Parcel out, int flags) {
-        // TODO Auto-generated method stub
         out.writeDouble(latitude);
         out.writeDouble(longitude);
         out.writeFloat(velocity);

@@ -58,7 +58,8 @@
         <activity
             android:name=".ui.activity.ShowDataActivity"
             android:icon="@mipmap/ic_logo"
-            android:label="" />
+            android:label=""
+            android:screenOrientation="portrait"/>
         <activity
             android:name=".ui.activity.ShowRouteActivity"
             android:icon="@mipmap/ic_logo"

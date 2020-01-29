@@ -14,13 +14,14 @@
 
     <!-- Save button alert dialog -->
     <string name="alert_dialog_title_save_btn">Save route</string>
-    <string name="alert_dialog_message_save_btn">Your route is successfully saved.</string>
+    <string name="alert_dialog_message_save_btn">Do you want to save this route?</string>
     <string name="alert_dialog_positive_button_save_btn">OK</string>
     <string name="alert_dialog_negative_button_save_btn">Cancel</string>
+    <string name="alert_dialog_route_saved">Route saved</string>
 
     <!-- Reset button alert dialog -->
     <string name="alert_dialog_title_reset_btn">Clear route data</string>
-    <string name="alert_dialog_message_reset_btn">Clear map and route data.</string>
+    <string name="alert_dialog_message_reset_btn">Clear map and route data?</string>
     <string name="alert_dialog_positive_reset_save_btn">OK</string>
     <string name="alert_dialog_negative_reset_save_btn">Cancel</string>
 
@@ -103,6 +104,11 @@
 
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="alert_dialog_goal_0">Goal cannot be 0</string>
+    <string name="alert_dialog_title_incorrect_value">Incorrect value</string>
+    <string name="alert_dialog_delete_route">Delete permanently this route?</string>
+    <string name="route_deleted_msg">Route deleted</string>
+    <string name="alert_dialog_no_routes">No routes to display</string>
 
 
 </resources>

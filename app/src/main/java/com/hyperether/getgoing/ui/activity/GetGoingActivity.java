@@ -2,10 +2,11 @@ package com.hyperether.getgoing.ui.activity;
 
 import android.Manifest;
 import android.app.Activity;
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.DisplayMetrics;
 import android.util.SparseIntArray;
@@ -20,6 +21,7 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.databinding.DataBindingUtil;
+import androidx.lifecycle.Observer;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.LinearSnapHelper;
 import androidx.recyclerview.widget.OrientationHelper;
@@ -37,9 +39,7 @@ import com.hyperether.getgoing.repository.room.GgRepository;
 import com.hyperether.getgoing.repository.room.entity.DbNode;
 import com.hyperether.getgoing.repository.room.entity.DbRoute;
 import com.hyperether.getgoing.ui.adapter.HorizontalListAdapter;
-import com.hyperether.getgoing.ui.adapter.formatter.MyProgressFormatter;
-import com.hyperether.getgoing.ui.adapter.formatter.MyProgressFormatter2;
-import com.hyperether.getgoing.ui.adapter.formatter.MyProgressFormatter3;
+import com.hyperether.getgoing.ui.adapter.formatter.TimeProgressFormatterInvisible;
 import com.hyperether.getgoing.ui.fragment.ActivitiesFragment;
 import com.hyperether.getgoing.ui.fragment.ProfileFragment;
 import com.hyperether.getgoing.ui.fragment.old.SettingsFragment;
@@ -52,18 +52,23 @@ import io.fabric.sdk.android.Fabric;
 
 import static com.hyperether.getgoing.ui.fragment.old.SettingsFragment.DATA_KEY;
 import static com.hyperether.getgoing.util.Constants.ACTION_OPEN_ACTIVITY_DETAILS;
+import static com.hyperether.getgoing.util.Constants.ACTIVITY_RIDE_ID;
 import static com.hyperether.getgoing.util.Constants.ACTIVITY_RUN_ID;
 import static com.hyperether.getgoing.util.Constants.ACTIVITY_WALK_ID;
 import static com.hyperether.getgoing.util.Constants.BUNDLE_ACTION;
 import static com.hyperether.getgoing.util.Constants.BUNDLE_ACTIVITY_ID;
 import static com.hyperether.getgoing.util.Constants.DATA_DETAILS_LABEL;
+import static com.hyperether.getgoing.util.Constants.OPENED_FROM_GG_ACT;
+import static com.hyperether.getgoing.util.Constants.PREF_RIDE_ROUTE_EXISTING;
+import static com.hyperether.getgoing.util.Constants.PREF_RUN_ROUTE_EXISTING;
+import static com.hyperether.getgoing.util.Constants.PREF_WALK_ROUTE_EXISTING;
 
 public class GetGoingActivity extends AppCompatActivity implements
         SettingsFragment.SettingsFragmentListener, GgOnClickListener {
 
-    private static final int WALK_ID = 1;
-    private static final int RUN_ID = 2;
-    private static final int RIDE_ID = 3;
+//    private static final int WALK_ID = 1;
+//    private static final int RUN_ID = 2;
+//    private static final int RIDE_ID = 3;
     //private static final int IMPERIAL = 1;
     //private static final int US = 2;
 
@@ -88,6 +93,8 @@ public class GetGoingActivity extends AppCompatActivity implements
 
     private SharedPreferences currentSettings;
 
+//    private DbRoute lastRoute;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         setTheme(R.style.AppTheme);
@@ -97,15 +104,13 @@ public class GetGoingActivity extends AppCompatActivity implements
 
         mBinding = DataBindingUtil.setContentView(this, R.layout.activity_main);
         mBinding.setViewModel(new ClickHandler());
+        mBinding.cpbAmKmgoal2.setProgressFormatter(new TimeProgressFormatterInvisible());
 
         cbDataFrameLocal = CacheManager.getInstance().getObDataFrameGlobal();
 
         actLabel = findViewById(R.id.tv_ma_mainact);
         blueSentence = findViewById(R.id.tv_am_burn);
         selectorView = findViewById(R.id.imageView2);
-        circleProgressBar = findViewById(R.id.cpb_am_kmgoal);
-        circleProgressBar2 = findViewById(R.id.cpb_am_kmgoal1);
-        circleProgressBar3 = findViewById(R.id.cpb_am_kmgoal2);
 
         ActivityCompat.requestPermissions(this, new String[]{
                 Manifest.permission.ACCESS_FINE_LOCATION,
@@ -125,7 +130,7 @@ public class GetGoingActivity extends AppCompatActivity implements
         super.onResume();
 
         initModel();
-        initProgressBars();
+//        initProgressBars();
     }
 
     @Override
@@ -153,7 +158,7 @@ public class GetGoingActivity extends AppCompatActivity implements
     }
 
     private void zeroNodeInit() {
-        if (currentSettings.getBoolean("zeroNode", false) == false) {
+        if (!currentSettings.getBoolean("zeroNode", false)) {
             /*route init*/
             List<DbNode> tmpRoute = new ArrayList<>();
             DbNode tmpNode = new DbNode(0, 0, 0, 0, 0, 0);
@@ -162,7 +167,22 @@ public class GetGoingActivity extends AppCompatActivity implements
 
             SharedPreferences.Editor edit = currentSettings.edit();
             edit.putBoolean("zeroNode", true);
+
+            // no saved routes yet
+            edit.putBoolean(PREF_WALK_ROUTE_EXISTING, false);
+            edit.putBoolean(PREF_RUN_ROUTE_EXISTING, false);
+            edit.putBoolean(PREF_RIDE_ROUTE_EXISTING, false);
+
             edit.apply();
+
+        } else {
+
+            GgRepository.getInstance().getLastRoute().observe(GetGoingActivity.this, new Observer<DbRoute>() {
+                @Override
+                public void onChanged(DbRoute dbRoute) {
+                    mBinding.setLastRoute(dbRoute);
+                }
+            });
         }
     }
 
@@ -249,7 +269,6 @@ public class GetGoingActivity extends AppCompatActivity implements
     @Deprecated
     private void initListeners() {
         ImageView ib_am_user = findViewById(R.id.ib_am_user);
-        ImageView iv_am_arrows = findViewById(R.id.iv_am_arrow2actfrag);
         TextView tv_am_viewall = findViewById(R.id.tv_am_viewall);
         Button startBtn = findViewById(R.id.materialButton);
 
@@ -259,23 +278,18 @@ public class GetGoingActivity extends AppCompatActivity implements
             profileFragment.show(getSupportFragmentManager(), "ProfileFragment");
         });
 
-        iv_am_arrows.setOnClickListener(view -> {
-            ActivitiesFragment activitiesFragment = ActivitiesFragment.newInstance(null);
-            activitiesFragment.show(getSupportFragmentManager(), "ActivitiesFragment");
-        });
-
         tv_am_viewall.setOnClickListener(view -> {
-            ActivitiesFragment activitiesFragment = ActivitiesFragment.newInstance(null);
+            ActivitiesFragment activitiesFragment = ActivitiesFragment.newInstance(null, OPENED_FROM_GG_ACT);
             activitiesFragment.show(getSupportFragmentManager(), "ActivitiesFragment");
         });
 
         startBtn.setOnClickListener(view -> {
             if (centralImg.getTag().equals(R.drawable.ic_light_walking_icon_active))
-                callMeteringActivity(WALK_ID);
+                callMeteringActivity(ACTIVITY_WALK_ID);
             else if (centralImg.getTag().equals(R.drawable.ic_light_running_icon_active))
-                callMeteringActivity(RUN_ID);
+                callMeteringActivity(ACTIVITY_RUN_ID);
             else if (centralImg.getTag().equals(R.drawable.ic_light_bicycling_icon_active))
-                callMeteringActivity(RIDE_ID);
+                callMeteringActivity(ACTIVITY_RIDE_ID);
         });
 
         recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
@@ -358,9 +372,9 @@ public class GetGoingActivity extends AppCompatActivity implements
         });
     }
 
-    public void initProgressBars() {
-        new PullProgressData().execute(null, null, null);
-    }
+//    public void initProgressBars() {
+//        new PullProgressData().execute(null, null, null);
+//    }
 
     private void initScreenDimen() {
         DisplayMetrics metrics = getApplicationContext().getResources().getDisplayMetrics();
@@ -453,121 +467,56 @@ public class GetGoingActivity extends AppCompatActivity implements
 
         switch (acId) {
             case ACTIVITY_WALK_ID:
-                intent.putExtra(DATA_DETAILS_LABEL, getString(R.string.walking));
+                if (currentSettings.getBoolean(PREF_WALK_ROUTE_EXISTING, false)) {
+                    intent.putExtra(DATA_DETAILS_LABEL, getString(R.string.walking));
+                    startActivity(intent);
+                } else {
+                    openAlertDialog();
+                }
                 break;
             case ACTIVITY_RUN_ID:
-                intent.putExtra(DATA_DETAILS_LABEL, getString(R.string.running));
-                break;
-            default:
-                intent.putExtra(DATA_DETAILS_LABEL, getString(R.string.cycling));
-                break;
-        }
-
-        startActivity(intent);
-
-    }
-
-    private class PullProgressData extends AsyncTask<Void, Void, Void> {
-        DbRoute lastRoute;
-        TextView kcalVal, progBar1Act;
-        ImageView progBar1Img;
-
-        @Override
-        protected void onPreExecute() {
-            super.onPreExecute();
-
-            kcalVal = findViewById(R.id.tv_am_kcalval);
-            progBar1Act = findViewById(R.id.tv_am_progbar_act);
-            progBar1Img = findViewById(R.id.iv_am_activity);
-        }
-
-        @Override
-        protected Void doInBackground(Void... voids) {
-            //DbHelper.getInstance(getApplicationContext()).getLastRoute(lastRoute);
-            lastRoute = GgRepository.getInstance().getLastRoute().getValue();
-
-            return null;
-        }
-
-        @Override
-        protected void onPostExecute(Void aVoid) {
-            super.onPostExecute(aVoid);
-
-            if (lastRoute != null) {
-                int lastRouteLen = (int) lastRoute.getLength();
-                int lastRouteTime;
-
-                if (lastRoute.getDuration() >= 60000)
-                    lastRouteTime = Math.round(lastRoute.getDuration() / 1000 / 60);
-                else
-                    lastRouteTime = 0;
-
-                int goal = (int) lastRoute.getGoal();
-                int cpbProgress;
-
-                if (goal != 0)
-                    cpbProgress = Math.round(lastRouteLen * 100 / goal);
-                else
-                    cpbProgress = 0;
-
-                int kcal = (int) lastRoute.getEnergy();
-
-                circleProgressBar.setProgressFormatter(new MyProgressFormatter((double) lastRouteLen));
-                circleProgressBar.setProgress(cpbProgress);
-
-                circleProgressBar2.setProgressFormatter(new MyProgressFormatter2(lastRouteTime));
-                circleProgressBar2.setProgress(100);
-
-                circleProgressBar3.setProgressFormatter(new MyProgressFormatter3());
-
-                kcalVal.setText(String.valueOf(kcal));
-
-                switch (lastRoute.getActivity_id()) {
-                    case 1: {
-                        progBar1Act.setText(getString(R.string.walking));
-                        progBar1Img.setImageDrawable(getResources().getDrawable(R.drawable.ic_walking_icon));
-                        break;
-                    }
-                    case 2: {
-                        progBar1Act.setText(getString(R.string.running));
-                        progBar1Img.setImageDrawable(getResources().getDrawable(R.drawable.ic_running_icon));
-                        break;
-                    }
-                    case 3: {
-                        progBar1Act.setText(getString(R.string.cycling));
-                        progBar1Img.setImageDrawable(getResources().getDrawable(R.drawable.ic_light_bicycling_icon));
-                        break;
-                    }
+                if (currentSettings.getBoolean(PREF_RUN_ROUTE_EXISTING, false)) {
+                    intent.putExtra(DATA_DETAILS_LABEL, getString(R.string.running));
+                    startActivity(intent);
+                } else {
+                    openAlertDialog();
                 }
-            } else
-                resetDisplay();
+                break;
+            case ACTIVITY_RIDE_ID:
+                if(currentSettings.getBoolean(PREF_RIDE_ROUTE_EXISTING, false)) {
+                    intent.putExtra(DATA_DETAILS_LABEL, getString(R.string.cycling));
+                    startActivity(intent);
+                } else {
+                    openAlertDialog();
+                }
+                break;
         }
 
-        private void resetDisplay() {
-            circleProgressBar.setProgressFormatter(new MyProgressFormatter(0));
-            circleProgressBar.setProgress(0);
-
-            circleProgressBar2.setProgressFormatter(new MyProgressFormatter2(0));
-            circleProgressBar2.setProgress(0);
-
-            circleProgressBar3.setProgressFormatter(new MyProgressFormatter3());
-
-            kcalVal.setText(Integer.toString(0));
-        }
     }
+
+    private void openAlertDialog() {
+        new AlertDialog.Builder(this)
+                .setTitle(R.string.alert_dialog_empty_title)
+                .setPositiveButton(R.string.confirm,
+                        (DialogInterface dialog, int whichButton) -> dialog.dismiss())
+                .create()
+                .show();
+    }
+
+
 
     public class ClickHandler {
 
         public void onWalk(View view) {
-            callMeteringActivity(WALK_ID);
+            callMeteringActivity(ACTIVITY_WALK_ID);
         }
 
         public void onRun(View view) {
-            callMeteringActivity(RUN_ID);
+            callMeteringActivity(ACTIVITY_RUN_ID);
         }
 
         public void onRide(View view) {
-            callMeteringActivity(RIDE_ID);
+            callMeteringActivity(ACTIVITY_RIDE_ID);
         }
 
         public void onProfileClick() {

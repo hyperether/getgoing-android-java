@@ -32,7 +32,7 @@ public interface DbRouteDao {
     @Query("DELETE FROM DbRoute WHERE id = :id")
     void deleteRouteById(long id);
 
-    @Query("SELECT * FROM DbRoute ORDER BY id DESC LIMIT 1")
+    @Query("SELECT * FROM DbRoute WHERE goal > 0 ORDER BY id DESC LIMIT 1")
     LiveData<DbRoute> getLatestRoute();
 
     @Update

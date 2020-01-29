@@ -33,6 +33,9 @@ public class Constants {
 
     // Preference file
     public static final String PREF_FILE = "CBUserDataPref.txt";
+    public static final String PREF_WALK_ROUTE_EXISTING = "walk_route_existing";
+    public static final String PREF_RUN_ROUTE_EXISTING = "run_route_existing";
+    public static final String PREF_RIDE_ROUTE_EXISTING = "ride_route_existing";
 
     public static final int NODE_ADD_DISTANCE = 10;
 
@@ -80,4 +83,7 @@ public class Constants {
     public static final int ACTIVITY_WALK_ID = 1;
     public static final int ACTIVITY_RUN_ID = 2;
     public static final int ACTIVITY_RIDE_ID = 3;
+
+    public static final int OPENED_FROM_LOCATION_ACT = 501;
+    public static final int OPENED_FROM_GG_ACT = 502;
 }

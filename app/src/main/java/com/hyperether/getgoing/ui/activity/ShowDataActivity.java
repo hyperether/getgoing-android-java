@@ -2,9 +2,11 @@ package com.hyperether.getgoing.ui.activity;
 
 import android.app.AlertDialog;
 import android.content.DialogInterface;
+import android.content.SharedPreferences;
 import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.os.Bundle;
+import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.databinding.DataBindingUtil;
@@ -37,6 +39,10 @@ import static com.hyperether.getgoing.util.Constants.ACTIVITY_RUN_ID;
 import static com.hyperether.getgoing.util.Constants.ACTIVITY_WALK_ID;
 import static com.hyperether.getgoing.util.Constants.BUNDLE_PARCELABLE;
 import static com.hyperether.getgoing.util.Constants.DATA_DETAILS_LABEL;
+import static com.hyperether.getgoing.util.Constants.PREF_FILE;
+import static com.hyperether.getgoing.util.Constants.PREF_RIDE_ROUTE_EXISTING;
+import static com.hyperether.getgoing.util.Constants.PREF_RUN_ROUTE_EXISTING;
+import static com.hyperether.getgoing.util.Constants.PREF_WALK_ROUTE_EXISTING;
 
 
 public class ShowDataActivity extends AppCompatActivity
@@ -45,7 +51,6 @@ public class ShowDataActivity extends AppCompatActivity
     private ShowDataBinding binding;
 
     private GoogleMap mMap;
-    private LatLngBounds mapBounds;
 
     private final List<DbRoute> routes = new ArrayList<>();
     private RecyclerView.Adapter recyclerAdapter;
@@ -70,9 +75,10 @@ public class ShowDataActivity extends AppCompatActivity
             activityId = ACTIVITY_RIDE_ID;
         }
 
+        initializeViewModel();
         initializeViews();
         populateListView();
-        initializeViewModel();
+
 
         MapFragment mapFragment = (MapFragment) getFragmentManager()
                 .findFragmentById(R.id.sd_map_view);
@@ -96,25 +102,20 @@ public class ShowDataActivity extends AppCompatActivity
                     }
                 }
 
-            } else {
-                routes.addAll(routeList);
             }
 
-            if (routes.size() > 0) {
-                bm = ProgressBarBitmap.getWidgetBitmap(getApplicationContext(), routes.get(0).getGoal(), routes.get(0).getLength(), 400, 400, 160, 220, 20, 0);
-                binding.setVar(routes.get(0));
+            if (routes.size() == 0) {
+                showNoRoutesDialog();
             } else {
-                new AlertDialog.Builder(ShowDataActivity.this)
-                        .setTitle(R.string.alert_dialog_empty_title)
-                        .setPositiveButton(R.string.confirm,
-                                (DialogInterface dialog, int whichButton) -> finish())
-                        .create()
-                        .show();
-                bm = ProgressBarBitmap.getWidgetBitmap(getApplicationContext(), 0, 0, 400, 400, 160, 220, 20, 0);
+                bm = ProgressBarBitmap.getWidgetBitmap(getApplicationContext(), routes.get(routes.size() - 1).getGoal(), routes.get(0).getLength(), 400, 400, 160, 220, 20, 0);
+                binding.setVar(routes.get(routes.size() - 1));
+                binding.progress.setImageBitmap(bm);
+                binding.recyclerList.smoothScrollToPosition(routes.size() - 1);
             }
 
-            binding.progress.setImageBitmap(bm);
             recyclerAdapter.notifyDataSetChanged();
+
+
         });
     }
 
@@ -124,8 +125,55 @@ public class ShowDataActivity extends AppCompatActivity
         binding.ibSdBackBtn.setOnClickListener(v -> onBackPressed());
         binding.btnToggleMap.setOnClickListener(v -> toogleMap());
         binding.mapFragmentHolder.animate().scaleYBy(-1);
+        binding.ibSdDeleteBtn.setOnClickListener(v -> deleteRoute());
     }
 
+
+    private void deleteRoute() {
+
+        AlertDialog.Builder dialog = new AlertDialog.Builder(this);
+        dialog.setCancelable(false);
+        dialog.setMessage(getResources().getString(R.string.alert_dialog_delete_route));
+        dialog.setPositiveButton(R.string.alert_dialog_positive_button_save_btn,
+                (DialogInterface paramDialogInterface, int paramInt) -> {
+                    routeViewModel.removeRouteById(binding.getVar().getId());
+                    Toast.makeText(this, "Route deleted", Toast.LENGTH_SHORT).show();
+                });
+
+        dialog.setNegativeButton(getString(R.string.alert_dialog_negative_button_save_btn),
+                (paramDialogInterface, paramInt) -> {
+                });
+        dialog.show();
+
+
+    }
+
+    private void showNoRoutesDialog() {
+        new AlertDialog.Builder(this)
+                .setCancelable(false)
+                .setMessage(getResources().getString(R.string.alert_dialog_no_routes))
+                .setPositiveButton(R.string.alert_dialog_positive_button_save_btn,
+                        (DialogInterface paramDialogInterface, int paramInt) -> {
+                            SharedPreferences prefs = getSharedPreferences(PREF_FILE, MODE_PRIVATE);
+                            SharedPreferences.Editor editor = prefs.edit();
+
+                            switch (activityId) {
+                                case ACTIVITY_WALK_ID:
+                                    editor.putBoolean(PREF_WALK_ROUTE_EXISTING, false);
+                                    break;
+                                case ACTIVITY_RUN_ID:
+                                    editor.putBoolean(PREF_RUN_ROUTE_EXISTING, false);
+                                    break;
+                                case ACTIVITY_RIDE_ID:
+                                    editor.putBoolean(PREF_RIDE_ROUTE_EXISTING, false);
+                                    break;
+                            }
+                            editor.apply();
+
+                            ShowDataActivity.this.finish();
+                        })
+                .show();
+    }
 
     private void toogleMap() {
 
@@ -171,12 +219,11 @@ public class ShowDataActivity extends AppCompatActivity
                                 .strokeColor(getResources().getColor(R.color.transparent_light_theme_accent))
                                 .strokeWidth(20));
                         mMap.addCircle(new CircleOptions()
-                                .center(new LatLng(dbNodes.get(dbNodes.size()-1).getLatitude(), dbNodes.get(dbNodes.size()-1).getLongitude()))
+                                .center(new LatLng(dbNodes.get(dbNodes.size() - 1).getLatitude(), dbNodes.get(dbNodes.size() - 1).getLongitude()))
                                 .radius(5)
                                 .fillColor(getResources().getColor(R.color.light_theme_accent))
                                 .strokeColor(getResources().getColor(R.color.transparent_light_theme_accent))
                                 .strokeWidth(20));
-
 
 
                         setCameraView(dbNodes);
@@ -193,13 +240,12 @@ public class ShowDataActivity extends AppCompatActivity
         for (DbNode node : routeNodes) {
             builder.include(new LatLng(node.getLatitude(), node.getLongitude()));
         }
-        mapBounds = builder.build();
 
-        // TODO - add padding/offset to bounds - Ivana
-        mMap.moveCamera(CameraUpdateFactory
-                .newLatLngBounds(mapBounds, 1));
-
-
+        // find route center point
+        LatLng center = builder.build().getCenter();
+        // zoom over center
+        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(
+                center, 16));
     }
 
     /**
@@ -229,7 +275,7 @@ public class ShowDataActivity extends AppCompatActivity
 
     @Override
     public void onMapReady(GoogleMap googleMap) {
-    this.mMap = googleMap;
+        this.mMap = googleMap;
         mMap.getUiSettings().setZoomControlsEnabled(true);
     }
 
