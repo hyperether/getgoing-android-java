@@ -83,7 +83,6 @@ public class GetGoingActivity extends AppCompatActivity implements
     private RecyclerView recyclerView;
     private RecyclerView.LayoutManager layoutManager;
 
-    private CircleProgressBar circleProgressBar, circleProgressBar2, circleProgressBar3;
     private HorizontalListAdapter mAdapter;
     private ImageView blueRectangle;
     private ImageView selectorView;
@@ -391,7 +390,7 @@ public class GetGoingActivity extends AppCompatActivity implements
             ViewGroup.MarginLayoutParams params1 = (ViewGroup.MarginLayoutParams) blueRectangle.getLayoutParams();
             ViewGroup.MarginLayoutParams params2 = (ViewGroup.MarginLayoutParams) lastExeLabel.getLayoutParams();
 
-            blueRectangle.getLayoutParams().height = (int) (circleProgressBar.getLayoutParams().height + circleProgressBar.getLayoutParams().height * 0.3);
+            blueRectangle.getLayoutParams().height = (int) (mBinding.cpbAmKmgoal.getLayoutParams().height + mBinding.cpbAmKmgoal.getLayoutParams().height * 0.3);
             blueRectangle.getLayoutParams().height = 650;
 
             params.bottomMargin = 150;
