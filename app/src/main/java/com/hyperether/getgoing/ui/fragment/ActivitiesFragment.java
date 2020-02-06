@@ -222,7 +222,6 @@ public class ActivitiesFragment extends DialogFragment {
         high.setOnClickListener(view -> seekBar.setProgress(Constants.CONST_HIGH_DIST));
         backBtn.setOnClickListener(view -> this.getDialog().dismiss());
 
-
         openActivityDetails();
 
         saveChanges.setOnClickListener(view -> {
@@ -254,11 +253,9 @@ public class ActivitiesFragment extends DialogFragment {
                 }
             }
         });
-
     }
 
     private void openActivityDetails() {
-
         Bundle bundle = new Bundle();
         bundle.putInt(BUNDLE_ACTION, ACTION_OPEN_ACTIVITY_DETAILS);
 
@@ -276,8 +273,6 @@ public class ActivitiesFragment extends DialogFragment {
             bundle.putInt(BUNDLE_ACTIVITY_ID, ACTIVITY_RIDE_ID);
             listener.onClick(bundle);
         });
-
-
     }
 
     private int[] getTimeEstimates(int dist) {
@@ -303,7 +298,6 @@ public class ActivitiesFragment extends DialogFragment {
         minutesCycling.setText(timeEstimates[2] + " min");
 
         kcal.setText("About " + (int) (progress * 0.00112 * settings.getInt("weight", 0)) + "kcal");
-
     }
 
     private void fillProgressBars() {

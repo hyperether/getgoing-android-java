@@ -38,9 +38,7 @@ public class LastExerciseBindingAdapter {
                 break;
             default:
                 view.setVisibility(View.INVISIBLE);
-
         }
-
     }
 
     @androidx.databinding.BindingAdapter("progress_activity_name")

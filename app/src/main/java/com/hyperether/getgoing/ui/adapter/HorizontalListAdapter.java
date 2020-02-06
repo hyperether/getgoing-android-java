@@ -21,8 +21,7 @@ public class HorizontalListAdapter extends RecyclerView.Adapter<HorizontalListAd
 
     public ViewHolder mHolder;
 
-    public HorizontalListAdapter(SparseIntArray data, Context pContext)
-    {
+    public HorizontalListAdapter(SparseIntArray data, Context pContext) {
         this.imgList = data;
         this.mInflater = LayoutInflater.from(pContext);
         this.mContext = pContext;
@@ -71,11 +70,6 @@ public class HorizontalListAdapter extends RecyclerView.Adapter<HorizontalListAd
     @Override
     public int getItemCount() {
         return imgList.size() * 10;
-    }
-
-    public ViewHolder getHolder()
-    {
-        return mHolder;
     }
 
     public static class ViewHolder extends RecyclerView.ViewHolder {

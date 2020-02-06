@@ -33,17 +33,18 @@ public class CurvedBottomView extends View {
         super(context);
         init();
     }
+
     public CurvedBottomView(Context context, AttributeSet attrs) {
         super(context, attrs);
         init();
     }
+
     public CurvedBottomView(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
         init();
     }
 
-    private void init()
-    {
+    private void init() {
         mPath = new Path();
         mPaint = new Paint();
 

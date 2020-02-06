@@ -6,14 +6,6 @@ package com.hyperether.getgoing.util;
 
 public class Constants {
 
-    // Global constants
-    /*
-     * Define a request code to send to Google Play services
-	 * This code is returned in Activity.onActivityResult
-	 */
-    public final static int
-            CONNECTION_FAILURE_RESOLUTION_REQUEST = 9000;
-
     // Milliseconds per second
     public static final int MILLISECONDS_PER_SECOND = 1000;
 
@@ -39,12 +31,8 @@ public class Constants {
 
     public static final int NODE_ADD_DISTANCE = 10;
 
-    public static final int REQUEST_RESOLVE_ERROR = 1001;
-
     //Permission request TAG
     public static final int TAG_CODE_PERMISSION_LOCATION = 1;
-
-    public static final int RESULT_REQUESTED = 1;
 
     public static final int METRIC = 0;
 
@@ -77,7 +65,6 @@ public class Constants {
     public static final String BUNDLE_ACTIVITY_ID = "bundle_activity_id";
 
     public static final int ACTION_OPEN_ACTIVITY_DETAILS = 3001;
-
 
     // activities IDs
     public static final int ACTIVITY_WALK_ID = 1;

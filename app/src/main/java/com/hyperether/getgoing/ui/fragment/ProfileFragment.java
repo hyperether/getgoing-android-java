@@ -360,5 +360,4 @@ public class ProfileFragment extends DialogFragment {
         totalMileage = getView().findViewById(R.id.tv_fp_mileage);
         totalCalories = getView().findViewById(R.id.tv_fp_calories);
     }
-
 }

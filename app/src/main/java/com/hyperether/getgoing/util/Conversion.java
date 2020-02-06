@@ -59,13 +59,13 @@ public class Conversion {
         return 6366000 * tt;
     }
 
-    public static int convertDpToPixel(float dp, Context context){
+    public static int convertDpToPixel(float dp, Context context) {
         final float scale = context.getResources().getDisplayMetrics().density;
         return (int) (dp * scale + 0.5f);
     }
 
     public static int convertPixelToDp(Context context, float pxValue) {
-        final float scale =  context.getResources().getDisplayMetrics().density;
+        final float scale = context.getResources().getDisplayMetrics().density;
         return (int) (pxValue / scale + 0.5f);
     }
 }

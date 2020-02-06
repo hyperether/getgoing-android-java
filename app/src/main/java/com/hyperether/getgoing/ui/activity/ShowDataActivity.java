@@ -79,46 +79,36 @@ public class ShowDataActivity extends AppCompatActivity
         initializeViews();
         populateListView();
 
-
         MapFragment mapFragment = (MapFragment) getFragmentManager()
                 .findFragmentById(R.id.sd_map_view);
         mapFragment.getMapAsync(this);
-
     }
-
 
     private void initializeViewModel() {
         routeViewModel = ViewModelProviders.of(this).get(RouteViewModel.class);
         routeViewModel.getRouteList().observe(this, routeList -> {
             routes.clear();
-
-            Bitmap bm;
             if (routeList.size() > 1) {
                 routeList.remove(0); // remove 0th node
-
                 for (DbRoute route : routeList) {
                     if (route.getActivity_id() == activityId) {
                         routes.add(route);
                     }
                 }
-
             }
 
             if (routes.size() == 0) {
                 showNoRoutesDialog();
             } else {
-                bm = ProgressBarBitmap.getWidgetBitmap(getApplicationContext(), routes.get(routes.size() - 1).getGoal(), routes.get(0).getLength(), 400, 400, 160, 220, 20, 0);
+                Bitmap bm = ProgressBarBitmap.getWidgetBitmap(getApplicationContext(), routes.get(routes.size() - 1).getGoal(), routes.get(0).getLength(), 400, 400, 160, 220, 20, 0);
                 binding.setVar(routes.get(routes.size() - 1));
                 binding.progress.setImageBitmap(bm);
                 binding.recyclerList.smoothScrollToPosition(routes.size() - 1);
             }
 
             recyclerAdapter.notifyDataSetChanged();
-
-
         });
     }
-
 
     private void initializeViews() {
         binding.tvSdLabel.setText(dataLabel);
@@ -128,9 +118,7 @@ public class ShowDataActivity extends AppCompatActivity
         binding.ibSdDeleteBtn.setOnClickListener(v -> deleteRoute());
     }
 
-
     private void deleteRoute() {
-
         AlertDialog.Builder dialog = new AlertDialog.Builder(this);
         dialog.setCancelable(false);
         dialog.setMessage(getResources().getString(R.string.alert_dialog_delete_route));
@@ -144,8 +132,6 @@ public class ShowDataActivity extends AppCompatActivity
                 (paramDialogInterface, paramInt) -> {
                 });
         dialog.show();
-
-
     }
 
     private void showNoRoutesDialog() {
@@ -176,7 +162,6 @@ public class ShowDataActivity extends AppCompatActivity
     }
 
     private void toogleMap() {
-
         if (!mapToogleDown) {
             binding.btnToggleMap.animate().rotationBy(180).setDuration(500);
             mapToogleDown = true;
@@ -192,11 +177,8 @@ public class ShowDataActivity extends AppCompatActivity
     }
 
     private void drawSavedRoute() {
-
         mMap.clear();
-
         DbRoute route = binding.getVar();
-
         routeViewModel.getNodeListById(route.getId())
                 .observe(this, dbNodes -> {
 
@@ -228,14 +210,10 @@ public class ShowDataActivity extends AppCompatActivity
 
                         setCameraView(dbNodes);
                     }
-
                 });
-
-
     }
 
     private void setCameraView(List<DbNode> routeNodes) {
-
         LatLngBounds.Builder builder = new LatLngBounds.Builder();
         for (DbNode node : routeNodes) {
             builder.include(new LatLng(node.getLatitude(), node.getLongitude()));
@@ -244,8 +222,7 @@ public class ShowDataActivity extends AppCompatActivity
         // find route center point
         LatLng center = builder.build().getCenter();
         // zoom over center
-        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(
-                center, 16));
+        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(center, 16));
     }
 
     /**
@@ -270,7 +247,6 @@ public class ShowDataActivity extends AppCompatActivity
             binding.progress.setImageBitmap(bm);
             drawSavedRoute();
         }
-
     }
 
     @Override
@@ -278,5 +254,4 @@ public class ShowDataActivity extends AppCompatActivity
         this.mMap = googleMap;
         mMap.getUiSettings().setZoomControlsEnabled(true);
     }
-
 }

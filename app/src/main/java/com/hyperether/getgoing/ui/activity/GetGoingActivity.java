@@ -1,7 +1,6 @@
 package com.hyperether.getgoing.ui.activity;
 
 import android.Manifest;
-import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -29,7 +28,6 @@ import androidx.recyclerview.widget.RecyclerView;
 import androidx.recyclerview.widget.SnapHelper;
 
 import com.crashlytics.android.Crashlytics;
-import com.dinuscxj.progressbar.CircleProgressBar;
 import com.hyperether.getgoing.R;
 import com.hyperether.getgoing.databinding.ActivityMainBinding;
 import com.hyperether.getgoing.listeners.GgOnClickListener;
@@ -42,7 +40,6 @@ import com.hyperether.getgoing.ui.adapter.HorizontalListAdapter;
 import com.hyperether.getgoing.ui.adapter.formatter.TimeProgressFormatterInvisible;
 import com.hyperether.getgoing.ui.fragment.ActivitiesFragment;
 import com.hyperether.getgoing.ui.fragment.ProfileFragment;
-import com.hyperether.getgoing.ui.fragment.old.SettingsFragment;
 import com.hyperether.getgoing.util.Constants;
 
 import java.util.ArrayList;
@@ -50,7 +47,6 @@ import java.util.List;
 
 import io.fabric.sdk.android.Fabric;
 
-import static com.hyperether.getgoing.ui.fragment.old.SettingsFragment.DATA_KEY;
 import static com.hyperether.getgoing.util.Constants.ACTION_OPEN_ACTIVITY_DETAILS;
 import static com.hyperether.getgoing.util.Constants.ACTIVITY_RIDE_ID;
 import static com.hyperether.getgoing.util.Constants.ACTIVITY_RUN_ID;
@@ -63,14 +59,7 @@ import static com.hyperether.getgoing.util.Constants.PREF_RIDE_ROUTE_EXISTING;
 import static com.hyperether.getgoing.util.Constants.PREF_RUN_ROUTE_EXISTING;
 import static com.hyperether.getgoing.util.Constants.PREF_WALK_ROUTE_EXISTING;
 
-public class GetGoingActivity extends AppCompatActivity implements
-        SettingsFragment.SettingsFragmentListener, GgOnClickListener {
-
-//    private static final int WALK_ID = 1;
-//    private static final int RUN_ID = 2;
-//    private static final int RIDE_ID = 3;
-    //private static final int IMPERIAL = 1;
-    //private static final int US = 2;
+public class GetGoingActivity extends AppCompatActivity implements GgOnClickListener {
 
     public static float ratio = (float) 0.0;
 
@@ -92,8 +81,6 @@ public class GetGoingActivity extends AppCompatActivity implements
 
     private SharedPreferences currentSettings;
 
-//    private DbRoute lastRoute;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         setTheme(R.style.AppTheme);
@@ -102,7 +89,6 @@ public class GetGoingActivity extends AppCompatActivity implements
         Fabric.with(this, new Crashlytics());
 
         mBinding = DataBindingUtil.setContentView(this, R.layout.activity_main);
-        mBinding.setViewModel(new ClickHandler());
         mBinding.cpbAmKmgoal2.setProgressFormatter(new TimeProgressFormatterInvisible());
 
         cbDataFrameLocal = CacheManager.getInstance().getObDataFrameGlobal();
@@ -127,9 +113,7 @@ public class GetGoingActivity extends AppCompatActivity implements
     @Override
     protected void onResume() {
         super.onResume();
-
         initModel();
-//        initProgressBars();
     }
 
     @Override
@@ -140,18 +124,6 @@ public class GetGoingActivity extends AppCompatActivity implements
                     .PERMISSION_GRANTED) {
             } else {
                 finish();
-            }
-        }
-    }
-
-    @Override
-    public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == Constants.RESULT_REQUESTED) {
-            if (resultCode == Activity.RESULT_OK) {
-                if (data.hasExtra(DATA_KEY)) {
-                    this.cbDataFrameLocal = data.getParcelableExtra(DATA_KEY);
-                }
             }
         }
     }
@@ -371,10 +343,6 @@ public class GetGoingActivity extends AppCompatActivity implements
         });
     }
 
-//    public void initProgressBars() {
-//        new PullProgressData().execute(null, null, null);
-//    }
-
     private void initScreenDimen() {
         DisplayMetrics metrics = getApplicationContext().getResources().getDisplayMetrics();
         ratio = (float) metrics.heightPixels / (float) metrics.widthPixels;
@@ -434,34 +402,23 @@ public class GetGoingActivity extends AppCompatActivity implements
         return closestChild;
     }
 
-    @Override
-    public void onDataSent(CBDataFrame dataFrame) {
-        cbDataFrameLocal = dataFrame;
-    }
-
     private void roomStoreNodeZero(List<DbNode> nodeList) {
         DbRoute dbRoute = new DbRoute(0, 0, 0, 0, "null", 0, 1, 0);
         GgRepository.getInstance().insertRouteInit(dbRoute, nodeList);
     }
 
-
     @Override
     public void onClick(Bundle bundle) {
-
         int action = bundle.getInt(BUNDLE_ACTION);
         switch (action) {
             case ACTION_OPEN_ACTIVITY_DETAILS:
                 openActivityDetails(bundle);
                 break;
         }
-
-
     }
 
     private void openActivityDetails(Bundle bundle) {
-
         int acId = bundle.getInt(BUNDLE_ACTIVITY_ID);
-
         Intent intent = new Intent(this, ShowDataActivity.class);
 
         switch (acId) {
@@ -482,7 +439,7 @@ public class GetGoingActivity extends AppCompatActivity implements
                 }
                 break;
             case ACTIVITY_RIDE_ID:
-                if(currentSettings.getBoolean(PREF_RIDE_ROUTE_EXISTING, false)) {
+                if (currentSettings.getBoolean(PREF_RIDE_ROUTE_EXISTING, false)) {
                     intent.putExtra(DATA_DETAILS_LABEL, getString(R.string.cycling));
                     startActivity(intent);
                 } else {
@@ -490,7 +447,6 @@ public class GetGoingActivity extends AppCompatActivity implements
                 }
                 break;
         }
-
     }
 
     private void openAlertDialog() {
@@ -501,27 +457,4 @@ public class GetGoingActivity extends AppCompatActivity implements
                 .create()
                 .show();
     }
-
-
-
-    public class ClickHandler {
-
-        public void onWalk(View view) {
-            callMeteringActivity(ACTIVITY_WALK_ID);
-        }
-
-        public void onRun(View view) {
-            callMeteringActivity(ACTIVITY_RUN_ID);
-        }
-
-        public void onRide(View view) {
-            callMeteringActivity(ACTIVITY_RIDE_ID);
-        }
-
-        public void onProfileClick() {
-            ProfileFragment profileFragment = ProfileFragment.newInstance(null);
-            profileFragment.show(getSupportFragmentManager(), "ProfileFragment");
-        }
-    }
-
 }
