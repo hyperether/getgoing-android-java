@@ -1,4 +1,4 @@
-package com.hyperether.getgoing.ui.adapter.bindingadapter;
+package com.hyperether.getgoing.ui.bindingadapter;
 
 import android.view.View;
 import android.widget.TextView;

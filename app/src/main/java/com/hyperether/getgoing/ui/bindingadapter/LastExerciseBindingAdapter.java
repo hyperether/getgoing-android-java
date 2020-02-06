@@ -1,4 +1,4 @@
-package com.hyperether.getgoing.ui.adapter.bindingadapter;
+package com.hyperether.getgoing.ui.bindingadapter;
 
 import android.graphics.drawable.Drawable;
 import android.view.View;
@@ -8,8 +8,8 @@ import android.widget.TextView;
 import com.dinuscxj.progressbar.CircleProgressBar;
 import com.hyperether.getgoing.R;
 import com.hyperether.getgoing.repository.room.entity.DbRoute;
-import com.hyperether.getgoing.ui.adapter.formatter.DistanceProgressFormatter;
-import com.hyperether.getgoing.ui.adapter.formatter.TimeProgressFormatter;
+import com.hyperether.getgoing.ui.formatter.DistanceProgressFormatter;
+import com.hyperether.getgoing.ui.formatter.TimeProgressFormatter;
 
 import static com.hyperether.getgoing.util.Constants.ACTIVITY_RIDE_ID;
 import static com.hyperether.getgoing.util.Constants.ACTIVITY_RUN_ID;

@@ -1,4 +1,4 @@
-package com.hyperether.getgoing.ui.adapter.formatter;
+package com.hyperether.getgoing.ui.formatter;
 
 import android.annotation.SuppressLint;
 

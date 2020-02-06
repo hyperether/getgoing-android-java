@@ -37,7 +37,7 @@ import com.hyperether.getgoing.repository.room.GgRepository;
 import com.hyperether.getgoing.repository.room.entity.DbNode;
 import com.hyperether.getgoing.repository.room.entity.DbRoute;
 import com.hyperether.getgoing.ui.adapter.HorizontalListAdapter;
-import com.hyperether.getgoing.ui.adapter.formatter.TimeProgressFormatterInvisible;
+import com.hyperether.getgoing.ui.formatter.TimeProgressFormatterInvisible;
 import com.hyperether.getgoing.ui.fragment.ActivitiesFragment;
 import com.hyperether.getgoing.ui.fragment.ProfileFragment;
 import com.hyperether.getgoing.util.Constants;
