@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="app_name">GetGoing</string>
+    <string name="google_maps_key"></string>
     <!-- google maps id-->
     <string name="dialog_message" translatable="false">No saved data. Press OK to continue.</string>
     <string name="confirm" translatable="false">OK</string>
