@@ -241,6 +241,7 @@ public class GetGoingActivity extends AppCompatActivity implements GgOnClickList
     private void initListeners() {
         ImageView ib_am_user = findViewById(R.id.ib_am_user);
         TextView tv_am_viewall = findViewById(R.id.tv_am_viewall);
+        ImageView iv_am_bluerectangle = findViewById(R.id.iv_am_bluerectangle);
         Button startBtn = findViewById(R.id.materialButton);
 
 
@@ -250,6 +251,11 @@ public class GetGoingActivity extends AppCompatActivity implements GgOnClickList
         });
 
         tv_am_viewall.setOnClickListener(view -> {
+            ActivitiesFragment activitiesFragment = ActivitiesFragment.newInstance(null, OPENED_FROM_GG_ACT);
+            activitiesFragment.show(getSupportFragmentManager(), "ActivitiesFragment");
+        });
+
+        iv_am_bluerectangle.setOnClickListener(view -> {
             ActivitiesFragment activitiesFragment = ActivitiesFragment.newInstance(null, OPENED_FROM_GG_ACT);
             activitiesFragment.show(getSupportFragmentManager(), "ActivitiesFragment");
         });

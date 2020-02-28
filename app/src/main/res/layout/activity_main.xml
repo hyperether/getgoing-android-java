@@ -65,6 +65,7 @@
             android:text="@string/view_all"
             android:textColor="@color/light_theme_accent"
             android:textSize="18sp"
+            android:textStyle="bold"
             app:layout_constraintBottom_toBottomOf="@+id/tv_am_lastexercise"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="@+id/tv_am_lastexercise" />
@@ -293,6 +294,8 @@
             android:textAllCaps="false"
             android:textColor="@android:color/white"
             android:textSize="18sp"
+            android:outlineSpotShadowColor="@color/getready_shadow"
+            android:outlineAmbientShadowColor="@color/getready_shadow"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.505"
