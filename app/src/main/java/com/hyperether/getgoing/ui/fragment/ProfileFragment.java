@@ -186,7 +186,7 @@ public class ProfileFragment extends DialogFragment {
 
         switch (pID) {
             case "gender": {
-                genderBuilder = new AlertDialog.Builder(pView.getContext());
+                genderBuilder = new AlertDialog.Builder(pView.getContext(), R.style.AlertDialogTheme);
                 final String[] newText = new String[1];
                 newText[0] = "Male";
 
@@ -233,7 +233,7 @@ public class ProfileFragment extends DialogFragment {
                     ageList.add(Integer.toString(i));
                 }
 
-                ageBuilder = new AlertDialog.Builder(pView.getContext());
+                ageBuilder = new AlertDialog.Builder(pView.getContext(), R.style.AlertDialogTheme);
                 inflater = LayoutInflater.from(pView.getContext());
 
                 View toInflate = inflater.inflate(R.layout.alertdialog_age, rootViewGroup);
@@ -263,7 +263,7 @@ public class ProfileFragment extends DialogFragment {
                     weightList.add(Integer.toString(i));
                 }
 
-                weightBuilder = new AlertDialog.Builder(pView.getContext());
+                weightBuilder = new AlertDialog.Builder(pView.getContext(), R.style.AlertDialogTheme);
                 inflater = LayoutInflater.from(pView.getContext());
 
                 View toInflate = inflater.inflate(R.layout.alertdialog_weight, rootViewGroup);
@@ -293,7 +293,7 @@ public class ProfileFragment extends DialogFragment {
                     heightList.add(Integer.toString(i));
                 }
 
-                heightBuilder = new AlertDialog.Builder(pView.getContext());
+                heightBuilder = new AlertDialog.Builder(pView.getContext(), R.style.AlertDialogTheme);
                 inflater = LayoutInflater.from(pView.getContext());
 
                 View toInflate = inflater.inflate(R.layout.alertdialog_height, rootViewGroup);
