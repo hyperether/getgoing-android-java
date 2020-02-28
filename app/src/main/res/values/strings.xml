@@ -77,7 +77,7 @@
     <string name="totalkm_0km">0km</string>
     <string name="totalkcal_0kcal">0kcal</string>
     <string name="walking">Walking</string>
-    <string name="cycling">Cycling</string>
+    <string name="cycling">Bicycling</string>
     <string name="duration">Duration</string>
     <string name="speed">Speed</string>
     <string name="calories">Calories</string>

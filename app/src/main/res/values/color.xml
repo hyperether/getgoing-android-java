@@ -7,4 +7,6 @@
     <color name="walk_shadow">#6F087389</color>
     <color name="run_shadow">#6F503B53</color>
     <color name="ride_shadow">#6F7EAE1B</color>
+    <color name="getready_shadow">#1100FF</color>
+
 </resources>
