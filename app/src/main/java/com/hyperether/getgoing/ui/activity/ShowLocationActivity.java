@@ -685,23 +685,7 @@ public class ShowLocationActivity extends AppCompatActivity implements OnMapRead
 
     private void onAnyBackButtonPressed() {
         if (mLocTrackingRunning || !mRouteAlreadySaved) {
-            AlertDialog.Builder dialog = new AlertDialog.Builder(this);
-            dialog.setCancelable(false);
-            dialog.setTitle(R.string.alert_dialog_title_back_pressed);
-            dialog.setMessage(getString(R.string.alert_dialog_message_back_pressed));
-            dialog.setPositiveButton(R.string.alert_dialog_positive_back_pressed, (paramDialogInterface, paramInt) -> {
-                stopService(new Intent(GetGoingApp.getInstance().getApplicationContext(),
-                        GPSTrackingService.class));
-                clearCacheData();
-                // TODO remove temporary route and nodes from database - Ivana
-                finish();
-            });
-
-            dialog.setNegativeButton(getString(R.string.alert_dialog_negative_back_pressed),
-                    (paramDialogInterface, paramInt) -> {
-                    });
-
-            dialog.show();
+            this.moveTaskToBack(true);
         } else {
             super.onBackPressed();
         }
