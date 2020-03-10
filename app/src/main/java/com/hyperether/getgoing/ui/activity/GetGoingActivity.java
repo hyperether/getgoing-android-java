@@ -40,6 +40,7 @@ import com.hyperether.getgoing.ui.adapter.HorizontalListAdapter;
 import com.hyperether.getgoing.ui.formatter.TimeProgressFormatterInvisible;
 import com.hyperether.getgoing.ui.fragment.ActivitiesFragment;
 import com.hyperether.getgoing.ui.fragment.ProfileFragment;
+import com.hyperether.getgoing.ui.fragment.ShowDataFragment;
 import com.hyperether.getgoing.util.Constants;
 
 import java.util.ArrayList;
@@ -425,29 +426,28 @@ public class GetGoingActivity extends AppCompatActivity implements GgOnClickList
 
     private void openActivityDetails(Bundle bundle) {
         int acId = bundle.getInt(BUNDLE_ACTIVITY_ID);
-        Intent intent = new Intent(this, ShowDataActivity.class);
 
         switch (acId) {
             case ACTIVITY_WALK_ID:
                 if (currentSettings.getBoolean(PREF_WALK_ROUTE_EXISTING, false)) {
-                    intent.putExtra(DATA_DETAILS_LABEL, getString(R.string.walking));
-                    startActivity(intent);
+                    ShowDataFragment showDataFragment = ShowDataFragment.newInstance(getString(R.string.walking));
+                    showDataFragment.show(getSupportFragmentManager(), "ShowDataFragment");
                 } else {
                     openAlertDialog();
                 }
                 break;
             case ACTIVITY_RUN_ID:
                 if (currentSettings.getBoolean(PREF_RUN_ROUTE_EXISTING, false)) {
-                    intent.putExtra(DATA_DETAILS_LABEL, getString(R.string.running));
-                    startActivity(intent);
+                    ShowDataFragment showDataFragment = ShowDataFragment.newInstance(getString(R.string.running));
+                    showDataFragment.show(getSupportFragmentManager(), "ShowDataFragment");
                 } else {
                     openAlertDialog();
                 }
                 break;
             case ACTIVITY_RIDE_ID:
                 if (currentSettings.getBoolean(PREF_RIDE_ROUTE_EXISTING, false)) {
-                    intent.putExtra(DATA_DETAILS_LABEL, getString(R.string.cycling));
-                    startActivity(intent);
+                    ShowDataFragment showDataFragment = ShowDataFragment.newInstance(getString(R.string.cycling));
+                    showDataFragment.show(getSupportFragmentManager(), "ShowDataFragment");
                 } else {
                     openAlertDialog();
                 }
