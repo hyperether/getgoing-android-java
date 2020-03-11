@@ -1,5 +1,7 @@
 package com.hyperether.getgoing.util;
 
+import android.content.Context;
+
 public class Conversion {
     /**
      * Convert number of milliseconds into form HH:mm:ss
@@ -55,5 +57,15 @@ public class Conversion {
         double tt = Math.acos(t1 + t2 + t3);
 
         return 6366000 * tt;
+    }
+
+    public static int convertDpToPixel(float dp, Context context) {
+        final float scale = context.getResources().getDisplayMetrics().density;
+        return (int) (dp * scale + 0.5f);
+    }
+
+    public static int convertPixelToDp(Context context, float pxValue) {
+        final float scale = context.getResources().getDisplayMetrics().density;
+        return (int) (pxValue / scale + 0.5f);
     }
 }

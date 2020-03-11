@@ -1,21 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <color name="black">#000000</color>
-    <color name="settings_font">#5D777B</color>
-    <color name="settings_view_first_line">#7F969A</color>
-    <color name="settings_view_second_line">#D1D8D9</color>
-    <color name="settings_btn_accept_bgd">#067389</color>
-    <color name="settings_btn_accept_font">#CFE1E5</color>
-    <color name="settings_grey_field_normal">#E0E5E3</color>
-    <color name="settings_grey_field_focus">#9FC5CE</color>
-    <color name="settings_edit_gradient_start">#FAFCFB</color>
-    <color name="settings_edit_gradient_end">#DBE3E4</color>
-    <color name="list_element_font">#C3CED1</color>
-    <color name="location_view_line">#CCD5D7</color>
     <color name="walk_graph_color">#087389</color>
     <color name="run_graph_color">#503b53</color>
     <color name="ride_graph_color">#7eae1b</color>
     <color name="walk_shadow">#6F087389</color>
     <color name="run_shadow">#6F503B53</color>
     <color name="ride_shadow">#6F7EAE1B</color>
+    <color name="getready_shadow">#1100FF</color>
+
 </resources>

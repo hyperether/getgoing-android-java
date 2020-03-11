@@ -1,7 +1,7 @@
 package com.hyperether.getgoing.manager;
 
-import com.hyperether.getgoing.data.CBDataFrame;
-import com.hyperether.getgoing.db.DbNode;
+import com.hyperether.getgoing.model.CBDataFrame;
+import com.hyperether.getgoing.repository.room.entity.DbNode;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -20,16 +20,21 @@ public class CacheManager {
     private Double kcalCumulative;
     private Double velocity;
     private Double velocityAvg;
-    private CBDataFrame obDataFrameLocal;
+    private CBDataFrame obDataFrameGlobal;
     private long timeCumulative;
     private int secondsCumulative;
     private long time = 0; // time between to position updates
+    private long currentRouteId = 0;
 
     public static CacheManager getInstance() {
         if (instance == null) {
             instance = new CacheManager();
         }
         return instance;
+    }
+
+    private CacheManager() {
+        obDataFrameGlobal = CBDataFrame.getInstance();
     }
 
     public void addRouteNode(DbNode dbNode) {
@@ -88,12 +93,12 @@ public class CacheManager {
         this.velocityAvg = velocityAvg;
     }
 
-    public CBDataFrame getObDataFrameLocal() {
-        return obDataFrameLocal;
+    public CBDataFrame getObDataFrameGlobal() {
+        return obDataFrameGlobal;
     }
 
     public void setObDataFrameLocal(CBDataFrame obDataFrameLocal) {
-        this.obDataFrameLocal = obDataFrameLocal;
+        this.obDataFrameGlobal = obDataFrameLocal;
     }
 
     public long getTimeCumulative() {
@@ -118,5 +123,13 @@ public class CacheManager {
 
     public void setTime(long time) {
         this.time = time;
+    }
+
+    public long getCurrentRouteId() {
+        return currentRouteId;
+    }
+
+    public void setCurrentRouteId(long currentRouteId) {
+        this.currentRouteId = currentRouteId;
     }
 }

@@ -1,13 +1,13 @@
 package com.hyperether.getgoing.util;
 
-import com.hyperether.getgoing.data.CBDataFrame;
+import com.hyperether.getgoing.model.CBDataFrame;
 
 
 public class CaloriesCalculation {
     // Algorithm variables
     // Lookup table for calories calculation first is speed in m/s, second is
     // kcal/m*kg
-    private final double kcalMatrix[][] = {{0.89, 0.00078}, {1.12, 0.00074},
+    private final double[][] kcalMatrix = {{0.89, 0.00078}, {1.12, 0.00074},
             {1.34, 0.00073}, {1.56, 0.00071}, {1.79, 0.00078},
             {2.01, 0.00087}, {2.23, 0.00099}, {2.68, 0.00104},
             {3.13, 0.00102}, {3.58, 0.00105}, {4.02, 0.00104},
