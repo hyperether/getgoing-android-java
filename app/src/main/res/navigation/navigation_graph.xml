@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/navigation_graph"
+    app:startDestination="@id/getGoingFragment">
+    <fragment
+        android:id="@+id/getGoingFragment"
+        android:name="com.hyperether.getgoing.ui.fragment.GetGoingFragment"
+        android:label="fragment_getgoing"
+        tools:layout="@layout/fragment_getgoing" >
+        <action
+            android:id="@+id/action_getGoingFragment_to_activitiesFragment"
+            app:destination="@id/activitiesFragment" />
+        <action
+            android:id="@+id/action_getGoingFragment_to_profileFragment"
+            app:destination="@id/profileFragment" />
+        <action
+            android:id="@+id/action_getGoingFragment_to_trackingFragment"
+            app:destination="@id/trackingFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/activitiesFragment"
+        android:name="com.hyperether.getgoing.ui.fragment.ActivitiesFragment"
+        android:label="fragment_activities"
+        tools:layout="@layout/fragment_activities" >
+        <argument
+            android:name="from"
+            app:argType="integer"/>
+        <action
+            android:id="@+id/action_activitiesFragment_to_showDataFragment"
+            app:destination="@id/showDataFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/profileFragment"
+        android:name="com.hyperether.getgoing.ui.fragment.ProfileFragment"
+        android:label="fragment_profile"
+        tools:layout="@layout/fragment_profile" />
+    <fragment
+        android:id="@+id/showDataFragment"
+        android:name="com.hyperether.getgoing.ui.fragment.ShowDataFragment"
+        android:label="fragment_showdata"
+        tools:layout="@layout/fragment_showdata">
+        <argument
+            android:name="activityName"/>
+    </fragment>
+    <fragment
+        android:id="@+id/trackingFragment"
+        android:name="com.hyperether.getgoing.ui.fragment.TrackingFragment"
+        android:label="fragment_tracking"
+        tools:layout="@layout/fragment_tracking" >
+
+        <argument
+            android:name="searchKey"
+            app:argType="com.hyperether.getgoing.model.CBDataFrame"/>
+        <action
+            android:id="@+id/action_trackingFragment_to_activitiesFragment"
+            app:destination="@id/activitiesFragment" />
+    </fragment>
+</navigation>

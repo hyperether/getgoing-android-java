@@ -8,6 +8,13 @@ import android.content.DialogInterface;
 import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Bundle;
+
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.fragment.app.Fragment;
+import androidx.navigation.NavController;
+import androidx.navigation.Navigation;
+
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -18,13 +25,8 @@ import android.widget.SeekBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.fragment.app.DialogFragment;
-
 import com.hyperether.getgoing.R;
 import com.hyperether.getgoing.listeners.GgOnClickListener;
-import com.hyperether.getgoing.model.CBDataFrame;
 import com.hyperether.getgoing.repository.room.DbHelper;
 import com.hyperether.getgoing.repository.room.entity.DbRoute;
 import com.hyperether.getgoing.util.Constants;
@@ -34,7 +36,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
-import static com.hyperether.getgoing.ui.activity.GetGoingActivity.ratio;
+import static com.hyperether.getgoing.ui.fragment.GetGoingFragment.ratio;
 import static com.hyperether.getgoing.util.Constants.ACTION_OPEN_ACTIVITY_DETAILS;
 import static com.hyperether.getgoing.util.Constants.ACTIVITY_RIDE_ID;
 import static com.hyperether.getgoing.util.Constants.ACTIVITY_RUN_ID;
@@ -42,13 +44,14 @@ import static com.hyperether.getgoing.util.Constants.ACTIVITY_WALK_ID;
 import static com.hyperether.getgoing.util.Constants.BUNDLE_ACTION;
 import static com.hyperether.getgoing.util.Constants.BUNDLE_ACTIVITY_ID;
 import static com.hyperether.getgoing.util.Constants.OPENED_FROM_LOCATION_ACT;
+import static com.hyperether.getgoing.util.Constants.PREF_RIDE_ROUTE_EXISTING;
+import static com.hyperether.getgoing.util.Constants.PREF_RUN_ROUTE_EXISTING;
+import static com.hyperether.getgoing.util.Constants.PREF_WALK_ROUTE_EXISTING;
 
-public class ActivitiesFragment extends DialogFragment {
 
-    public static final String DATA_KEY = "data_key";
-    public static final String FROM_KEY = "from_key";
+public class ActivitiesFragment extends Fragment {
 
-    private GgOnClickListener listener;
+    private NavController navigationController;
 
     private View whiteView;
     private TextView goal, walkingLabel;
@@ -64,37 +67,28 @@ public class ActivitiesFragment extends DialogFragment {
 
     private int openedFrom;
 
-    public static ActivitiesFragment newInstance(CBDataFrame dataFrame, int openedFrom) {
-        ActivitiesFragment activitiesFragment = new ActivitiesFragment();
-        Bundle bundle = new Bundle();
-        bundle.putParcelable(DATA_KEY, dataFrame);
-        bundle.putInt(FROM_KEY, openedFrom);
-        activitiesFragment.setArguments(bundle);
-        return activitiesFragment;
+    public ActivitiesFragment() {
+        // Required empty public constructor
     }
 
     @Override
-    public void onCreate(@Nullable Bundle savedInstanceState) {
+    public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setStyle(DialogFragment.STYLE_NORMAL, R.style.FullScreenDialogStyle);
-
         settings = Objects.requireNonNull(getActivity()).getSharedPreferences(Constants.PREF_FILE, 0);
         if (getArguments() != null) {
-            openedFrom = getArguments().getInt(FROM_KEY);
+            openedFrom = getArguments().getInt("from");
         }
     }
 
-    @Nullable
     @Override
-    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        super.onCreateView(inflater, container, savedInstanceState);
-
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         return inflater.inflate(R.layout.fragment_activities, container, false);
     }
 
     @Override
-    public void onStart() {
-        super.onStart();
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+        navigationController = Navigation.findNavController(view);
 
         seekBar = getView().findViewById(R.id.seekBar);
         goal = getView().findViewById(R.id.tv_fa_goal);
@@ -105,14 +99,14 @@ public class ActivitiesFragment extends DialogFragment {
 
         seekBar.incrementProgressBy(10);
 
-        Dialog dialog = getDialog();
-
-        if (dialog != null) {
-            int width = ViewGroup.LayoutParams.MATCH_PARENT;
-            int height = ViewGroup.LayoutParams.MATCH_PARENT;
-
-            dialog.getWindow().setLayout(width, height);
-        }
+//        Dialog dialog = getDialog();
+//
+//        if (dialog != null) {
+//            int width = ViewGroup.LayoutParams.MATCH_PARENT;
+//            int height = ViewGroup.LayoutParams.MATCH_PARENT;
+//
+//            dialog.getWindow().setLayout(width, height);
+//        }
 
         mileageWalk = getView().findViewById(R.id.tv_fa_pb_mileage_walk);
         mileageRun = getView().findViewById(R.id.tv_fa_pb_mileage_run);
@@ -220,7 +214,7 @@ public class ActivitiesFragment extends DialogFragment {
         low.setOnClickListener(view -> seekBar.setProgress(Constants.CONST_LOW_DIST));
         medium.setOnClickListener(view -> seekBar.setProgress(Constants.CONST_MEDIUM_DIST));
         high.setOnClickListener(view -> seekBar.setProgress(Constants.CONST_HIGH_DIST));
-        backBtn.setOnClickListener(view -> this.getDialog().dismiss());
+        backBtn.setOnClickListener(view -> getActivity().onBackPressed());
 
         openActivityDetails();
 
@@ -247,7 +241,7 @@ public class ActivitiesFragment extends DialogFragment {
                 Toast.makeText(getContext(), "Your goal is updated", Toast.LENGTH_SHORT).show();
 
                 if (openedFrom == OPENED_FROM_LOCATION_ACT) {
-                    dismiss();
+                    getActivity().onBackPressed();
                 } else {
                     fillProgressBars();
                 }
@@ -256,23 +250,45 @@ public class ActivitiesFragment extends DialogFragment {
     }
 
     private void openActivityDetails() {
-        Bundle bundle = new Bundle();
-        bundle.putInt(BUNDLE_ACTION, ACTION_OPEN_ACTIVITY_DETAILS);
 
         mileageWalk.setOnClickListener(view -> {
-            bundle.putInt(BUNDLE_ACTIVITY_ID, ACTIVITY_WALK_ID);
-            listener.onClick(bundle);
+            if (settings.getBoolean(PREF_WALK_ROUTE_EXISTING, false)) {
+                Bundle bundle = new Bundle();
+                bundle.putString("activityName", getString(R.string.walking));
+                navigationController.navigate(R.id.action_activitiesFragment_to_showDataFragment, bundle);
+            } else {
+                openAlertDialog();
+            }
         });
 
         mileageRun.setOnClickListener(view -> {
-            bundle.putInt(BUNDLE_ACTIVITY_ID, ACTIVITY_RUN_ID);
-            listener.onClick(bundle);
+            if (settings.getBoolean(PREF_RUN_ROUTE_EXISTING, false)) {
+                Bundle bundle = new Bundle();
+                bundle.putString("activityName", getString(R.string.running));
+                navigationController.navigate(R.id.action_activitiesFragment_to_showDataFragment, bundle);
+            } else {
+                openAlertDialog();
+            }
         });
 
         mileageRide.setOnClickListener(view -> {
-            bundle.putInt(BUNDLE_ACTIVITY_ID, ACTIVITY_RIDE_ID);
-            listener.onClick(bundle);
+            if (settings.getBoolean(PREF_RIDE_ROUTE_EXISTING, false)) {
+                Bundle bundle = new Bundle();
+                bundle.putString("activityName", getString(R.string.cycling));
+                navigationController.navigate(R.id.action_activitiesFragment_to_showDataFragment, bundle);
+            } else {
+                openAlertDialog();
+            }
         });
+    }
+
+    private void openAlertDialog() {
+        new AlertDialog.Builder(getActivity())
+                .setTitle(R.string.alert_dialog_empty_title)
+                .setPositiveButton(R.string.confirm,
+                        (DialogInterface dialog, int whichButton) -> dialog.dismiss())
+                .create()
+                .show();
     }
 
     private int[] getTimeEstimates(int dist) {
@@ -357,19 +373,5 @@ public class ActivitiesFragment extends DialogFragment {
             mileageRun.setText(df.format(sumRun / 1000) + "km");
             mileageRide.setText(df.format(sumRide / 1000) + "km");
         }
-    }
-
-    @Override
-    public void onAttach(Context context) {
-        super.onAttach(context);
-        if (context instanceof GgOnClickListener) {
-            listener = (GgOnClickListener) context;
-        }
-    }
-
-    @Override
-    public void onDetach() {
-        super.onDetach();
-        listener = null;
     }
 }

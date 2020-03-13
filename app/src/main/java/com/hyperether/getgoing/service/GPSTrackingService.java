@@ -10,7 +10,7 @@ import com.hyperether.getgoing.manager.CacheManager;
 import com.hyperether.getgoing.model.CBDataFrame;
 import com.hyperether.getgoing.repository.room.GgRepository;
 import com.hyperether.getgoing.repository.room.entity.DbNode;
-import com.hyperether.getgoing.ui.activity.ShowLocationActivity;
+import com.hyperether.getgoing.ui.activity.NavigationActivity;
 import com.hyperether.getgoing.util.CaloriesCalculation;
 import com.hyperether.getgoing.util.Constants;
 import com.hyperether.getgoing.util.Conversion;
@@ -90,7 +90,7 @@ public class GPSTrackingService extends HyperLocationService {
     protected void startForeground() {
         super.startForeground();
 
-        Intent intent = new Intent(this, ShowLocationActivity.class);
+        Intent intent = new Intent(this, NavigationActivity.class);
         PendingIntent pendingIntent = PendingIntent.getActivity(this, 0, intent,
                 PendingIntent.FLAG_UPDATE_CURRENT);
 

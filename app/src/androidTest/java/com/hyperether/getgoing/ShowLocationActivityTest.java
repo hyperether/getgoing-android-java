@@ -7,7 +7,7 @@ import androidx.test.rule.ActivityTestRule;
 import androidx.test.runner.AndroidJUnit4;
 
 import com.hyperether.getgoing.model.CBDataFrame;
-import com.hyperether.getgoing.ui.activity.ShowLocationActivity;
+import com.hyperether.getgoing.ui.old.ShowLocationActivity;
 
 import org.junit.Before;
 import org.junit.Rule;

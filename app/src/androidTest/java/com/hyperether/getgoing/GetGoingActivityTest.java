@@ -4,7 +4,7 @@ import androidx.test.filters.LargeTest;
 import androidx.test.rule.ActivityTestRule;
 import androidx.test.runner.AndroidJUnit4;
 
-import com.hyperether.getgoing.ui.activity.GetGoingActivity;
+import com.hyperether.getgoing.ui.old.GetGoingActivity;
 
 import org.junit.Rule;
 import org.junit.Test;
