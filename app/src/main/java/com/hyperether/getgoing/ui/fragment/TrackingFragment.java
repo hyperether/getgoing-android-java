@@ -64,6 +64,7 @@ import static android.provider.Settings.ACTION_LOCATION_SOURCE_SETTINGS;
 import static com.hyperether.getgoing.util.Constants.ACTIVITY_RIDE_ID;
 import static com.hyperether.getgoing.util.Constants.ACTIVITY_RUN_ID;
 import static com.hyperether.getgoing.util.Constants.ACTIVITY_WALK_ID;
+import static com.hyperether.getgoing.util.Constants.OPENED_FROM_KEY;
 import static com.hyperether.getgoing.util.Constants.OPENED_FROM_LOCATION_ACT;
 import static com.hyperether.getgoing.util.Constants.PREF_RIDE_ROUTE_EXISTING;
 import static com.hyperether.getgoing.util.Constants.PREF_RUN_ROUTE_EXISTING;
@@ -149,11 +150,11 @@ public class TrackingFragment extends Fragment implements OnMapReadyCallback{
         mRouteAlreadySaved = true;
 
         // Open the shared preferences
-        mPrefs = getActivity().getSharedPreferences("SharedPreferences", Context.MODE_PRIVATE);
+        mPrefs = getContext().getSharedPreferences("SharedPreferences", Context.MODE_PRIVATE);
         // Get a SharedPreferences editor
         mEditor = mPrefs.edit();
         // Get user data shared prefs
-        cbPrefs = getActivity().getSharedPreferences("CBUserDataPref.txt", Context.MODE_PRIVATE);
+        cbPrefs = getContext().getSharedPreferences("CBUserDataPref.txt", Context.MODE_PRIVATE);
 
         cbDataFrameLocal = CacheManager.getInstance().getObDataFrameGlobal();
 
@@ -436,7 +437,7 @@ public class TrackingFragment extends Fragment implements OnMapReadyCallback{
         @Override
         public void onClick(View v) {
             Bundle bundle = new Bundle();
-            bundle.putInt("from", OPENED_FROM_LOCATION_ACT);
+            bundle.putInt(OPENED_FROM_KEY, OPENED_FROM_LOCATION_ACT);
             navigationController.navigate(R.id.action_trackingFragment_to_activitiesFragment, bundle);
         }
     };

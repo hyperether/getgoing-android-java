@@ -61,10 +61,6 @@ public class Constants {
     // Intent extras
     public static final String DATA_DETAILS_LABEL = "data_details_label";
     public static final String BUNDLE_PARCELABLE = "bundle_parcelable";
-    public static final String BUNDLE_ACTION = "bundle_action";
-    public static final String BUNDLE_ACTIVITY_ID = "bundle_activity_id";
-
-    public static final int ACTION_OPEN_ACTIVITY_DETAILS = 3001;
 
     // activities IDs
     public static final int ACTIVITY_WALK_ID = 1;
@@ -73,4 +69,5 @@ public class Constants {
 
     public static final int OPENED_FROM_LOCATION_ACT = 501;
     public static final int OPENED_FROM_GG_ACT = 502;
+    public static final String OPENED_FROM_KEY = "from";
 }

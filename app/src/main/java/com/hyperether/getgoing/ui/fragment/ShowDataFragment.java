@@ -44,6 +44,7 @@ import static com.hyperether.getgoing.util.Constants.ACTIVITY_RIDE_ID;
 import static com.hyperether.getgoing.util.Constants.ACTIVITY_RUN_ID;
 import static com.hyperether.getgoing.util.Constants.ACTIVITY_WALK_ID;
 import static com.hyperether.getgoing.util.Constants.BUNDLE_PARCELABLE;
+import static com.hyperether.getgoing.util.Constants.DATA_DETAILS_LABEL;
 import static com.hyperether.getgoing.util.Constants.PREF_FILE;
 import static com.hyperether.getgoing.util.Constants.PREF_RIDE_ROUTE_EXISTING;
 import static com.hyperether.getgoing.util.Constants.PREF_RUN_ROUTE_EXISTING;
@@ -87,7 +88,7 @@ public class ShowDataFragment extends Fragment implements GgOnClickListener, OnM
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        dataLabel = getArguments().getString("activityName");
+        dataLabel = getArguments().getString(DATA_DETAILS_LABEL);
 
         if (getResources().getString(R.string.walking).equals(dataLabel)) {
             activityId = ACTIVITY_WALK_ID;
@@ -170,7 +171,7 @@ public class ShowDataFragment extends Fragment implements GgOnClickListener, OnM
                 .setMessage(getResources().getString(R.string.alert_dialog_no_routes))
                 .setPositiveButton(R.string.alert_dialog_positive_button_save_btn,
                         (DialogInterface paramDialogInterface, int paramInt) -> {
-                            SharedPreferences prefs = getActivity().getSharedPreferences(PREF_FILE, getActivity().MODE_PRIVATE);
+                            SharedPreferences prefs = getContext().getSharedPreferences(PREF_FILE, getActivity().MODE_PRIVATE);
                             SharedPreferences.Editor editor = prefs.edit();
 
                             switch (activityId) {

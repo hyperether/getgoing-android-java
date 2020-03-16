@@ -35,7 +35,6 @@ public class ProfileFragment extends Fragment {
     private ImageView genderImg;
 
     private CBDataFrame mDataFrame;
-    private ViewGroup rootViewGroup;
 
     private SharedPreferences settings;
     private SharedPreferences.Editor editor;
@@ -48,7 +47,7 @@ public class ProfileFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        settings = getActivity().getSharedPreferences(Constants.PREF_FILE, 0);
+        settings = getContext().getSharedPreferences(Constants.PREF_FILE, 0);
 
         // default gender selection in shared prefs if nothing is set
         editor = settings.edit();
@@ -62,7 +61,6 @@ public class ProfileFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        rootViewGroup = container;
 
         View rootView = inflater.inflate(R.layout.fragment_profile, container, false);
         genderImg = rootView.findViewById(R.id.iv_fp_gender);

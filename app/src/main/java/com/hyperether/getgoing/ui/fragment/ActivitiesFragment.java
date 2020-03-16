@@ -37,12 +37,8 @@ import java.util.List;
 import java.util.Objects;
 
 import static com.hyperether.getgoing.ui.fragment.GetGoingFragment.ratio;
-import static com.hyperether.getgoing.util.Constants.ACTION_OPEN_ACTIVITY_DETAILS;
-import static com.hyperether.getgoing.util.Constants.ACTIVITY_RIDE_ID;
-import static com.hyperether.getgoing.util.Constants.ACTIVITY_RUN_ID;
-import static com.hyperether.getgoing.util.Constants.ACTIVITY_WALK_ID;
-import static com.hyperether.getgoing.util.Constants.BUNDLE_ACTION;
-import static com.hyperether.getgoing.util.Constants.BUNDLE_ACTIVITY_ID;
+import static com.hyperether.getgoing.util.Constants.DATA_DETAILS_LABEL;
+import static com.hyperether.getgoing.util.Constants.OPENED_FROM_KEY;
 import static com.hyperether.getgoing.util.Constants.OPENED_FROM_LOCATION_ACT;
 import static com.hyperether.getgoing.util.Constants.PREF_RIDE_ROUTE_EXISTING;
 import static com.hyperether.getgoing.util.Constants.PREF_RUN_ROUTE_EXISTING;
@@ -76,7 +72,7 @@ public class ActivitiesFragment extends Fragment {
         super.onCreate(savedInstanceState);
         settings = Objects.requireNonNull(getActivity()).getSharedPreferences(Constants.PREF_FILE, 0);
         if (getArguments() != null) {
-            openedFrom = getArguments().getInt("from");
+            openedFrom = getArguments().getInt(OPENED_FROM_KEY);
         }
     }
 
@@ -98,15 +94,6 @@ public class ActivitiesFragment extends Fragment {
         kcal = getView().findViewById(R.id.tv_fa_kcal);
 
         seekBar.incrementProgressBy(10);
-
-//        Dialog dialog = getDialog();
-//
-//        if (dialog != null) {
-//            int width = ViewGroup.LayoutParams.MATCH_PARENT;
-//            int height = ViewGroup.LayoutParams.MATCH_PARENT;
-//
-//            dialog.getWindow().setLayout(width, height);
-//        }
 
         mileageWalk = getView().findViewById(R.id.tv_fa_pb_mileage_walk);
         mileageRun = getView().findViewById(R.id.tv_fa_pb_mileage_run);
@@ -254,7 +241,7 @@ public class ActivitiesFragment extends Fragment {
         mileageWalk.setOnClickListener(view -> {
             if (settings.getBoolean(PREF_WALK_ROUTE_EXISTING, false)) {
                 Bundle bundle = new Bundle();
-                bundle.putString("activityName", getString(R.string.walking));
+                bundle.putString(DATA_DETAILS_LABEL, getString(R.string.walking));
                 navigationController.navigate(R.id.action_activitiesFragment_to_showDataFragment, bundle);
             } else {
                 openAlertDialog();
@@ -264,7 +251,7 @@ public class ActivitiesFragment extends Fragment {
         mileageRun.setOnClickListener(view -> {
             if (settings.getBoolean(PREF_RUN_ROUTE_EXISTING, false)) {
                 Bundle bundle = new Bundle();
-                bundle.putString("activityName", getString(R.string.running));
+                bundle.putString(DATA_DETAILS_LABEL, getString(R.string.running));
                 navigationController.navigate(R.id.action_activitiesFragment_to_showDataFragment, bundle);
             } else {
                 openAlertDialog();
@@ -274,7 +261,7 @@ public class ActivitiesFragment extends Fragment {
         mileageRide.setOnClickListener(view -> {
             if (settings.getBoolean(PREF_RIDE_ROUTE_EXISTING, false)) {
                 Bundle bundle = new Bundle();
-                bundle.putString("activityName", getString(R.string.cycling));
+                bundle.putString(DATA_DETAILS_LABEL, getString(R.string.cycling));
                 navigationController.navigate(R.id.action_activitiesFragment_to_showDataFragment, bundle);
             } else {
                 openAlertDialog();

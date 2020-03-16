@@ -44,6 +44,7 @@ import static com.hyperether.getgoing.util.Constants.ACTIVITY_RIDE_ID;
 import static com.hyperether.getgoing.util.Constants.ACTIVITY_RUN_ID;
 import static com.hyperether.getgoing.util.Constants.ACTIVITY_WALK_ID;
 import static com.hyperether.getgoing.util.Constants.OPENED_FROM_GG_ACT;
+import static com.hyperether.getgoing.util.Constants.OPENED_FROM_KEY;
 import static com.hyperether.getgoing.util.Constants.PREF_RIDE_ROUTE_EXISTING;
 import static com.hyperether.getgoing.util.Constants.PREF_RUN_ROUTE_EXISTING;
 import static com.hyperether.getgoing.util.Constants.PREF_WALK_ROUTE_EXISTING;
@@ -102,7 +103,7 @@ public class GetGoingFragment extends Fragment {
         blueSentence = getView().findViewById(R.id.tv_am_burn);
         selectorView = getView().findViewById(R.id.imageView2);
 
-        currentSettings = getActivity().getSharedPreferences(Constants.PREF_FILE, 0);
+        currentSettings = getContext().getSharedPreferences(Constants.PREF_FILE, 0);
 
         zeroNodeInit();
         initScreenDimen();
@@ -169,8 +170,6 @@ public class GetGoingFragment extends Fragment {
         if (getParametersStatus(CacheManager.getInstance().getObDataFrameGlobal())) {
             setMeteringActivityRequested(0);
             this.cbDataFrameLocal.setProfileId(id);
-//            Bundle bundle = new Bundle();
-//            bundle.putParcelable("searchKey", CacheManager.getInstance().getObDataFrameGlobal());
             navigationController.navigate(R.id.action_getGoingFragment_to_trackingFragment);
         } else {
             setMeteringActivityRequested(id);
@@ -181,7 +180,7 @@ public class GetGoingFragment extends Fragment {
 
     private void callActivitiesFragment() {
         Bundle bundle = new Bundle();
-        bundle.putInt("from", OPENED_FROM_GG_ACT);
+        bundle.putInt(OPENED_FROM_KEY, OPENED_FROM_GG_ACT);
         navigationController.navigate(R.id.action_getGoingFragment_to_activitiesFragment, bundle);
     }
 
@@ -191,7 +190,7 @@ public class GetGoingFragment extends Fragment {
      * @param id mode id
      */
     private void setMeteringActivityRequested(int id) {
-        SharedPreferences settings = getActivity().getSharedPreferences(Constants.PREF_FILE, 0);
+        SharedPreferences settings = getContext().getSharedPreferences(Constants.PREF_FILE, 0);
         SharedPreferences.Editor editor = settings.edit();
         editor.putInt("meteringActivityRequestedId", id);
         editor.apply();

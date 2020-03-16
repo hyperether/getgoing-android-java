@@ -1,6 +1,5 @@
 package com.hyperether.getgoing.ui.adapter;
 
-import android.content.Context;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -27,9 +26,9 @@ public class DbRecyclerAdapter extends RecyclerView.Adapter<DbRecyclerAdapter.Vi
     private GgOnClickListener listener;
 
 
-    public DbRecyclerAdapter(Fragment context, List<DbRoute> routes) {
+    public DbRecyclerAdapter(Fragment fragment, List<DbRoute> routes) {
         this.routes = routes;
-        listener = (GgOnClickListener) context;
+        listener = (GgOnClickListener) fragment;
     }
 
     @NonNull
