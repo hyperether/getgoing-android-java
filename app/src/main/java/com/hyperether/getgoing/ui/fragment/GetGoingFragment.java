@@ -1,14 +1,24 @@
-package com.hyperether.getgoing.ui.activity;
+package com.hyperether.getgoing.ui.fragment;
 
-import android.Manifest;
-import android.app.AlertDialog;
-import android.content.DialogInterface;
-import android.content.Intent;
 import android.content.SharedPreferences;
-import android.content.pm.PackageManager;
 import android.os.Bundle;
+
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.databinding.DataBindingUtil;
+import androidx.fragment.app.Fragment;
+import androidx.lifecycle.Observer;
+import androidx.navigation.NavController;
+import androidx.navigation.Navigation;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.LinearSnapHelper;
+import androidx.recyclerview.widget.OrientationHelper;
+import androidx.recyclerview.widget.RecyclerView;
+import androidx.recyclerview.widget.SnapHelper;
+
 import android.util.DisplayMetrics;
 import android.util.SparseIntArray;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
@@ -16,21 +26,8 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import androidx.annotation.NonNull;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.app.ActivityCompat;
-import androidx.databinding.DataBindingUtil;
-import androidx.lifecycle.Observer;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.LinearSnapHelper;
-import androidx.recyclerview.widget.OrientationHelper;
-import androidx.recyclerview.widget.RecyclerView;
-import androidx.recyclerview.widget.SnapHelper;
-
-import com.crashlytics.android.Crashlytics;
 import com.hyperether.getgoing.R;
-import com.hyperether.getgoing.databinding.ActivityMainBinding;
-import com.hyperether.getgoing.listeners.GgOnClickListener;
+import com.hyperether.getgoing.databinding.FragmentGetgoingBindingImpl;
 import com.hyperether.getgoing.manager.CacheManager;
 import com.hyperether.getgoing.model.CBDataFrame;
 import com.hyperether.getgoing.repository.room.GgRepository;
@@ -38,36 +35,31 @@ import com.hyperether.getgoing.repository.room.entity.DbNode;
 import com.hyperether.getgoing.repository.room.entity.DbRoute;
 import com.hyperether.getgoing.ui.adapter.HorizontalListAdapter;
 import com.hyperether.getgoing.ui.formatter.TimeProgressFormatterInvisible;
-import com.hyperether.getgoing.ui.fragment.ActivitiesFragment;
-import com.hyperether.getgoing.ui.fragment.ProfileFragment;
-import com.hyperether.getgoing.ui.fragment.ShowDataFragment;
 import com.hyperether.getgoing.util.Constants;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import io.fabric.sdk.android.Fabric;
-
-import static com.hyperether.getgoing.util.Constants.ACTION_OPEN_ACTIVITY_DETAILS;
 import static com.hyperether.getgoing.util.Constants.ACTIVITY_RIDE_ID;
 import static com.hyperether.getgoing.util.Constants.ACTIVITY_RUN_ID;
 import static com.hyperether.getgoing.util.Constants.ACTIVITY_WALK_ID;
-import static com.hyperether.getgoing.util.Constants.BUNDLE_ACTION;
-import static com.hyperether.getgoing.util.Constants.BUNDLE_ACTIVITY_ID;
-import static com.hyperether.getgoing.util.Constants.DATA_DETAILS_LABEL;
 import static com.hyperether.getgoing.util.Constants.OPENED_FROM_GG_ACT;
+import static com.hyperether.getgoing.util.Constants.OPENED_FROM_KEY;
 import static com.hyperether.getgoing.util.Constants.PREF_RIDE_ROUTE_EXISTING;
 import static com.hyperether.getgoing.util.Constants.PREF_RUN_ROUTE_EXISTING;
 import static com.hyperether.getgoing.util.Constants.PREF_WALK_ROUTE_EXISTING;
 
-public class GetGoingActivity extends AppCompatActivity implements GgOnClickListener {
+
+public class GetGoingFragment extends Fragment {
+
+    private NavController navigationController;
 
     public static float ratio = (float) 0.0;
 
     /*USER DATA VARIABLES*/
     private int measureUnitId;
 
-    private ActivityMainBinding mBinding;
+    private FragmentGetgoingBindingImpl mBinding;
     private CBDataFrame cbDataFrameLocal;
     private SnapHelper snapHelper;
     private RecyclerView recyclerView;
@@ -82,28 +74,36 @@ public class GetGoingActivity extends AppCompatActivity implements GgOnClickList
 
     private SharedPreferences currentSettings;
 
+    public GetGoingFragment() {
+        // Required empty public constructor
+    }
+
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        setTheme(R.style.AppTheme);
-
+    public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        Fabric.with(this, new Crashlytics());
+    }
 
-        mBinding = DataBindingUtil.setContentView(this, R.layout.activity_main);
+    @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+                             Bundle savedInstanceState) {
+        mBinding = DataBindingUtil.inflate(inflater, R.layout.fragment_getgoing, container, false);
+        return mBinding.getRoot();
+    }
+
+    @Override
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+        navigationController = Navigation.findNavController(view);
+
         mBinding.cpbAmKmgoal2.setProgressFormatter(new TimeProgressFormatterInvisible());
 
         cbDataFrameLocal = CacheManager.getInstance().getObDataFrameGlobal();
 
-        actLabel = findViewById(R.id.tv_ma_mainact);
-        blueSentence = findViewById(R.id.tv_am_burn);
-        selectorView = findViewById(R.id.imageView2);
+        actLabel = getView().findViewById(R.id.tv_ma_mainact);
+        blueSentence = getView().findViewById(R.id.tv_am_burn);
+        selectorView = getView().findViewById(R.id.imageView2);
 
-        ActivityCompat.requestPermissions(this, new String[]{
-                Manifest.permission.ACCESS_FINE_LOCATION,
-                Manifest.permission.ACCESS_COARSE_LOCATION}, Constants
-                .TAG_CODE_PERMISSION_LOCATION);
-
-        currentSettings = getSharedPreferences(Constants.PREF_FILE, 0);
+        currentSettings = getContext().getSharedPreferences(Constants.PREF_FILE, 0);
 
         zeroNodeInit();
         initScreenDimen();
@@ -112,21 +112,9 @@ public class GetGoingActivity extends AppCompatActivity implements GgOnClickList
     }
 
     @Override
-    protected void onResume() {
+    public void onResume() {
         super.onResume();
         initModel();
-    }
-
-    @Override
-    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions,
-                                           @NonNull int[] grantResults) {
-        if (requestCode == Constants.TAG_CODE_PERMISSION_LOCATION) {
-            if (grantResults.length > 0 && grantResults[0] == PackageManager
-                    .PERMISSION_GRANTED) {
-            } else {
-                finish();
-            }
-        }
     }
 
     private void zeroNodeInit() {
@@ -149,7 +137,7 @@ public class GetGoingActivity extends AppCompatActivity implements GgOnClickList
 
         } else {
 
-            GgRepository.getInstance().getLastRoute().observe(GetGoingActivity.this, new Observer<DbRoute>() {
+            GgRepository.getInstance().getLastRoute().observe(getActivity(), new Observer<DbRoute>() {
                 @Override
                 public void onChanged(DbRoute dbRoute) {
                     mBinding.setLastRoute(dbRoute);
@@ -170,8 +158,7 @@ public class GetGoingActivity extends AppCompatActivity implements GgOnClickList
      * This method starts ProfileFragment when user hasn't entered his data
      */
     private void callProfileFragment() {
-        ProfileFragment profileFragment = ProfileFragment.newInstance(null);
-        profileFragment.show(getSupportFragmentManager(), "ProfileFragment");
+        navigationController.navigate(R.id.action_getGoingFragment_to_profileFragment);
     }
 
     /**
@@ -179,18 +166,22 @@ public class GetGoingActivity extends AppCompatActivity implements GgOnClickList
      *
      * @param id mode id
      */
-    private void callMeteringActivity(int id) {
+    private void callTrackingFragment(int id) {
         if (getParametersStatus(CacheManager.getInstance().getObDataFrameGlobal())) {
             setMeteringActivityRequested(0);
             this.cbDataFrameLocal.setProfileId(id);
-            Intent intent = new Intent(GetGoingActivity.this, ShowLocationActivity.class);
-            intent.putExtra("searchKey", CacheManager.getInstance().getObDataFrameGlobal());
-            startActivity(intent);
+            navigationController.navigate(R.id.action_getGoingFragment_to_trackingFragment);
         } else {
             setMeteringActivityRequested(id);
-            Toast.makeText(this, "You must enter your data first!", Toast.LENGTH_LONG).show();
+            Toast.makeText(getActivity(), "You must enter your data first!", Toast.LENGTH_LONG).show();
             callProfileFragment();
         }
+    }
+
+    private void callActivitiesFragment() {
+        Bundle bundle = new Bundle();
+        bundle.putInt(OPENED_FROM_KEY, OPENED_FROM_GG_ACT);
+        navigationController.navigate(R.id.action_getGoingFragment_to_activitiesFragment, bundle);
     }
 
     /**
@@ -199,7 +190,7 @@ public class GetGoingActivity extends AppCompatActivity implements GgOnClickList
      * @param id mode id
      */
     private void setMeteringActivityRequested(int id) {
-        SharedPreferences settings = getSharedPreferences(Constants.PREF_FILE, 0);
+        SharedPreferences settings = getContext().getSharedPreferences(Constants.PREF_FILE, 0);
         SharedPreferences.Editor editor = settings.edit();
         editor.putInt("meteringActivityRequestedId", id);
         editor.apply();
@@ -217,10 +208,10 @@ public class GetGoingActivity extends AppCompatActivity implements GgOnClickList
     }
 
     private void initRecyclerView() {
-        recyclerView = findViewById(R.id.recyclerView);
+        recyclerView = getView().findViewById(R.id.recyclerView);
         recyclerView.setHasFixedSize(true);
 
-        layoutManager = new LinearLayoutManager(this);
+        layoutManager = new LinearLayoutManager(getActivity());
         ((LinearLayoutManager) layoutManager).setOrientation(RecyclerView.HORIZONTAL);
         recyclerView.setLayoutManager(layoutManager);
 
@@ -229,7 +220,7 @@ public class GetGoingActivity extends AppCompatActivity implements GgOnClickList
         DRAWABLE_MAP.append(R.drawable.ic_light_running_icon_inactive, R.drawable.ic_light_running_icon_active);
         DRAWABLE_MAP.append(R.drawable.ic_light_walking_icon, R.drawable.ic_light_walking_icon_active);
 
-        mAdapter = new HorizontalListAdapter(DRAWABLE_MAP, getApplicationContext());
+        mAdapter = new HorizontalListAdapter(DRAWABLE_MAP, getActivity().getApplicationContext());
         recyclerView.setAdapter(mAdapter);
 
         snapHelper = new LinearSnapHelper();
@@ -240,34 +231,31 @@ public class GetGoingActivity extends AppCompatActivity implements GgOnClickList
 
     @Deprecated
     private void initListeners() {
-        ImageView ib_am_user = findViewById(R.id.ib_am_user);
-        TextView tv_am_viewall = findViewById(R.id.tv_am_viewall);
-        ImageView iv_am_bluerectangle = findViewById(R.id.iv_am_bluerectangle);
-        Button startBtn = findViewById(R.id.materialButton);
+        ImageView ib_am_user = getView().findViewById(R.id.ib_am_user);
+        TextView tv_am_viewall = getView().findViewById(R.id.tv_am_viewall);
+        ImageView iv_am_bluerectangle = getView().findViewById(R.id.iv_am_bluerectangle);
+        Button startBtn = getView().findViewById(R.id.materialButton);
 
 
         ib_am_user.setOnClickListener(view -> {
-            ProfileFragment profileFragment = ProfileFragment.newInstance(null);
-            profileFragment.show(getSupportFragmentManager(), "ProfileFragment");
+            callProfileFragment();
         });
 
         tv_am_viewall.setOnClickListener(view -> {
-            ActivitiesFragment activitiesFragment = ActivitiesFragment.newInstance(null, OPENED_FROM_GG_ACT);
-            activitiesFragment.show(getSupportFragmentManager(), "ActivitiesFragment");
+            callActivitiesFragment();
         });
 
         iv_am_bluerectangle.setOnClickListener(view -> {
-            ActivitiesFragment activitiesFragment = ActivitiesFragment.newInstance(null, OPENED_FROM_GG_ACT);
-            activitiesFragment.show(getSupportFragmentManager(), "ActivitiesFragment");
+            callActivitiesFragment();
         });
 
         startBtn.setOnClickListener(view -> {
             if (centralImg.getTag().equals(R.drawable.ic_light_walking_icon_active))
-                callMeteringActivity(ACTIVITY_WALK_ID);
+                callTrackingFragment(ACTIVITY_WALK_ID);
             else if (centralImg.getTag().equals(R.drawable.ic_light_running_icon_active))
-                callMeteringActivity(ACTIVITY_RUN_ID);
+                callTrackingFragment(ACTIVITY_RUN_ID);
             else if (centralImg.getTag().equals(R.drawable.ic_light_bicycling_icon_active))
-                callMeteringActivity(ACTIVITY_RIDE_ID);
+                callTrackingFragment(ACTIVITY_RIDE_ID);
         });
 
         recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
@@ -300,13 +288,13 @@ public class GetGoingActivity extends AppCompatActivity implements GgOnClickList
 
                 if (centralImgPos[0] > selectorViewPos[0] - centralImgWidthParam && centralImgPos[0] < selectorViewPos[0] + centralImgWidthParam) {
                     if (centralImg.getTag().equals(R.drawable.ic_light_bicycling_icon_inactive)) {
-                        centralImg.setImageDrawable(getApplicationContext().getResources().getDrawable(R.drawable.ic_light_bicycling_icon_active));
+                        centralImg.setImageDrawable(getActivity().getApplicationContext().getResources().getDrawable(R.drawable.ic_light_bicycling_icon_active));
                         centralImg.setTag(R.drawable.ic_light_bicycling_icon_active);
                     } else if (centralImg.getTag().equals(R.drawable.ic_light_running_icon_inactive)) {
-                        centralImg.setImageDrawable(getApplicationContext().getResources().getDrawable(R.drawable.ic_light_running_icon_active));
+                        centralImg.setImageDrawable(getActivity().getApplicationContext().getResources().getDrawable(R.drawable.ic_light_running_icon_active));
                         centralImg.setTag(R.drawable.ic_light_running_icon_active);
                     } else if (centralImg.getTag().equals(R.drawable.ic_light_walking_icon)) {
-                        centralImg.setImageDrawable(getApplicationContext().getResources().getDrawable(R.drawable.ic_light_walking_icon_active));
+                        centralImg.setImageDrawable(getActivity().getApplicationContext().getResources().getDrawable(R.drawable.ic_light_walking_icon_active));
                         centralImg.setTag(R.drawable.ic_light_walking_icon_active);
                     }
                 }
@@ -317,13 +305,13 @@ public class GetGoingActivity extends AppCompatActivity implements GgOnClickList
                     leftImg = layoutManager.findViewByPosition(k1 - 1).findViewById(R.id.iv_ri_pic);
 
                     if (leftImg.getTag().equals(R.drawable.ic_light_bicycling_icon_active)) {
-                        leftImg.setImageDrawable(getApplicationContext().getResources().getDrawable(R.drawable.ic_light_bicycling_icon_inactive));
+                        leftImg.setImageDrawable(getActivity().getApplicationContext().getResources().getDrawable(R.drawable.ic_light_bicycling_icon_inactive));
                         leftImg.setTag(R.drawable.ic_light_bicycling_icon_inactive);
                     } else if (leftImg.getTag().equals(R.drawable.ic_light_running_icon_active)) {
-                        leftImg.setImageDrawable(getApplicationContext().getResources().getDrawable(R.drawable.ic_light_running_icon_inactive));
+                        leftImg.setImageDrawable(getActivity().getApplicationContext().getResources().getDrawable(R.drawable.ic_light_running_icon_inactive));
                         leftImg.setTag(R.drawable.ic_light_running_icon_inactive);
                     } else if (leftImg.getTag().equals(R.drawable.ic_light_walking_icon_active)) {
-                        leftImg.setImageDrawable(getApplicationContext().getResources().getDrawable(R.drawable.ic_light_walking_icon));
+                        leftImg.setImageDrawable(getActivity().getApplicationContext().getResources().getDrawable(R.drawable.ic_light_walking_icon));
                         leftImg.setTag(R.drawable.ic_light_walking_icon);
                     }
                 } catch (NullPointerException e) {
@@ -334,13 +322,13 @@ public class GetGoingActivity extends AppCompatActivity implements GgOnClickList
                     rightImg = layoutManager.findViewByPosition(k1 + 1).findViewById(R.id.iv_ri_pic);
 
                     if (rightImg.getTag().equals(R.drawable.ic_light_bicycling_icon_active)) {
-                        rightImg.setImageDrawable(getApplicationContext().getResources().getDrawable(R.drawable.ic_light_bicycling_icon_inactive));
+                        rightImg.setImageDrawable(getActivity().getApplicationContext().getResources().getDrawable(R.drawable.ic_light_bicycling_icon_inactive));
                         rightImg.setTag(R.drawable.ic_light_bicycling_icon_inactive);
                     } else if (rightImg.getTag().equals(R.drawable.ic_light_running_icon_active)) {
-                        rightImg.setImageDrawable(getApplicationContext().getResources().getDrawable(R.drawable.ic_light_running_icon_inactive));
+                        rightImg.setImageDrawable(getActivity().getApplicationContext().getResources().getDrawable(R.drawable.ic_light_running_icon_inactive));
                         rightImg.setTag(R.drawable.ic_light_running_icon_inactive);
                     } else if (rightImg.getTag().equals(R.drawable.ic_light_walking_icon_active)) {
-                        rightImg.setImageDrawable(getApplicationContext().getResources().getDrawable(R.drawable.ic_light_walking_icon));
+                        rightImg.setImageDrawable(getActivity().getApplicationContext().getResources().getDrawable(R.drawable.ic_light_walking_icon));
                         rightImg.setTag(R.drawable.ic_light_walking_icon);
                     }
                 } catch (NullPointerException e) {
@@ -351,11 +339,11 @@ public class GetGoingActivity extends AppCompatActivity implements GgOnClickList
     }
 
     private void initScreenDimen() {
-        DisplayMetrics metrics = getApplicationContext().getResources().getDisplayMetrics();
+        DisplayMetrics metrics = getActivity().getApplicationContext().getResources().getDisplayMetrics();
         ratio = (float) metrics.heightPixels / (float) metrics.widthPixels;
 
-        blueRectangle = findViewById(R.id.iv_am_bluerectangle);
-        lastExeLabel = findViewById(R.id.tv_am_lastexercise);
+        blueRectangle = getView().findViewById(R.id.iv_am_bluerectangle);
+        lastExeLabel = getView().findViewById(R.id.tv_am_lastexercise);
 
         int unicode = 0x1F605;  /* emoji */
         blueSentence.append(" " + String.valueOf(Character.toChars(unicode)));
@@ -414,53 +402,4 @@ public class GetGoingActivity extends AppCompatActivity implements GgOnClickList
         GgRepository.getInstance().insertRouteInit(dbRoute, nodeList);
     }
 
-    @Override
-    public void onClick(Bundle bundle) {
-        int action = bundle.getInt(BUNDLE_ACTION);
-        switch (action) {
-            case ACTION_OPEN_ACTIVITY_DETAILS:
-                openActivityDetails(bundle);
-                break;
-        }
-    }
-
-    private void openActivityDetails(Bundle bundle) {
-        int acId = bundle.getInt(BUNDLE_ACTIVITY_ID);
-
-        switch (acId) {
-            case ACTIVITY_WALK_ID:
-                if (currentSettings.getBoolean(PREF_WALK_ROUTE_EXISTING, false)) {
-                    ShowDataFragment showDataFragment = ShowDataFragment.newInstance(getString(R.string.walking));
-                    showDataFragment.show(getSupportFragmentManager(), "ShowDataFragment");
-                } else {
-                    openAlertDialog();
-                }
-                break;
-            case ACTIVITY_RUN_ID:
-                if (currentSettings.getBoolean(PREF_RUN_ROUTE_EXISTING, false)) {
-                    ShowDataFragment showDataFragment = ShowDataFragment.newInstance(getString(R.string.running));
-                    showDataFragment.show(getSupportFragmentManager(), "ShowDataFragment");
-                } else {
-                    openAlertDialog();
-                }
-                break;
-            case ACTIVITY_RIDE_ID:
-                if (currentSettings.getBoolean(PREF_RIDE_ROUTE_EXISTING, false)) {
-                    ShowDataFragment showDataFragment = ShowDataFragment.newInstance(getString(R.string.cycling));
-                    showDataFragment.show(getSupportFragmentManager(), "ShowDataFragment");
-                } else {
-                    openAlertDialog();
-                }
-                break;
-        }
-    }
-
-    private void openAlertDialog() {
-        new AlertDialog.Builder(this)
-                .setTitle(R.string.alert_dialog_empty_title)
-                .setPositiveButton(R.string.confirm,
-                        (DialogInterface dialog, int whichButton) -> dialog.dismiss())
-                .create()
-                .show();
-    }
 }

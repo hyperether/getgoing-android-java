@@ -2,9 +2,9 @@ package com.hyperether.getgoing.ui.fragment;
 
 import android.annotation.SuppressLint;
 import android.app.AlertDialog;
-import android.app.Dialog;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import androidx.fragment.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,25 +13,20 @@ import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.Spinner;
 import android.widget.TextView;
-
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.fragment.app.DialogFragment;
-
 import com.hyperether.getgoing.R;
 import com.hyperether.getgoing.manager.CacheManager;
 import com.hyperether.getgoing.model.CBDataFrame;
 import com.hyperether.getgoing.repository.room.DbHelper;
 import com.hyperether.getgoing.repository.room.entity.DbRoute;
-import com.hyperether.getgoing.ui.activity.GetGoingActivity;
 import com.hyperether.getgoing.util.Constants;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class ProfileFragment extends DialogFragment {
+import static com.hyperether.getgoing.ui.fragment.GetGoingFragment.ratio;
 
-    public static final String DATA_KEY = "data_key";
+
+public class ProfileFragment extends Fragment {
 
     private ImageButton genderBtn, ageBtn, heightBtn, weightBtn, backBtn;
     private TextView tvAge, tvGender, tvHeight, tvWeight;
@@ -40,28 +35,19 @@ public class ProfileFragment extends DialogFragment {
     private ImageView genderImg;
 
     private CBDataFrame mDataFrame;
-    private ViewGroup rootViewGroup;
 
     private SharedPreferences settings;
     private SharedPreferences.Editor editor;
 
-    public ProfileFragment(CBDataFrame pDataFrame) {
-        mDataFrame = pDataFrame;
-    }
-
-    public static ProfileFragment newInstance(CBDataFrame dataFrame) {
-        ProfileFragment profileFragment = new ProfileFragment(dataFrame);
-        Bundle bundle = new Bundle();
-        bundle.putParcelable(DATA_KEY, dataFrame);
-        profileFragment.setArguments(bundle);
-        return profileFragment;
+    public ProfileFragment() {
+        // Required empty public constructor
     }
 
     @Override
-    public void onCreate(@Nullable Bundle savedInstanceState) {
+    public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setStyle(DialogFragment.STYLE_NORMAL, R.style.FullScreenDialogStyle);
-        settings = getActivity().getSharedPreferences(Constants.PREF_FILE, 0);
+
+        settings = getContext().getSharedPreferences(Constants.PREF_FILE, 0);
 
         // default gender selection in shared prefs if nothing is set
         editor = settings.edit();
@@ -72,11 +58,9 @@ public class ProfileFragment extends DialogFragment {
         mDataFrame = CacheManager.getInstance().getObDataFrameGlobal();
     }
 
-    @Nullable
     @Override
-    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        super.onCreateView(inflater, container, savedInstanceState);
-        rootViewGroup = container;
+    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+                             Bundle savedInstanceState) {
 
         View rootView = inflater.inflate(R.layout.fragment_profile, container, false);
         genderImg = rootView.findViewById(R.id.iv_fp_gender);
@@ -104,15 +88,6 @@ public class ProfileFragment extends DialogFragment {
         tvWeight = getView().findViewById(R.id.tv_fp_weight);
         genderBtn = getView().findViewById(R.id.ib_fp_gender);
 
-        Dialog dialog = getDialog();
-
-        if (dialog != null) {
-            int width = ViewGroup.LayoutParams.MATCH_PARENT;
-            int height = ViewGroup.LayoutParams.MATCH_PARENT;
-
-            dialog.getWindow().setLayout(width, height);
-        }
-
         initScreenDimen();
         initLabels();
         initTotals();
@@ -120,7 +95,7 @@ public class ProfileFragment extends DialogFragment {
     }
 
     private void initScreenDimen() {
-        if (GetGoingActivity.ratio > 1.8) {
+        if (ratio > 1.8) {
             dataLabel = getView().findViewById(R.id.tv_fp_mydata);
 
             ViewGroup.MarginLayoutParams params = (ViewGroup.MarginLayoutParams) dataLabel.getLayoutParams();
@@ -174,15 +149,13 @@ public class ProfileFragment extends DialogFragment {
         });
 
         backBtn.setOnClickListener(view -> {
-            this.getDialog().dismiss();
+            getActivity().onBackPressed();
         });
     }
 
     private AlertDialog.Builder createDialog(String pID, View pView) {
         AlertDialog.Builder genderBuilder, ageBuilder,
                 weightBuilder, heightBuilder;
-
-        LayoutInflater inflater;
 
         switch (pID) {
             case "gender": {
@@ -234,9 +207,8 @@ public class ProfileFragment extends DialogFragment {
                 }
 
                 ageBuilder = new AlertDialog.Builder(pView.getContext(), R.style.AlertDialogTheme);
-                inflater = LayoutInflater.from(pView.getContext());
 
-                View toInflate = inflater.inflate(R.layout.alertdialog_age, rootViewGroup);
+                View toInflate = getActivity().getLayoutInflater().inflate(R.layout.alertdialog_age, null);
                 ageBuilder.setView(toInflate);
 
                 Spinner ageSpinner = toInflate.findViewById(R.id.dialog_spinner_age);
@@ -264,9 +236,8 @@ public class ProfileFragment extends DialogFragment {
                 }
 
                 weightBuilder = new AlertDialog.Builder(pView.getContext(), R.style.AlertDialogTheme);
-                inflater = LayoutInflater.from(pView.getContext());
 
-                View toInflate = inflater.inflate(R.layout.alertdialog_weight, rootViewGroup);
+                View toInflate = getActivity().getLayoutInflater().inflate(R.layout.alertdialog_weight, null);
                 weightBuilder.setView(toInflate);
 
                 Spinner weightSpinner = toInflate.findViewById(R.id.dialog_spinner_weight);
@@ -294,9 +265,8 @@ public class ProfileFragment extends DialogFragment {
                 }
 
                 heightBuilder = new AlertDialog.Builder(pView.getContext(), R.style.AlertDialogTheme);
-                inflater = LayoutInflater.from(pView.getContext());
 
-                View toInflate = inflater.inflate(R.layout.alertdialog_height, rootViewGroup);
+                View toInflate = getActivity().getLayoutInflater().inflate(R.layout.alertdialog_height, null);
                 heightBuilder.setView(toInflate);
 
                 Spinner heightSpinner = toInflate.findViewById(R.id.dialog_spinner_height);

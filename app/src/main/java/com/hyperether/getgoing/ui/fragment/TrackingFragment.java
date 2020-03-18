@@ -1,4 +1,4 @@
-package com.hyperether.getgoing.ui.activity;
+package com.hyperether.getgoing.ui.fragment;
 
 import android.annotation.SuppressLint;
 import android.app.AlertDialog;
@@ -6,16 +6,26 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.content.SharedPreferences.Editor;
 import android.content.pm.PackageManager;
 import android.graphics.Color;
 import android.location.Criteria;
 import android.location.Location;
 import android.location.LocationManager;
 import android.os.Bundle;
+
+import androidx.activity.OnBackPressedCallback;
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.core.app.ActivityCompat;
+import androidx.fragment.app.Fragment;
+import androidx.lifecycle.ViewModelProviders;
+import androidx.navigation.NavController;
+import androidx.navigation.Navigation;
+
 import android.os.SystemClock;
+import android.view.LayoutInflater;
 import android.view.View;
-import android.view.View.OnClickListener;
+import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.Chronometer;
@@ -24,17 +34,12 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.app.ActivityCompat;
-import androidx.lifecycle.ViewModelProviders;
-
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapFragment;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.PolylineOptions;
-import com.hyperether.getgoing.GetGoingApp;
 import com.hyperether.getgoing.R;
 import com.hyperether.getgoing.manager.CacheManager;
 import com.hyperether.getgoing.model.CBDataFrame;
@@ -43,7 +48,6 @@ import com.hyperether.getgoing.repository.room.GgRepository;
 import com.hyperether.getgoing.repository.room.entity.DbNode;
 import com.hyperether.getgoing.repository.room.entity.DbRoute;
 import com.hyperether.getgoing.service.GPSTrackingService;
-import com.hyperether.getgoing.ui.fragment.ActivitiesFragment;
 import com.hyperether.getgoing.util.Constants;
 import com.hyperether.getgoing.viewmodel.NodeListViewModel;
 import com.hyperether.toolbox.HyperConst;
@@ -60,12 +64,16 @@ import static android.provider.Settings.ACTION_LOCATION_SOURCE_SETTINGS;
 import static com.hyperether.getgoing.util.Constants.ACTIVITY_RIDE_ID;
 import static com.hyperether.getgoing.util.Constants.ACTIVITY_RUN_ID;
 import static com.hyperether.getgoing.util.Constants.ACTIVITY_WALK_ID;
+import static com.hyperether.getgoing.util.Constants.OPENED_FROM_KEY;
 import static com.hyperether.getgoing.util.Constants.OPENED_FROM_LOCATION_ACT;
 import static com.hyperether.getgoing.util.Constants.PREF_RIDE_ROUTE_EXISTING;
 import static com.hyperether.getgoing.util.Constants.PREF_RUN_ROUTE_EXISTING;
 import static com.hyperether.getgoing.util.Constants.PREF_WALK_ROUTE_EXISTING;
 
-public class ShowLocationActivity extends AppCompatActivity implements OnMapReadyCallback {
+
+public class TrackingFragment extends Fragment implements OnMapReadyCallback{
+
+    private NavController navigationController;
 
     private static final long UPDATE_INTERVAL_IN_MILLISECONDS = 3000;
     private static final long FASTEST_UPDATE_INTERVAL_IN_MILLISECONDS =
@@ -79,7 +87,7 @@ public class ShowLocationActivity extends AppCompatActivity implements OnMapRead
 
     private SharedPreferences mPrefs;
     private SharedPreferences cbPrefs;
-    private Editor mEditor;
+    private SharedPreferences.Editor mEditor;
     // to store the current settings
     private CBDataFrame cbDataFrameLocal;
     private NodeListViewModel nodeListViewModel;
@@ -109,32 +117,51 @@ public class ShowLocationActivity extends AppCompatActivity implements OnMapRead
     private Context classContext;
 
     private DbRoute updatedRoute;
+    MapFragment mapFragment;
+
+    public TrackingFragment() {
+        // Required empty public constructor
+    }
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
-
+    public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
-        // Keep screen on all the time
-        setContentView(R.layout.activity_location);
+        getActivity().getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
+        OnBackPressedCallback callback = new OnBackPressedCallback(true /* enabled by default */) {
+            @Override
+            public void handleOnBackPressed() {
+                onAnyBackButtonPressed();
+            }
+        };
+        requireActivity().getOnBackPressedDispatcher().addCallback(this, callback);
+    }
 
+    @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+                             Bundle savedInstanceState) {
+        // Inflate the layout for this fragment
+        return inflater.inflate(R.layout.fragment_tracking, container, false);
+    }
+
+    @Override
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+        navigationController = Navigation.findNavController(view);
         mRouteAlreadySaved = true;
 
         // Open the shared preferences
-        mPrefs = getSharedPreferences("SharedPreferences", Context.MODE_PRIVATE);
+        mPrefs = getContext().getSharedPreferences("SharedPreferences", Context.MODE_PRIVATE);
         // Get a SharedPreferences editor
         mEditor = mPrefs.edit();
         // Get user data shared prefs
-        cbPrefs = getSharedPreferences("CBUserDataPref.txt", Context.MODE_PRIVATE);
+        cbPrefs = getContext().getSharedPreferences("CBUserDataPref.txt", Context.MODE_PRIVATE);
 
-        cbDataFrameLocal = new CBDataFrame();
-        Bundle b = getIntent().getExtras();
-        cbDataFrameLocal = b.getParcelable("searchKey");
+        cbDataFrameLocal = CacheManager.getInstance().getObDataFrameGlobal();
 
         nodeList = new ArrayList<>();
-        nodeListViewModel = ViewModelProviders.of(this).get(NodeListViewModel.class);
+        nodeListViewModel = ViewModelProviders.of(getActivity()).get(NodeListViewModel.class);
 
-        classContext = this;
+        classContext = getActivity();
 
         initLayoutDinamically();
         setActivityLabel();
@@ -144,8 +171,7 @@ public class ShowLocationActivity extends AppCompatActivity implements OnMapRead
 
         clearData();
 
-        MapFragment mapFragment = (MapFragment) getFragmentManager()
-                .findFragmentById(R.id.mapView);
+        mapFragment = (MapFragment) getActivity().getFragmentManager().findFragmentById(R.id.mapView);
         mapFragment.getMapAsync(this);
 
         if (mPrefs.contains("KEY_UPDATES_ON")) {
@@ -156,27 +182,30 @@ public class ShowLocationActivity extends AppCompatActivity implements OnMapRead
             mEditor.putBoolean("KEY_UPDATES_ON", mLocTrackingRunning);
             mEditor.apply();
         }
-
-//        toInflate = getLayoutInflater().inflate(R.layout.alertdialog_goal, null, false);
     }
 
     @Override
-    protected void onDestroy() {
+    public void onDestroy() {
         super.onDestroy();
         clearCacheData();
-        stopService(new Intent(this, GPSTrackingService.class));
+        getActivity().stopService(new Intent(getActivity(), GPSTrackingService.class));
     }
 
+
+
     @Override
-    protected void onResume() {
+    public void onResume() {
         super.onResume();
         cbPrefs.registerOnSharedPreferenceChangeListener(sharedPrefsListener);
     }
 
     @Override
-    protected void onPause() {
+    public void onPause() {
         super.onPause();
         cbPrefs.unregisterOnSharedPreferenceChangeListener(sharedPrefsListener);
+        if (mapFragment != null) {
+            getActivity().getFragmentManager().beginTransaction().remove(mapFragment).commit();
+        }
     }
 
     @Override
@@ -189,12 +218,13 @@ public class ShowLocationActivity extends AppCompatActivity implements OnMapRead
     }
 
     @Override
-    public void onRestoreInstanceState(Bundle savedInstanceState) {
-        super.onRestoreInstanceState(savedInstanceState);
-        // Restore UI state from the savedInstanceState.
-        // This bundle has also been passed to onCreate.
-        mLocTrackingRunning = savedInstanceState.getBoolean("mLocTrackingRunning");
-        currentDateandTime = savedInstanceState.getString("currentDateandTime");
+    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+        if(savedInstanceState != null) {
+            mLocTrackingRunning = savedInstanceState.getBoolean("mLocTrackingRunning");
+            currentDateandTime = savedInstanceState.getString("currentDateandTime");
+        }
+
     }
 
     private void setupVMObserver() {
@@ -268,7 +298,7 @@ public class ShowLocationActivity extends AppCompatActivity implements OnMapRead
     /**
      * This method handle button click on Start button.
      */
-    private final OnClickListener mButtonStartListener = new OnClickListener() {
+    private final View.OnClickListener mButtonStartListener = new View.OnClickListener() {
         @Override
         public void onClick(View v) {
             if (goalStore > 0) {
@@ -285,21 +315,21 @@ public class ShowLocationActivity extends AppCompatActivity implements OnMapRead
     /**
      * This method handle button click on pause button.
      */
-    private final OnClickListener mButtonPauseListener = new OnClickListener() {
+    private final View.OnClickListener mButtonPauseListener = new View.OnClickListener() {
         @Override
         public void onClick(View v) {
             stopTracking();
             button_save.setClickable(true);
-            button_save.setImageDrawable(getDrawable(R.drawable.ic_light_save_icon));
+            button_save.setImageDrawable(getResources().getDrawable(R.drawable.ic_light_save_icon));
             button_rst.setClickable(true);
-            button_rst.setImageDrawable(getDrawable(R.drawable.ic_light_replay_icon));
+            button_rst.setImageDrawable(getResources().getDrawable(R.drawable.ic_light_replay_icon));
         }
     };
 
     /**
      * This method handle button click on save button.
      */
-    private final OnClickListener mButtonSaveListener = new OnClickListener() {
+    private final View.OnClickListener mButtonSaveListener = new View.OnClickListener() {
         @Override
         public void onClick(View v) {
 
@@ -321,7 +351,7 @@ public class ShowLocationActivity extends AppCompatActivity implements OnMapRead
                             GgRepository.getInstance().updateRoute(updatedRoute);
                             CacheManager.getInstance().setCurrentRouteId(0);
 
-                            Editor editor = cbPrefs.edit();
+                            SharedPreferences.Editor editor = cbPrefs.edit();
                             if (updatedRoute.getActivity_id() == ACTIVITY_WALK_ID &&
                                     !cbPrefs.getBoolean(PREF_WALK_ROUTE_EXISTING, false)) {
                                 editor.putBoolean(PREF_WALK_ROUTE_EXISTING, true);
@@ -337,7 +367,7 @@ public class ShowLocationActivity extends AppCompatActivity implements OnMapRead
                             }
 
                             button_save.setClickable(false);
-                            button_save.setImageDrawable(getDrawable(R.drawable.ic_light_save_icon_disabled));
+                            button_save.setImageDrawable(getResources().getDrawable(R.drawable.ic_light_save_icon_disabled));
                             Toast.makeText(classContext, getString(R.string.alert_dialog_route_saved), Toast.LENGTH_SHORT).show();
                         }
                     });
@@ -355,7 +385,7 @@ public class ShowLocationActivity extends AppCompatActivity implements OnMapRead
     /**
      * This method handle button click on reset button.
      */
-    private final OnClickListener mButtonResetListener = new OnClickListener() {
+    private final View.OnClickListener mButtonResetListener = new View.OnClickListener() {
         @Override
         public void onClick(View v) {
             AlertDialog.Builder dialog = new AlertDialog.Builder(v.getContext());
@@ -383,9 +413,9 @@ public class ShowLocationActivity extends AppCompatActivity implements OnMapRead
                             CacheManager.getInstance().setCurrentRouteId(0);
 
                             button_save.setClickable(false);
-                            button_save.setImageDrawable(getDrawable(R.drawable.ic_light_save_icon_disabled));
+                            button_save.setImageDrawable(getResources().getDrawable(R.drawable.ic_light_save_icon_disabled));
                             button_rst.setClickable(false);
-                            button_rst.setImageDrawable(getDrawable(R.drawable.ic_light_replay_icon_disabled));
+                            button_rst.setImageDrawable(getResources().getDrawable(R.drawable.ic_light_replay_icon_disabled));
                             mRouteAlreadySaved = true;
                         }
                     });
@@ -401,13 +431,14 @@ public class ShowLocationActivity extends AppCompatActivity implements OnMapRead
         }
     };
 
-    private final OnClickListener mButtonBackListener = v -> onAnyBackButtonPressed();
+    private final View.OnClickListener mButtonBackListener = v -> getActivity().onBackPressed(); //onAnyBackButtonPressed();
 
-    private final OnClickListener mButtonSetGoalListener = new OnClickListener() {
+    private final View.OnClickListener mButtonSetGoalListener = new View.OnClickListener() {
         @Override
         public void onClick(View v) {
-            ActivitiesFragment activitiesFragment = ActivitiesFragment.newInstance(null, OPENED_FROM_LOCATION_ACT);
-            activitiesFragment.show(getSupportFragmentManager(), "ActivitiesFragment");
+            Bundle bundle = new Bundle();
+            bundle.putInt(OPENED_FROM_KEY, OPENED_FROM_LOCATION_ACT);
+            navigationController.navigate(R.id.action_trackingFragment_to_activitiesFragment, bundle);
         }
     };
 
@@ -440,9 +471,9 @@ public class ShowLocationActivity extends AppCompatActivity implements OnMapRead
                 intent.putExtra(HyperConst.LOC_INTERVAL, UPDATE_INTERVAL_IN_MILLISECONDS);
                 intent.putExtra(HyperConst.LOC_FASTEST_INTERVAL, FASTEST_UPDATE_INTERVAL_IN_MILLISECONDS);
                 intent.putExtra(HyperConst.LOC_DISTANCE, LOCATION_DISTANCE);
-                startService(intent);
+                getActivity().startService(intent);
 
-                runOnUiThread(() -> {
+                getActivity().runOnUiThread(() -> {
                     setupVMObserver();
 
                     showTime.setBase(SystemClock.elapsedRealtime() + timeWhenStopped);
@@ -451,9 +482,9 @@ public class ShowLocationActivity extends AppCompatActivity implements OnMapRead
                     button_start.setVisibility(View.GONE);
                     button_pause.setVisibility(View.VISIBLE);
                     if (mLocTrackingRunning) {
-                        button_save.setImageDrawable(getDrawable(R.drawable.ic_light_save_icon_disabled));
+                        button_save.setImageDrawable(getResources().getDrawable(R.drawable.ic_light_save_icon_disabled));
                         button_save.setClickable(false);
-                        button_rst.setImageDrawable(getDrawable(R.drawable.ic_light_replay_icon_disabled));
+                        button_rst.setImageDrawable(getResources().getDrawable(R.drawable.ic_light_replay_icon_disabled));
                         button_rst.setClickable(false);
                     }
                 });
@@ -470,7 +501,7 @@ public class ShowLocationActivity extends AppCompatActivity implements OnMapRead
      * This method stops timer and disables visibility of start button.
      */
     private void stopTracking() {
-        stopService(new Intent(this, GPSTrackingService.class));
+        getActivity().stopService(new Intent(getActivity(), GPSTrackingService.class));
 
         timeWhenStopped4Storage = SystemClock.elapsedRealtime() - showTime.getBase();
         timeWhenStopped = showTime.getBase() - SystemClock.elapsedRealtime();
@@ -507,20 +538,20 @@ public class ShowLocationActivity extends AppCompatActivity implements OnMapRead
 
     @Override
     public void onMapReady(GoogleMap googleMap) {
-        if (ActivityCompat.checkSelfPermission(this, android.Manifest.permission
+        if (ActivityCompat.checkSelfPermission(getActivity(), android.Manifest.permission
                 .ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED &&
-                ActivityCompat.checkSelfPermission(this, android.Manifest.permission
+                ActivityCompat.checkSelfPermission(getActivity(), android.Manifest.permission
                         .ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
 
             this.mMap = googleMap;
             initMapComponents(googleMap);
 
-            LocationManager locationManager = (LocationManager) getSystemService(
+            LocationManager locationManager = (LocationManager) getActivity().getSystemService(
                     Context.LOCATION_SERVICE);
 
             boolean gpsEnabled = locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER);
             if (!gpsEnabled) {
-                AlertDialog.Builder dialog = new AlertDialog.Builder(this);
+                AlertDialog.Builder dialog = new AlertDialog.Builder(getActivity());
                 dialog.setCancelable(false);
                 dialog.setTitle(R.string.alert_dialog_title);
                 dialog.setMessage(getString(R.string.alert_dialog_message));
@@ -532,7 +563,7 @@ public class ShowLocationActivity extends AppCompatActivity implements OnMapRead
                     }
                 });
 
-                dialog.setNegativeButton(R.string.alert_dialog_negative_button, (paramDialogInterface, paramInt) -> finish());
+                dialog.setNegativeButton(R.string.alert_dialog_negative_button, (paramDialogInterface, paramInt) -> getActivity().finish());
 
                 dialog.show();
             }
@@ -544,15 +575,11 @@ public class ShowLocationActivity extends AppCompatActivity implements OnMapRead
             Location location = locationManager.getLastKnownLocation(bestProvider);
             zoomOverCurrentLocation(mMap, location);
         } else {
-            finish();
+            getActivity().finish();
         }
     }
 
-    @Override
-    public void onBackPressed() {
-//        backPressed = false;
-        onAnyBackButtonPressed();
-    }
+
 
     /**
      * This method is used for init of map components
@@ -560,9 +587,9 @@ public class ShowLocationActivity extends AppCompatActivity implements OnMapRead
      * @param googleMap google map v2
      **/
     private void initMapComponents(GoogleMap googleMap) {
-        if (ActivityCompat.checkSelfPermission(this, android.Manifest.permission
+        if (ActivityCompat.checkSelfPermission(getActivity(), android.Manifest.permission
                 .ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED &&
-                ActivityCompat.checkSelfPermission(this, android.Manifest.permission
+                ActivityCompat.checkSelfPermission(getActivity(), android.Manifest.permission
                         .ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
 
             googleMap.setMyLocationEnabled(true);
@@ -650,28 +677,28 @@ public class ShowLocationActivity extends AppCompatActivity implements OnMapRead
      * Method for initiating layout.
      */
     private void initLayoutDinamically() {
-        button_back = findViewById(R.id.ib_al_backbutton);
+        button_back = getView().findViewById(R.id.ib_al_backbutton);
         button_back.setOnClickListener(mButtonBackListener);
-        button_start = findViewById(R.id.al_btn_start);
+        button_start = getView().findViewById(R.id.al_btn_start);
         button_start.setOnClickListener(mButtonStartListener);
-        button_pause = findViewById(R.id.al_btn_pause);
+        button_pause = getView().findViewById(R.id.al_btn_pause);
         button_pause.setOnClickListener(mButtonPauseListener);
-        button_rst = findViewById(R.id.ib_al_reset);
+        button_rst = getView().findViewById(R.id.ib_al_reset);
         button_rst.setOnClickListener(mButtonResetListener);
-        button_save = findViewById(R.id.ib_al_save);
+        button_save = getView().findViewById(R.id.ib_al_save);
         button_save.setOnClickListener(mButtonSaveListener);
 
-        showTime = findViewById(R.id.chr_al_duration);
-        showCalories = findViewById(R.id.chr_al_kcal);
-        showDistance = findViewById(R.id.chr_al_meters);
-        showVelocity = findViewById(R.id.chr_al_speed);
+        showTime = getView().findViewById(R.id.chr_al_duration);
+        showCalories = getView().findViewById(R.id.chr_al_kcal);
+        showDistance = getView().findViewById(R.id.chr_al_meters);
+        showVelocity = getView().findViewById(R.id.chr_al_speed);
 
-        activity_id = findViewById(R.id.tv_al_activity);
-        labelCalories = findViewById(R.id.tv_al_kcal);
-        labelDuration = findViewById(R.id.tv_al_duration);
-        labelVelocity = findViewById(R.id.tv_al_speed);
+        activity_id = getView().findViewById(R.id.tv_al_activity);
+        labelCalories = getView().findViewById(R.id.tv_al_kcal);
+        labelDuration = getView().findViewById(R.id.tv_al_duration);
+        labelVelocity = getView().findViewById(R.id.tv_al_speed);
 
-        set_goal = findViewById(R.id.al_btn_setgoal);
+        set_goal = getView().findViewById(R.id.al_btn_setgoal);
         set_goal.setOnClickListener(mButtonSetGoalListener);
     }
 
@@ -683,16 +710,14 @@ public class ShowLocationActivity extends AppCompatActivity implements OnMapRead
         startActivityForResult(i, Constants.REQUEST_GPS_SETTINGS);
     }
 
-    private void onAnyBackButtonPressed() {
-        if (mLocTrackingRunning || !mRouteAlreadySaved) {
-            this.moveTaskToBack(true);
-        } else {
-            super.onBackPressed();
-        }
-    }
-
     private SharedPreferences.OnSharedPreferenceChangeListener sharedPrefsListener =
             (SharedPreferences sharedPreferences, String key) -> setVisibilities();
 
-
+    private void onAnyBackButtonPressed() {
+        if (mLocTrackingRunning || !mRouteAlreadySaved) {
+            getActivity().moveTaskToBack(true);
+        } else {
+            navigationController.popBackStack();
+        }
+    }
 }

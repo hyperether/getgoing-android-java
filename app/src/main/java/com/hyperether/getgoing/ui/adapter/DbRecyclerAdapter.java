@@ -1,6 +1,5 @@
 package com.hyperether.getgoing.ui.adapter;
 
-import android.content.Context;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -9,6 +8,7 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.hyperether.getgoing.R;
@@ -26,9 +26,9 @@ public class DbRecyclerAdapter extends RecyclerView.Adapter<DbRecyclerAdapter.Vi
     private GgOnClickListener listener;
 
 
-    public DbRecyclerAdapter(Context context, List<DbRoute> routes) {
+    public DbRecyclerAdapter(Fragment fragment, List<DbRoute> routes) {
         this.routes = routes;
-        listener = (GgOnClickListener) context;
+        listener = (GgOnClickListener) fragment;
     }
 
     @NonNull
