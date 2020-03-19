@@ -7,7 +7,6 @@ import android.location.Location;
 
 import com.hyperether.getgoing.R;
 import com.hyperether.getgoing.manager.CacheManager;
-import com.hyperether.getgoing.model.CBDataFrame;
 import com.hyperether.getgoing.repository.room.GgRepository;
 import com.hyperether.getgoing.repository.room.entity.DbNode;
 import com.hyperether.getgoing.ui.activity.NavigationActivity;
@@ -17,6 +16,8 @@ import com.hyperether.getgoing.util.Conversion;
 import com.hyperether.getgoing.util.KalmanLatLong;
 import com.hyperether.toolbox.HyperNotification;
 import com.hyperether.toolbox.location.HyperLocationService;
+
+import static com.hyperether.getgoing.util.Constants.TRACKING_ACTIVITY_KEY;
 
 
 /**
@@ -41,6 +42,8 @@ public class GPSTrackingService extends HyperLocationService {
     private long timeCumulative = 0;
     private int nodeIndex;
 
+    private int profileID;
+
     private int secondsCumulative = 0;
     private long time = 0; // time between to position updates
 
@@ -53,12 +56,13 @@ public class GPSTrackingService extends HyperLocationService {
     private double weight = 0;
     private long oldTime = 0;
 
+    private SharedPreferences settings;
+
     private CaloriesCalculation calcCal = new CaloriesCalculation();
-    private CBDataFrame cbDataFrameLocal;    // to store the current settings
 
     @Override
     public void onCreate() {
-        SharedPreferences settings = getSharedPreferences(Constants.PREF_FILE, 0);
+        settings = getSharedPreferences(Constants.PREF_FILE, 0);
         weight = settings.getInt("weight", 0);
 
         if (CacheManager.getInstance().getDistanceCumulative() != null) {
@@ -83,7 +87,15 @@ public class GPSTrackingService extends HyperLocationService {
 
         oldTime = System.currentTimeMillis();
 
+
+
         super.onCreate();
+    }
+
+    @Override
+    public int onStartCommand(Intent intent, int flags, int startId) {
+        profileID = intent.getIntExtra(TRACKING_ACTIVITY_KEY, -1);
+        return super.onStartCommand(intent, flags, startId);
     }
 
     @Override
@@ -172,15 +184,12 @@ public class GPSTrackingService extends HyperLocationService {
                         CacheManager.getInstance().setVelocity(velocity);
                     }
 
-                    if (CacheManager.getInstance().getObDataFrameGlobal() != null) {
-                        cbDataFrameLocal = CacheManager.getInstance().getObDataFrameGlobal();
-                        kcalCurrent = calcCal
-                                .calculate(distance, velocity, cbDataFrameLocal,
-                                        weight);
-                        kcalCumulative += kcalCurrent;
-                        if (velocity < 30) {
-                            CacheManager.getInstance().setKcalCumulative(kcalCumulative);
-                        }
+                    kcalCurrent = calcCal
+                            .calculate(distance, velocity, profileID, settings,
+                                    weight);
+                    kcalCumulative += kcalCurrent;
+                    if (velocity < 30) {
+                        CacheManager.getInstance().setKcalCumulative(kcalCumulative);
                     }
 
                     if (distanceDelta > Constants.NODE_ADD_DISTANCE) {

@@ -4,6 +4,8 @@ import android.annotation.SuppressLint;
 import android.app.AlertDialog;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+
+import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -14,8 +16,6 @@ import android.widget.ImageView;
 import android.widget.Spinner;
 import android.widget.TextView;
 import com.hyperether.getgoing.R;
-import com.hyperether.getgoing.manager.CacheManager;
-import com.hyperether.getgoing.model.CBDataFrame;
 import com.hyperether.getgoing.repository.room.DbHelper;
 import com.hyperether.getgoing.repository.room.entity.DbRoute;
 import com.hyperether.getgoing.util.Constants;
@@ -33,8 +33,6 @@ public class ProfileFragment extends Fragment {
     private TextView totalMileage, totalCalories;
     private TextView dataLabel;
     private ImageView genderImg;
-
-    private CBDataFrame mDataFrame;
 
     private SharedPreferences settings;
     private SharedPreferences.Editor editor;
@@ -54,8 +52,6 @@ public class ProfileFragment extends Fragment {
         if (!settings.contains("gender")) {
             editor.putInt("gender", 0).apply();
         }
-
-        mDataFrame = CacheManager.getInstance().getObDataFrameGlobal();
     }
 
     @Override
@@ -168,15 +164,12 @@ public class ProfileFragment extends Fragment {
                     if (which == 0) {
                         newText[0] = "Male";
                         editor.putInt("gender", 0);
-                        mDataFrame.setGender(Constants.gender.Male);
                     } else if (which == 1) {
                         newText[0] = "Female";
                         editor.putInt("gender", 1);
-                        mDataFrame.setGender(Constants.gender.Female);
                     } else {
                         newText[0] = "Other";
                         editor.putInt("gender", 2);
-                        mDataFrame.setGender(Constants.gender.Other);
                     }
                     editor.apply();
                 })
@@ -222,7 +215,6 @@ public class ProfileFragment extends Fragment {
                     SharedPreferences.Editor editor = settings.edit();
                     editor.putInt("age", Integer.valueOf((String) ageSpinner.getSelectedItem()));
                     editor.apply();
-                    mDataFrame.setAge(Integer.valueOf((String) ageSpinner.getSelectedItem()));
                 })
                         .setNegativeButton("Cancel", (dialogInterface, i) -> dialogInterface.cancel())
                         .setTitle("How old are you?");
@@ -251,7 +243,6 @@ public class ProfileFragment extends Fragment {
                     SharedPreferences.Editor editor = settings.edit();
                     editor.putInt("weight", Integer.valueOf((String) weightSpinner.getSelectedItem()));
                     editor.apply();
-                    mDataFrame.setWeight(Integer.valueOf((String) weightSpinner.getSelectedItem()));
                 })
                         .setNegativeButton("Cancel", (dialogInterface, i) -> dialogInterface.cancel())
                         .setTitle("Enter your weight:");
@@ -280,7 +271,6 @@ public class ProfileFragment extends Fragment {
                     SharedPreferences.Editor editor = settings.edit();
                     editor.putInt("height", Integer.valueOf((String) heightSpinner.getSelectedItem()));
                     editor.apply();
-                    mDataFrame.setHeight(Integer.valueOf((String) heightSpinner.getSelectedItem()));
                 })
                         .setNegativeButton("Cancel", (dialogInterface, i) -> dialogInterface.cancel())
                         .setTitle("Enter your height:");

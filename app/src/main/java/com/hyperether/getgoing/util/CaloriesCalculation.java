@@ -1,12 +1,16 @@
 package com.hyperether.getgoing.util;
 
-import com.hyperether.getgoing.model.CBDataFrame;
+import android.content.Context;
+import android.content.SharedPreferences;
+
+import static com.hyperether.getgoing.util.Constants.PREF_FILE;
 
 
 public class CaloriesCalculation {
     // Algorithm variables
     // Lookup table for calories calculation first is speed in m/s, second is
     // kcal/m*kg
+
     private final double[][] kcalMatrix = {{0.89, 0.00078}, {1.12, 0.00074},
             {1.34, 0.00073}, {1.56, 0.00071}, {1.79, 0.00078},
             {2.01, 0.00087}, {2.23, 0.00099}, {2.68, 0.00104},
@@ -18,19 +22,18 @@ public class CaloriesCalculation {
      *
      * @param dis distance traveled
      * @param vel velocity
-     * @param cbDataFrameLocal data frame
      * @param weight user weight
      */
-    public double calculate(double dis, double vel, CBDataFrame cbDataFrameLocal, double weight) {
+    public double calculate(double dis, double vel, int profileID, SharedPreferences settings, double weight) {
 
         double energySpent = 0;
         int i;
 
-        if (cbDataFrameLocal.getMeasurementSystemId() == 1 ||
-                cbDataFrameLocal.getMeasurementSystemId() == 2)
+        if (settings.getInt("measurementSystemId", Constants.METRIC) == 1 ||
+                settings.getInt("measurementSystemId", Constants.METRIC) == 2)
             weight = weight * 0.4536; //convert weght to metric system for calculations;
 
-        if (cbDataFrameLocal.getProfileId() == 1 || cbDataFrameLocal.getProfileId() == 2) {
+        if (profileID == 1 || profileID == 2) {
             // walking and running algorithm
 
             if (vel < kcalMatrix[0][0]) { // if the measured speed is lower than the

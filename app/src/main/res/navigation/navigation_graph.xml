@@ -52,7 +52,7 @@
 
         <argument
             android:name="searchKey"
-            app:argType="com.hyperether.getgoing.model.CBDataFrame"/>
+            app:argType="integer"/>
         <action
             android:id="@+id/action_trackingFragment_to_activitiesFragment"
             app:destination="@id/activitiesFragment" />

@@ -42,7 +42,6 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.PolylineOptions;
 import com.hyperether.getgoing.R;
 import com.hyperether.getgoing.manager.CacheManager;
-import com.hyperether.getgoing.model.CBDataFrame;
 import com.hyperether.getgoing.repository.room.DbRouteAddedCallback;
 import com.hyperether.getgoing.repository.room.GgRepository;
 import com.hyperether.getgoing.repository.room.entity.DbNode;
@@ -66,9 +65,11 @@ import static com.hyperether.getgoing.util.Constants.ACTIVITY_RUN_ID;
 import static com.hyperether.getgoing.util.Constants.ACTIVITY_WALK_ID;
 import static com.hyperether.getgoing.util.Constants.OPENED_FROM_KEY;
 import static com.hyperether.getgoing.util.Constants.OPENED_FROM_LOCATION_ACT;
+import static com.hyperether.getgoing.util.Constants.PREF_FILE;
 import static com.hyperether.getgoing.util.Constants.PREF_RIDE_ROUTE_EXISTING;
 import static com.hyperether.getgoing.util.Constants.PREF_RUN_ROUTE_EXISTING;
 import static com.hyperether.getgoing.util.Constants.PREF_WALK_ROUTE_EXISTING;
+import static com.hyperether.getgoing.util.Constants.TRACKING_ACTIVITY_KEY;
 
 
 public class TrackingFragment extends Fragment implements OnMapReadyCallback{
@@ -88,8 +89,6 @@ public class TrackingFragment extends Fragment implements OnMapReadyCallback{
     private SharedPreferences mPrefs;
     private SharedPreferences cbPrefs;
     private SharedPreferences.Editor mEditor;
-    // to store the current settings
-    private CBDataFrame cbDataFrameLocal;
     private NodeListViewModel nodeListViewModel;
 
     // U/I variables
@@ -112,6 +111,7 @@ public class TrackingFragment extends Fragment implements OnMapReadyCallback{
     private boolean timeFlg = true;
 
     private long goalStore;
+    private int profileID;
 
     //    private View toInflate;
     private Context classContext;
@@ -133,6 +133,7 @@ public class TrackingFragment extends Fragment implements OnMapReadyCallback{
                 onAnyBackButtonPressed();
             }
         };
+        profileID = getArguments().getInt(TRACKING_ACTIVITY_KEY);
         requireActivity().getOnBackPressedDispatcher().addCallback(this, callback);
     }
 
@@ -154,9 +155,7 @@ public class TrackingFragment extends Fragment implements OnMapReadyCallback{
         // Get a SharedPreferences editor
         mEditor = mPrefs.edit();
         // Get user data shared prefs
-        cbPrefs = getContext().getSharedPreferences("CBUserDataPref.txt", Context.MODE_PRIVATE);
-
-        cbDataFrameLocal = CacheManager.getInstance().getObDataFrameGlobal();
+        cbPrefs = getContext().getSharedPreferences(PREF_FILE, Context.MODE_PRIVATE);
 
         nodeList = new ArrayList<>();
         nodeListViewModel = ViewModelProviders.of(getActivity()).get(NodeListViewModel.class);
@@ -246,9 +245,7 @@ public class TrackingFragment extends Fragment implements OnMapReadyCallback{
     }
 
     private void setActivityLabel() {
-        int id = cbDataFrameLocal.getProfileId();
-
-        switch (id) {
+        switch (profileID) {
             case 1: {
                 activity_id.setText(getString(R.string.walking));
                 break;
@@ -346,7 +343,7 @@ public class TrackingFragment extends Fragment implements OnMapReadyCallback{
 
                             updatedRoute = new DbRoute(cm.getCurrentRouteId(), timeWhenStopped4Storage,
                                     cm.getKcalCumulative(), cm.getDistanceCumulative(), currentDateandTime,
-                                    cm.getVelocityAvg(), cbDataFrameLocal.getProfileId(), goalStore);
+                                    cm.getVelocityAvg(), profileID, goalStore);
 
                             GgRepository.getInstance().updateRoute(updatedRoute);
                             CacheManager.getInstance().setCurrentRouteId(0);
@@ -471,6 +468,7 @@ public class TrackingFragment extends Fragment implements OnMapReadyCallback{
                 intent.putExtra(HyperConst.LOC_INTERVAL, UPDATE_INTERVAL_IN_MILLISECONDS);
                 intent.putExtra(HyperConst.LOC_FASTEST_INTERVAL, FASTEST_UPDATE_INTERVAL_IN_MILLISECONDS);
                 intent.putExtra(HyperConst.LOC_DISTANCE, LOCATION_DISTANCE);
+                intent.putExtra(TRACKING_ACTIVITY_KEY, profileID);
                 getActivity().startService(intent);
 
                 getActivity().runOnUiThread(() -> {
@@ -526,8 +524,8 @@ public class TrackingFragment extends Fragment implements OnMapReadyCallback{
     @SuppressLint("DefaultLocale")
     private void showData(double distance, double kcal, double vel) {
         showCalories.setText(String.format("%.02f kcal", kcal));
-        if (cbDataFrameLocal.getMeasurementSystemId() == 1 ||
-                cbDataFrameLocal.getMeasurementSystemId() == 2)
+        if (cbPrefs.getInt("measurementSystemId", Constants.METRIC) == 1 ||
+                cbPrefs.getInt("measurementSystemId", Constants.METRIC) == 2)
             showDistance
                     .setText(String.format("%.02f ft", distance * 3.281)); // present data in feet
         else

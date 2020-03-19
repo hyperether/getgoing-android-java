@@ -63,6 +63,7 @@ public class Constants {
     public static final String BUNDLE_PARCELABLE = "bundle_parcelable";
 
     // activities IDs
+    public static final String TRACKING_ACTIVITY_KEY = "tracking_activity";
     public static final int ACTIVITY_WALK_ID = 1;
     public static final int ACTIVITY_RUN_ID = 2;
     public static final int ACTIVITY_RIDE_ID = 3;

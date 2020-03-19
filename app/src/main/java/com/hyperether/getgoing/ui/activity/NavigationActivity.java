@@ -7,6 +7,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
+
 import com.crashlytics.android.Crashlytics;
 import com.hyperether.getgoing.R;
 import com.hyperether.getgoing.util.Constants;
@@ -17,11 +18,10 @@ public class NavigationActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
-        setTheme(R.style.AppTheme);
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_navigation);
         Fabric.with(this, new Crashlytics());
-
+        setTheme(R.style.AppTheme);
         ActivityCompat.requestPermissions(this, new String[]{
                 Manifest.permission.ACCESS_FINE_LOCATION,
                 Manifest.permission.ACCESS_COARSE_LOCATION}, Constants

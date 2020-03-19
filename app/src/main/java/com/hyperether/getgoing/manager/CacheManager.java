@@ -1,6 +1,5 @@
 package com.hyperether.getgoing.manager;
 
-import com.hyperether.getgoing.model.CBDataFrame;
 import com.hyperether.getgoing.repository.room.entity.DbNode;
 
 import java.util.ArrayList;
@@ -20,7 +19,6 @@ public class CacheManager {
     private Double kcalCumulative;
     private Double velocity;
     private Double velocityAvg;
-    private CBDataFrame obDataFrameGlobal;
     private long timeCumulative;
     private int secondsCumulative;
     private long time = 0; // time between to position updates
@@ -34,7 +32,7 @@ public class CacheManager {
     }
 
     private CacheManager() {
-        obDataFrameGlobal = CBDataFrame.getInstance();
+
     }
 
     public void addRouteNode(DbNode dbNode) {
@@ -91,14 +89,6 @@ public class CacheManager {
 
     public void setVelocityAvg(Double velocityAvg) {
         this.velocityAvg = velocityAvg;
-    }
-
-    public CBDataFrame getObDataFrameGlobal() {
-        return obDataFrameGlobal;
-    }
-
-    public void setObDataFrameLocal(CBDataFrame obDataFrameLocal) {
-        this.obDataFrameGlobal = obDataFrameLocal;
     }
 
     public long getTimeCumulative() {

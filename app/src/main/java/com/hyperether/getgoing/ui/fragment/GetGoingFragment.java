@@ -28,8 +28,6 @@ import android.widget.Toast;
 
 import com.hyperether.getgoing.R;
 import com.hyperether.getgoing.databinding.FragmentGetgoingBindingImpl;
-import com.hyperether.getgoing.manager.CacheManager;
-import com.hyperether.getgoing.model.CBDataFrame;
 import com.hyperether.getgoing.repository.room.GgRepository;
 import com.hyperether.getgoing.repository.room.entity.DbNode;
 import com.hyperether.getgoing.repository.room.entity.DbRoute;
@@ -48,6 +46,7 @@ import static com.hyperether.getgoing.util.Constants.OPENED_FROM_KEY;
 import static com.hyperether.getgoing.util.Constants.PREF_RIDE_ROUTE_EXISTING;
 import static com.hyperether.getgoing.util.Constants.PREF_RUN_ROUTE_EXISTING;
 import static com.hyperether.getgoing.util.Constants.PREF_WALK_ROUTE_EXISTING;
+import static com.hyperether.getgoing.util.Constants.TRACKING_ACTIVITY_KEY;
 
 
 public class GetGoingFragment extends Fragment {
@@ -60,7 +59,6 @@ public class GetGoingFragment extends Fragment {
     private int measureUnitId;
 
     private FragmentGetgoingBindingImpl mBinding;
-    private CBDataFrame cbDataFrameLocal;
     private SnapHelper snapHelper;
     private RecyclerView recyclerView;
     private RecyclerView.LayoutManager layoutManager;
@@ -97,8 +95,6 @@ public class GetGoingFragment extends Fragment {
 
         mBinding.cpbAmKmgoal2.setProgressFormatter(new TimeProgressFormatterInvisible());
 
-        cbDataFrameLocal = CacheManager.getInstance().getObDataFrameGlobal();
-
         actLabel = getView().findViewById(R.id.tv_ma_mainact);
         blueSentence = getView().findViewById(R.id.tv_am_burn);
         selectorView = getView().findViewById(R.id.imageView2);
@@ -109,12 +105,6 @@ public class GetGoingFragment extends Fragment {
         initScreenDimen();
         initRecyclerView();
         initListeners();
-    }
-
-    @Override
-    public void onResume() {
-        super.onResume();
-        initModel();
     }
 
     private void zeroNodeInit() {
@@ -149,9 +139,9 @@ public class GetGoingFragment extends Fragment {
     /*
      * true: parameters are set false: settings required
      */
-    private boolean getParametersStatus(CBDataFrame cbDataFrameLocal) {
-        return !((cbDataFrameLocal.getAge() == 0)
-                || (cbDataFrameLocal.getWeight() == 0));
+    private boolean getParametersStatus() {
+        return !((currentSettings.getInt("age", 0) == 0)
+                || (currentSettings.getInt("weight", 0) == 0));
     }
 
     /**
@@ -167,10 +157,11 @@ public class GetGoingFragment extends Fragment {
      * @param id mode id
      */
     private void callTrackingFragment(int id) {
-        if (getParametersStatus(CacheManager.getInstance().getObDataFrameGlobal())) {
+        if (getParametersStatus()) {
             setMeteringActivityRequested(0);
-            this.cbDataFrameLocal.setProfileId(id);
-            navigationController.navigate(R.id.action_getGoingFragment_to_trackingFragment);
+            Bundle bundle = new Bundle();
+            bundle.putInt(TRACKING_ACTIVITY_KEY, id);
+            navigationController.navigate(R.id.action_getGoingFragment_to_trackingFragment, bundle);
         } else {
             setMeteringActivityRequested(id);
             Toast.makeText(getActivity(), "You must enter your data first!", Toast.LENGTH_LONG).show();
@@ -194,17 +185,6 @@ public class GetGoingFragment extends Fragment {
         SharedPreferences.Editor editor = settings.edit();
         editor.putInt("meteringActivityRequestedId", id);
         editor.apply();
-    }
-
-    private void initModel() {
-        /*
-         * default value is metric
-         */
-        measureUnitId = currentSettings.getInt("measurementSystemId", Constants.METRIC);
-        cbDataFrameLocal.setMeasurementSystemId(measureUnitId);
-        cbDataFrameLocal.setHeight(currentSettings.getInt("height", 0));
-        cbDataFrameLocal.setWeight(currentSettings.getInt("weight", 0));
-        cbDataFrameLocal.setAge(currentSettings.getInt("age", 0));
     }
 
     private void initRecyclerView() {
