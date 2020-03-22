@@ -4,11 +4,11 @@ import android.app.PendingIntent;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.location.Location;
-
+import android.os.AsyncTask;
 import com.hyperether.getgoing.R;
-import com.hyperether.getgoing.manager.CacheManager;
 import com.hyperether.getgoing.repository.room.GgRepository;
 import com.hyperether.getgoing.repository.room.entity.DbNode;
+import com.hyperether.getgoing.repository.room.entity.DbRoute;
 import com.hyperether.getgoing.ui.activity.NavigationActivity;
 import com.hyperether.getgoing.util.CaloriesCalculation;
 import com.hyperether.getgoing.util.Constants;
@@ -58,45 +58,36 @@ public class GPSTrackingService extends HyperLocationService {
 
     private SharedPreferences settings;
 
+    private long routeID;
+    private DbRoute currentRoute;
+    private DbNode currentNode;
+
     private CaloriesCalculation calcCal = new CaloriesCalculation();
 
     @Override
     public void onCreate() {
+        super.onCreate();
         settings = getSharedPreferences(Constants.PREF_FILE, 0);
         weight = settings.getInt("weight", 0);
-
-        if (CacheManager.getInstance().getDistanceCumulative() != null) {
-            distanceCumulative = CacheManager.getInstance().getDistanceCumulative();
-        }
-
-        if (CacheManager.getInstance().getKcalCumulative() != null) {
-            kcalCumulative = CacheManager.getInstance().getKcalCumulative();
-        }
-
-        if (CacheManager.getInstance().getVelocity() != null) {
-            velocity = CacheManager.getInstance().getVelocity();
-        }
-
-        if (CacheManager.getInstance().getVelocityAvg() != null) {
-            velocityAvg = CacheManager.getInstance().getVelocityAvg();
-        }
-
-        timeCumulative = CacheManager.getInstance().getTimeCumulative();
-        secondsCumulative = CacheManager.getInstance().getSecondsCumulative();
-        time = CacheManager.getInstance().getTime();
-
         oldTime = System.currentTimeMillis();
 
+        AsyncTask.execute(new Runnable() {
+            @Override
+            public void run() {
+                currentRoute = GgRepository.getInstance().getLastRoute();
 
-
-        super.onCreate();
+                routeID = currentRoute.getId();
+                profileID = currentRoute.getActivity_id();
+                distanceCumulative = currentRoute.getLength();
+                kcalCumulative = currentRoute.getEnergy();
+                velocity = currentRoute.getCurrentSpeed();
+                velocityAvg = currentRoute.getAvgSpeed();
+                timeCumulative = currentRoute.getDuration();
+                secondsCumulative = (int) timeCumulative / 1000;
+            }
+        });
     }
 
-    @Override
-    public int onStartCommand(Intent intent, int flags, int startId) {
-        profileID = intent.getIntExtra(TRACKING_ACTIVITY_KEY, -1);
-        return super.onStartCommand(intent, flags, startId);
-    }
 
     @Override
     protected void startForeground() {
@@ -135,8 +126,8 @@ public class GPSTrackingService extends HyperLocationService {
                 longitude = longitude_old = dLong;
                 firstPass = false;
 
-                DbNode tmp = new DbNode(0, latitude, longitude, 0, nodeIndex++, CacheManager.getInstance().getCurrentRouteId());
-                CacheManager.getInstance().addRouteNode(tmp);
+                DbNode tmp = new DbNode(0, latitude, longitude, 0, nodeIndex++, routeID);
+                currentNode = tmp;
                 GgRepository.getInstance().daoInsertNode(tmp);
             } else {
                 latitude_old = latitude;
@@ -181,7 +172,7 @@ public class GPSTrackingService extends HyperLocationService {
                     //brzina je srednja vrednost izmerene i ocitane brzine
                     velocity = (mCurrentLocation.getSpeed() + (distance / time)) / 2;
                     if (velocity < 30) {
-                        CacheManager.getInstance().setVelocity(velocity);
+                        currentRoute.setCurrentSpeed(velocity);
                     }
 
                     kcalCurrent = calcCal
@@ -189,7 +180,7 @@ public class GPSTrackingService extends HyperLocationService {
                                     weight);
                     kcalCumulative += kcalCurrent;
                     if (velocity < 30) {
-                        CacheManager.getInstance().setKcalCumulative(kcalCumulative);
+                        currentRoute.setEnergy(kcalCumulative);
                     }
 
                     if (distanceDelta > Constants.NODE_ADD_DISTANCE) {
@@ -197,25 +188,25 @@ public class GPSTrackingService extends HyperLocationService {
                         // add new point to the route
                         // node and route database _ids are intentionally 0
                         DbNode tmp = new DbNode(0, latitude, longitude, (float) velocity,
-                                nodeIndex++, CacheManager.getInstance().getCurrentRouteId());
+                                nodeIndex++, routeID);
                         if (velocity < 30) {
-                            CacheManager.getInstance().addRouteNode(tmp);
+                            currentNode = tmp;
                             GgRepository.getInstance().daoInsertNode(tmp);
                         }
                     }
                 } else {
                     velocity = mCurrentLocation.getSpeed();
                     if (velocity < 30) {
-                        CacheManager.getInstance().setVelocity(velocity);
+                        currentRoute.setCurrentSpeed(velocity);
                     }
                 }
             }
 
             if (velocity < 30) {
-                CacheManager.getInstance().setDistanceCumulative(distanceCumulative);
-                CacheManager.getInstance().setKcalCumulative(kcalCumulative);
-                CacheManager.getInstance().setVelocity(velocity);
-                CacheManager.getInstance().setVelocityAvg(velocityAvg);
+                currentRoute.setLength(distanceCumulative);
+                currentRoute.setEnergy(kcalCumulative);
+                currentRoute.setCurrentSpeed(velocity);
+                currentRoute.setAvgSpeed(velocityAvg);
             }
 
             time = 0; // reset the second counter for calculating velocity
@@ -224,7 +215,17 @@ public class GPSTrackingService extends HyperLocationService {
         }
 
         if (velocity < 30) {
-            CacheManager.getInstance().setDistanceCumulative(distanceCumulative);
+            currentRoute.setLength(distanceCumulative);
         }
+
+        GgRepository.getInstance().updateRoute(currentRoute);
+
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        currentNode.setLast(true);
+        GgRepository.getInstance().daoInsertNode(currentNode);
     }
 }

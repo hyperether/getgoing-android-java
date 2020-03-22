@@ -6,12 +6,15 @@ import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.SharedPreferences;
+import android.content.res.ObbScanner;
 import android.os.AsyncTask;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.Observer;
+import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 
@@ -26,15 +29,15 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.hyperether.getgoing.R;
-import com.hyperether.getgoing.listeners.GgOnClickListener;
-import com.hyperether.getgoing.repository.room.DbHelper;
 import com.hyperether.getgoing.repository.room.entity.DbRoute;
 import com.hyperether.getgoing.util.Constants;
+import com.hyperether.getgoing.viewmodel.RouteViewModel;
 
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
+import java.util.Observable;
 
 import static com.hyperether.getgoing.ui.fragment.GetGoingFragment.ratio;
 import static com.hyperether.getgoing.util.Constants.DATA_DETAILS_LABEL;
@@ -62,6 +65,7 @@ public class ActivitiesFragment extends Fragment {
     private SharedPreferences settings;
 
     private int openedFrom;
+    private RouteViewModel routeViewModel;
 
     public ActivitiesFragment() {
         // Required empty public constructor
@@ -74,6 +78,7 @@ public class ActivitiesFragment extends Fragment {
         if (getArguments() != null) {
             openedFrom = getArguments().getInt(OPENED_FROM_KEY);
         }
+        routeViewModel = new ViewModelProvider(this).get(RouteViewModel.class);
     }
 
     @Override
@@ -93,6 +98,10 @@ public class ActivitiesFragment extends Fragment {
         minutesCycling = getView().findViewById(R.id.tv_fa_min3);
         kcal = getView().findViewById(R.id.tv_fa_kcal);
 
+        prbWalk = getView().findViewById(R.id.progressBar);
+        prbRun = getView().findViewById(R.id.progressBar2);
+        prbRide = getView().findViewById(R.id.progressBar3);
+
         seekBar.incrementProgressBy(10);
 
         mileageWalk = getView().findViewById(R.id.tv_fa_pb_mileage_walk);
@@ -103,7 +112,13 @@ public class ActivitiesFragment extends Fragment {
         initLabels();
         initProgressStringColor();
         initListeners();
-        fillProgressBars();
+        routeViewModel.getAllRoutes().observe(getViewLifecycleOwner(), new Observer<List<DbRoute>>() {
+            @Override
+            public void onChanged(List<DbRoute> dbRoutes) {
+                fillProgressBars(dbRoutes);
+            }
+        });
+
     }
 
     private void initScreenDimen() {
@@ -230,7 +245,7 @@ public class ActivitiesFragment extends Fragment {
                 if (openedFrom == OPENED_FROM_LOCATION_ACT) {
                     getActivity().onBackPressed();
                 } else {
-                    fillProgressBars();
+                    //fillProgressBars();
                 }
             }
         });
@@ -303,62 +318,35 @@ public class ActivitiesFragment extends Fragment {
         kcal.setText("About " + (int) (progress * 0.00112 * settings.getInt("weight", 0)) + "kcal");
     }
 
-    private void fillProgressBars() {
-        new PullProgressData().execute(null, null, null);
-    }
-
-    private class PullProgressData extends AsyncTask<Void, Void, Void> {
-        List<DbRoute> allRoutes;
+    private void fillProgressBars(List<DbRoute> allRoutes) {
         int goal = settings.getInt("goal", 0);
         Double sumWalk = 0.0, sumRun = 0.0, sumRide = 0.0;
         int walkPercentage = 0, runPercentage = 0, ridePercentage = 0;
 
-        @Override
-        protected void onPreExecute() {
-            super.onPreExecute();
-
-            prbWalk = getView().findViewById(R.id.progressBar);
-            prbRun = getView().findViewById(R.id.progressBar2);
-            prbRide = getView().findViewById(R.id.progressBar3);
-
+        for (DbRoute route : allRoutes) {
+            if (route.getActivity_id() == 1)
+                sumWalk += route.getLength();
+            else if (route.getActivity_id() == 2)
+                sumRun += route.getLength();
+            else if (route.getActivity_id() == 3)
+                sumRide += route.getLength();
         }
 
-        @Override
-        protected Void doInBackground(Void... voids) {
-            allRoutes = new ArrayList<>();
-            DbHelper.getInstance(getContext()).getRoutes(allRoutes::addAll);
-            return null;
-        }
+        if (sumWalk != 0)
+            walkPercentage = (int) (sumWalk * 100 / goal);
+        if (sumRun != 0)
+            runPercentage = (int) (sumRun * 100 / goal);
+        if (sumRide != 0)
+            ridePercentage = (int) (sumRide * 100 / goal);
 
-        @Override
-        protected void onPostExecute(Void aVoid) {
-            super.onPostExecute(aVoid);
+        prbWalk.setProgress(walkPercentage);
+        prbRun.setProgress(runPercentage);
+        prbRide.setProgress(ridePercentage);
 
-            for (DbRoute route : allRoutes) {
-                if (route.getActivity_id() == 1)
-                    sumWalk += route.getLength();
-                else if (route.getActivity_id() == 2)
-                    sumRun += route.getLength();
-                else if (route.getActivity_id() == 3)
-                    sumRide += route.getLength();
-            }
+        DecimalFormat df = new DecimalFormat("#.##");
 
-            if (sumWalk != 0)
-                walkPercentage = (int) (sumWalk * 100 / goal);
-            if (sumRun != 0)
-                runPercentage = (int) (sumRun * 100 / goal);
-            if (sumRide != 0)
-                ridePercentage = (int) (sumRide * 100 / goal);
-
-            prbWalk.setProgress(walkPercentage);
-            prbRun.setProgress(runPercentage);
-            prbRide.setProgress(ridePercentage);
-
-            DecimalFormat df = new DecimalFormat("#.##");
-
-            mileageWalk.setText(df.format(sumWalk / 1000) + "km");
-            mileageRun.setText(df.format(sumRun / 1000) + "km");
-            mileageRide.setText(df.format(sumRide / 1000) + "km");
-        }
+        mileageWalk.setText(df.format(sumWalk / 1000) + "km");
+        mileageRun.setText(df.format(sumRun / 1000) + "km");
+        mileageRide.setText(df.format(sumRide / 1000) + "km");
     }
 }

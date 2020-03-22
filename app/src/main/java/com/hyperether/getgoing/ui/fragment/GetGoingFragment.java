@@ -17,6 +17,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import androidx.recyclerview.widget.SnapHelper;
 
 import android.util.DisplayMetrics;
+import android.util.Log;
 import android.util.SparseIntArray;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -62,7 +63,6 @@ public class GetGoingFragment extends Fragment {
     private SnapHelper snapHelper;
     private RecyclerView recyclerView;
     private RecyclerView.LayoutManager layoutManager;
-
     private HorizontalListAdapter mAdapter;
     private ImageView blueRectangle;
     private ImageView selectorView;
@@ -127,9 +127,10 @@ public class GetGoingFragment extends Fragment {
 
         } else {
 
-            GgRepository.getInstance().getLastRoute().observe(getActivity(), new Observer<DbRoute>() {
+            GgRepository.getInstance().getLastRouteAsLiveData().observe(getActivity(), new Observer<DbRoute>() {
                 @Override
                 public void onChanged(DbRoute dbRoute) {
+                    //Toast.makeText(getContext(), dbRoute.getLength() + "", Toast.LENGTH_SHORT).show();
                     mBinding.setLastRoute(dbRoute);
                 }
             });
@@ -378,7 +379,7 @@ public class GetGoingFragment extends Fragment {
     }
 
     private void roomStoreNodeZero(List<DbNode> nodeList) {
-        DbRoute dbRoute = new DbRoute(0, 0, 0, 0, "null", 0, 1, 0);
+        DbRoute dbRoute = new DbRoute(0, 0, 0, 0, "null", 0,0, 1, 0);
         GgRepository.getInstance().insertRouteInit(dbRoute, nodeList);
     }
 

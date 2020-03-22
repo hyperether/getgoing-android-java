@@ -1,47 +1,39 @@
 package com.hyperether.getgoing.viewmodel;
 
-import android.content.Context;
+import android.app.Application;
 
+import androidx.annotation.NonNull;
+import androidx.lifecycle.AndroidViewModel;
 import androidx.lifecycle.LiveData;
-import androidx.lifecycle.MutableLiveData;
-import androidx.lifecycle.ViewModel;
-
-import com.hyperether.getgoing.GetGoingApp;
-import com.hyperether.getgoing.repository.room.DbHelper;
 import com.hyperether.getgoing.repository.room.GgRepository;
 import com.hyperether.getgoing.repository.room.entity.DbNode;
 import com.hyperether.getgoing.repository.room.entity.DbRoute;
 
 import java.util.List;
 
-public class RouteViewModel extends ViewModel {
+public class RouteViewModel extends AndroidViewModel {
 
-    private MutableLiveData<List<DbRoute>> routeList;
+    private LiveData<List<DbRoute>> routeList;
 
-    public LiveData<List<DbRoute>> getRouteList() {
-        if (routeList == null) {
-            routeList = new MutableLiveData<List<DbRoute>>();
-            loadRoutes();
-        }
-        return routeList;
+    public RouteViewModel(@NonNull Application application) {
+        super(application);
+        routeList = GgRepository.getInstance().getAllRoutes();
     }
 
-    private void loadRoutes() {
-        // Do an asynchronous operation to fetch routeList.
-        Context ctxt = GetGoingApp.getInstance().getApplicationContext();
-        DbHelper.getInstance(ctxt).getRoutes(new DbHelper.OnDataLoadedListener() {
-            @Override
-            public void onLoad(List<DbRoute> routes) {
-                routeList.postValue(routes);
-            }
-        });
+    public LiveData<List<DbRoute>> getAllRoutes() {
+        return routeList;
     }
 
     public LiveData<List<DbNode>> getNodeListById(long id) {
         return GgRepository.getInstance().getAllNodesById(id);
     }
 
+    public LiveData<DbRoute> getRouteByIdAsLiveData(long id) {
+        return GgRepository.getInstance().getRouteByIdAsLiveData(id);
+    }
+
     public void removeRouteById(long id) {
-        GgRepository.getInstance().deleteRouteById(id, this::loadRoutes);
+        GgRepository.getInstance().deleteNodesByRouteId(id);
+        GgRepository.getInstance().deleteRouteById(id);
     }
 }

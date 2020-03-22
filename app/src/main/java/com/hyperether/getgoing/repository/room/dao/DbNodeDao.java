@@ -5,6 +5,7 @@ import androidx.room.Dao;
 import androidx.room.Delete;
 import androidx.room.Insert;
 import androidx.room.Query;
+import androidx.room.Update;
 
 import com.hyperether.getgoing.repository.room.entity.DbNode;
 
@@ -23,14 +24,11 @@ public interface DbNodeDao {
     LiveData<List<DbNode>> getAllAsLiveData();
 
     @Query("SELECT * FROM DbNode WHERE routeId = :id")
-    List<DbNode> getAllByRouteId(long id);
-
-    @Query("SELECT * FROM DbNode WHERE routeId = :id")
     LiveData<List<DbNode>> getAllByRouteIdAsLiveData(long id);
 
     @Insert
     void insertNode(DbNode node);
 
-    @Delete
-    void deleteNodes(DbNode... nodes);
+    @Query("DELETE FROM DbNode WHERE routeId = :id")
+    void deleteAllByRouteId(long id);
 }

@@ -3,10 +3,11 @@ package com.hyperether.getgoing.ui.fragment;
 import android.annotation.SuppressLint;
 import android.app.AlertDialog;
 import android.content.SharedPreferences;
+import android.os.AsyncTask;
 import android.os.Bundle;
-
-import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.Observer;
+import androidx.lifecycle.ViewModelProvider;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,9 +17,9 @@ import android.widget.ImageView;
 import android.widget.Spinner;
 import android.widget.TextView;
 import com.hyperether.getgoing.R;
-import com.hyperether.getgoing.repository.room.DbHelper;
 import com.hyperether.getgoing.repository.room.entity.DbRoute;
 import com.hyperether.getgoing.util.Constants;
+import com.hyperether.getgoing.viewmodel.RouteViewModel;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -37,6 +38,8 @@ public class ProfileFragment extends Fragment {
     private SharedPreferences settings;
     private SharedPreferences.Editor editor;
 
+    private RouteViewModel routeViewModel;
+
     public ProfileFragment() {
         // Required empty public constructor
     }
@@ -52,6 +55,8 @@ public class ProfileFragment extends Fragment {
         if (!settings.contains("gender")) {
             editor.putInt("gender", 0).apply();
         }
+
+        routeViewModel = new ViewModelProvider(this).get(RouteViewModel.class);
     }
 
     @Override
@@ -83,11 +88,18 @@ public class ProfileFragment extends Fragment {
         tvAge = getView().findViewById(R.id.tv_fp_age);
         tvWeight = getView().findViewById(R.id.tv_fp_weight);
         genderBtn = getView().findViewById(R.id.ib_fp_gender);
+        totalMileage = getView().findViewById(R.id.tv_fp_mileage);
+        totalCalories = getView().findViewById(R.id.tv_fp_calories);
 
         initScreenDimen();
         initLabels();
-        initTotals();
         initDialogs();
+        routeViewModel.getAllRoutes().observe(this, new Observer<List<DbRoute>>() {
+            @Override
+            public void onChanged(List<DbRoute> dbRoutes) {
+                initTotals(dbRoutes);
+            }
+        });
     }
 
     private void initScreenDimen() {
@@ -298,26 +310,26 @@ public class ProfileFragment extends Fragment {
     }
 
     @SuppressLint("DefaultLocale")
-    private void initTotals() {
+    private void initTotals(List<DbRoute> dbRoutes) {
         final float[] totalRoute = new float[1];
         final int[] totalKcal = new int[1];
 
-        DbHelper.getInstance(getContext()).getRoutes(routes -> {
-            totalRoute[0] = 0;
-            totalKcal[0] = 0;
+        AsyncTask.execute(new Runnable() {
+            @Override
+            public void run() {
+                totalRoute[0] = 0;
+                totalKcal[0] = 0;
 
-            for (DbRoute route : routes) {
-                totalRoute[0] += (route.getLength() / 1000);
-                totalKcal[0] += route.getEnergy();
+                for (DbRoute route : dbRoutes) {
+                    totalRoute[0] += (route.getLength() / 1000);
+                    totalKcal[0] += route.getEnergy();
+                }
+
+                getActivity().runOnUiThread(() -> {
+                    totalMileage.setText(String.format("%.02f km", totalRoute[0]));
+                    totalCalories.setText(totalKcal[0] + "kcal");
+                });
             }
-
-            getActivity().runOnUiThread(() -> {
-                totalMileage.setText(String.format("%.02f km", totalRoute[0]));
-                totalCalories.setText(totalKcal[0] + "kcal");
-            });
         });
-
-        totalMileage = getView().findViewById(R.id.tv_fp_mileage);
-        totalCalories = getView().findViewById(R.id.tv_fp_calories);
     }
 }
