@@ -21,6 +21,7 @@ public abstract class AppDatabase extends RoomDatabase {
     private static AppDatabase instance;
 
     public abstract DbNodeDao dbNodeDao();
+
     public abstract DbRouteDao dbRouteDao();
 
     public static synchronized AppDatabase getInstance(Context context) {

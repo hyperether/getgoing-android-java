@@ -102,7 +102,7 @@ public class GgRepository {
         });
     }
 
-    public LiveData<DbRoute> getRouteByIdAsLiveData(long id){
+    public LiveData<DbRoute> getRouteByIdAsLiveData(long id) {
         return routeDao.getRouteByIdAsLiveData(id);
     }
 

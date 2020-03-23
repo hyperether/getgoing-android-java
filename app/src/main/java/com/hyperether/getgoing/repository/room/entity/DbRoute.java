@@ -130,9 +130,13 @@ public class DbRoute implements Parcelable {
         this.activity_id = activity_id;
     }
 
-    public void setGoal(int goal) { this.goal = goal; }
+    public void setGoal(int goal) {
+        this.goal = goal;
+    }
 
-    public long getGoal() { return goal; }
+    public long getGoal() {
+        return goal;
+    }
 
     @Override
     public int describeContents() {

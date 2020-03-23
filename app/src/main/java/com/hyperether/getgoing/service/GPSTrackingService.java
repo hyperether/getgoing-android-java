@@ -3,7 +3,10 @@ package com.hyperether.getgoing.service;
 import android.app.PendingIntent;
 import android.content.Intent;
 import android.location.Location;
-import android.os.AsyncTask;
+
+import android.os.HandlerThread;
+
+import com.hyperether.getgoing.GetGoingApp;
 import com.hyperether.getgoing.R;
 import com.hyperether.getgoing.SharedPref;
 import com.hyperether.getgoing.repository.room.GgRepository;
@@ -65,7 +68,10 @@ public class GPSTrackingService extends HyperLocationService {
         weight = SharedPref.getWeight();
         oldTime = System.currentTimeMillis();
 
-        AsyncTask.execute(new Runnable() {
+        HandlerThread mThread = new HandlerThread("db-thread");
+        mThread.start();
+
+        GetGoingApp.getHandler().post(new Runnable() {
             @Override
             public void run() {
                 currentRoute = GgRepository.getInstance().getLastRoute();

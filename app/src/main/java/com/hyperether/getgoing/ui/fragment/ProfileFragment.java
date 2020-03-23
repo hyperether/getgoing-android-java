@@ -2,11 +2,12 @@ package com.hyperether.getgoing.ui.fragment;
 
 import android.annotation.SuppressLint;
 import android.app.AlertDialog;
-import android.os.AsyncTask;
 import android.os.Bundle;
+
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
+
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,6 +17,7 @@ import android.widget.ImageView;
 import android.widget.Spinner;
 import android.widget.TextView;
 
+import com.hyperether.getgoing.GetGoingApp;
 import com.hyperether.getgoing.R;
 import com.hyperether.getgoing.SharedPref;
 import com.hyperether.getgoing.repository.room.entity.DbRoute;
@@ -301,7 +303,7 @@ public class ProfileFragment extends Fragment {
         final float[] totalRoute = new float[1];
         final int[] totalKcal = new int[1];
 
-        AsyncTask.execute(new Runnable() {
+        GetGoingApp.getHandler().post(new Runnable() {
             @Override
             public void run() {
                 totalRoute[0] = 0;

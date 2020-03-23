@@ -19,8 +19,8 @@ public class CaloriesCalculation {
     /**
      * This method calculate burned calories.
      *
-     * @param dis distance traveled
-     * @param vel velocity
+     * @param dis    distance traveled
+     * @param vel    velocity
      * @param weight user weight
      */
     public double calculate(double dis, double vel, int profileID, double weight) {

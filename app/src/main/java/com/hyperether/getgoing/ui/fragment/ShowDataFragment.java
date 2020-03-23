@@ -5,6 +5,7 @@ import android.content.DialogInterface;
 import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.os.Bundle;
+
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.databinding.DataBindingUtil;
@@ -13,10 +14,12 @@ import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
+
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapFragment;
@@ -215,7 +218,7 @@ public class ShowDataFragment extends Fragment implements GgOnClickListener, OnM
                     if (!dbNodes.isEmpty()) {
 
                         Iterator<DbNode> it = dbNodes.iterator();
-                        while(it.hasNext()) {
+                        while (it.hasNext()) {
                             PolylineOptions pOptions = new PolylineOptions();
                             pOptions.width(10)
                                     .color(getResources().getColor(R.color.light_theme_accent))
@@ -225,7 +228,7 @@ public class ShowDataFragment extends Fragment implements GgOnClickListener, OnM
                             DbNode node = null;
                             while (it.hasNext()) {
                                 node = it.next();
-                                if(first) {
+                                if (first) {
                                     mMap.addCircle(new CircleOptions()
                                             .center(new LatLng(node.getLatitude(), node.getLongitude()))
                                             .radius(5)

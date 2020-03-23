@@ -11,6 +11,7 @@ import android.location.Criteria;
 import android.location.Location;
 import android.location.LocationManager;
 import android.os.Bundle;
+
 import androidx.activity.OnBackPressedCallback;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -20,6 +21,7 @@ import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
+
 import android.os.SystemClock;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -32,6 +34,7 @@ import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
+
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapFragment;
@@ -49,6 +52,7 @@ import com.hyperether.getgoing.util.Constants;
 import com.hyperether.getgoing.viewmodel.NodeListViewModel;
 import com.hyperether.getgoing.viewmodel.RouteViewModel;
 import com.hyperether.toolbox.HyperConst;
+
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -66,7 +70,7 @@ import static com.hyperether.getgoing.util.Constants.OPENED_FROM_LOCATION_ACT;
 import static com.hyperether.getgoing.util.Constants.TRACKING_ACTIVITY_KEY;
 
 
-public class TrackingFragment extends Fragment implements OnMapReadyCallback{
+public class TrackingFragment extends Fragment implements OnMapReadyCallback {
 
     private NavController navigationController;
 
@@ -166,7 +170,7 @@ public class TrackingFragment extends Fragment implements OnMapReadyCallback{
     public void onDestroy() {
         super.onDestroy();
         getActivity().stopService(new Intent(getActivity(), GPSTrackingService.class));
-        if(!mRouteAlreadySaved) {
+        if (!mRouteAlreadySaved) {
             routeViewModel.removeRouteById(currentRouteID);
         }
     }
@@ -194,7 +198,7 @@ public class TrackingFragment extends Fragment implements OnMapReadyCallback{
     }
 
     private void setupVMObserver() {
-        nodeListViewModel.getNodeListById(currentRouteID).observe(getViewLifecycleOwner(),new Observer<List<DbNode>>() {
+        nodeListViewModel.getNodeListById(currentRouteID).observe(getViewLifecycleOwner(), new Observer<List<DbNode>>() {
             @Override
             public void onChanged(List<DbNode> dbNodes) {
                 mMap.clear();
@@ -205,7 +209,7 @@ public class TrackingFragment extends Fragment implements OnMapReadyCallback{
         routeViewModel.getRouteByIdAsLiveData(currentRouteID).observe(getViewLifecycleOwner(), new Observer<DbRoute>() {
             @Override
             public void onChanged(DbRoute dbRoute) {
-                if(dbRoute != null) {
+                if (dbRoute != null) {
                     showData(dbRoute.getLength(), dbRoute.getEnergy(), dbRoute.getCurrentSpeed());
                 }
             }
@@ -357,7 +361,7 @@ public class TrackingFragment extends Fragment implements OnMapReadyCallback{
                             timeFlg = true; // ready for the new round
                             clearData();
 
-                            if(!mRouteAlreadySaved) {
+                            if (!mRouteAlreadySaved) {
                                 routeViewModel.removeRouteById(currentRouteID);
                             }
 
@@ -404,7 +408,7 @@ public class TrackingFragment extends Fragment implements OnMapReadyCallback{
      * This method starts timer and enable visibility of pause button.
      */
     private void startTracking(Context context) {
-        if(!trackingStarted) {
+        if (!trackingStarted) {
             trackingStarted = true;
             GgRepository.getInstance().insertRoute(new DbRoute(0, 0, 0, 0, currentDateandTime, 0, 0, profileID, goalStore), new DbRouteAddedCallback() {
                 @Override
@@ -530,7 +534,6 @@ public class TrackingFragment extends Fragment implements OnMapReadyCallback{
     }
 
 
-
     /**
      * This method is used for init of map components
      *
@@ -583,7 +586,7 @@ public class TrackingFragment extends Fragment implements OnMapReadyCallback{
                 secondNode = it.next();
             }
 
-            if(firstNode.isLast()) {
+            if (firstNode.isLast()) {
                 Log.i("LAST", "" + firstNode.isLast());
                 continue;
             }
