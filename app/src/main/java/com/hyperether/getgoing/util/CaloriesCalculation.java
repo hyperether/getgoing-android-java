@@ -1,7 +1,6 @@
 package com.hyperether.getgoing.util;
 
-import android.content.Context;
-import android.content.SharedPreferences;
+import com.hyperether.getgoing.SharedPref;
 
 import static com.hyperether.getgoing.util.Constants.PREF_FILE;
 
@@ -24,13 +23,13 @@ public class CaloriesCalculation {
      * @param vel velocity
      * @param weight user weight
      */
-    public double calculate(double dis, double vel, int profileID, SharedPreferences settings, double weight) {
+    public double calculate(double dis, double vel, int profileID, double weight) {
 
         double energySpent = 0;
         int i;
 
-        if (settings.getInt("measurementSystemId", Constants.METRIC) == 1 ||
-                settings.getInt("measurementSystemId", Constants.METRIC) == 2)
+        if (SharedPref.getMeasurementSystemId() == 1 ||
+                SharedPref.getMeasurementSystemId() == 2)
             weight = weight * 0.4536; //convert weght to metric system for calculations;
 
         if (profileID == 1 || profileID == 2) {

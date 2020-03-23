@@ -1,6 +1,6 @@
 package com.hyperether.getgoing.ui.fragment;
 
-import android.content.SharedPreferences;
+
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -17,7 +17,6 @@ import androidx.recyclerview.widget.RecyclerView;
 import androidx.recyclerview.widget.SnapHelper;
 
 import android.util.DisplayMetrics;
-import android.util.Log;
 import android.util.SparseIntArray;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -28,6 +27,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.hyperether.getgoing.R;
+import com.hyperether.getgoing.SharedPref;
 import com.hyperether.getgoing.databinding.FragmentGetgoingBindingImpl;
 import com.hyperether.getgoing.repository.room.GgRepository;
 import com.hyperether.getgoing.repository.room.entity.DbNode;
@@ -44,9 +44,6 @@ import static com.hyperether.getgoing.util.Constants.ACTIVITY_RUN_ID;
 import static com.hyperether.getgoing.util.Constants.ACTIVITY_WALK_ID;
 import static com.hyperether.getgoing.util.Constants.OPENED_FROM_GG_ACT;
 import static com.hyperether.getgoing.util.Constants.OPENED_FROM_KEY;
-import static com.hyperether.getgoing.util.Constants.PREF_RIDE_ROUTE_EXISTING;
-import static com.hyperether.getgoing.util.Constants.PREF_RUN_ROUTE_EXISTING;
-import static com.hyperether.getgoing.util.Constants.PREF_WALK_ROUTE_EXISTING;
 import static com.hyperether.getgoing.util.Constants.TRACKING_ACTIVITY_KEY;
 
 
@@ -70,8 +67,6 @@ public class GetGoingFragment extends Fragment {
     private TextView blueSentence;
     private TextView actLabel, lastExeLabel;
 
-    private SharedPreferences currentSettings;
-
     public GetGoingFragment() {
         // Required empty public constructor
     }
@@ -85,6 +80,7 @@ public class GetGoingFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         mBinding = DataBindingUtil.inflate(inflater, R.layout.fragment_getgoing, container, false);
+        SharedPref.setMeasurementSystemId(0);
         return mBinding.getRoot();
     }
 
@@ -99,8 +95,6 @@ public class GetGoingFragment extends Fragment {
         blueSentence = getView().findViewById(R.id.tv_am_burn);
         selectorView = getView().findViewById(R.id.imageView2);
 
-        currentSettings = getContext().getSharedPreferences(Constants.PREF_FILE, 0);
-
         zeroNodeInit();
         initScreenDimen();
         initRecyclerView();
@@ -108,23 +102,19 @@ public class GetGoingFragment extends Fragment {
     }
 
     private void zeroNodeInit() {
-        if (!currentSettings.getBoolean("zeroNode", false)) {
+        if (!SharedPref.isZeroNodeInit()) {
             /*route init*/
             List<DbNode> tmpRoute = new ArrayList<>();
             DbNode tmpNode = new DbNode(0, 0, 0, 0, 0, 0);
             tmpRoute.add(tmpNode);
             roomStoreNodeZero(tmpRoute);
 
-            SharedPreferences.Editor edit = currentSettings.edit();
-            edit.putBoolean("zeroNode", true);
+            SharedPref.setZeroNodeInit(true);
 
             // no saved routes yet
-            edit.putBoolean(PREF_WALK_ROUTE_EXISTING, false);
-            edit.putBoolean(PREF_RUN_ROUTE_EXISTING, false);
-            edit.putBoolean(PREF_RIDE_ROUTE_EXISTING, false);
-
-            edit.apply();
-
+            SharedPref.setWalkRouteExisting(false);
+            SharedPref.setRunRouteExisting(false);
+            SharedPref.setRideRouteExisting(false);
         } else {
 
             GgRepository.getInstance().getLastRouteAsLiveData().observe(getActivity(), new Observer<DbRoute>() {
@@ -141,8 +131,8 @@ public class GetGoingFragment extends Fragment {
      * true: parameters are set false: settings required
      */
     private boolean getParametersStatus() {
-        return !((currentSettings.getInt("age", 0) == 0)
-                || (currentSettings.getInt("weight", 0) == 0));
+        return !((SharedPref.getAge() == 0)
+                || (SharedPref.getWeight() == 0));
     }
 
     /**
@@ -159,12 +149,10 @@ public class GetGoingFragment extends Fragment {
      */
     private void callTrackingFragment(int id) {
         if (getParametersStatus()) {
-            setMeteringActivityRequested(0);
             Bundle bundle = new Bundle();
             bundle.putInt(TRACKING_ACTIVITY_KEY, id);
             navigationController.navigate(R.id.action_getGoingFragment_to_trackingFragment, bundle);
         } else {
-            setMeteringActivityRequested(id);
             Toast.makeText(getActivity(), "You must enter your data first!", Toast.LENGTH_LONG).show();
             callProfileFragment();
         }
@@ -174,18 +162,6 @@ public class GetGoingFragment extends Fragment {
         Bundle bundle = new Bundle();
         bundle.putInt(OPENED_FROM_KEY, OPENED_FROM_GG_ACT);
         navigationController.navigate(R.id.action_getGoingFragment_to_activitiesFragment, bundle);
-    }
-
-    /**
-     * This method set Metering Activity request.
-     *
-     * @param id mode id
-     */
-    private void setMeteringActivityRequested(int id) {
-        SharedPreferences settings = getContext().getSharedPreferences(Constants.PREF_FILE, 0);
-        SharedPreferences.Editor editor = settings.edit();
-        editor.putInt("meteringActivityRequestedId", id);
-        editor.apply();
     }
 
     private void initRecyclerView() {
@@ -379,7 +355,7 @@ public class GetGoingFragment extends Fragment {
     }
 
     private void roomStoreNodeZero(List<DbNode> nodeList) {
-        DbRoute dbRoute = new DbRoute(0, 0, 0, 0, "null", 0,0, 1, 0);
+        DbRoute dbRoute = new DbRoute(0, 0, 0, 0, "null", 0, 0, 1, 0);
         GgRepository.getInstance().insertRouteInit(dbRoute, nodeList);
     }
 

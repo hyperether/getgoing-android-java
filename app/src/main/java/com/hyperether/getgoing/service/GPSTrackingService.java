@@ -2,10 +2,10 @@ package com.hyperether.getgoing.service;
 
 import android.app.PendingIntent;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.location.Location;
 import android.os.AsyncTask;
 import com.hyperether.getgoing.R;
+import com.hyperether.getgoing.SharedPref;
 import com.hyperether.getgoing.repository.room.GgRepository;
 import com.hyperether.getgoing.repository.room.entity.DbNode;
 import com.hyperether.getgoing.repository.room.entity.DbRoute;
@@ -16,8 +16,6 @@ import com.hyperether.getgoing.util.Conversion;
 import com.hyperether.getgoing.util.KalmanLatLong;
 import com.hyperether.toolbox.HyperNotification;
 import com.hyperether.toolbox.location.HyperLocationService;
-
-import static com.hyperether.getgoing.util.Constants.TRACKING_ACTIVITY_KEY;
 
 
 /**
@@ -55,9 +53,6 @@ public class GPSTrackingService extends HyperLocationService {
     private double velocityAvg = 0;
     private double weight = 0;
     private long oldTime = 0;
-
-    private SharedPreferences settings;
-
     private long routeID;
     private DbRoute currentRoute;
     private DbNode currentNode;
@@ -67,8 +62,7 @@ public class GPSTrackingService extends HyperLocationService {
     @Override
     public void onCreate() {
         super.onCreate();
-        settings = getSharedPreferences(Constants.PREF_FILE, 0);
-        weight = settings.getInt("weight", 0);
+        weight = SharedPref.getWeight();
         oldTime = System.currentTimeMillis();
 
         AsyncTask.execute(new Runnable() {
@@ -176,7 +170,7 @@ public class GPSTrackingService extends HyperLocationService {
                     }
 
                     kcalCurrent = calcCal
-                            .calculate(distance, velocity, profileID, settings,
+                            .calculate(distance, velocity, profileID,
                                     weight);
                     kcalCumulative += kcalCurrent;
                     if (velocity < 30) {

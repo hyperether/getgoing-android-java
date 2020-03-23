@@ -5,24 +5,21 @@ import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.graphics.Color;
 import android.location.Criteria;
 import android.location.Location;
 import android.location.LocationManager;
 import android.os.Bundle;
-
 import androidx.activity.OnBackPressedCallback;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.core.app.ActivityCompat;
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
-import androidx.lifecycle.ViewModelProviders;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
-
 import android.os.SystemClock;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -35,7 +32,6 @@ import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
-
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapFragment;
@@ -43,6 +39,7 @@ import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.PolylineOptions;
 import com.hyperether.getgoing.R;
+import com.hyperether.getgoing.SharedPref;
 import com.hyperether.getgoing.repository.room.DbRouteAddedCallback;
 import com.hyperether.getgoing.repository.room.GgRepository;
 import com.hyperether.getgoing.repository.room.entity.DbNode;
@@ -52,7 +49,6 @@ import com.hyperether.getgoing.util.Constants;
 import com.hyperether.getgoing.viewmodel.NodeListViewModel;
 import com.hyperether.getgoing.viewmodel.RouteViewModel;
 import com.hyperether.toolbox.HyperConst;
-
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -67,10 +63,6 @@ import static com.hyperether.getgoing.util.Constants.ACTIVITY_RUN_ID;
 import static com.hyperether.getgoing.util.Constants.ACTIVITY_WALK_ID;
 import static com.hyperether.getgoing.util.Constants.OPENED_FROM_KEY;
 import static com.hyperether.getgoing.util.Constants.OPENED_FROM_LOCATION_ACT;
-import static com.hyperether.getgoing.util.Constants.PREF_FILE;
-import static com.hyperether.getgoing.util.Constants.PREF_RIDE_ROUTE_EXISTING;
-import static com.hyperether.getgoing.util.Constants.PREF_RUN_ROUTE_EXISTING;
-import static com.hyperether.getgoing.util.Constants.PREF_WALK_ROUTE_EXISTING;
 import static com.hyperether.getgoing.util.Constants.TRACKING_ACTIVITY_KEY;
 
 
@@ -88,9 +80,6 @@ public class TrackingFragment extends Fragment implements OnMapReadyCallback{
     private boolean mLocTrackingRunning = false;
     private boolean mRouteAlreadySaved = true;
 
-    private SharedPreferences mPrefs;
-    private SharedPreferences cbPrefs;
-    private SharedPreferences.Editor mEditor;
     private NodeListViewModel nodeListViewModel;
 
     // U/I variables
@@ -156,13 +145,6 @@ public class TrackingFragment extends Fragment implements OnMapReadyCallback{
         super.onViewCreated(view, savedInstanceState);
         navigationController = Navigation.findNavController(view);
 
-        // Open the shared preferences
-        mPrefs = getContext().getSharedPreferences("SharedPreferences", Context.MODE_PRIVATE);
-        // Get a SharedPreferences editor
-        mEditor = mPrefs.edit();
-        // Get user data shared prefs
-        cbPrefs = getContext().getSharedPreferences(PREF_FILE, Context.MODE_PRIVATE);
-
         nodeList = new ArrayList<>();
 
         classContext = getActivity();
@@ -178,33 +160,25 @@ public class TrackingFragment extends Fragment implements OnMapReadyCallback{
 
         mapFragment = (MapFragment) getActivity().getFragmentManager().findFragmentById(R.id.mapView);
         mapFragment.getMapAsync(this);
-
-        if (mPrefs.contains("KEY_UPDATES_ON")) {
-            mLocTrackingRunning = mPrefs.getBoolean("KEY_UPDATES_ON", false);
-            // Otherwise, turn off location updates
-        } else {
-            mLocTrackingRunning = false;
-            mEditor.putBoolean("KEY_UPDATES_ON", mLocTrackingRunning);
-            mEditor.apply();
-        }
     }
 
     @Override
     public void onDestroy() {
         super.onDestroy();
         getActivity().stopService(new Intent(getActivity(), GPSTrackingService.class));
+        if(!mRouteAlreadySaved) {
+            routeViewModel.removeRouteById(currentRouteID);
+        }
     }
 
     @Override
     public void onResume() {
         super.onResume();
-        cbPrefs.registerOnSharedPreferenceChangeListener(sharedPrefsListener);
     }
 
     @Override
     public void onPause() {
         super.onPause();
-        cbPrefs.unregisterOnSharedPreferenceChangeListener(sharedPrefsListener);
         if (mapFragment != null) {
             getActivity().getFragmentManager().beginTransaction().remove(mapFragment).commit();
         }
@@ -220,15 +194,20 @@ public class TrackingFragment extends Fragment implements OnMapReadyCallback{
     }
 
     private void setupVMObserver() {
-        nodeListViewModel.getNodeListById(currentRouteID).observe(getViewLifecycleOwner(), dbNodes -> {
-            mMap.clear();
-            Log.i("OBSERVER", "VAZI");
-            drawRoute(dbNodes);
+        nodeListViewModel.getNodeListById(currentRouteID).observe(getViewLifecycleOwner(),new Observer<List<DbNode>>() {
+            @Override
+            public void onChanged(List<DbNode> dbNodes) {
+                mMap.clear();
+                drawRoute(dbNodes);
+            }
         });
 
-        routeViewModel.getRouteByIdAsLiveData(currentRouteID).observe(getViewLifecycleOwner(), dbRoute -> {
-            if(dbRoute != null) {
-                showData(dbRoute.getLength(), dbRoute.getEnergy(), dbRoute.getCurrentSpeed());
+        routeViewModel.getRouteByIdAsLiveData(currentRouteID).observe(getViewLifecycleOwner(), new Observer<DbRoute>() {
+            @Override
+            public void onChanged(DbRoute dbRoute) {
+                if(dbRoute != null) {
+                    showData(dbRoute.getLength(), dbRoute.getEnergy(), dbRoute.getCurrentSpeed());
+                }
             }
         });
     }
@@ -251,7 +230,7 @@ public class TrackingFragment extends Fragment implements OnMapReadyCallback{
     }
 
     private void setVisibilities() {
-        if (!cbPrefs.contains("goal")) {
+        if (!SharedPref.isGoalSet()) {
             set_goal.setVisibility(View.VISIBLE);
             button_save.setVisibility(View.GONE);
             button_rst.setVisibility(View.GONE);
@@ -264,7 +243,7 @@ public class TrackingFragment extends Fragment implements OnMapReadyCallback{
             labelVelocity.setVisibility(View.GONE);
             labelCalories.setVisibility(View.GONE);
         } else {
-            goalStore = cbPrefs.getInt("goal", 0);
+            goalStore = SharedPref.getGoal();
             set_goal.setVisibility(View.GONE);
             button_save.setVisibility(View.VISIBLE);
             button_save.setClickable(false);
@@ -329,19 +308,15 @@ public class TrackingFragment extends Fragment implements OnMapReadyCallback{
                         public void onClick(DialogInterface paramDialogInterface, int paramInt) {
                             mRouteAlreadySaved = true;
 
-                            SharedPreferences.Editor editor = cbPrefs.edit();
                             if (profileID == ACTIVITY_WALK_ID &&
-                                    !cbPrefs.getBoolean(PREF_WALK_ROUTE_EXISTING, false)) {
-                                editor.putBoolean(PREF_WALK_ROUTE_EXISTING, true);
-                                editor.apply();
+                                    !SharedPref.doesWalkRouteExist()) {
+                                SharedPref.setWalkRouteExisting(true);
                             } else if (profileID == ACTIVITY_RUN_ID &&
-                                    !cbPrefs.getBoolean(PREF_RUN_ROUTE_EXISTING, false)) {
-                                editor.putBoolean(PREF_RUN_ROUTE_EXISTING, true);
-                                editor.apply();
+                                    !SharedPref.doesRunRouteExist()) {
+                                SharedPref.setRunRouteExisting(true);
                             } else if (profileID == ACTIVITY_RIDE_ID &&
-                                    !cbPrefs.getBoolean(PREF_RIDE_ROUTE_EXISTING, false)) {
-                                editor.putBoolean(PREF_RIDE_ROUTE_EXISTING, true);
-                                editor.apply();
+                                    !SharedPref.doesRideRouteExist()) {
+                                SharedPref.setRideRouteExisting(true);
                             }
 
                             button_save.setClickable(false);
@@ -377,18 +352,17 @@ public class TrackingFragment extends Fragment implements OnMapReadyCallback{
 
                             showTime.setBase(SystemClock.elapsedRealtime());
                             timeWhenStopped = 0;
-                            stopTracking();
+                            //stopTracking();
 
                             timeFlg = true; // ready for the new round
                             clearData();
 
                             if(!mRouteAlreadySaved) {
                                 routeViewModel.removeRouteById(currentRouteID);
-                                //currentRoute = null;
-                                trackingStarted = false;
                             }
-                            mRouteAlreadySaved = true;
 
+                            mRouteAlreadySaved = true;
+                            trackingStarted = false;
 
                             button_save.setClickable(false);
                             button_save.setImageDrawable(getResources().getDrawable(R.drawable.ic_light_save_icon_disabled));
@@ -436,6 +410,10 @@ public class TrackingFragment extends Fragment implements OnMapReadyCallback{
                 @Override
                 public void onRouteAdded(long currentid) {
                     currentRouteID = currentid;
+                    getActivity().runOnUiThread(() -> {
+                        nodeListViewModel.setRouteID(currentid);
+                        routeViewModel.setRouteID(currentid);
+                    });
                     startTrackingService(context);
                 }
             });
@@ -453,7 +431,6 @@ public class TrackingFragment extends Fragment implements OnMapReadyCallback{
         getActivity().startService(intent);
 
         getActivity().runOnUiThread(() -> {
-            setupVMObserver();
 
             showTime.setBase(SystemClock.elapsedRealtime() + timeWhenStopped);
             showTime.start();
@@ -470,8 +447,6 @@ public class TrackingFragment extends Fragment implements OnMapReadyCallback{
 
         mLocTrackingRunning = true;
         mRouteAlreadySaved = false;
-        mEditor.putBoolean("KEY_UPDATES_ON", mLocTrackingRunning);
-        mEditor.apply();
     }
 
 
@@ -489,8 +464,6 @@ public class TrackingFragment extends Fragment implements OnMapReadyCallback{
         button_pause.setVisibility(View.GONE);
 
         mLocTrackingRunning = false;
-        mEditor.putBoolean("KEY_UPDATES_ON", mLocTrackingRunning);
-        mEditor.apply();
     }
 
     /**
@@ -503,8 +476,8 @@ public class TrackingFragment extends Fragment implements OnMapReadyCallback{
     @SuppressLint("DefaultLocale")
     private void showData(double distance, double kcal, double vel) {
         showCalories.setText(String.format("%.02f kcal", kcal));
-        if (cbPrefs.getInt("measurementSystemId", Constants.METRIC) == 1 ||
-                cbPrefs.getInt("measurementSystemId", Constants.METRIC) == 2)
+        if (SharedPref.getMeasurementSystemId() == 1 ||
+                SharedPref.getMeasurementSystemId() == 2)
             showDistance
                     .setText(String.format("%.02f ft", distance * 3.281)); // present data in feet
         else
@@ -691,9 +664,6 @@ public class TrackingFragment extends Fragment implements OnMapReadyCallback{
         Intent i = new Intent(ACTION_LOCATION_SOURCE_SETTINGS);
         startActivityForResult(i, Constants.REQUEST_GPS_SETTINGS);
     }
-
-    private SharedPreferences.OnSharedPreferenceChangeListener sharedPrefsListener =
-            (SharedPreferences sharedPreferences, String key) -> setVisibilities();
 
     private void onAnyBackButtonPressed() {
         if (mLocTrackingRunning || !mRouteAlreadySaved) {

@@ -2,7 +2,6 @@ package com.hyperether.getgoing.ui.fragment;
 
 import android.annotation.SuppressLint;
 import android.app.AlertDialog;
-import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import androidx.fragment.app.Fragment;
@@ -16,9 +15,10 @@ import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.Spinner;
 import android.widget.TextView;
+
 import com.hyperether.getgoing.R;
+import com.hyperether.getgoing.SharedPref;
 import com.hyperether.getgoing.repository.room.entity.DbRoute;
-import com.hyperether.getgoing.util.Constants;
 import com.hyperether.getgoing.viewmodel.RouteViewModel;
 
 import java.util.ArrayList;
@@ -34,10 +34,6 @@ public class ProfileFragment extends Fragment {
     private TextView totalMileage, totalCalories;
     private TextView dataLabel;
     private ImageView genderImg;
-
-    private SharedPreferences settings;
-    private SharedPreferences.Editor editor;
-
     private RouteViewModel routeViewModel;
 
     public ProfileFragment() {
@@ -48,12 +44,9 @@ public class ProfileFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        settings = getContext().getSharedPreferences(Constants.PREF_FILE, 0);
-
         // default gender selection in shared prefs if nothing is set
-        editor = settings.edit();
-        if (!settings.contains("gender")) {
-            editor.putInt("gender", 0).apply();
+        if (!SharedPref.isGenderSet()) {
+            SharedPref.setGender(0);
         }
 
         routeViewModel = new ViewModelProvider(this).get(RouteViewModel.class);
@@ -66,7 +59,7 @@ public class ProfileFragment extends Fragment {
         View rootView = inflater.inflate(R.layout.fragment_profile, container, false);
         genderImg = rootView.findViewById(R.id.iv_fp_gender);
 
-        int genderSel = settings.getInt("gender", 0);
+        int genderSel = SharedPref.getGender();
 
         if (genderSel == 0) {
             genderImg.setImageDrawable(getResources().getDrawable(R.drawable.ic_gendersign_male));
@@ -171,19 +164,18 @@ public class ProfileFragment extends Fragment {
                 final String[] newText = new String[1];
                 newText[0] = "Male";
 
-                genderBuilder.setSingleChoiceItems(R.array.genders, settings.getInt("gender", 0), (dialog, which) -> {
+                genderBuilder.setSingleChoiceItems(R.array.genders, SharedPref.getGender(), (dialog, which) -> {
 
                     if (which == 0) {
                         newText[0] = "Male";
-                        editor.putInt("gender", 0);
+                        SharedPref.setGender(0);
                     } else if (which == 1) {
                         newText[0] = "Female";
-                        editor.putInt("gender", 1);
+                        SharedPref.setGender(1);
                     } else {
                         newText[0] = "Other";
-                        editor.putInt("gender", 2);
+                        SharedPref.setGender(2);
                     }
-                    editor.apply();
                 })
                         .setPositiveButton("Confirm", (dialogInterface, i) -> {
                             tvGender.setText(newText[0]);
@@ -219,14 +211,12 @@ public class ProfileFragment extends Fragment {
                 Spinner ageSpinner = toInflate.findViewById(R.id.dialog_spinner_age);
                 ArrayAdapter<String> adapter = new ArrayAdapter<String>(pView.getContext(), android.R.layout.simple_list_item_1, ageList);
                 ageSpinner.setAdapter(adapter);
-                ageSpinner.setSelection(settings.getInt("age", 0) - 1);
+                ageSpinner.setSelection(SharedPref.getAge() - 1);
 
                 ageBuilder.setPositiveButton("Confirm", (dialogInterface, i) -> {
                     tvAge.setText(ageSpinner.getSelectedItem() + getResources().getString(R.string.textview_age_end));
 
-                    SharedPreferences.Editor editor = settings.edit();
-                    editor.putInt("age", Integer.valueOf((String) ageSpinner.getSelectedItem()));
-                    editor.apply();
+                    SharedPref.setAge(Integer.valueOf((String) ageSpinner.getSelectedItem()));
                 })
                         .setNegativeButton("Cancel", (dialogInterface, i) -> dialogInterface.cancel())
                         .setTitle("How old are you?");
@@ -247,14 +237,13 @@ public class ProfileFragment extends Fragment {
                 Spinner weightSpinner = toInflate.findViewById(R.id.dialog_spinner_weight);
                 ArrayAdapter<String> adapter = new ArrayAdapter<String>(pView.getContext(), android.R.layout.simple_list_item_1, weightList);
                 weightSpinner.setAdapter(adapter);
-                weightSpinner.setSelection(settings.getInt("weight", 0) - 40);
+                weightSpinner.setSelection(SharedPref.getWeight() - 40);
 
                 weightBuilder.setPositiveButton("Confirm", (dialogInterface, i) -> {
                     tvWeight.setText(weightSpinner.getSelectedItem() + " kg");
 
-                    SharedPreferences.Editor editor = settings.edit();
-                    editor.putInt("weight", Integer.valueOf((String) weightSpinner.getSelectedItem()));
-                    editor.apply();
+                    SharedPref.setWeight(Integer.valueOf((String) weightSpinner.getSelectedItem()));
+
                 })
                         .setNegativeButton("Cancel", (dialogInterface, i) -> dialogInterface.cancel())
                         .setTitle("Enter your weight:");
@@ -275,14 +264,12 @@ public class ProfileFragment extends Fragment {
                 Spinner heightSpinner = toInflate.findViewById(R.id.dialog_spinner_height);
                 ArrayAdapter<String> adapter = new ArrayAdapter<String>(pView.getContext(), android.R.layout.simple_list_item_1, heightList);
                 heightSpinner.setAdapter(adapter);
-                heightSpinner.setSelection(settings.getInt("height", 0) - 110);
+                heightSpinner.setSelection(SharedPref.getHeight() - 110);
 
                 heightBuilder.setPositiveButton("Confirm", (dialogInterface, i) -> {
                     tvHeight.setText(heightSpinner.getSelectedItem() + " cm");
 
-                    SharedPreferences.Editor editor = settings.edit();
-                    editor.putInt("height", Integer.valueOf((String) heightSpinner.getSelectedItem()));
-                    editor.apply();
+                    SharedPref.setHeight(Integer.valueOf((String) heightSpinner.getSelectedItem()));
                 })
                         .setNegativeButton("Cancel", (dialogInterface, i) -> dialogInterface.cancel())
                         .setTitle("Enter your height:");
@@ -295,11 +282,11 @@ public class ProfileFragment extends Fragment {
     }
 
     private void initLabels() {
-        tvAge.setText(settings.getInt("age", 0) + " years");
-        tvHeight.setText(settings.getInt("height", 0) + "cm");
-        tvWeight.setText(settings.getInt("weight", 0) + "kg");
+        tvAge.setText(SharedPref.getAge() + " years");
+        tvHeight.setText(SharedPref.getHeight() + "cm");
+        tvWeight.setText(SharedPref.getWeight() + "kg");
 
-        int gender = settings.getInt("gender", 0);
+        int gender = SharedPref.getGender();
         if (gender == 0) {
             tvGender.setText(R.string.gender_male);
         } else if (gender == 1) {

@@ -2,7 +2,6 @@ package com.hyperether.getgoing.ui.fragment;
 
 import android.app.AlertDialog;
 import android.content.DialogInterface;
-import android.content.SharedPreferences;
 import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.os.Bundle;
@@ -27,6 +26,7 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.LatLngBounds;
 import com.google.android.gms.maps.model.PolylineOptions;
 import com.hyperether.getgoing.R;
+import com.hyperether.getgoing.SharedPref;
 import com.hyperether.getgoing.databinding.FragmentShowdataBinding;
 import com.hyperether.getgoing.listeners.GgOnClickListener;
 import com.hyperether.getgoing.repository.room.entity.DbNode;
@@ -173,21 +173,18 @@ public class ShowDataFragment extends Fragment implements GgOnClickListener, OnM
                 .setMessage(getResources().getString(R.string.alert_dialog_no_routes))
                 .setPositiveButton(R.string.alert_dialog_positive_button_save_btn,
                         (DialogInterface paramDialogInterface, int paramInt) -> {
-                            SharedPreferences prefs = getContext().getSharedPreferences(PREF_FILE, getActivity().MODE_PRIVATE);
-                            SharedPreferences.Editor editor = prefs.edit();
 
                             switch (activityId) {
                                 case ACTIVITY_WALK_ID:
-                                    editor.putBoolean(PREF_WALK_ROUTE_EXISTING, false);
+                                    SharedPref.setWalkRouteExisting(false);
                                     break;
                                 case ACTIVITY_RUN_ID:
-                                    editor.putBoolean(PREF_RUN_ROUTE_EXISTING, false);
+                                    SharedPref.setRunRouteExisting(false);
                                     break;
                                 case ACTIVITY_RIDE_ID:
-                                    editor.putBoolean(PREF_RIDE_ROUTE_EXISTING, false);
+                                    SharedPref.setRideRouteExisting(false);
                                     break;
                             }
-                            editor.apply();
 
                             getActivity().onBackPressed();
                         })
