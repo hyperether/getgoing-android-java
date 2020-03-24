@@ -54,7 +54,6 @@ import com.hyperether.getgoing.viewmodel.RouteViewModel;
 import com.hyperether.toolbox.HyperConst;
 
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
@@ -83,8 +82,7 @@ public class TrackingFragment extends Fragment implements OnMapReadyCallback {
 
     private boolean mLocTrackingRunning = false;
     private boolean mRouteAlreadySaved = true;
-
-    private NodeListViewModel nodeListViewModel;
+    private boolean trackingStarted = false;
 
     // U/I variables
     private Button set_goal;
@@ -93,8 +91,6 @@ public class TrackingFragment extends Fragment implements OnMapReadyCallback {
     private ImageButton button_rst, button_save, button_back;
     private Chronometer showTime, showCalories, showDistance, showVelocity;
 
-    private List<DbNode> nodeList;
-
     // timer for data show
     private Timer timer;
     long timeWhenStopped = 0;
@@ -102,8 +98,6 @@ public class TrackingFragment extends Fragment implements OnMapReadyCallback {
 
     // Route storage variables
     private SimpleDateFormat sdf;
-    private String currentDateandTime;
-    private boolean timeFlg = true;
 
     private long goalStore;
     private int profileID;
@@ -113,9 +107,9 @@ public class TrackingFragment extends Fragment implements OnMapReadyCallback {
 
     MapFragment mapFragment;
 
-    private boolean trackingStarted = false;
     private long currentRouteID;
     private RouteViewModel routeViewModel;
+    private NodeListViewModel nodeListViewModel;
 
     public TrackingFragment() {
         // Required empty public constructor
@@ -148,8 +142,6 @@ public class TrackingFragment extends Fragment implements OnMapReadyCallback {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         navigationController = Navigation.findNavController(view);
-
-        nodeList = new ArrayList<>();
 
         classContext = getActivity();
 
@@ -186,15 +178,6 @@ public class TrackingFragment extends Fragment implements OnMapReadyCallback {
         if (mapFragment != null) {
             getActivity().getFragmentManager().beginTransaction().remove(mapFragment).commit();
         }
-    }
-
-    @Override
-    public void onSaveInstanceState(Bundle savedInstanceState) {
-        // Save UI state changes to the savedInstanceState.
-        savedInstanceState.putBoolean("mLocTrackingRunning", mLocTrackingRunning);
-        savedInstanceState.putString("currentDateandTime", currentDateandTime);
-
-        super.onSaveInstanceState(savedInstanceState);
     }
 
     private void setupVMObserver() {
@@ -271,12 +254,6 @@ public class TrackingFragment extends Fragment implements OnMapReadyCallback {
         @Override
         public void onClick(View v) {
             if (goalStore > 0) {
-
-                if (timeFlg) {
-                    // Get date and time on which the tracking started
-                    currentDateandTime = sdf.format(new Date());
-                    timeFlg = false;
-                }
                 startTracking(classContext);
             }
         }
@@ -356,11 +333,8 @@ public class TrackingFragment extends Fragment implements OnMapReadyCallback {
 
                             showTime.setBase(SystemClock.elapsedRealtime());
                             timeWhenStopped = 0;
-                            //stopTracking();
 
-                            timeFlg = true; // ready for the new round
                             clearData();
-
                             if (!mRouteAlreadySaved) {
                                 routeViewModel.removeRouteById(currentRouteID);
                             }
@@ -410,7 +384,7 @@ public class TrackingFragment extends Fragment implements OnMapReadyCallback {
     private void startTracking(Context context) {
         if (!trackingStarted) {
             trackingStarted = true;
-            GgRepository.getInstance().insertRoute(new DbRoute(0, 0, 0, 0, currentDateandTime, 0, 0, profileID, goalStore), new DbRouteAddedCallback() {
+            GgRepository.getInstance().insertRoute(new DbRoute(0, 0, 0, 0, sdf.format(new Date()), 0, 0, profileID, goalStore), new DbRouteAddedCallback() {
                 @Override
                 public void onRouteAdded(long currentid) {
                     currentRouteID = currentid;

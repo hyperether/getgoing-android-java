@@ -110,6 +110,17 @@ public class GgRepository {
         return routeDao.getLatestRouteAsLiveData();
     }
 
+    public void markLastNode() {
+        getRepoHandler().post(new Runnable() {
+            @Override
+            public void run() {
+                DbNode lastNode = nodeDao.getLastNode();
+                lastNode.setLast(true);
+                nodeDao.update(lastNode);
+            }
+        });
+    }
+
     public DbRoute getLastRoute() {
         return routeDao.getLatestRoute();
     }

@@ -29,6 +29,13 @@ public interface DbNodeDao {
     @Insert
     void insertNode(DbNode node);
 
+    @Query("SELECT * FROM DbNode ORDER BY id DESC LIMIT 1")
+    DbNode getLastNode();
+
     @Query("DELETE FROM DbNode WHERE routeId = :id")
     void deleteAllByRouteId(long id);
+
+    @Update
+    void update(DbNode dbNode);
+
 }

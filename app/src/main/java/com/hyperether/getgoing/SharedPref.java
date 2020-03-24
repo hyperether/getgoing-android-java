@@ -11,8 +11,6 @@ import static com.hyperether.getgoing.util.Constants.PREF_WALK_ROUTE_EXISTING;
 public class SharedPref {
 
     private static SharedPreferences settings = GetGoingApp.getInstance().getSharedPreferences(Constants.PREF_FILE, 0);
-    ;
-    private static SharedPreferences.Editor editor;
 
     public static void setGender(int gender) {
         SharedPreferences.Editor editor = settings.edit();

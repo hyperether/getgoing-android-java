@@ -58,7 +58,6 @@ public class GPSTrackingService extends HyperLocationService {
     private long oldTime = 0;
     private long routeID;
     private DbRoute currentRoute;
-    private DbNode currentNode;
 
     private CaloriesCalculation calcCal = new CaloriesCalculation();
 
@@ -67,9 +66,6 @@ public class GPSTrackingService extends HyperLocationService {
         super.onCreate();
         weight = SharedPref.getWeight();
         oldTime = System.currentTimeMillis();
-
-        HandlerThread mThread = new HandlerThread("db-thread");
-        mThread.start();
 
         GetGoingApp.getHandler().post(new Runnable() {
             @Override
@@ -127,7 +123,6 @@ public class GPSTrackingService extends HyperLocationService {
                 firstPass = false;
 
                 DbNode tmp = new DbNode(0, latitude, longitude, 0, nodeIndex++, routeID);
-                currentNode = tmp;
                 GgRepository.getInstance().daoInsertNode(tmp);
             } else {
                 latitude_old = latitude;
@@ -175,9 +170,7 @@ public class GPSTrackingService extends HyperLocationService {
                         currentRoute.setCurrentSpeed(velocity);
                     }
 
-                    kcalCurrent = calcCal
-                            .calculate(distance, velocity, profileID,
-                                    weight);
+                    kcalCurrent = calcCal.calculate(distance, velocity, profileID, weight);
                     kcalCumulative += kcalCurrent;
                     if (velocity < 30) {
                         currentRoute.setEnergy(kcalCumulative);
@@ -190,7 +183,6 @@ public class GPSTrackingService extends HyperLocationService {
                         DbNode tmp = new DbNode(0, latitude, longitude, (float) velocity,
                                 nodeIndex++, routeID);
                         if (velocity < 30) {
-                            currentNode = tmp;
                             GgRepository.getInstance().daoInsertNode(tmp);
                         }
                     }
@@ -225,7 +217,6 @@ public class GPSTrackingService extends HyperLocationService {
     @Override
     public void onDestroy() {
         super.onDestroy();
-        currentNode.setLast(true);
-        GgRepository.getInstance().daoInsertNode(currentNode);
+        GgRepository.getInstance().markLastNode();
     }
 }
