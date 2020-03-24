@@ -14,7 +14,7 @@ import com.hyperether.getgoing.repository.room.entity.DbRoute;
 /**
  * Created by Slobodan on 7/11/2017.
  */
-@Database(entities = {DbNode.class, DbRoute.class}, version = 3)
+@Database(entities = {DbNode.class, DbRoute.class}, version = 4)
 public abstract class AppDatabase extends RoomDatabase {
 
     private static final String DATABASE_NAME = "getgoing_db";
