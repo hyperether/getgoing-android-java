@@ -165,16 +165,6 @@ public class TrackingFragment extends Fragment implements OnMapReadyCallback {
         if (!mRouteAlreadySaved) {
             routeViewModel.removeRouteById(currentRouteID);
         }
-    }
-
-    @Override
-    public void onResume() {
-        super.onResume();
-    }
-
-    @Override
-    public void onPause() {
-        super.onPause();
         if (mapFragment != null) {
             getActivity().getFragmentManager().beginTransaction().remove(mapFragment).commit();
         }

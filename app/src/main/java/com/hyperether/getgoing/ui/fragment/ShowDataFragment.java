@@ -47,10 +47,6 @@ import static com.hyperether.getgoing.util.Constants.ACTIVITY_RUN_ID;
 import static com.hyperether.getgoing.util.Constants.ACTIVITY_WALK_ID;
 import static com.hyperether.getgoing.util.Constants.BUNDLE_PARCELABLE;
 import static com.hyperether.getgoing.util.Constants.DATA_DETAILS_LABEL;
-import static com.hyperether.getgoing.util.Constants.PREF_FILE;
-import static com.hyperether.getgoing.util.Constants.PREF_RIDE_ROUTE_EXISTING;
-import static com.hyperether.getgoing.util.Constants.PREF_RUN_ROUTE_EXISTING;
-import static com.hyperether.getgoing.util.Constants.PREF_WALK_ROUTE_EXISTING;
 
 public class ShowDataFragment extends Fragment implements GgOnClickListener, OnMapReadyCallback {
 
@@ -213,7 +209,7 @@ public class ShowDataFragment extends Fragment implements GgOnClickListener, OnM
         mMap.clear();
         DbRoute route = binding.getVar();
         routeViewModel.getNodeListById(route.getId())
-                .observe(getActivity(), dbNodes -> {
+                .observe(this, dbNodes -> {
 
                     if (!dbNodes.isEmpty()) {
 
