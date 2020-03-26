@@ -2,16 +2,14 @@ package com.hyperether.getgoing.ui.fragment;
 
 import android.annotation.SuppressLint;
 import android.app.AlertDialog;
-import android.app.Dialog;
-import android.content.Context;
 import android.content.DialogInterface;
-import android.content.SharedPreferences;
-import android.os.AsyncTask;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.Observer;
+import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 
@@ -25,24 +23,19 @@ import android.widget.SeekBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+
 import com.hyperether.getgoing.R;
-import com.hyperether.getgoing.listeners.GgOnClickListener;
-import com.hyperether.getgoing.repository.room.DbHelper;
+import com.hyperether.getgoing.SharedPref;
 import com.hyperether.getgoing.repository.room.entity.DbRoute;
 import com.hyperether.getgoing.util.Constants;
+import com.hyperether.getgoing.viewmodel.RouteViewModel;
 
 import java.text.DecimalFormat;
-import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
-
 import static com.hyperether.getgoing.ui.fragment.GetGoingFragment.ratio;
 import static com.hyperether.getgoing.util.Constants.DATA_DETAILS_LABEL;
 import static com.hyperether.getgoing.util.Constants.OPENED_FROM_KEY;
 import static com.hyperether.getgoing.util.Constants.OPENED_FROM_LOCATION_ACT;
-import static com.hyperether.getgoing.util.Constants.PREF_RIDE_ROUTE_EXISTING;
-import static com.hyperether.getgoing.util.Constants.PREF_RUN_ROUTE_EXISTING;
-import static com.hyperether.getgoing.util.Constants.PREF_WALK_ROUTE_EXISTING;
 
 
 public class ActivitiesFragment extends Fragment {
@@ -59,9 +52,8 @@ public class ActivitiesFragment extends Fragment {
     private ProgressBar prbWalk, prbRun, prbRide;
     private Button saveChanges;
 
-    private SharedPreferences settings;
-
     private int openedFrom;
+    private RouteViewModel routeViewModel;
 
     public ActivitiesFragment() {
         // Required empty public constructor
@@ -70,10 +62,10 @@ public class ActivitiesFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        settings = Objects.requireNonNull(getActivity()).getSharedPreferences(Constants.PREF_FILE, 0);
         if (getArguments() != null) {
             openedFrom = getArguments().getInt(OPENED_FROM_KEY);
         }
+        routeViewModel = new ViewModelProvider(this).get(RouteViewModel.class);
     }
 
     @Override
@@ -93,6 +85,10 @@ public class ActivitiesFragment extends Fragment {
         minutesCycling = getView().findViewById(R.id.tv_fa_min3);
         kcal = getView().findViewById(R.id.tv_fa_kcal);
 
+        prbWalk = getView().findViewById(R.id.progressBar);
+        prbRun = getView().findViewById(R.id.progressBar2);
+        prbRide = getView().findViewById(R.id.progressBar3);
+
         seekBar.incrementProgressBy(10);
 
         mileageWalk = getView().findViewById(R.id.tv_fa_pb_mileage_walk);
@@ -103,7 +99,13 @@ public class ActivitiesFragment extends Fragment {
         initLabels();
         initProgressStringColor();
         initListeners();
-        fillProgressBars();
+        routeViewModel.getAllRoutes().observe(getViewLifecycleOwner(), new Observer<List<DbRoute>>() {
+            @Override
+            public void onChanged(List<DbRoute> dbRoutes) {
+                fillProgressBars(dbRoutes);
+            }
+        });
+
     }
 
     private void initScreenDimen() {
@@ -186,7 +188,7 @@ public class ActivitiesFragment extends Fragment {
                 minutesWalking.setText(timeEstimates[0] + " min");
                 minutesRunning.setText(timeEstimates[1] + " min");
                 minutesCycling.setText(timeEstimates[2] + " min");
-                kcal.setText("About " + (int) (i * 0.00112 * settings.getInt("weight", 0)) + "kcal");
+                kcal.setText("About " + (int) (i * 0.00112 * SharedPref.getWeight()) + "kcal");
             }
 
             @Override
@@ -216,21 +218,19 @@ public class ActivitiesFragment extends Fragment {
                                 new DialogInterface.OnClickListener() {
                                     @Override
                                     public void onClick(DialogInterface paramDialogInterface, int paramInt) {
-                                        seekBar.setProgress(settings.getInt("goal", 0));
+                                        seekBar.setProgress(SharedPref.getGoal());
                                     }
                                 }).show();
             } else {
 
-                SharedPreferences.Editor editor = settings.edit();
-                editor.putInt("goal", seekBar.getProgress());
-                editor.apply();
+                SharedPref.setGoal(seekBar.getProgress());
 
                 Toast.makeText(getContext(), "Your goal is updated", Toast.LENGTH_SHORT).show();
 
                 if (openedFrom == OPENED_FROM_LOCATION_ACT) {
                     getActivity().onBackPressed();
                 } else {
-                    fillProgressBars();
+                    //fillProgressBars();
                 }
             }
         });
@@ -239,7 +239,7 @@ public class ActivitiesFragment extends Fragment {
     private void openActivityDetails() {
 
         mileageWalk.setOnClickListener(view -> {
-            if (settings.getBoolean(PREF_WALK_ROUTE_EXISTING, false)) {
+            if (SharedPref.doesWalkRouteExist()) {
                 Bundle bundle = new Bundle();
                 bundle.putString(DATA_DETAILS_LABEL, getString(R.string.walking));
                 navigationController.navigate(R.id.action_activitiesFragment_to_showDataFragment, bundle);
@@ -249,7 +249,7 @@ public class ActivitiesFragment extends Fragment {
         });
 
         mileageRun.setOnClickListener(view -> {
-            if (settings.getBoolean(PREF_RUN_ROUTE_EXISTING, false)) {
+            if (SharedPref.doesRunRouteExist()) {
                 Bundle bundle = new Bundle();
                 bundle.putString(DATA_DETAILS_LABEL, getString(R.string.running));
                 navigationController.navigate(R.id.action_activitiesFragment_to_showDataFragment, bundle);
@@ -259,7 +259,7 @@ public class ActivitiesFragment extends Fragment {
         });
 
         mileageRide.setOnClickListener(view -> {
-            if (settings.getBoolean(PREF_RIDE_ROUTE_EXISTING, false)) {
+            if (SharedPref.doesRideRouteExist()) {
                 Bundle bundle = new Bundle();
                 bundle.putString(DATA_DETAILS_LABEL, getString(R.string.cycling));
                 navigationController.navigate(R.id.action_activitiesFragment_to_showDataFragment, bundle);
@@ -289,7 +289,7 @@ public class ActivitiesFragment extends Fragment {
     }
 
     private void initLabels() {
-        seekBar.setProgress(settings.getInt("goal", 5000));
+        seekBar.setProgress(SharedPref.getGoal());
 
         int progress = seekBar.getProgress();
         int[] timeEstimates = getTimeEstimates(progress);
@@ -300,65 +300,38 @@ public class ActivitiesFragment extends Fragment {
         minutesRunning.setText(timeEstimates[1] + " min");
         minutesCycling.setText(timeEstimates[2] + " min");
 
-        kcal.setText("About " + (int) (progress * 0.00112 * settings.getInt("weight", 0)) + "kcal");
+        kcal.setText("About " + (int) (progress * 0.00112 * SharedPref.getWeight()) + "kcal");
     }
 
-    private void fillProgressBars() {
-        new PullProgressData().execute(null, null, null);
-    }
-
-    private class PullProgressData extends AsyncTask<Void, Void, Void> {
-        List<DbRoute> allRoutes;
-        int goal = settings.getInt("goal", 0);
+    private void fillProgressBars(List<DbRoute> allRoutes) {
+        int goal = SharedPref.getGoal();
         Double sumWalk = 0.0, sumRun = 0.0, sumRide = 0.0;
         int walkPercentage = 0, runPercentage = 0, ridePercentage = 0;
 
-        @Override
-        protected void onPreExecute() {
-            super.onPreExecute();
-
-            prbWalk = getView().findViewById(R.id.progressBar);
-            prbRun = getView().findViewById(R.id.progressBar2);
-            prbRide = getView().findViewById(R.id.progressBar3);
-
+        for (DbRoute route : allRoutes) {
+            if (route.getActivity_id() == 1)
+                sumWalk += route.getLength();
+            else if (route.getActivity_id() == 2)
+                sumRun += route.getLength();
+            else if (route.getActivity_id() == 3)
+                sumRide += route.getLength();
         }
 
-        @Override
-        protected Void doInBackground(Void... voids) {
-            allRoutes = new ArrayList<>();
-            DbHelper.getInstance(getContext()).getRoutes(allRoutes::addAll);
-            return null;
-        }
+        if (sumWalk != 0)
+            walkPercentage = (int) (sumWalk * 100 / goal);
+        if (sumRun != 0)
+            runPercentage = (int) (sumRun * 100 / goal);
+        if (sumRide != 0)
+            ridePercentage = (int) (sumRide * 100 / goal);
 
-        @Override
-        protected void onPostExecute(Void aVoid) {
-            super.onPostExecute(aVoid);
+        prbWalk.setProgress(walkPercentage);
+        prbRun.setProgress(runPercentage);
+        prbRide.setProgress(ridePercentage);
 
-            for (DbRoute route : allRoutes) {
-                if (route.getActivity_id() == 1)
-                    sumWalk += route.getLength();
-                else if (route.getActivity_id() == 2)
-                    sumRun += route.getLength();
-                else if (route.getActivity_id() == 3)
-                    sumRide += route.getLength();
-            }
+        DecimalFormat df = new DecimalFormat("#.##");
 
-            if (sumWalk != 0)
-                walkPercentage = (int) (sumWalk * 100 / goal);
-            if (sumRun != 0)
-                runPercentage = (int) (sumRun * 100 / goal);
-            if (sumRide != 0)
-                ridePercentage = (int) (sumRide * 100 / goal);
-
-            prbWalk.setProgress(walkPercentage);
-            prbRun.setProgress(runPercentage);
-            prbRide.setProgress(ridePercentage);
-
-            DecimalFormat df = new DecimalFormat("#.##");
-
-            mileageWalk.setText(df.format(sumWalk / 1000) + "km");
-            mileageRun.setText(df.format(sumRun / 1000) + "km");
-            mileageRide.setText(df.format(sumRide / 1000) + "km");
-        }
+        mileageWalk.setText(df.format(sumWalk / 1000) + "km");
+        mileageRun.setText(df.format(sumRun / 1000) + "km");
+        mileageRide.setText(df.format(sumRide / 1000) + "km");
     }
 }

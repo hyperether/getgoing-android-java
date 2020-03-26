@@ -15,7 +15,7 @@ import java.util.List;
 public interface DbRouteDao {
 
     @Query("SELECT * FROM DbRoute")
-    List<DbRoute> getAll();
+    LiveData<List<DbRoute>> getAll();
 
     @Insert
     long insertRoute(DbRoute dbRoute);
@@ -33,7 +33,10 @@ public interface DbRouteDao {
     void deleteRouteById(long id);
 
     @Query("SELECT * FROM DbRoute WHERE goal > 0 ORDER BY id DESC LIMIT 1")
-    LiveData<DbRoute> getLatestRoute();
+    LiveData<DbRoute> getLatestRouteAsLiveData();
+
+    @Query("SELECT * FROM DbRoute WHERE goal > 0 ORDER BY id DESC LIMIT 1")
+    DbRoute getLatestRoute();
 
     @Update
     void updateRoute(DbRoute route);

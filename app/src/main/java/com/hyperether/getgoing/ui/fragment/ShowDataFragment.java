@@ -2,7 +2,6 @@ package com.hyperether.getgoing.ui.fragment;
 
 import android.app.AlertDialog;
 import android.content.DialogInterface;
-import android.content.SharedPreferences;
 import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.os.Bundle;
@@ -11,6 +10,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.databinding.DataBindingUtil;
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -29,6 +29,7 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.LatLngBounds;
 import com.google.android.gms.maps.model.PolylineOptions;
 import com.hyperether.getgoing.R;
+import com.hyperether.getgoing.SharedPref;
 import com.hyperether.getgoing.databinding.FragmentShowdataBinding;
 import com.hyperether.getgoing.listeners.GgOnClickListener;
 import com.hyperether.getgoing.repository.room.entity.DbNode;
@@ -38,6 +39,7 @@ import com.hyperether.getgoing.util.ProgressBarBitmap;
 import com.hyperether.getgoing.viewmodel.RouteViewModel;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 
 import static com.hyperether.getgoing.util.Constants.ACTIVITY_RIDE_ID;
@@ -45,10 +47,6 @@ import static com.hyperether.getgoing.util.Constants.ACTIVITY_RUN_ID;
 import static com.hyperether.getgoing.util.Constants.ACTIVITY_WALK_ID;
 import static com.hyperether.getgoing.util.Constants.BUNDLE_PARCELABLE;
 import static com.hyperether.getgoing.util.Constants.DATA_DETAILS_LABEL;
-import static com.hyperether.getgoing.util.Constants.PREF_FILE;
-import static com.hyperether.getgoing.util.Constants.PREF_RIDE_ROUTE_EXISTING;
-import static com.hyperether.getgoing.util.Constants.PREF_RUN_ROUTE_EXISTING;
-import static com.hyperether.getgoing.util.Constants.PREF_WALK_ROUTE_EXISTING;
 
 public class ShowDataFragment extends Fragment implements GgOnClickListener, OnMapReadyCallback {
 
@@ -117,27 +115,30 @@ public class ShowDataFragment extends Fragment implements GgOnClickListener, OnM
 
     private void initializeViewModel() {
         routeViewModel = new ViewModelProvider(this).get(RouteViewModel.class);
-        routeViewModel.getRouteList().observe(getActivity(), routeList -> {
-            routes.clear();
-            if (routeList.size() > 1) {
-                routeList.remove(0); // remove 0th node
-                for (DbRoute route : routeList) {
-                    if (route.getActivity_id() == activityId) {
-                        routes.add(route);
+        routeViewModel.getAllRoutes().observe(getViewLifecycleOwner(), new Observer<List<DbRoute>>() {
+            @Override
+            public void onChanged(List<DbRoute> dbRoutes) {
+                routes.clear();
+                if (dbRoutes.size() > 1) {
+                    dbRoutes.remove(0); // remove 0th node
+                    for (DbRoute route : dbRoutes) {
+                        if (route.getActivity_id() == activityId) {
+                            routes.add(route);
+                        }
                     }
                 }
-            }
 
-            if (routes.size() == 0) {
-                showNoRoutesDialog();
-            } else {
-                Bitmap bm = ProgressBarBitmap.getWidgetBitmap(getActivity().getApplicationContext(), routes.get(routes.size() - 1).getGoal(), routes.get(0).getLength(), 400, 400, 160, 220, 20, 0);
-                binding.setVar(routes.get(routes.size() - 1));
-                binding.progress.setImageBitmap(bm);
-                binding.recyclerList.smoothScrollToPosition(routes.size() - 1);
-            }
+                if (routes.size() == 0) {
+                    showNoRoutesDialog();
+                } else {
+                    Bitmap bm = ProgressBarBitmap.getWidgetBitmap(getActivity().getApplicationContext(), routes.get(routes.size() - 1).getGoal(), routes.get(0).getLength(), 400, 400, 160, 220, 20, 0);
+                    binding.setVar(routes.get(routes.size() - 1));
+                    binding.progress.setImageBitmap(bm);
+                    binding.recyclerList.smoothScrollToPosition(routes.size() - 1);
+                }
 
-            recyclerAdapter.notifyDataSetChanged();
+                recyclerAdapter.notifyDataSetChanged();
+            }
         });
     }
 
@@ -171,21 +172,18 @@ public class ShowDataFragment extends Fragment implements GgOnClickListener, OnM
                 .setMessage(getResources().getString(R.string.alert_dialog_no_routes))
                 .setPositiveButton(R.string.alert_dialog_positive_button_save_btn,
                         (DialogInterface paramDialogInterface, int paramInt) -> {
-                            SharedPreferences prefs = getContext().getSharedPreferences(PREF_FILE, getActivity().MODE_PRIVATE);
-                            SharedPreferences.Editor editor = prefs.edit();
 
                             switch (activityId) {
                                 case ACTIVITY_WALK_ID:
-                                    editor.putBoolean(PREF_WALK_ROUTE_EXISTING, false);
+                                    SharedPref.setWalkRouteExisting(false);
                                     break;
                                 case ACTIVITY_RUN_ID:
-                                    editor.putBoolean(PREF_RUN_ROUTE_EXISTING, false);
+                                    SharedPref.setRunRouteExisting(false);
                                     break;
                                 case ACTIVITY_RIDE_ID:
-                                    editor.putBoolean(PREF_RIDE_ROUTE_EXISTING, false);
+                                    SharedPref.setRideRouteExisting(false);
                                     break;
                             }
-                            editor.apply();
 
                             getActivity().onBackPressed();
                         })
@@ -211,20 +209,43 @@ public class ShowDataFragment extends Fragment implements GgOnClickListener, OnM
         mMap.clear();
         DbRoute route = binding.getVar();
         routeViewModel.getNodeListById(route.getId())
-                .observe(getActivity(), dbNodes -> {
-
-                    PolylineOptions pOptions = new PolylineOptions();
-                    pOptions.width(10)
-                            .color(getResources().getColor(R.color.light_theme_accent))
-                            .geodesic(true);
+                .observe(this, dbNodes -> {
 
                     if (!dbNodes.isEmpty()) {
 
-                        for (DbNode node : dbNodes) {
-                            pOptions.add(new LatLng(node.getLatitude(), node.getLongitude()));
+                        Iterator<DbNode> it = dbNodes.iterator();
+                        while (it.hasNext()) {
+                            PolylineOptions pOptions = new PolylineOptions();
+                            pOptions.width(10)
+                                    .color(getResources().getColor(R.color.light_theme_accent))
+                                    .geodesic(true);
+
+                            boolean first = true;
+                            DbNode node = null;
+                            while (it.hasNext()) {
+                                node = it.next();
+                                if (first) {
+                                    mMap.addCircle(new CircleOptions()
+                                            .center(new LatLng(node.getLatitude(), node.getLongitude()))
+                                            .radius(5)
+                                            .fillColor(getResources().getColor(R.color.light_theme_accent))
+                                            .strokeColor(getResources().getColor(R.color.transparent_light_theme_accent))
+                                            .strokeWidth(20));
+                                    first = false;
+                                }
+                                pOptions.add(new LatLng(node.getLatitude(), node.getLongitude()));
+                                if (node.isLast()) break;
+                            }
+
+                            mMap.addPolyline(pOptions);
+                            mMap.addCircle(new CircleOptions()
+                                    .center(new LatLng(node.getLatitude(), node.getLongitude()))
+                                    .radius(5)
+                                    .fillColor(getResources().getColor(R.color.light_theme_accent))
+                                    .strokeColor(getResources().getColor(R.color.transparent_light_theme_accent))
+                                    .strokeWidth(20));
                         }
 
-                        mMap.addPolyline(pOptions);
                         mMap.addCircle(new CircleOptions()
                                 .center(new LatLng(dbNodes.get(0).getLatitude(), dbNodes.get(0).getLongitude()))
                                 .radius(5)

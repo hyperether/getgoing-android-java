@@ -1,6 +1,7 @@
 package com.hyperether.getgoing.ui.adapter;
 
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -47,7 +48,8 @@ public class DbRecyclerAdapter extends RecyclerView.Adapter<DbRecyclerAdapter.Vi
         if (!"null".equals(route.getDate()) || route.getDate() != null) {
             holder.chartProgress.setMax((int) route.getGoal());
             holder.chartProgress.setProgress((int) route.getLength());
-            holder.chartDate.setText(route.getDate().substring(0, 5));
+            //TODO Fix line below
+            holder.chartDate.setText(route.getDate().substring(0, 6));
             holder.chartDate.setOnClickListener((new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
