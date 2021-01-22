@@ -2,8 +2,6 @@ package com.hyperether.getgoing.util;
 
 import com.hyperether.getgoing.SharedPref;
 
-import static com.hyperether.getgoing.util.Constants.PREF_FILE;
-
 
 public class CaloriesCalculation {
     // Algorithm variables

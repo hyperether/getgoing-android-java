@@ -11,13 +11,13 @@ import android.os.HandlerThread;
 public class GetGoingApp extends Application {
 
     private static GetGoingApp instance = null;
-    private static Handler handler = null;
+    private Handler handler = null;
 
     public static GetGoingApp getInstance() {
         return instance;
     }
 
-    public static Handler getHandler() {
+    public Handler getHandler() {
         if (handler == null) {
             HandlerThread thread = new HandlerThread("db-thread");
             thread.start();

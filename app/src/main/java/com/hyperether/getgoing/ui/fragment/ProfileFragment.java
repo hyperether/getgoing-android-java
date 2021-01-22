@@ -3,11 +3,6 @@ package com.hyperether.getgoing.ui.fragment;
 import android.annotation.SuppressLint;
 import android.app.AlertDialog;
 import android.os.Bundle;
-
-import androidx.fragment.app.Fragment;
-import androidx.lifecycle.Observer;
-import androidx.lifecycle.ViewModelProvider;
-
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,6 +11,10 @@ import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.Spinner;
 import android.widget.TextView;
+
+import androidx.fragment.app.Fragment;
+import androidx.lifecycle.Observer;
+import androidx.lifecycle.ViewModelProvider;
 
 import com.hyperether.getgoing.GetGoingApp;
 import com.hyperether.getgoing.R;
@@ -303,22 +302,19 @@ public class ProfileFragment extends Fragment {
         final float[] totalRoute = new float[1];
         final int[] totalKcal = new int[1];
 
-        GetGoingApp.getHandler().post(new Runnable() {
-            @Override
-            public void run() {
-                totalRoute[0] = 0;
-                totalKcal[0] = 0;
+        GetGoingApp.getInstance().getHandler().post(() -> {
+            totalRoute[0] = 0;
+            totalKcal[0] = 0;
 
-                for (DbRoute route : dbRoutes) {
-                    totalRoute[0] += (route.getLength() / 1000);
-                    totalKcal[0] += route.getEnergy();
-                }
-
-                getActivity().runOnUiThread(() -> {
-                    totalMileage.setText(String.format("%.02f km", totalRoute[0]));
-                    totalCalories.setText(totalKcal[0] + "kcal");
-                });
+            for (DbRoute route : dbRoutes) {
+                totalRoute[0] += (route.getLength() / 1000);
+                totalKcal[0] += route.getEnergy();
             }
+
+            getActivity().runOnUiThread(() -> {
+                totalMileage.setText(String.format("%.02f km", totalRoute[0]));
+                totalCalories.setText(totalKcal[0] + "kcal");
+            });
         });
     }
 }

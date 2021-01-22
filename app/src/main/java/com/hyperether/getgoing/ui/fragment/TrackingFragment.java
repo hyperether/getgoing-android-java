@@ -11,17 +11,6 @@ import android.location.Criteria;
 import android.location.Location;
 import android.location.LocationManager;
 import android.os.Bundle;
-
-import androidx.activity.OnBackPressedCallback;
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.core.app.ActivityCompat;
-import androidx.fragment.app.Fragment;
-import androidx.lifecycle.Observer;
-import androidx.lifecycle.ViewModelProvider;
-import androidx.navigation.NavController;
-import androidx.navigation.Navigation;
-
 import android.os.SystemClock;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -33,7 +22,16 @@ import android.widget.Chronometer;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
+
+import androidx.activity.OnBackPressedCallback;
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.core.app.ActivityCompat;
+import androidx.fragment.app.Fragment;
+import androidx.lifecycle.Observer;
+import androidx.lifecycle.ViewModelProvider;
+import androidx.navigation.NavController;
+import androidx.navigation.Navigation;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -58,7 +56,6 @@ import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
-import java.util.Timer;
 
 import static android.provider.Settings.ACTION_LOCATION_SOURCE_SETTINGS;
 import static com.hyperether.getgoing.util.Constants.ACTIVITY_RIDE_ID;
@@ -73,11 +70,6 @@ public class TrackingFragment extends Fragment implements OnMapReadyCallback {
 
     private NavController navigationController;
 
-    private static final long UPDATE_INTERVAL_IN_MILLISECONDS = 3000;
-    private static final long FASTEST_UPDATE_INTERVAL_IN_MILLISECONDS =
-            UPDATE_INTERVAL_IN_MILLISECONDS / 2;
-    private static final float LOCATION_DISTANCE = 5;
-
     private GoogleMap mMap;
 
     private boolean mLocTrackingRunning = false;
@@ -91,8 +83,6 @@ public class TrackingFragment extends Fragment implements OnMapReadyCallback {
     private ImageButton button_rst, button_save, button_back;
     private Chronometer showTime, showCalories, showDistance, showVelocity;
 
-    // timer for data show
-    private Timer timer;
     long timeWhenStopped = 0;
     long timeWhenStopped4Storage = 0;
 
@@ -102,7 +92,6 @@ public class TrackingFragment extends Fragment implements OnMapReadyCallback {
     private long goalStore;
     private int profileID;
 
-    //    private View toInflate;
     private Context classContext;
 
     MapFragment mapFragment;
@@ -222,8 +211,8 @@ public class TrackingFragment extends Fragment implements OnMapReadyCallback {
         } else {
             goalStore = SharedPref.getGoal();
             set_goal.setVisibility(View.GONE);
-            button_save.setVisibility(View.VISIBLE);
-            button_save.setClickable(false);
+//            button_save.setVisibility(View.VISIBLE);
+//            button_save.setClickable(false);
             button_rst.setVisibility(View.VISIBLE);
             button_rst.setClickable(false);
             button_start.setClickable(true);
@@ -256,54 +245,25 @@ public class TrackingFragment extends Fragment implements OnMapReadyCallback {
         @Override
         public void onClick(View v) {
             stopTracking();
-            button_save.setClickable(true);
-            button_save.setImageDrawable(getResources().getDrawable(R.drawable.ic_light_save_icon));
+//            button_save.setClickable(true);
+//            button_save.setImageDrawable(getResources().getDrawable(R.drawable.ic_light_save_icon));
             button_rst.setClickable(true);
             button_rst.setImageDrawable(getResources().getDrawable(R.drawable.ic_light_replay_icon));
+            saveRoute();
         }
     };
 
-    /**
-     * This method handle button click on save button.
-     */
-    private final View.OnClickListener mButtonSaveListener = new View.OnClickListener() {
-        @Override
-        public void onClick(View v) {
+    private void saveRoute() {
+        mRouteAlreadySaved = true;
 
-            AlertDialog.Builder dialog = new AlertDialog.Builder(v.getContext());
-            dialog.setCancelable(false);
-            dialog.setMessage(getString(R.string.alert_dialog_message_save_btn));
-            dialog.setPositiveButton(R.string.alert_dialog_positive_button_save_btn,
-                    new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface paramDialogInterface, int paramInt) {
-                            mRouteAlreadySaved = true;
-
-                            if (profileID == ACTIVITY_WALK_ID &&
-                                    !SharedPref.doesWalkRouteExist()) {
-                                SharedPref.setWalkRouteExisting(true);
-                            } else if (profileID == ACTIVITY_RUN_ID &&
-                                    !SharedPref.doesRunRouteExist()) {
-                                SharedPref.setRunRouteExisting(true);
-                            } else if (profileID == ACTIVITY_RIDE_ID &&
-                                    !SharedPref.doesRideRouteExist()) {
-                                SharedPref.setRideRouteExisting(true);
-                            }
-
-                            button_save.setClickable(false);
-                            button_save.setImageDrawable(getResources().getDrawable(R.drawable.ic_light_save_icon_disabled));
-                            Toast.makeText(classContext, getString(R.string.alert_dialog_route_saved), Toast.LENGTH_SHORT).show();
-                        }
-                    });
-
-            dialog.setNegativeButton(getString(R.string.alert_dialog_negative_button_save_btn),
-                    (paramDialogInterface, paramInt) -> {
-                        // TODO delete current route and nodes? - Ivana
-                    });
-
-            dialog.show();
+        if (profileID == ACTIVITY_WALK_ID && !SharedPref.doesWalkRouteExist()) {
+            SharedPref.setWalkRouteExisting(true);
+        } else if (profileID == ACTIVITY_RUN_ID && !SharedPref.doesRunRouteExist()) {
+            SharedPref.setRunRouteExisting(true);
+        } else if (profileID == ACTIVITY_RIDE_ID && !SharedPref.doesRideRouteExist()) {
+            SharedPref.setRideRouteExisting(true);
         }
-    };
+    }
 
     /**
      * This method handle button click on reset button.
@@ -315,35 +275,29 @@ public class TrackingFragment extends Fragment implements OnMapReadyCallback {
             dialog.setCancelable(false);
             dialog.setMessage(getString(R.string.alert_dialog_message_reset_btn));
             dialog.setPositiveButton(R.string.alert_dialog_positive_reset_save_btn,
-                    new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface paramDialogInterface, int paramInt) {
-                            if (mMap != null)
-                                mMap.clear();
+                    (paramDialogInterface, paramInt) -> {
+                        if (mMap != null)
+                            mMap.clear();
 
-                            showTime.setBase(SystemClock.elapsedRealtime());
-                            timeWhenStopped = 0;
+                        showTime.setBase(SystemClock.elapsedRealtime());
+                        timeWhenStopped = 0;
 
-                            clearData();
-                            if (!mRouteAlreadySaved) {
-                                routeViewModel.removeRouteById(currentRouteID);
-                            }
-
-                            mRouteAlreadySaved = true;
-                            trackingStarted = false;
-
-                            button_save.setClickable(false);
-                            button_save.setImageDrawable(getResources().getDrawable(R.drawable.ic_light_save_icon_disabled));
-                            button_rst.setClickable(false);
-                            button_rst.setImageDrawable(getResources().getDrawable(R.drawable.ic_light_replay_icon_disabled));
+                        clearData();
+                        if (!mRouteAlreadySaved) {
+                            routeViewModel.removeRouteById(currentRouteID);
                         }
+
+                        mRouteAlreadySaved = true;
+                        trackingStarted = false;
+
+//                        button_save.setClickable(false);
+//                        button_save.setImageDrawable(getResources().getDrawable(R.drawable.ic_light_save_icon_disabled));
+                        button_rst.setClickable(false);
+                        button_rst.setImageDrawable(getResources().getDrawable(R.drawable.ic_light_replay_icon_disabled));
                     });
 
             dialog.setNegativeButton(getString(R.string.alert_dialog_negative_reset_save_btn),
-                    new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface paramDialogInterface, int paramInt) {
-                        }
+                    (paramDialogInterface, paramInt) -> {
                     });
 
             dialog.show();
@@ -393,9 +347,9 @@ public class TrackingFragment extends Fragment implements OnMapReadyCallback {
 
     private void startTrackingService(Context context) {
         Intent intent = new Intent(context, GPSTrackingService.class);
-        intent.putExtra(HyperConst.LOC_INTERVAL, UPDATE_INTERVAL_IN_MILLISECONDS);
-        intent.putExtra(HyperConst.LOC_FASTEST_INTERVAL, FASTEST_UPDATE_INTERVAL_IN_MILLISECONDS);
-        intent.putExtra(HyperConst.LOC_DISTANCE, LOCATION_DISTANCE);
+        intent.putExtra(HyperConst.LOC_INTERVAL, Constants.UPDATE_INTERVAL);
+        intent.putExtra(HyperConst.LOC_FASTEST_INTERVAL, Constants.FASTEST_INTERVAL);
+        intent.putExtra(HyperConst.LOC_DISTANCE, Constants.LOCATION_DISTANCE);
         getActivity().startService(intent);
 
         getActivity().runOnUiThread(() -> {
@@ -608,7 +562,6 @@ public class TrackingFragment extends Fragment implements OnMapReadyCallback {
         button_rst = getView().findViewById(R.id.ib_al_reset);
         button_rst.setOnClickListener(mButtonResetListener);
         button_save = getView().findViewById(R.id.ib_al_save);
-        button_save.setOnClickListener(mButtonSaveListener);
 
         showTime = getView().findViewById(R.id.chr_al_duration);
         showCalories = getView().findViewById(R.id.chr_al_kcal);
