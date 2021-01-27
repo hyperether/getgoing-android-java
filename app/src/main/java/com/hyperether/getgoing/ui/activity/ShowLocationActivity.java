@@ -160,6 +160,9 @@ public class ShowLocationActivity extends AppCompatActivity implements OnMapRead
 //        toInflate = getLayoutInflater().inflate(R.layout.alertdialog_goal, null, false);
     }
 
+    private SharedPreferences.OnSharedPreferenceChangeListener sharedPrefsListener =
+            (SharedPreferences sharedPreferences, String key) -> setVisibilities();
+
     @Override
     protected void onDestroy() {
         super.onDestroy();
@@ -691,8 +694,7 @@ public class ShowLocationActivity extends AppCompatActivity implements OnMapRead
         }
     }
 
-    private SharedPreferences.OnSharedPreferenceChangeListener sharedPrefsListener =
-            (SharedPreferences sharedPreferences, String key) -> setVisibilities();
+
 
 
 }

@@ -1,5 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <string name="google_maps_key">AIzaSyBY3c7RFvwzs06juEg0nzIU7PVERTIV3U8</string>
+    <string name="facebook_app_id">Facebook</string>
     <string name="app_name">GetGoing</string>
     <!-- google maps id-->
     <string name="dialog_message" translatable="false">No saved data. Press OK to continue.</string>
@@ -109,8 +111,6 @@
     <string name="alert_dialog_delete_route">Delete permanently this route?</string>
     <string name="route_deleted_msg">Route deleted</string>
     <string name="alert_dialog_no_routes">No routes to display</string>
-
-
 </resources>
 
 

@@ -62,6 +62,9 @@ public class DbRoute implements Parcelable {
         }
     };
 
+    public DbRoute(int i, int i1, int i2, int i3, String s, int i4, int i5) {
+    }
+
     public long getId() {
         return id;
     }

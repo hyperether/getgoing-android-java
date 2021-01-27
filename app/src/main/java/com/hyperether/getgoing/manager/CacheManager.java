@@ -9,23 +9,26 @@ import java.util.List;
 /**
  * Created by nikola on 11/07/17.
  */
-
+//Cuva podatke o trenutnom putovanju/pokretu
 public class CacheManager {
 
     private static CacheManager instance = null;
-
+//Lista cvorova (lista posecenih lokacija)
     private List<DbNode> mRoute = new ArrayList<>();
+    //od pocetka do kraja
     private String timeElapsed;
     private Double distanceCumulative = 0.0;
     private Double kcalCumulative;
     private Double velocity;
     private Double velocityAvg;
     private CBDataFrame obDataFrameGlobal;
+    //koliko vremena je tralajo putovanje
     private long timeCumulative;
+    //koliko vremena je trajalo putovanje u sekundama
     private int secondsCumulative;
     private long time = 0; // time between to position updates
     private long currentRouteId = 0;
-
+//trenutna ruta
     public static CacheManager getInstance() {
         if (instance == null) {
             instance = new CacheManager();
@@ -128,7 +131,7 @@ public class CacheManager {
     public long getCurrentRouteId() {
         return currentRouteId;
     }
-
+//Kada ima nova putovanja, novi cvor, jer nam prosledjuje parametre.
     public void setCurrentRouteId(long currentRouteId) {
         this.currentRouteId = currentRouteId;
     }

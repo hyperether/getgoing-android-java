@@ -266,7 +266,7 @@ public class ActivitiesFragment extends DialogFragment {
 
         mileageRun.setOnClickListener(view -> {
             bundle.putInt(BUNDLE_ACTIVITY_ID, ACTIVITY_RUN_ID);
-            listener.onClick(bundle);
+//            listener.onClick(bundle);
         });
 
         mileageRide.setOnClickListener(view -> {
