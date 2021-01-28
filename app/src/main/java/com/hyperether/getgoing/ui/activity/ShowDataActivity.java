@@ -6,6 +6,7 @@ import android.content.SharedPreferences;
 import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.os.Bundle;
+import android.util.Log;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -62,6 +63,7 @@ public class ShowDataActivity extends AppCompatActivity
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
+              //check here, because it crashes
         super.onCreate(savedInstanceState);
         binding = DataBindingUtil.setContentView(this, R.layout.show_data);
 
@@ -240,6 +242,9 @@ public class ShowDataActivity extends AppCompatActivity
     @Override
     public void onClick(Bundle bundle) {
         DbRoute route = bundle.getParcelable(BUNDLE_PARCELABLE);
+        if (binding == null) {
+            System.out.println("prosao ovde");
+        }
         binding.setVar(route);
 
         if (route != null) {

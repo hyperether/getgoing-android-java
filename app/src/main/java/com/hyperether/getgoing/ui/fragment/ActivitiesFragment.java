@@ -8,6 +8,7 @@ import android.content.DialogInterface;
 import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -27,6 +28,7 @@ import com.hyperether.getgoing.listeners.GgOnClickListener;
 import com.hyperether.getgoing.model.CBDataFrame;
 import com.hyperether.getgoing.repository.room.DbHelper;
 import com.hyperether.getgoing.repository.room.entity.DbRoute;
+import com.hyperether.getgoing.ui.activity.ShowDataActivity;
 import com.hyperether.getgoing.util.Constants;
 
 import java.text.DecimalFormat;
@@ -41,6 +43,8 @@ import static com.hyperether.getgoing.util.Constants.ACTIVITY_RUN_ID;
 import static com.hyperether.getgoing.util.Constants.ACTIVITY_WALK_ID;
 import static com.hyperether.getgoing.util.Constants.BUNDLE_ACTION;
 import static com.hyperether.getgoing.util.Constants.BUNDLE_ACTIVITY_ID;
+import static com.hyperether.getgoing.util.Constants.BUNDLE_PARCELABLE;
+import static com.hyperether.getgoing.util.Constants.DATA_DETAILS_LABEL;
 import static com.hyperether.getgoing.util.Constants.OPENED_FROM_LOCATION_ACT;
 
 public class ActivitiesFragment extends DialogFragment {
@@ -48,7 +52,18 @@ public class ActivitiesFragment extends DialogFragment {
     public static final String DATA_KEY = "data_key";
     public static final String FROM_KEY = "from_key";
 
-    private GgOnClickListener listener;
+    private GgOnClickListener listener = new GgOnClickListener() {
+        @Override
+        public void onClick(Bundle bundle) {
+            Toast.makeText(getContext(), "Test", Toast.LENGTH_SHORT).show();
+        }
+    };
+   // private ShowDataActivity listener = new ShowDataActivity();
+//    {
+//        public void onClick(Bundle bundle) {
+//            Toast.makeText(getContext(), "evo", Toast.LENGTH_SHORT).show();
+//        }
+//    };
 
     private View whiteView;
     private TextView goal, walkingLabel;
@@ -254,19 +269,43 @@ public class ActivitiesFragment extends DialogFragment {
             }
         });
     }
-
+  //the problem is that the listener is not initialized (not assigned a value), but is null and then can't do anything.
+    //It comes to the App failure. I will check again tomorrow during the day.
     private void openActivityDetails() {
         Bundle bundle = new Bundle();
         bundle.putInt(BUNDLE_ACTION, ACTION_OPEN_ACTIVITY_DETAILS);
 
+//        mileageWalk.setOnClickListener(
+//
+//
+//                new View.OnClickListener() {
+//                    @Override
+//                    public void onClick(View view) {
+//                        bundle.putInt(BUNDLE_ACTIVITY_ID, ACTIVITY_WALK_ID);
+//                        boolean test;
+//                        if(listener==null){
+//                            test=true;
+//
+//                        }else {
+//                            test=false;
+//                        }
+//                        Log.d("PUCAM", "onClick: "+ test);
+//                        listener.onClick(bundle);
+//
+//                    }
+//                }
+//        );
         mileageWalk.setOnClickListener(view -> {
             bundle.putInt(BUNDLE_ACTIVITY_ID, ACTIVITY_WALK_ID);
+
+            Log.d("ovde", "openActivityDetails: ");
+          //  listener.onCreate(bundle);
             listener.onClick(bundle);
         });
 
         mileageRun.setOnClickListener(view -> {
             bundle.putInt(BUNDLE_ACTIVITY_ID, ACTIVITY_RUN_ID);
-//            listener.onClick(bundle);
+            listener.onClick(bundle);
         });
 
         mileageRide.setOnClickListener(view -> {

@@ -39,7 +39,7 @@ public class GPSTrackingService extends HyperLocationService {
     // Global variable to hold the current location
     private Location mCurrentLocation;
     private long timeCumulative = 0;
-    //automatski je po defaultu na nuli
+    //it is automatically set to zero by default
     private int nodeIndex;
 
     private int secondsCumulative = 0;
@@ -107,40 +107,40 @@ public class GPSTrackingService extends HyperLocationService {
     protected void onLocationUpdate(Location location) {
         double dLat, dLong;
         double distance = 0;
-        // Svaki put kada stisnem Start na app, ona poziva ovu metodu.
-        //Trenutno vreme u milisekundama. OldTime poziva na update vreme pokretanja
+        // Every time we press Start on the app, it calls this method.
+        // Current time in milliseconds. OldTime calls for a startup time update
         time = System.currentTimeMillis() - oldTime;
         timeCumulative += System.currentTimeMillis() - oldTime;
         secondsCumulative = (int) timeCumulative / 1000;
         oldTime = System.currentTimeMillis();
-        //Kada se ova metoda poziva, prosledjuje se trenutna lokacija
+        //When this method is called, the current location is passed
         mCurrentLocation = location;
 
         if (mCurrentLocation != null) {
-            //uzima koordinate, ako nije na null
+            //It takes coordinates, if not at null
             dLat = mCurrentLocation.getLatitude();
             dLong = mCurrentLocation.getLongitude();
-            //firstPass da li je prvi unos u bazu
+            //FirstPass whether the first entry in the database
             if (firstPass) {
                 latitude = latitude_old = dLat;
                 longitude = longitude_old = dLong;
-                //Samo bi trebalo prvi put da prodje i onda vise nikad
+                //It should just pass the first time and then never again
                 firstPass = false;
-             //DbNode kreira novi objekat, postavlja id na 0 (prvi unos), nodeIndex++ iskoristi vrednost, pa je uvecaj;
+             //DbNode creates a new object, sets the id to 0 (first entry), nodeIndex ++ uses the value, so increase it;
                 DbNode tmp = new DbNode(0, latitude, longitude, 0, nodeIndex++, CacheManager.getInstance().getCurrentRouteId());
                 //
                 CacheManager.getInstance().addRouteNode(tmp);
-                //daoInsertNode konkretno ubacuje u bazu
+                //daoInsertNode specifically inserts into the database
                 GgRepository.getInstance().daoInsertNode(tmp);
-                //Ukoliko je drugi unos, onda Else
+                //If the second entry is, then Else
             } else {
                 latitude_old = latitude;
                 longitude_old = longitude;
-                //trenutne vrednosti
+                //current values
                 latitude = dLat;
                 longitude = dLong;
             }
-           //Ako izbije neka greska, nece biti postavljeno na true, onda nece uci u if
+           //If an error occurs, it will not be set to true, then it will not enter if
             actualPositionValid = true; // put up a flag for the algorithm
         }
 
@@ -152,14 +152,14 @@ public class GPSTrackingService extends HyperLocationService {
             if ((dLate != 0) || (dLon != 0)) {
                 // Carry out the path filtering
                 if (!isKalmanStateSet) {
-                    //pocetak, kada startuje mora odraditi ovaj deo
+                    //the beginning, when it starts must do this part
                     kalman.SetState(latitude,
                             longitude,
                             mCurrentLocation != null ? mCurrentLocation.getAccuracy() : 0,
                             timeCumulative);
                     isKalmanStateSet = true;
                 }
-                //nastavalja kasnije na ovaj deo
+                //continues later on to this part
                 kalman.Process(latitude,
                         longitude,
                         mCurrentLocation != null ? mCurrentLocation.getAccuracy() : 0,
@@ -169,14 +169,14 @@ public class GPSTrackingService extends HyperLocationService {
 
                 distance =
                         Conversion.gps2m(latitude, longitude, latitude_old, longitude_old);
-                //Ako nije jednako null, uci ce u if
+                //If it is not equal to null, it will enter if
                 if (!Double.isNaN(distance)) {
                     distanceCumulative += distance;
                     distanceDelta += distance;
 
                     velocityAvg = distanceCumulative / secondsCumulative;
 
-                    //brzina je srednja vrednost izmerene i ocitane brzine
+                    //speed is the mean value of the measured and read speed
                     velocity = (mCurrentLocation.getSpeed() + (distance / time)) / 2;
                     if (velocity < 30) {
                         CacheManager.getInstance().setVelocity(velocity);
@@ -192,7 +192,8 @@ public class GPSTrackingService extends HyperLocationService {
                             CacheManager.getInstance().setKcalCumulative(kcalCumulative);
                         }
                     }
-                    //Proverava da li je to osvezavanje distance vece od 10
+
+                    //Checks if this distance is greater than 10
                     if (distanceDelta > Constants.NODE_ADD_DISTANCE) {
                         distanceDelta = 0;
                         // add new point to the route
@@ -201,11 +202,11 @@ public class GPSTrackingService extends HyperLocationService {
                                 nodeIndex++, CacheManager.getInstance().getCurrentRouteId());
                         if (velocity < 30) {
                             CacheManager.getInstance().addRouteNode(tmp);
-                            //dodaje bas u bazu podatke
+                            //here adds data to the database
                             GgRepository.getInstance().daoInsertNode(tmp);
                         }
                     }
-                    //Ako je null distanca, onda ide Else
+                    //If the distance is null, then Else goes
                 } else {
                     velocity = mCurrentLocation.getSpeed();
                     if (velocity < 30) {
@@ -225,7 +226,7 @@ public class GPSTrackingService extends HyperLocationService {
         } else {
             // is connection broken???
         }
-         //Predjenja putanja
+         //Traversed path
         if (velocity < 30) {
             CacheManager.getInstance().setDistanceCumulative(distanceCumulative);
         }
