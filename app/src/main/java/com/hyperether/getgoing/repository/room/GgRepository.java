@@ -101,7 +101,6 @@ public class GgRepository {
         if (mHandler == null) {
             HandlerThread mThread = new HandlerThread("db-thread");
             mThread.start();
-            //getLooper method returns the Looper associated with HandlerThread.
             mHandler = new Handler(mThread.getLooper());
         }
         return mHandler;
