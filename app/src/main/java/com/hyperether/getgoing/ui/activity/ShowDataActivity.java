@@ -221,9 +221,8 @@ public class ShowDataActivity extends AppCompatActivity
             builder.include(new LatLng(node.getLatitude(), node.getLongitude()));
         }
 
-        // find route center point
+
         LatLng center = builder.build().getCenter();
-        // zoom over center
         mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(center, 16));
     }
 

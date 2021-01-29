@@ -9,26 +9,21 @@ import java.util.List;
 /**
  * Created by nikola on 11/07/17.
  */
-//Stores current travel / movement data
 public class CacheManager {
 
     private static CacheManager instance = null;
-//List of nodes (list of visited locations)
     private List<DbNode> mRoute = new ArrayList<>();
-    //from beginning to end
     private String timeElapsed;
     private Double distanceCumulative = 0.0;
     private Double kcalCumulative;
     private Double velocity;
     private Double velocityAvg;
     private CBDataFrame obDataFrameGlobal;
-    //how long the journey took
     private long timeCumulative;
-    //how long the journey took in seconds
     private int secondsCumulative;
     private long time = 0; // time between to position updates
     private long currentRouteId = 0;
-    //current route
+
     public static CacheManager getInstance() {
         if (instance == null) {
             instance = new CacheManager();
@@ -131,7 +126,7 @@ public class CacheManager {
     public long getCurrentRouteId() {
         return currentRouteId;
     }
-   //When there are new routes, a new node, because it passes us the parameters.
+
     public void setCurrentRouteId(long currentRouteId) {
         this.currentRouteId = currentRouteId;
     }

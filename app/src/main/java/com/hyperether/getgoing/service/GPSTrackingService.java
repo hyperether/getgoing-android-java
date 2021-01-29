@@ -27,8 +27,6 @@ public class GPSTrackingService extends HyperLocationService {
 
     private static final String TAG = GPSTrackingService.class.getSimpleName();
 
-    // filter for GPS data smoothing
-    // Initialise Kalman filter
     private KalmanLatLong kalman = new KalmanLatLong(3);
 
     private double latitude, longitude, latitude_old, longitude_old;
@@ -36,10 +34,8 @@ public class GPSTrackingService extends HyperLocationService {
     private boolean actualPositionValid = false;
 
     private boolean isKalmanStateSet = false;
-    // Global variable to hold the current location
     private Location mCurrentLocation;
     private long timeCumulative = 0;
-    //it is automatically set to zero by default
     private int nodeIndex;
 
     private int secondsCumulative = 0;
@@ -107,40 +103,32 @@ public class GPSTrackingService extends HyperLocationService {
     protected void onLocationUpdate(Location location) {
         double dLat, dLong;
         double distance = 0;
-        // Every time we press Start on the app, it calls this method.
-        // Current time in milliseconds. OldTime calls for a startup time update
         time = System.currentTimeMillis() - oldTime;
         timeCumulative += System.currentTimeMillis() - oldTime;
         secondsCumulative = (int) timeCumulative / 1000;
         oldTime = System.currentTimeMillis();
-        //When this method is called, the current location is passed
         mCurrentLocation = location;
 
         if (mCurrentLocation != null) {
-            //It takes coordinates, if not at null
             dLat = mCurrentLocation.getLatitude();
             dLong = mCurrentLocation.getLongitude();
-            //FirstPass whether the first entry in the database
             if (firstPass) {
                 latitude = latitude_old = dLat;
                 longitude = longitude_old = dLong;
-                //It should just pass the first time and then never again
-                firstPass = false;
-             //DbNode creates a new object, sets the id to 0 (first entry), nodeIndex ++ uses the value, so increase it;
+
+                firstPass = false;;
                 DbNode tmp = new DbNode(0, latitude, longitude, 0, nodeIndex++, CacheManager.getInstance().getCurrentRouteId());
-                //
                 CacheManager.getInstance().addRouteNode(tmp);
-                //daoInsertNode specifically inserts into the database
+
                 GgRepository.getInstance().daoInsertNode(tmp);
-                //If the second entry is, then Else
+
             } else {
                 latitude_old = latitude;
                 longitude_old = longitude;
-                //current values
+
                 latitude = dLat;
                 longitude = dLong;
             }
-           //If an error occurs, it will not be set to true, then it will not enter if
             actualPositionValid = true; // put up a flag for the algorithm
         }
 
@@ -152,14 +140,13 @@ public class GPSTrackingService extends HyperLocationService {
             if ((dLate != 0) || (dLon != 0)) {
                 // Carry out the path filtering
                 if (!isKalmanStateSet) {
-                    //the beginning, when it starts must do this part
                     kalman.SetState(latitude,
                             longitude,
                             mCurrentLocation != null ? mCurrentLocation.getAccuracy() : 0,
                             timeCumulative);
                     isKalmanStateSet = true;
                 }
-                //continues later on to this part
+
                 kalman.Process(latitude,
                         longitude,
                         mCurrentLocation != null ? mCurrentLocation.getAccuracy() : 0,
@@ -169,14 +156,13 @@ public class GPSTrackingService extends HyperLocationService {
 
                 distance =
                         Conversion.gps2m(latitude, longitude, latitude_old, longitude_old);
-                //If it is not equal to null, it will enter if
+
                 if (!Double.isNaN(distance)) {
                     distanceCumulative += distance;
                     distanceDelta += distance;
 
                     velocityAvg = distanceCumulative / secondsCumulative;
 
-                    //speed is the mean value of the measured and read speed
                     velocity = (mCurrentLocation.getSpeed() + (distance / time)) / 2;
                     if (velocity < 30) {
                         CacheManager.getInstance().setVelocity(velocity);
@@ -193,20 +179,16 @@ public class GPSTrackingService extends HyperLocationService {
                         }
                     }
 
-                    //Checks if this distance is greater than 10
                     if (distanceDelta > Constants.NODE_ADD_DISTANCE) {
                         distanceDelta = 0;
-                        // add new point to the route
-                        // node and route database _ids are intentionally 0
+
                         DbNode tmp = new DbNode(0, latitude, longitude, (float) velocity,
                                 nodeIndex++, CacheManager.getInstance().getCurrentRouteId());
                         if (velocity < 30) {
                             CacheManager.getInstance().addRouteNode(tmp);
-                            //here adds data to the database
                             GgRepository.getInstance().daoInsertNode(tmp);
                         }
                     }
-                    //If the distance is null, then Else goes
                 } else {
                     velocity = mCurrentLocation.getSpeed();
                     if (velocity < 30) {
@@ -226,7 +208,6 @@ public class GPSTrackingService extends HyperLocationService {
         } else {
             // is connection broken???
         }
-         //Traversed path
         if (velocity < 30) {
             CacheManager.getInstance().setDistanceCumulative(distanceCumulative);
         }
