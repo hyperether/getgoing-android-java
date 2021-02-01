@@ -63,7 +63,6 @@ public class ShowDataActivity extends AppCompatActivity
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
-              //check here, because it crashes
         super.onCreate(savedInstanceState);
         binding = DataBindingUtil.setContentView(this, R.layout.show_data);
 

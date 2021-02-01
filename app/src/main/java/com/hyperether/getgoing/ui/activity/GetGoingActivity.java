@@ -97,7 +97,7 @@ public class GetGoingActivity extends AppCompatActivity implements GgOnClickList
         actLabel = findViewById(R.id.tv_ma_mainact);
         blueSentence = findViewById(R.id.tv_am_burn);
         selectorView = findViewById(R.id.imageView2);
-    //Coarse location deleted
+
         ActivityCompat.requestPermissions(this, new String[]{
                 Manifest.permission.ACCESS_FINE_LOCATION}, Constants
                 .TAG_CODE_PERMISSION_LOCATION);
@@ -412,7 +412,7 @@ public class GetGoingActivity extends AppCompatActivity implements GgOnClickList
         DbRoute dbRoute = new DbRoute(0, 0, 0, 0, "null", 0, 1, 0);
         GgRepository.getInstance().insertRouteInit(dbRoute, nodeList);
     }
-   //Handler - handles a specific event
+
     @Override
     public void onClick(Bundle bundle) {
         int action = bundle.getInt(BUNDLE_ACTION);
