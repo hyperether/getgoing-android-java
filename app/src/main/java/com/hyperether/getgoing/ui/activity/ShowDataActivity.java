@@ -240,9 +240,6 @@ public class ShowDataActivity extends AppCompatActivity
     @Override
     public void onClick(Bundle bundle) {
         DbRoute route = bundle.getParcelable(BUNDLE_PARCELABLE);
-        if (binding == null) {
-            System.out.println("prosao ovde");
-        }
         binding.setVar(route);
 
         if (route != null) {

@@ -41,16 +41,8 @@ public class GgRepository {
     }
 
     public void daoInsertNode(DbNode node) {
-        getRepoHandler().post(new Runnable() {
-            @Override
-            public void run() {
-                nodeDao.insertNode(node);
-            }
-        });
+        getRepoHandler().post(() -> nodeDao.insertNode(node));
     }
-//    public void daoInsertNode(DbNode node) {
-//        getRepoHandler().post(() -> nodeDao.insertNode(node));
-//    }
 
     public LiveData<List<DbNode>> getAllNodes() {
         return allNodes;
@@ -64,52 +56,22 @@ public class GgRepository {
     public void insertRoute(final DbRoute dbRoute, DbRouteAddedCallback listener) {
         AtomicLong routeId = new AtomicLong();
 
-        getRepoHandler().post(new Runnable() {
-            @Override
-            public void run() {
-                routeId.set(routeDao.insertRoute(dbRoute));
-                listener.onRouteAdded(routeId.get());
-
-            }
+        getRepoHandler().post(() -> {
+            routeId.set(routeDao.insertRoute(dbRoute));
+            listener.onRouteAdded(routeId.get());
         });
-
-//        getRepoHandler().post(() -> {
-//            routeId.set(routeDao.insertRoute(dbRoute));
-//            listener.onRouteAdded(routeId.get());
-//        });
     }
 
     public void updateRoute(DbRoute dbRoute) {
-        getRepoHandler().post(new Runnable() {
-            @Override
-            public void run() {
-                routeDao.updateRoute(dbRoute);
-            }
-        });
+        getRepoHandler().post(() -> routeDao.updateRoute(dbRoute));
     }
-
-
-//    public void updateRoute(DbRoute dbRoute) {
-//        getRepoHandler().post(() -> routeDao.updateRoute(dbRoute));
-//    }
 
     public void deleteRouteById(long id, DbRouteDeletedCallback listener) {
-        getRepoHandler().post(new Runnable() {
-            @Override
-            public void run() {
-                routeDao.deleteRouteById(id);
-                listener.onRouteDeleted();
-            }
-
+        getRepoHandler().post(() -> {
+            routeDao.deleteRouteById(id);
+            listener.onRouteDeleted();
         });
     }
-
-//    public void deleteRouteById(long id, DbRouteDeletedCallback listener) {
-//        getRepoHandler().post(() -> {
-//            routeDao.deleteRouteById(id);
-//            listener.onRouteDeleted();
-//        });
-//    }
 
     public void insertRouteInit(final DbRoute dbRoute, List<DbNode> nodeList) {
         getRepoHandler().post(new Runnable() {

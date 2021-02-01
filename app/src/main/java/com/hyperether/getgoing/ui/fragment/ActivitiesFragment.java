@@ -265,8 +265,6 @@ public class ActivitiesFragment extends DialogFragment {
 
         mileageWalk.setOnClickListener(view -> {
             bundle.putInt(BUNDLE_ACTIVITY_ID, ACTIVITY_WALK_ID);
-
-            Log.d("ovde", "openActivityDetails: ");
             listener.onClick(bundle);
         });
 
