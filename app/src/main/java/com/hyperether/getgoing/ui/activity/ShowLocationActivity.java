@@ -511,9 +511,7 @@ public class ShowLocationActivity extends AppCompatActivity implements OnMapRead
     @Override
     public void onMapReady(GoogleMap googleMap) {
         if (ActivityCompat.checkSelfPermission(this, android.Manifest.permission
-                .ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED &&
-                ActivityCompat.checkSelfPermission(this, android.Manifest.permission
-                        .ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
+                .ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
 
             this.mMap = googleMap;
             initMapComponents(googleMap);
@@ -564,9 +562,7 @@ public class ShowLocationActivity extends AppCompatActivity implements OnMapRead
      **/
     private void initMapComponents(GoogleMap googleMap) {
         if (ActivityCompat.checkSelfPermission(this, android.Manifest.permission
-                .ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED &&
-                ActivityCompat.checkSelfPermission(this, android.Manifest.permission
-                        .ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
+                .ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
 
             googleMap.setMyLocationEnabled(true);
             googleMap.setTrafficEnabled(false);
