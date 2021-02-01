@@ -245,28 +245,40 @@ public class GetGoingActivity extends AppCompatActivity implements GgOnClickList
         Button startBtn = findViewById(R.id.materialButton);
 
 
-        ib_am_user.setOnClickListener(view -> {
-            ProfileFragment profileFragment = ProfileFragment.newInstance(null);
-            profileFragment.show(getSupportFragmentManager(), "ProfileFragment");
+        ib_am_user.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                ProfileFragment profileFragment = ProfileFragment.newInstance(null);
+                profileFragment.show(getSupportFragmentManager(), "ProfileFragment");
+            }
         });
 
-        tv_am_viewall.setOnClickListener(view -> {
-            ActivitiesFragment activitiesFragment = ActivitiesFragment.newInstance(null, OPENED_FROM_GG_ACT);
-            activitiesFragment.show(getSupportFragmentManager(), "ActivitiesFragment");
+        tv_am_viewall.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                ActivitiesFragment activitiesFragment = ActivitiesFragment.newInstance(null, OPENED_FROM_GG_ACT);
+                activitiesFragment.show(getSupportFragmentManager(), "ActivitiesFragment");
+            }
         });
 
-        iv_am_bluerectangle.setOnClickListener(view -> {
-            ActivitiesFragment activitiesFragment = ActivitiesFragment.newInstance(null, OPENED_FROM_GG_ACT);
-            activitiesFragment.show(getSupportFragmentManager(), "ActivitiesFragment");
+        iv_am_bluerectangle.setOnClickListener(new View.OnClickListener()  {
+            @Override
+            public void onClick(View view) {
+                ActivitiesFragment activitiesFragment = ActivitiesFragment.newInstance(null, OPENED_FROM_GG_ACT);
+                activitiesFragment.show(getSupportFragmentManager(), "ActivitiesFragment");
+            }
         });
 
-        startBtn.setOnClickListener(view -> {
-            if (centralImg.getTag().equals(R.drawable.ic_light_walking_icon_active))
-                callMeteringActivity(ACTIVITY_WALK_ID);
-            else if (centralImg.getTag().equals(R.drawable.ic_light_running_icon_active))
-                callMeteringActivity(ACTIVITY_RUN_ID);
-            else if (centralImg.getTag().equals(R.drawable.ic_light_bicycling_icon_active))
-                callMeteringActivity(ACTIVITY_RIDE_ID);
+        startBtn.setOnClickListener(new View.OnClickListener()  {
+            @Override
+            public void onClick(View view) {
+                if (centralImg.getTag().equals(R.drawable.ic_light_walking_icon_active))
+                    callMeteringActivity(ACTIVITY_WALK_ID);
+                else if (centralImg.getTag().equals(R.drawable.ic_light_running_icon_active))
+                    callMeteringActivity(ACTIVITY_RUN_ID);
+                else if (centralImg.getTag().equals(R.drawable.ic_light_bicycling_icon_active))
+                    callMeteringActivity(ACTIVITY_RIDE_ID);
+            }
         });
 
         recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
