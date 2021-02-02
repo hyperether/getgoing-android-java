@@ -393,8 +393,7 @@ public class ShowLocationActivity extends AppCompatActivity implements OnMapRead
                         }
                     });
 
-            dialog.setNegativeButton(getString(R.string.alert_dialog_negative_reset_save_btn),
-                    new DialogInterface.OnClickListener() {
+            dialog.setNegativeButton(getString(R.string.alert_dialog_negative_reset_save_btn), new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface paramDialogInterface, int paramInt) {
                         }
@@ -404,7 +403,13 @@ public class ShowLocationActivity extends AppCompatActivity implements OnMapRead
         }
     };
 
-    private final OnClickListener mButtonBackListener = v -> onAnyBackButtonPressed();
+    private final OnClickListener mButtonBackListener = new OnClickListener() {
+        @Override
+        public void onClick(View view) {
+            onAnyBackButtonPressed();
+        }
+    };
+
 
     private final OnClickListener mButtonSetGoalListener = new OnClickListener() {
         @Override
@@ -445,19 +450,22 @@ public class ShowLocationActivity extends AppCompatActivity implements OnMapRead
                 intent.putExtra(HyperConst.LOC_DISTANCE, LOCATION_DISTANCE);
                 startService(intent);
 
-                runOnUiThread(() -> {
-                    setupVMObserver();
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        setupVMObserver();
 
-                    showTime.setBase(SystemClock.elapsedRealtime() + timeWhenStopped);
-                    showTime.start();
+                        showTime.setBase(SystemClock.elapsedRealtime() + timeWhenStopped);
+                        showTime.start();
 
-                    button_start.setVisibility(View.GONE);
-                    button_pause.setVisibility(View.VISIBLE);
-                    if (mLocTrackingRunning) {
-                        button_save.setImageDrawable(getDrawable(R.drawable.ic_light_save_icon_disabled));
-                        button_save.setClickable(false);
-                        button_rst.setImageDrawable(getDrawable(R.drawable.ic_light_replay_icon_disabled));
-                        button_rst.setClickable(false);
+                        button_start.setVisibility(View.GONE);
+                        button_pause.setVisibility(View.VISIBLE);
+                        if (mLocTrackingRunning) {
+                            button_save.setImageDrawable(getDrawable(R.drawable.ic_light_save_icon_disabled));
+                            button_save.setClickable(false);
+                            button_rst.setImageDrawable(getDrawable(R.drawable.ic_light_replay_icon_disabled));
+                            button_rst.setClickable(false);
+                        }
                     }
                 });
 
@@ -693,8 +701,4 @@ public class ShowLocationActivity extends AppCompatActivity implements OnMapRead
             super.onBackPressed();
         }
     }
-
-
-
-
 }

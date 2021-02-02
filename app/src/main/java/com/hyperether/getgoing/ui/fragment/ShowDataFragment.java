@@ -15,6 +15,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.databinding.DataBindingUtil;
 import androidx.fragment.app.DialogFragment;
+import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProviders;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -149,10 +150,26 @@ public class ShowDataFragment extends DialogFragment implements GgOnClickListene
 
     private void initializeViews() {
         binding.tvSdLabel.setText(dataLabel);
-        binding.ibSdBackBtn.setOnClickListener(v -> this.dismiss());
-        binding.btnToggleMap.setOnClickListener(v -> toogleMap());
+        binding.ibSdBackBtn.setOnClickListener(new View.OnClickListener(){
+            @Override
+            public void onClick(View view) {
+                dismiss();
+            }
+        });
+        binding.btnToggleMap.setOnClickListener(new View.OnClickListener(){
+            @Override
+            public void onClick(View view) {
+                toogleMap();
+            }
+        });
         binding.mapFragmentHolder.animate().scaleYBy(-1);
-        binding.ibSdDeleteBtn.setOnClickListener(v -> deleteRoute());
+
+        binding.ibSdDeleteBtn.setOnClickListener(new View.OnClickListener(){
+            @Override
+            public void onClick(View view) {
+                deleteRoute();
+            }
+        });
     }
 
     private void deleteRoute() {
@@ -160,15 +177,22 @@ public class ShowDataFragment extends DialogFragment implements GgOnClickListene
         dialog.setCancelable(false);
         dialog.setMessage(getResources().getString(R.string.alert_dialog_delete_route));
         dialog.setPositiveButton(R.string.alert_dialog_positive_button_save_btn,
-                (DialogInterface paramDialogInterface, int paramInt) -> {
-                    routeViewModel.removeRouteById(binding.getVar().getId());
-                    Toast.makeText(getActivity(), "Route deleted", Toast.LENGTH_SHORT).show();
+                new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        routeViewModel.removeRouteById(binding.getVar().getId());
+                        Toast.makeText(getActivity(), "Route deleted", Toast.LENGTH_SHORT).show();
+                    }
                 });
 
         dialog.setNegativeButton(getString(R.string.alert_dialog_negative_button_save_btn),
-                (paramDialogInterface, paramInt) -> {
+                new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int paramInt) {
+
+                    }
                 });
-        dialog.show();
+                    dialog.show();
     }
 
     private void showNoRoutesDialog() {
@@ -176,26 +200,29 @@ public class ShowDataFragment extends DialogFragment implements GgOnClickListene
                 .setCancelable(false)
                 .setMessage(getResources().getString(R.string.alert_dialog_no_routes))
                 .setPositiveButton(R.string.alert_dialog_positive_button_save_btn,
-                        (DialogInterface paramDialogInterface, int paramInt) -> {
-                            SharedPreferences prefs = getActivity().getSharedPreferences(PREF_FILE, getActivity().MODE_PRIVATE);
-                            SharedPreferences.Editor editor = prefs.edit();
+                        new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialogInterface, int i) {
 
-                            switch (activityId) {
-                                case ACTIVITY_WALK_ID:
-                                    editor.putBoolean(PREF_WALK_ROUTE_EXISTING, false);
-                                    break;
-                                case ACTIVITY_RUN_ID:
-                                    editor.putBoolean(PREF_RUN_ROUTE_EXISTING, false);
-                                    break;
-                                case ACTIVITY_RIDE_ID:
-                                    editor.putBoolean(PREF_RIDE_ROUTE_EXISTING, false);
-                                    break;
+                                SharedPreferences prefs = getActivity().getSharedPreferences(PREF_FILE, getActivity().MODE_PRIVATE);
+                                SharedPreferences.Editor editor = prefs.edit();
+
+                                switch (activityId) {
+                                    case ACTIVITY_WALK_ID:
+                                        editor.putBoolean(PREF_WALK_ROUTE_EXISTING, false);
+                                        break;
+                                    case ACTIVITY_RUN_ID:
+                                        editor.putBoolean(PREF_RUN_ROUTE_EXISTING, false);
+                                        break;
+                                    case ACTIVITY_RIDE_ID:
+                                        editor.putBoolean(PREF_RIDE_ROUTE_EXISTING, false);
+                                        break;
+                                }
+                                editor.apply();
+                                dismiss();
                             }
-                            editor.apply();
+                });
 
-                            this.dismiss();
-                        })
-                .show();
     }
 
     private void toogleMap() {
@@ -217,12 +244,14 @@ public class ShowDataFragment extends DialogFragment implements GgOnClickListene
         mMap.clear();
         DbRoute route = binding.getVar();
         routeViewModel.getNodeListById(route.getId())
-                .observe(getActivity(), dbNodes -> {
+                .observe(getActivity(), new Observer<List<DbNode>>() {
 
-                    PolylineOptions pOptions = new PolylineOptions();
-                    pOptions.width(10)
-                            .color(getResources().getColor(R.color.light_theme_accent))
-                            .geodesic(true);
+                    @Override
+                    public void onChanged(List<DbNode> dbNodes) {
+                        PolylineOptions pOptions = new PolylineOptions();
+                        pOptions.width(10)
+                                .color(getResources().getColor(R.color.light_theme_accent))
+                                .geodesic(true);
 
                     if (!dbNodes.isEmpty()) {
 
@@ -244,7 +273,7 @@ public class ShowDataFragment extends DialogFragment implements GgOnClickListene
                                 .strokeColor(getResources().getColor(R.color.transparent_light_theme_accent))
                                 .strokeWidth(20));
 
-
+                         }
                         setCameraView(dbNodes);
                     }
                 });

@@ -3,6 +3,7 @@ package com.hyperether.getgoing.ui.fragment;
 import android.annotation.SuppressLint;
 import android.app.AlertDialog;
 import android.app.Dialog;
+import android.content.DialogInterface;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -141,40 +142,55 @@ public class ProfileFragment extends DialogFragment {
 
         backBtn = getView().findViewById(R.id.ib_fp_backbutton);
 
-        genderBtn.setOnClickListener(view -> {
-            String id = "gender";
-            AlertDialog.Builder builder = createDialog(id, view);
-            if (builder != null) {
-                builder.show();
+        genderBtn.setOnClickListener(new View.OnClickListener(){
+            @Override
+            public void onClick(View view) {
+                String id = "gender";
+                AlertDialog.Builder builder = createDialog(id, view);
+                if (builder != null) {
+                    builder.show();
+                }
             }
         });
 
-        ageBtn.setOnClickListener(view -> {
-            String id = "age";
-            AlertDialog.Builder builder = createDialog(id, view);
-            if (builder != null) {
-                builder.show();
+        ageBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                String id = "age";
+                AlertDialog.Builder builder = createDialog(id, view);
+                if (builder != null) {
+                    builder.show();
+                }
             }
         });
 
-        weightBtn.setOnClickListener(view -> {
-            String id = "weight";
-            AlertDialog.Builder builder = createDialog(id, view);
-            if (builder != null) {
-                builder.show();
+        weightBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                String id = "weight";
+                AlertDialog.Builder builder = createDialog(id, view);
+                if (builder != null) {
+                    builder.show();
+                }
             }
         });
 
-        heightBtn.setOnClickListener(view -> {
-            String id = "height";
-            AlertDialog.Builder builder = createDialog(id, view);
-            if (builder != null) {
-                builder.show();
+        heightBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                String id = "height";
+                AlertDialog.Builder builder = createDialog(id, view);
+                if (builder != null) {
+                    builder.show();
+                }
             }
         });
 
-        backBtn.setOnClickListener(view -> {
-            this.getDialog().dismiss();
+        backBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                dismiss();
+            }
         });
     }
 
@@ -190,39 +206,51 @@ public class ProfileFragment extends DialogFragment {
                 final String[] newText = new String[1];
                 newText[0] = "Male";
 
-                genderBuilder.setSingleChoiceItems(R.array.genders, settings.getInt("gender", 0), (dialog, which) -> {
+                genderBuilder.setSingleChoiceItems(R.array.genders, settings.getInt("gender", 0), new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int which) {
 
-                    if (which == 0) {
-                        newText[0] = "Male";
-                        editor.putInt("gender", 0);
-                        mDataFrame.setGender(Constants.gender.Male);
-                    } else if (which == 1) {
-                        newText[0] = "Female";
-                        editor.putInt("gender", 1);
-                        mDataFrame.setGender(Constants.gender.Female);
-                    } else {
-                        newText[0] = "Other";
-                        editor.putInt("gender", 2);
-                        mDataFrame.setGender(Constants.gender.Other);
+                        if (which == 0) {
+                            newText[0] = "Male";
+                            editor.putInt("gender", 0);
+                            mDataFrame.setGender(Constants.gender.Male);
+                        } else if (which == 1) {
+                            newText[0] = "Female";
+                            editor.putInt("gender", 1);
+                            mDataFrame.setGender(Constants.gender.Female);
+                        } else {
+                            newText[0] = "Other";
+                            editor.putInt("gender", 2);
+                            mDataFrame.setGender(Constants.gender.Other);
+                        }
+                        editor.apply();
                     }
-                    editor.apply();
                 })
-                        .setPositiveButton("Confirm", (dialogInterface, i) -> {
-                            tvGender.setText(newText[0]);
+                        .setPositiveButton("Confirm", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialogInterface, int i) {
+                                tvGender.setText(newText[0]);
 
-                            switch (newText[0]) {
-                                case "Male":
-                                    genderImg.setImageDrawable(getResources().getDrawable(R.drawable.ic_gendersign_male));
-                                    break;
-                                case "Female":
-                                    genderImg.setImageDrawable(getResources().getDrawable(R.drawable.ic_light_gender_female_icon));
-                                    break;
-                                case "Other":
-                                    genderImg.setImageDrawable(getResources().getDrawable(R.drawable.ic_light_gender_icon_trans));
-                                    break;
+                                switch (newText[0]) {
+                                    case "Male":
+                                        genderImg.setImageDrawable(getResources().getDrawable(R.drawable.ic_gendersign_male));
+                                        break;
+                                    case "Female":
+                                        genderImg.setImageDrawable(getResources().getDrawable(R.drawable.ic_light_gender_female_icon));
+                                        break;
+                                    case "Other":
+                                        genderImg.setImageDrawable(getResources().getDrawable(R.drawable.ic_light_gender_icon_trans));
+                                        break;
+                                }
                             }
                         })
-                        .setNegativeButton("Cancel", (dialogInterface, i) -> dialogInterface.cancel())
+
+                        .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialogInterface, int i) {
+                                dialogInterface.cancel();
+                            }
+                        })
                         .setTitle("Please select your gender:");
 
                 return genderBuilder;
@@ -244,18 +272,26 @@ public class ProfileFragment extends DialogFragment {
                 ageSpinner.setAdapter(adapter);
                 ageSpinner.setSelection(settings.getInt("age", 0) - 1);
 
-                ageBuilder.setPositiveButton("Confirm", (dialogInterface, i) -> {
-                    tvAge.setText(ageSpinner.getSelectedItem() + getResources().getString(R.string.textview_age_end));
+                ageBuilder.setPositiveButton("Confirm", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        tvAge.setText(ageSpinner.getSelectedItem() + getResources().getString(R.string.textview_age_end));
+                    }
+                });
 
-                    SharedPreferences.Editor editor = settings.edit();
-                    editor.putInt("age", Integer.valueOf((String) ageSpinner.getSelectedItem()));
-                    editor.apply();
-                    mDataFrame.setAge(Integer.valueOf((String) ageSpinner.getSelectedItem()));
-                })
-                        .setNegativeButton("Cancel", (dialogInterface, i) -> dialogInterface.cancel())
-                        .setTitle("How old are you?");
+                SharedPreferences.Editor editor = settings.edit();
+                editor.putInt("age", Integer.valueOf((String) ageSpinner.getSelectedItem()));
+                editor.apply();
+                mDataFrame.setAge(Integer.valueOf((String) ageSpinner.getSelectedItem()));
 
-                return ageBuilder;
+                ageBuilder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        dialogInterface.cancel();
+                    }
+                });
+                     ageBuilder.setTitle("How old are you?");
+                     return ageBuilder;
             }
             case "weight": {
                 List weightList = new ArrayList<String>();
@@ -274,15 +310,19 @@ public class ProfileFragment extends DialogFragment {
                 weightSpinner.setAdapter(adapter);
                 weightSpinner.setSelection(settings.getInt("weight", 0) - 40);
 
-                weightBuilder.setPositiveButton("Confirm", (dialogInterface, i) -> {
-                    tvWeight.setText(weightSpinner.getSelectedItem() + " kg");
+                weightBuilder.setPositiveButton("Confirm", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        tvWeight.setText(weightSpinner.getSelectedItem() + " kg");
+                    }
+                });
 
-                    SharedPreferences.Editor editor = settings.edit();
-                    editor.putInt("weight", Integer.valueOf((String) weightSpinner.getSelectedItem()));
-                    editor.apply();
-                    mDataFrame.setWeight(Integer.valueOf((String) weightSpinner.getSelectedItem()));
-                })
-                        .setNegativeButton("Cancel", (dialogInterface, i) -> dialogInterface.cancel())
+                SharedPreferences.Editor editor = settings.edit();
+                editor.putInt("weight", Integer.valueOf((String) weightSpinner.getSelectedItem()));
+                editor.apply();
+                mDataFrame.setWeight(Integer.valueOf((String) weightSpinner.getSelectedItem()));
+
+                weightBuilder.setNegativeButton("Cancel", (dialogInterface, i) -> dialogInterface.cancel())
                         .setTitle("Enter your weight:");
 
                 return weightBuilder;
@@ -304,17 +344,25 @@ public class ProfileFragment extends DialogFragment {
                 heightSpinner.setAdapter(adapter);
                 heightSpinner.setSelection(settings.getInt("height", 0) - 110);
 
-                heightBuilder.setPositiveButton("Confirm", (dialogInterface, i) -> {
-                    tvHeight.setText(heightSpinner.getSelectedItem() + " cm");
+                heightBuilder.setPositiveButton("Confirm", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialogInterface, int i) {
+                                tvHeight.setText(heightSpinner.getSelectedItem() + " cm");
+                            }
+                        });
 
                     SharedPreferences.Editor editor = settings.edit();
                     editor.putInt("height", Integer.valueOf((String) heightSpinner.getSelectedItem()));
                     editor.apply();
                     mDataFrame.setHeight(Integer.valueOf((String) heightSpinner.getSelectedItem()));
-                })
-                        .setNegativeButton("Cancel", (dialogInterface, i) -> dialogInterface.cancel())
-                        .setTitle("Enter your height:");
 
+            heightBuilder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialogInterface, int i) {
+                    dialogInterface.cancel();
+                }
+            });
+                heightBuilder.setTitle("Enter your height:");
                 return heightBuilder;
             }
         }
@@ -351,9 +399,12 @@ public class ProfileFragment extends DialogFragment {
                 totalKcal[0] += route.getEnergy();
             }
 
-            getActivity().runOnUiThread(() -> {
-                totalMileage.setText(String.format("%.02f km", totalRoute[0]));
-                totalCalories.setText(totalKcal[0] + "kcal");
+            getActivity().runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    totalMileage.setText(String.format("%.02f km", totalRoute[0]));
+                    totalCalories.setText(totalKcal[0] + "kcal");
+                }
             });
         });
 

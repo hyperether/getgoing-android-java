@@ -233,53 +233,66 @@ public class ActivitiesFragment extends DialogFragment {
 
         openActivityDetails();
 
-        saveChanges.setOnClickListener(view -> {
+        saveChanges.setOnClickListener(new View.OnClickListener() {
 
-            if (seekBar.getProgress() == 0) {
-                AlertDialog.Builder dialog = new AlertDialog.Builder(view.getContext());
-                dialog.setCancelable(false)
-                        .setTitle(getResources().getString(R.string.alert_dialog_title_incorrect_value))
-                        .setMessage(getResources().getString(R.string.alert_dialog_goal_0))
-                        .setPositiveButton(R.string.alert_dialog_positive_button_save_btn,
-                                new DialogInterface.OnClickListener() {
-                                    @Override
-                                    public void onClick(DialogInterface paramDialogInterface, int paramInt) {
-                                        seekBar.setProgress(settings.getInt("goal", 0));
-                                    }
-                                }).show();
-            } else {
+            @Override
+            public void onClick(View view) {
 
-                SharedPreferences.Editor editor = settings.edit();
-                editor.putInt("goal", seekBar.getProgress());
-                editor.apply();
-
-                Toast.makeText(getContext(), "Your goal is updated", Toast.LENGTH_SHORT).show();
-
-                if (openedFrom == OPENED_FROM_LOCATION_ACT) {
-                    dismiss();
+                if (seekBar.getProgress() == 0) {
+                    AlertDialog.Builder dialog = new AlertDialog.Builder(view.getContext());
+                    dialog.setCancelable(false)
+                            .setTitle(getResources().getString(R.string.alert_dialog_title_incorrect_value))
+                            .setMessage(getResources().getString(R.string.alert_dialog_goal_0))
+                            .setPositiveButton(R.string.alert_dialog_positive_button_save_btn, new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface paramDialogInterface, int paramInt) {
+                                    seekBar.setProgress(settings.getInt("goal", 0));
+                                }
+                            }).show();
                 } else {
-                    fillProgressBars();
+
+                    SharedPreferences.Editor editor = settings.edit();
+                    editor.putInt("goal", seekBar.getProgress());
+                    editor.apply();
+
+                    Toast.makeText(getContext(), "Your goal is updated", Toast.LENGTH_SHORT).show();
+
+                    if (openedFrom == OPENED_FROM_LOCATION_ACT) {
+                        dismiss();
+                    } else {
+                        fillProgressBars();
+                    }
                 }
             }
         });
     }
+
     private void openActivityDetails() {
         Bundle bundle = new Bundle();
         bundle.putInt(BUNDLE_ACTION, ACTION_OPEN_ACTIVITY_DETAILS);
 
-        mileageWalk.setOnClickListener(view -> {
-            bundle.putInt(BUNDLE_ACTIVITY_ID, ACTIVITY_WALK_ID);
-            listener.onClick(bundle);
+        mileageWalk.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                bundle.putInt(BUNDLE_ACTIVITY_ID, ACTIVITY_WALK_ID);
+                listener.onClick(bundle);
+            }
         });
 
-        mileageRun.setOnClickListener(view -> {
-            bundle.putInt(BUNDLE_ACTIVITY_ID, ACTIVITY_RUN_ID);
-            listener.onClick(bundle);
+        mileageRun.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                bundle.putInt(BUNDLE_ACTIVITY_ID, ACTIVITY_RUN_ID);
+                listener.onClick(bundle);
+            }
         });
 
-        mileageRide.setOnClickListener(view -> {
-            bundle.putInt(BUNDLE_ACTIVITY_ID, ACTIVITY_RIDE_ID);
-            listener.onClick(bundle);
+        mileageRide.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                bundle.putInt(BUNDLE_ACTIVITY_ID, ACTIVITY_RIDE_ID);
+                listener.onClick(bundle);
+            }
         });
     }
 
