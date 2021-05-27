@@ -12,7 +12,6 @@
     <!-- My Location -->
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
-    <uses-permission android:name="android.permission.ACCESS_BACKGROUND_LOCATION" />
     <!-- Foreground service (API 28) -->
     <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
     <!-- Maps API needs OpenGL ES 2.0. -->
@@ -45,7 +44,7 @@
             </intent-filter>
         </activity>
 
-        <service android:name=".service.GPSTrackingService" />
+        <service android:name=".service.GPSTrackingService" android:foregroundServiceType="location" />
 
         <provider
             android:name="com.facebook.FacebookContentProvider"

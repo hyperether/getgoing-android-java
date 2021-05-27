@@ -37,6 +37,7 @@ import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapFragment;
 import com.google.android.gms.maps.OnMapReadyCallback;
+import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.PolylineOptions;
 import com.hyperether.getgoing.R;
@@ -94,7 +95,7 @@ public class TrackingFragment extends Fragment implements OnMapReadyCallback {
 
     private Context classContext;
 
-    MapFragment mapFragment;
+    SupportMapFragment mapFragment;
 
     private long currentRouteID;
     private RouteViewModel routeViewModel;
@@ -124,7 +125,10 @@ public class TrackingFragment extends Fragment implements OnMapReadyCallback {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_tracking, container, false);
+        View view = inflater.inflate(R.layout.fragment_tracking, container, false);
+        mapFragment = (SupportMapFragment) getChildFragmentManager().findFragmentById(R.id.mapFragment);
+        mapFragment.getMapAsync(this);
+        return view;
     }
 
     @Override
@@ -142,21 +146,18 @@ public class TrackingFragment extends Fragment implements OnMapReadyCallback {
         sdf = new SimpleDateFormat("dd.MM.yyyy.' 'HH:mm:ss", Locale.ENGLISH);
 
         clearData();
-
-        mapFragment = (MapFragment) getActivity().getFragmentManager().findFragmentById(R.id.mapView);
-        mapFragment.getMapAsync(this);
     }
 
     @Override
     public void onDestroy() {
         super.onDestroy();
-        getActivity().stopService(new Intent(getActivity(), GPSTrackingService.class));
-        if (!mRouteAlreadySaved) {
-            routeViewModel.removeRouteById(currentRouteID);
-        }
-        if (mapFragment != null) {
-            getActivity().getFragmentManager().beginTransaction().remove(mapFragment).commit();
-        }
+//        getActivity().stopService(new Intent(getActivity(), GPSTrackingService.class));
+//        if (!mRouteAlreadySaved) {
+//            routeViewModel.removeRouteById(currentRouteID);
+//        }
+//        if (mapFragment != null) {
+//            getActivity().getFragmentManager().beginTransaction().remove(mapFragment).commit();
+//        }
     }
 
     private void setupVMObserver() {

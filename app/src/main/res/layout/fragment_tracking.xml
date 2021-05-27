@@ -31,8 +31,8 @@
         app:layout_constraintTop_toTopOf="@+id/ib_al_backbutton" />
 
     <fragment
-        android:id="@+id/mapView"
-        class="com.google.android.gms.maps.MapFragment"
+        android:id="@+id/mapFragment"
+        class="com.google.android.gms.maps.SupportMapFragment"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         app:layout_constraintBottom_toBottomOf="parent"
