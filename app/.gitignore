@@ -29,8 +29,6 @@ proguard/
 .idea
 *.iml
 
-# Fabric
-fabric.properties
 /release/output.json
 
 google_maps_api.xml

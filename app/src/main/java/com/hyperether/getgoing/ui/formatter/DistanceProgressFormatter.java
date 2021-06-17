@@ -18,10 +18,10 @@ public final class DistanceProgressFormatter implements CircleProgressBar.Progre
     @SuppressLint("DefaultLocale")
     @Override
     public CharSequence format(int progress, int max) {
-        if(mData > 1000) {
-            return df.format(mData/1000).concat(" km");
+        if (mData > 1000) {
+            return df.format(mData / 1000).concat(" km");
         } else {
-            return df.format((int)mData).concat(" m");
+            return df.format((int) mData).concat(" m");
         }
     }
 }

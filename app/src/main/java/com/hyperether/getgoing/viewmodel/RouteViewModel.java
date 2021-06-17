@@ -1,40 +1,48 @@
 package com.hyperether.getgoing.viewmodel;
 
-import android.content.Context;
+import android.app.Activity;
+import android.app.Application;
 
+import androidx.annotation.NonNull;
+import androidx.arch.core.util.Function;
+import androidx.lifecycle.AndroidViewModel;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
-import androidx.lifecycle.ViewModel;
+import androidx.lifecycle.Transformations;
 
 import com.hyperether.getgoing.GetGoingApp;
-import com.hyperether.getgoing.repository.room.DbHelper;
 import com.hyperether.getgoing.repository.room.GgRepository;
 import com.hyperether.getgoing.repository.room.entity.DbNode;
 import com.hyperether.getgoing.repository.room.entity.DbRoute;
 
 import java.util.List;
 
-public class RouteViewModel extends ViewModel {
+public class RouteViewModel extends AndroidViewModel {
 
-    private MutableLiveData<List<DbRoute>> routeList;
-
-    public LiveData<List<DbRoute>> getRouteList() {
-        if (routeList == null) {
-            routeList = new MutableLiveData<List<DbRoute>>();
-            loadRoutes();
+    private LiveData<List<DbRoute>> routeList;
+    private MutableLiveData<Long> routeID = new MutableLiveData<Long>();
+    private LiveData<DbRoute> route = Transformations.switchMap(routeID, new Function<Long, LiveData<DbRoute>>() {
+        @Override
+        public LiveData<DbRoute> apply(Long input) {
+            return GgRepository.getInstance().getRouteByIdAsLiveData(input);
         }
-        return routeList;
+    });
+
+    public LiveData<DbRoute> getRouteByIdAsLiveData(long id) {
+        return route;
     }
 
-    private void loadRoutes() {
-        // Do an asynchronous operation to fetch routeList.
-        Context ctxt = GetGoingApp.getInstance().getApplicationContext();
-        DbHelper.getInstance(ctxt).getRoutes(new DbHelper.OnDataLoadedListener() {
-            @Override
-            public void onLoad(List<DbRoute> routes) {
-                routeList.postValue(routes);
-            }
-        });
+    public void setRouteID(long id) {
+        routeID.setValue(id);
+    }
+
+    public RouteViewModel(@NonNull Application application) {
+        super(application);
+        routeList = GgRepository.getInstance().getAllRoutes();
+    }
+
+    public LiveData<List<DbRoute>> getAllRoutes() {
+        return routeList;
     }
 
     public LiveData<List<DbNode>> getNodeListById(long id) {
@@ -42,6 +50,21 @@ public class RouteViewModel extends ViewModel {
     }
 
     public void removeRouteById(long id) {
-        GgRepository.getInstance().deleteRouteById(id, this::loadRoutes);
+        GgRepository.getInstance().deleteNodesByRouteId(id);
+        GgRepository.getInstance().deleteRouteById(id);
+    }
+
+    public void continueTracking(Activity activity) {
+        GetGoingApp.getInstance().getHandler().post(() -> {
+            long id = GgRepository.getInstance().getLastRoute().getId();
+            activity.runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    setRouteID(id);
+                    getNodeListById(id);
+                    getRouteByIdAsLiveData(id);
+                }
+            });
+        });
     }
 }

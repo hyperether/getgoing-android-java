@@ -7,21 +7,23 @@ package com.hyperether.getgoing.util;
 public class Constants {
 
     // Milliseconds per second
-    public static final int MILLISECONDS_PER_SECOND = 1000;
+    private static final int MILLISECONDS_PER_SECOND = 1000;
 
     // Update frequency in seconds
-    public static final int UPDATE_INTERVAL_IN_SECONDS = 5;
+    private static final int UPDATE_INTERVAL_IN_SECONDS = 1;
 
     // Update frequency in milliseconds
     public static final long UPDATE_INTERVAL =
             MILLISECONDS_PER_SECOND * UPDATE_INTERVAL_IN_SECONDS;
 
     // The fastest update frequency, in seconds
-    public static final int FASTEST_INTERVAL_IN_SECONDS = 5;
+    private static final int FASTEST_INTERVAL_IN_SECONDS = 1;
 
     // A fast frequency ceiling in milliseconds
     public static final long FASTEST_INTERVAL =
             MILLISECONDS_PER_SECOND * FASTEST_INTERVAL_IN_SECONDS;
+
+    public static final float LOCATION_DISTANCE = 5;
 
     // Preference file
     public static final String PREF_FILE = "CBUserDataPref.txt";
@@ -35,13 +37,6 @@ public class Constants {
     public static final int TAG_CODE_PERMISSION_LOCATION = 1;
 
     public static final int METRIC = 0;
-
-    // Number picker
-    public static final int NUMBER_PICKER_MAX_VALUE = 150;
-    public static final int NUMBER_PICKER_DEFAULT_WEIGHT = 60;
-    public static final int NUMBER_PICKER_DEFAULT_AGE = 20;
-    public static final int NUMBER_PICKER_MIN_VALUE = 0;
-    public static final int NUMBER_PICKER_VALUE_SIZE = 151;
 
     // Requets TAG
     public static final int REQUEST_GPS_SETTINGS = 100;
@@ -61,16 +56,15 @@ public class Constants {
     // Intent extras
     public static final String DATA_DETAILS_LABEL = "data_details_label";
     public static final String BUNDLE_PARCELABLE = "bundle_parcelable";
-    public static final String BUNDLE_ACTION = "bundle_action";
-    public static final String BUNDLE_ACTIVITY_ID = "bundle_activity_id";
-
-    public static final int ACTION_OPEN_ACTIVITY_DETAILS = 3001;
 
     // activities IDs
+    public static final String TRACKING_ACTIVITY_KEY = "tracking_activity";
+    public static final int ACTIVITY_STARTED = 0;
     public static final int ACTIVITY_WALK_ID = 1;
     public static final int ACTIVITY_RUN_ID = 2;
     public static final int ACTIVITY_RIDE_ID = 3;
 
     public static final int OPENED_FROM_LOCATION_ACT = 501;
     public static final int OPENED_FROM_GG_ACT = 502;
+    public static final String OPENED_FROM_KEY = "from";
 }

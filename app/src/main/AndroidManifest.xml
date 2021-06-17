@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     package="com.hyperether.getgoing">
 
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
@@ -11,7 +12,6 @@
     <!-- My Location -->
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
-    <uses-permission android:name="android.permission.ACCESS_BACKGROUND_LOCATION" />
     <!-- Foreground service (API 28) -->
     <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
     <!-- Maps API needs OpenGL ES 2.0. -->
@@ -32,34 +32,24 @@
             android:required="true" />
 
         <activity
-            android:name=".ui.activity.GetGoingActivity"
+            android:name=".ui.activity.NavigationActivity"
+            android:launchMode="singleInstance"
             android:configChanges="keyboard|keyboardHidden|screenLayout|screenSize|orientation"
             android:label="@string/app_name"
-            android:screenOrientation="portrait">
+            android:screenOrientation="portrait"
+            tools:ignore="LockedOrientationActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
 
-        <service android:name=".service.GPSTrackingService" />
+        <service android:name=".service.GPSTrackingService" android:foregroundServiceType="location" />
 
         <provider
             android:name="com.facebook.FacebookContentProvider"
             android:authorities="com.facebook.app.FacebookContentProvider213193922545275"
             android:exported="true" />
-
-        <activity
-            android:name=".ui.activity.ShowLocationActivity"
-            android:icon="@mipmap/ic_logo"
-            android:label=""
-            android:launchMode="singleTask"
-            android:screenOrientation="portrait" />
-        <activity
-            android:name=".ui.activity.ShowDataActivity"
-            android:icon="@mipmap/ic_logo"
-            android:label=""
-            android:screenOrientation="portrait" />
 
         <meta-data
             android:name="com.google.android.maps.v2.API_KEY"
@@ -68,11 +58,7 @@
             android:name="com.google.android.gms.version"
             android:value="@integer/google_play_services_version" />
         <meta-data
-            android:name="io.fabric.ApiKey"
-            android:value="81fce5a0d04d64cd1c08c99cef619efaca994e50" />
-        <meta-data
             android:name="com.facebook.sdk.ApplicationId"
             android:value="@string/facebook_app_id" />
     </application>
-
 </manifest>

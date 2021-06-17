@@ -29,6 +29,8 @@ public class DbNode implements Parcelable {
     private float velocity;
     @ColumnInfo(name = "number")
     private long index; // node index within a particular route
+    @ColumnInfo
+    private boolean last;
 
     private long routeId; // foreign key
 
@@ -41,6 +43,7 @@ public class DbNode implements Parcelable {
         this.velocity = velocity;
         this.index = index;
         this.routeId = routeId;
+        this.last = false;
     }
 
     public long getId() {
@@ -89,6 +92,14 @@ public class DbNode implements Parcelable {
 
     public void setRouteId(long routeId) {
         this.routeId = routeId;
+    }
+
+    public boolean isLast() {
+        return last;
+    }
+
+    public void setLast(boolean last) {
+        this.last = last;
     }
 
     @Override

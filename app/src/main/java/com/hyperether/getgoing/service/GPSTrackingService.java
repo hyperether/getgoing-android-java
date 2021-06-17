@@ -2,95 +2,70 @@ package com.hyperether.getgoing.service;
 
 import android.app.PendingIntent;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.location.Location;
-
+import com.hyperether.getgoing.GetGoingApp;
 import com.hyperether.getgoing.R;
-import com.hyperether.getgoing.manager.CacheManager;
-import com.hyperether.getgoing.model.CBDataFrame;
+import com.hyperether.getgoing.SharedPref;
 import com.hyperether.getgoing.repository.room.GgRepository;
 import com.hyperether.getgoing.repository.room.entity.DbNode;
-import com.hyperether.getgoing.ui.activity.ShowLocationActivity;
+import com.hyperether.getgoing.repository.room.entity.DbRoute;
+import com.hyperether.getgoing.ui.activity.NavigationActivity;
 import com.hyperether.getgoing.util.CaloriesCalculation;
-import com.hyperether.getgoing.util.Constants;
-import com.hyperether.getgoing.util.Conversion;
-import com.hyperether.getgoing.util.KalmanLatLong;
 import com.hyperether.toolbox.HyperNotification;
 import com.hyperether.toolbox.location.HyperLocationService;
 
 
 /**
- * Created by nikola on 11/07/17.
+ * @author Slobodan Prijic
  */
 
 public class GPSTrackingService extends HyperLocationService {
 
     private static final String TAG = GPSTrackingService.class.getSimpleName();
+    private static final double ACCURACY_MIN = 20.0;
 
-    // filter for GPS data smoothing
-    // Initialise Kalman filter
-    private KalmanLatLong kalman = new KalmanLatLong(3);
-
-    private double latitude, longitude, latitude_old, longitude_old;
-    private boolean firstPass = true;
-    private boolean actualPositionValid = false;
-
-    private boolean isKalmanStateSet = false;
-    // Global variable to hold the current location
-    private Location mCurrentLocation;
-    private long timeCumulative = 0;
     private int nodeIndex;
-
-    private int secondsCumulative = 0;
-    private long time = 0; // time between to position updates
-
-    private double kcalCumulative = 0;
-    private double kcalCurrent;
-    private double distanceCumulative = 0;
-    private double distanceDelta = 0;
-    private double velocity = 0;
-    private double velocityAvg = 0;
+    private int profileID;
+    private long routeID;
     private double weight = 0;
-    private long oldTime = 0;
+    private DbRoute currentRoute;
+
+    private Location previousLocation;
+    private long previousTimestamp = 0;
+
+    private long timeCumulative = 0;
+    private int secondsCumulative = 0;
+    private double kcalCumulative = 0;
+    private double distanceCumulative = 0;
+    private double velocityAvg = 0;
 
     private CaloriesCalculation calcCal = new CaloriesCalculation();
-    private CBDataFrame cbDataFrameLocal;    // to store the current settings
 
     @Override
     public void onCreate() {
-        SharedPreferences settings = getSharedPreferences(Constants.PREF_FILE, 0);
-        weight = settings.getInt("weight", 0);
-
-        if (CacheManager.getInstance().getDistanceCumulative() != null) {
-            distanceCumulative = CacheManager.getInstance().getDistanceCumulative();
-        }
-
-        if (CacheManager.getInstance().getKcalCumulative() != null) {
-            kcalCumulative = CacheManager.getInstance().getKcalCumulative();
-        }
-
-        if (CacheManager.getInstance().getVelocity() != null) {
-            velocity = CacheManager.getInstance().getVelocity();
-        }
-
-        if (CacheManager.getInstance().getVelocityAvg() != null) {
-            velocityAvg = CacheManager.getInstance().getVelocityAvg();
-        }
-
-        timeCumulative = CacheManager.getInstance().getTimeCumulative();
-        secondsCumulative = CacheManager.getInstance().getSecondsCumulative();
-        time = CacheManager.getInstance().getTime();
-
-        oldTime = System.currentTimeMillis();
-
         super.onCreate();
+        weight = SharedPref.getWeight();
+        previousTimestamp = System.currentTimeMillis();
+
+        GetGoingApp.getInstance().getHandler().post(() -> {
+            currentRoute = GgRepository.getInstance().getLastRoute();
+
+            routeID = currentRoute.getId();
+            profileID = currentRoute.getActivity_id();
+            distanceCumulative = currentRoute.getLength();
+            kcalCumulative = currentRoute.getEnergy();
+            velocityAvg = currentRoute.getAvgSpeed();
+            timeCumulative = currentRoute.getDuration();
+            secondsCumulative = (int) timeCumulative / 1000;
+        });
     }
+
 
     @Override
     protected void startForeground() {
         super.startForeground();
 
-        Intent intent = new Intent(this, ShowLocationActivity.class);
+        Intent intent = new Intent(this, NavigationActivity.class);
         PendingIntent pendingIntent = PendingIntent.getActivity(this, 0, intent,
                 PendingIntent.FLAG_UPDATE_CURRENT);
 
@@ -104,118 +79,49 @@ public class GPSTrackingService extends HyperLocationService {
 
     @Override
     protected void onLocationUpdate(Location location) {
-        double dLat, dLong;
-        double distance = 0;
-
-        time = System.currentTimeMillis() - oldTime;
-        timeCumulative += System.currentTimeMillis() - oldTime;
-        secondsCumulative = (int) timeCumulative / 1000;
-        oldTime = System.currentTimeMillis();
-
-        mCurrentLocation = location;
-
-        if (mCurrentLocation != null) {
-            dLat = mCurrentLocation.getLatitude();
-            dLong = mCurrentLocation.getLongitude();
-
-            if (firstPass) {
-                latitude = latitude_old = dLat;
-                longitude = longitude_old = dLong;
-                firstPass = false;
-
-                DbNode tmp = new DbNode(0, latitude, longitude, 0, nodeIndex++, CacheManager.getInstance().getCurrentRouteId());
-                CacheManager.getInstance().addRouteNode(tmp);
-                GgRepository.getInstance().daoInsertNode(tmp);
+        if (location != null && location.getAccuracy() < ACCURACY_MIN) {
+            if (previousLocation == null) {
+                previousTimestamp = System.currentTimeMillis();
+                GgRepository.getInstance().daoInsertNode(createNode(location));
             } else {
-                latitude_old = latitude;
-                longitude_old = longitude;
-                latitude = dLat;
-                longitude = dLong;
-            }
+                // time between to position updates
+                long elapsedTime = System.currentTimeMillis() - previousTimestamp;
+                previousTimestamp = System.currentTimeMillis();
+                timeCumulative += elapsedTime;
+                secondsCumulative = (int) timeCumulative / 1000;
 
-            actualPositionValid = true; // put up a flag for the algorithm
-        }
-
-        if (actualPositionValid) {
-            actualPositionValid = false; // reset the flag
-            double dLate = latitude - latitude_old;
-            double dLon = longitude - longitude_old;
-
-            if ((dLate != 0) || (dLon != 0)) {
-                // Carry out the path filtering
-                if (!isKalmanStateSet) {
-                    kalman.SetState(latitude,
-                            longitude,
-                            mCurrentLocation != null ? mCurrentLocation.getAccuracy() : 0,
-                            timeCumulative);
-                    isKalmanStateSet = true;
-                }
-
-                kalman.Process(latitude,
-                        longitude,
-                        mCurrentLocation != null ? mCurrentLocation.getAccuracy() : 0,
-                        timeCumulative);
-                latitude = kalman.get_lat();
-                longitude = kalman.get_lng();
-
-                distance =
-                        Conversion.gps2m(latitude, longitude, latitude_old, longitude_old);
-                if (!Double.isNaN(distance)) {
+                float distance = location.distanceTo(previousLocation);
+                if (distance > 0) {
                     distanceCumulative += distance;
-                    distanceDelta += distance;
-
                     velocityAvg = distanceCumulative / secondsCumulative;
 
-                    //brzina je srednja vrednost izmerene i ocitane brzine
-                    velocity = (mCurrentLocation.getSpeed() + (distance / time)) / 2;
-                    if (velocity < 30) {
-                        CacheManager.getInstance().setVelocity(velocity);
-                    }
+                    //speed is average value from gps and calculated value
+                    float velocity = (location.getSpeed() + (distance / elapsedTime)) / 2;
+                    double kcalCurrent = calcCal.calculate(distance, velocity, profileID, weight);
+                    kcalCumulative += kcalCurrent;
 
-                    if (CacheManager.getInstance().getObDataFrameGlobal() != null) {
-                        cbDataFrameLocal = CacheManager.getInstance().getObDataFrameGlobal();
-                        kcalCurrent = calcCal
-                                .calculate(distance, velocity, cbDataFrameLocal,
-                                        weight);
-                        kcalCumulative += kcalCurrent;
-                        if (velocity < 30) {
-                            CacheManager.getInstance().setKcalCumulative(kcalCumulative);
-                        }
-                    }
+                    currentRoute.setLength(distanceCumulative);
+                    currentRoute.setEnergy(kcalCumulative);
+                    currentRoute.setCurrentSpeed(velocity);
+                    currentRoute.setAvgSpeed(velocityAvg);
 
-                    if (distanceDelta > Constants.NODE_ADD_DISTANCE) {
-                        distanceDelta = 0;
-                        // add new point to the route
-                        // node and route database _ids are intentionally 0
-                        DbNode tmp = new DbNode(0, latitude, longitude, (float) velocity,
-                                nodeIndex++, CacheManager.getInstance().getCurrentRouteId());
-                        if (velocity < 30) {
-                            CacheManager.getInstance().addRouteNode(tmp);
-                            GgRepository.getInstance().daoInsertNode(tmp);
-                        }
-                    }
-                } else {
-                    velocity = mCurrentLocation.getSpeed();
-                    if (velocity < 30) {
-                        CacheManager.getInstance().setVelocity(velocity);
-                    }
+                    GgRepository.getInstance().daoInsertNode(createNode(location));
+                    GgRepository.getInstance().updateRoute(currentRoute);
                 }
             }
-
-            if (velocity < 30) {
-                CacheManager.getInstance().setDistanceCumulative(distanceCumulative);
-                CacheManager.getInstance().setKcalCumulative(kcalCumulative);
-                CacheManager.getInstance().setVelocity(velocity);
-                CacheManager.getInstance().setVelocityAvg(velocityAvg);
-            }
-
-            time = 0; // reset the second counter for calculating velocity
-        } else {
-            // is connection broken???
+            previousLocation = location;
         }
+    }
 
-        if (velocity < 30) {
-            CacheManager.getInstance().setDistanceCumulative(distanceCumulative);
-        }
+    private DbNode createNode(Location location) {
+        // node and route database _ids are intentionally 0
+        return new DbNode(0, location.getLatitude(), location.getLongitude(),
+                location.getSpeed(), nodeIndex++, routeID);
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        GgRepository.getInstance().markLastNode();
     }
 }

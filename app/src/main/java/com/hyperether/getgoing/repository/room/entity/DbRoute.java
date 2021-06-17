@@ -22,12 +22,14 @@ public class DbRoute implements Parcelable {
     @ColumnInfo
     private double avgSpeed;  // average speed during this route
     @ColumnInfo
+    private double currentSpeed;
+    @ColumnInfo
     private int activity_id;   // actitivy called for this route walk = 1, run = 2, ride = 3
     @ColumnInfo
     private long goal;
 
     public DbRoute(long id, long duration, double energy, double length,
-                   String date, double avgSpeed, int activity_id, long goal) {
+                   String date, double avgSpeed, double currentSpeed, int activity_id, long goal) {
         super();
         this.id = id;
         this.duration = duration;
@@ -35,6 +37,7 @@ public class DbRoute implements Parcelable {
         this.length = length;
         this.date = date;
         this.avgSpeed = avgSpeed;
+        this.currentSpeed = currentSpeed;
         this.activity_id = activity_id;
         this.goal = goal;
     }
@@ -46,6 +49,7 @@ public class DbRoute implements Parcelable {
         length = in.readDouble();
         date = in.readString();
         avgSpeed = in.readDouble();
+        currentSpeed = in.readDouble();
         activity_id = in.readInt();
         goal = in.readLong();
     }
@@ -110,6 +114,14 @@ public class DbRoute implements Parcelable {
         this.avgSpeed = avgSpeed;
     }
 
+    public double getCurrentSpeed() {
+        return currentSpeed;
+    }
+
+    public void setCurrentSpeed(double currentSpeed) {
+        this.currentSpeed = currentSpeed;
+    }
+
     public int getActivity_id() {
         return activity_id;
     }
@@ -118,9 +130,13 @@ public class DbRoute implements Parcelable {
         this.activity_id = activity_id;
     }
 
-    public void setGoal(int goal) { this.goal = goal; }
+    public void setGoal(int goal) {
+        this.goal = goal;
+    }
 
-    public long getGoal() { return goal; }
+    public long getGoal() {
+        return goal;
+    }
 
     @Override
     public int describeContents() {
@@ -135,6 +151,7 @@ public class DbRoute implements Parcelable {
         parcel.writeDouble(length);
         parcel.writeString(date);
         parcel.writeDouble(avgSpeed);
+        parcel.writeDouble(currentSpeed);
         parcel.writeInt(activity_id);
         parcel.writeLong(goal);
     }

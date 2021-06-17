@@ -2,59 +2,55 @@ package com.hyperether.getgoing.ui.fragment;
 
 import android.app.AlertDialog;
 import android.content.DialogInterface;
-import android.content.SharedPreferences;
 import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.os.Bundle;
+
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.databinding.DataBindingUtil;
+import androidx.fragment.app.Fragment;
+import androidx.lifecycle.Observer;
+import androidx.lifecycle.ViewModelProvider;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
 
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.databinding.DataBindingUtil;
-import androidx.fragment.app.DialogFragment;
-import androidx.lifecycle.ViewModelProviders;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
-
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapFragment;
 import com.google.android.gms.maps.OnMapReadyCallback;
-import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.CircleOptions;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.LatLngBounds;
 import com.google.android.gms.maps.model.PolylineOptions;
 import com.hyperether.getgoing.R;
-import com.hyperether.getgoing.databinding.ShowDataBinding;
+import com.hyperether.getgoing.SharedPref;
+import com.hyperether.getgoing.databinding.FragmentShowdataBinding;
 import com.hyperether.getgoing.listeners.GgOnClickListener;
-import com.hyperether.getgoing.model.CBDataFrame;
 import com.hyperether.getgoing.repository.room.entity.DbNode;
 import com.hyperether.getgoing.repository.room.entity.DbRoute;
-import com.hyperether.getgoing.ui.activity.ShowDataActivity;
 import com.hyperether.getgoing.ui.adapter.DbRecyclerAdapter;
 import com.hyperether.getgoing.util.ProgressBarBitmap;
 import com.hyperether.getgoing.viewmodel.RouteViewModel;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 
 import static com.hyperether.getgoing.util.Constants.ACTIVITY_RIDE_ID;
 import static com.hyperether.getgoing.util.Constants.ACTIVITY_RUN_ID;
 import static com.hyperether.getgoing.util.Constants.ACTIVITY_WALK_ID;
 import static com.hyperether.getgoing.util.Constants.BUNDLE_PARCELABLE;
-import static com.hyperether.getgoing.util.Constants.PREF_FILE;
-import static com.hyperether.getgoing.util.Constants.PREF_RIDE_ROUTE_EXISTING;
-import static com.hyperether.getgoing.util.Constants.PREF_RUN_ROUTE_EXISTING;
-import static com.hyperether.getgoing.util.Constants.PREF_WALK_ROUTE_EXISTING;
+import static com.hyperether.getgoing.util.Constants.DATA_DETAILS_LABEL;
 
-public class ShowDataFragment extends DialogFragment implements GgOnClickListener, OnMapReadyCallback {
+public class ShowDataFragment extends Fragment implements GgOnClickListener, OnMapReadyCallback {
 
-    public static final String DATA_LABEL = "data_label";
-    private ShowDataBinding binding;
+    private FragmentShowdataBinding binding;
 
     private GoogleMap mMap;
 
@@ -69,21 +65,28 @@ public class ShowDataFragment extends DialogFragment implements GgOnClickListene
     private View rootView;
     private MapFragment mapFragment;
 
-
-    public static ShowDataFragment newInstance(String dataLabel) {
-        ShowDataFragment showDataFragment = new ShowDataFragment();
-        Bundle bundle = new Bundle();
-        bundle.putString(DATA_LABEL, dataLabel);
-        showDataFragment.setArguments(bundle);
-        return showDataFragment;
+    public ShowDataFragment() {
+        // Required empty public constructor
     }
 
     @Override
-    public void onCreate(@Nullable Bundle savedInstanceState) {
+    public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setStyle(DialogFragment.STYLE_NORMAL, R.style.FullScreenDialogStyle);
+    }
 
-        dataLabel = getArguments().getString(DATA_LABEL);
+    @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+                             Bundle savedInstanceState) {
+        binding = DataBindingUtil.inflate(inflater, R.layout.fragment_showdata, container, false);
+        rootView = binding.getRoot();
+        return rootView;
+    }
+
+    @Override
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+
+        dataLabel = getArguments().getString(DATA_DETAILS_LABEL);
 
         if (getResources().getString(R.string.walking).equals(dataLabel)) {
             activityId = ACTIVITY_WALK_ID;
@@ -92,25 +95,14 @@ public class ShowDataFragment extends DialogFragment implements GgOnClickListene
         } else {
             activityId = ACTIVITY_RIDE_ID;
         }
-    }
-
-    @Nullable
-    @Override
-    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        super.onCreateView(inflater, container, savedInstanceState);
-        binding = DataBindingUtil.inflate(inflater, R.layout.show_data, container, false);
-        rootView = binding.getRoot();
-
-        populateListView();
 
         initializeViewModel();
         initializeViews();
-
+        populateListView();
 
         mapFragment = (MapFragment) getActivity().getFragmentManager()
                 .findFragmentById(R.id.sd_map_view);
         mapFragment.getMapAsync(this);
-        return rootView;
     }
 
     @Override
@@ -122,34 +114,37 @@ public class ShowDataFragment extends DialogFragment implements GgOnClickListene
     }
 
     private void initializeViewModel() {
-        routeViewModel = ViewModelProviders.of(getActivity()).get(RouteViewModel.class);
-        routeViewModel.getRouteList().observe(getActivity(), routeList -> {
-            routes.clear();
-            if (routeList.size() > 1) {
-                routeList.remove(0); // remove 0th node
-                for (DbRoute route : routeList) {
-                    if (route.getActivity_id() == activityId) {
-                        routes.add(route);
+        routeViewModel = new ViewModelProvider(this).get(RouteViewModel.class);
+        routeViewModel.getAllRoutes().observe(getViewLifecycleOwner(), new Observer<List<DbRoute>>() {
+            @Override
+            public void onChanged(List<DbRoute> dbRoutes) {
+                routes.clear();
+                if (dbRoutes.size() > 1) {
+                    dbRoutes.remove(0); // remove 0th node
+                    for (DbRoute route : dbRoutes) {
+                        if (route.getActivity_id() == activityId) {
+                            routes.add(route);
+                        }
                     }
                 }
-            }
 
-            if (routes.size() == 0) {
-                showNoRoutesDialog();
-            } else {
-                Bitmap bm = ProgressBarBitmap.getWidgetBitmap(getActivity().getApplicationContext(), routes.get(routes.size() - 1).getGoal(), routes.get(0).getLength(), 400, 400, 160, 220, 20, 0);
-                binding.setVar(routes.get(routes.size() - 1));
-                binding.progress.setImageBitmap(bm);
-                binding.recyclerList.smoothScrollToPosition(routes.size() - 1);
-            }
+                if (routes.size() == 0) {
+                    showNoRoutesDialog();
+                } else {
+                    Bitmap bm = ProgressBarBitmap.getWidgetBitmap(getActivity().getApplicationContext(), routes.get(routes.size() - 1).getGoal(), routes.get(0).getLength(), 400, 400, 160, 220, 20, 0);
+                    binding.setVar(routes.get(routes.size() - 1));
+                    binding.progress.setImageBitmap(bm);
+                    binding.recyclerList.smoothScrollToPosition(routes.size() - 1);
+                }
 
-            recyclerAdapter.notifyDataSetChanged();
+                recyclerAdapter.notifyDataSetChanged();
+            }
         });
     }
 
     private void initializeViews() {
         binding.tvSdLabel.setText(dataLabel);
-        binding.ibSdBackBtn.setOnClickListener(v -> this.dismiss());
+        binding.ibSdBackBtn.setOnClickListener(v -> getActivity().onBackPressed());
         binding.btnToggleMap.setOnClickListener(v -> toogleMap());
         binding.mapFragmentHolder.animate().scaleYBy(-1);
         binding.ibSdDeleteBtn.setOnClickListener(v -> deleteRoute());
@@ -177,23 +172,20 @@ public class ShowDataFragment extends DialogFragment implements GgOnClickListene
                 .setMessage(getResources().getString(R.string.alert_dialog_no_routes))
                 .setPositiveButton(R.string.alert_dialog_positive_button_save_btn,
                         (DialogInterface paramDialogInterface, int paramInt) -> {
-                            SharedPreferences prefs = getActivity().getSharedPreferences(PREF_FILE, getActivity().MODE_PRIVATE);
-                            SharedPreferences.Editor editor = prefs.edit();
 
                             switch (activityId) {
                                 case ACTIVITY_WALK_ID:
-                                    editor.putBoolean(PREF_WALK_ROUTE_EXISTING, false);
+                                    SharedPref.setWalkRouteExisting(false);
                                     break;
                                 case ACTIVITY_RUN_ID:
-                                    editor.putBoolean(PREF_RUN_ROUTE_EXISTING, false);
+                                    SharedPref.setRunRouteExisting(false);
                                     break;
                                 case ACTIVITY_RIDE_ID:
-                                    editor.putBoolean(PREF_RIDE_ROUTE_EXISTING, false);
+                                    SharedPref.setRideRouteExisting(false);
                                     break;
                             }
-                            editor.apply();
 
-                            this.dismiss();
+                            getActivity().onBackPressed();
                         })
                 .show();
     }
@@ -217,20 +209,43 @@ public class ShowDataFragment extends DialogFragment implements GgOnClickListene
         mMap.clear();
         DbRoute route = binding.getVar();
         routeViewModel.getNodeListById(route.getId())
-                .observe(getActivity(), dbNodes -> {
-
-                    PolylineOptions pOptions = new PolylineOptions();
-                    pOptions.width(10)
-                            .color(getResources().getColor(R.color.light_theme_accent))
-                            .geodesic(true);
+                .observe(this, dbNodes -> {
 
                     if (!dbNodes.isEmpty()) {
 
-                        for (DbNode node : dbNodes) {
-                            pOptions.add(new LatLng(node.getLatitude(), node.getLongitude()));
+                        Iterator<DbNode> it = dbNodes.iterator();
+                        while (it.hasNext()) {
+                            PolylineOptions pOptions = new PolylineOptions();
+                            pOptions.width(10)
+                                    .color(getResources().getColor(R.color.light_theme_accent))
+                                    .geodesic(true);
+
+                            boolean first = true;
+                            DbNode node = null;
+                            while (it.hasNext()) {
+                                node = it.next();
+                                if (first) {
+                                    mMap.addCircle(new CircleOptions()
+                                            .center(new LatLng(node.getLatitude(), node.getLongitude()))
+                                            .radius(5)
+                                            .fillColor(getResources().getColor(R.color.light_theme_accent))
+                                            .strokeColor(getResources().getColor(R.color.transparent_light_theme_accent))
+                                            .strokeWidth(20));
+                                    first = false;
+                                }
+                                pOptions.add(new LatLng(node.getLatitude(), node.getLongitude()));
+                                if (node.isLast()) break;
+                            }
+
+                            mMap.addPolyline(pOptions);
+                            mMap.addCircle(new CircleOptions()
+                                    .center(new LatLng(node.getLatitude(), node.getLongitude()))
+                                    .radius(5)
+                                    .fillColor(getResources().getColor(R.color.light_theme_accent))
+                                    .strokeColor(getResources().getColor(R.color.transparent_light_theme_accent))
+                                    .strokeWidth(20));
                         }
 
-                        mMap.addPolyline(pOptions);
                         mMap.addCircle(new CircleOptions()
                                 .center(new LatLng(dbNodes.get(0).getLatitude(), dbNodes.get(0).getLongitude()))
                                 .radius(5)
@@ -266,7 +281,7 @@ public class ShowDataFragment extends DialogFragment implements GgOnClickListene
      * This method is for populating list view
      */
     private void populateListView() {
-        recyclerAdapter = new DbRecyclerAdapter(getActivity(), routes);
+        recyclerAdapter = new DbRecyclerAdapter(this, routes);
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getActivity());
         linearLayoutManager.setOrientation(RecyclerView.HORIZONTAL);
         binding.recyclerList.setLayoutManager(linearLayoutManager);

@@ -1,7 +1,7 @@
 package com.hyperether.getgoing.ui.adapter;
 
-import android.content.Context;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -9,6 +9,7 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.hyperether.getgoing.R;
@@ -26,9 +27,9 @@ public class DbRecyclerAdapter extends RecyclerView.Adapter<DbRecyclerAdapter.Vi
     private GgOnClickListener listener;
 
 
-    public DbRecyclerAdapter(Context context, List<DbRoute> routes) {
+    public DbRecyclerAdapter(Fragment fragment, List<DbRoute> routes) {
         this.routes = routes;
-        listener = (GgOnClickListener) context;
+        listener = (GgOnClickListener) fragment;
     }
 
     @NonNull
@@ -47,7 +48,8 @@ public class DbRecyclerAdapter extends RecyclerView.Adapter<DbRecyclerAdapter.Vi
         if (!"null".equals(route.getDate()) || route.getDate() != null) {
             holder.chartProgress.setMax((int) route.getGoal());
             holder.chartProgress.setProgress((int) route.getLength());
-            holder.chartDate.setText(route.getDate().substring(0, 5));
+            //TODO Fix line below
+            holder.chartDate.setText(route.getDate().substring(0, 6));
             holder.chartDate.setOnClickListener((new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
