@@ -119,4 +119,24 @@ public class SharedPref {
         editor.putInt("meteringActivityRequestedId", id);
         editor.apply();
     }
+
+    public static void setLastTime(long time) {
+        SharedPreferences.Editor editor = settings.edit();
+        editor.putLong("gg_last_time", time);
+        editor.apply();
+    }
+
+    public static long getLastTime() {
+        return settings.getLong("gg_last_time", 0);
+    }
+
+    public static long getBackgroundStartTime() {
+        return settings.getLong("gg_background_time", 0);
+    }
+
+    public static void setBackgroundStartTime(long currentTimeMillis) {
+        SharedPreferences.Editor editor = settings.edit();
+        editor.putLong("gg_background_time", currentTimeMillis);
+        editor.apply();
+    }
 }

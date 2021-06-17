@@ -1,5 +1,6 @@
 package com.hyperether.getgoing.viewmodel;
 
+import android.app.Activity;
 import android.app.Application;
 
 import androidx.annotation.NonNull;
@@ -9,6 +10,7 @@ import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.Transformations;
 
+import com.hyperether.getgoing.GetGoingApp;
 import com.hyperether.getgoing.repository.room.GgRepository;
 import com.hyperether.getgoing.repository.room.entity.DbNode;
 import com.hyperether.getgoing.repository.room.entity.DbRoute;
@@ -50,5 +52,19 @@ public class RouteViewModel extends AndroidViewModel {
     public void removeRouteById(long id) {
         GgRepository.getInstance().deleteNodesByRouteId(id);
         GgRepository.getInstance().deleteRouteById(id);
+    }
+
+    public void continueTracking(Activity activity) {
+        GetGoingApp.getInstance().getHandler().post(() -> {
+            long id = GgRepository.getInstance().getLastRoute().getId();
+            activity.runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    setRouteID(id);
+                    getNodeListById(id);
+                    getRouteByIdAsLiveData(id);
+                }
+            });
+        });
     }
 }

@@ -35,7 +35,6 @@ import androidx.navigation.Navigation;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
-import com.google.android.gms.maps.MapFragment;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
@@ -48,6 +47,8 @@ import com.hyperether.getgoing.repository.room.entity.DbNode;
 import com.hyperether.getgoing.repository.room.entity.DbRoute;
 import com.hyperether.getgoing.service.GPSTrackingService;
 import com.hyperether.getgoing.util.Constants;
+import com.hyperether.getgoing.util.ServiceUtil;
+import com.hyperether.getgoing.util.TimeUtils;
 import com.hyperether.getgoing.viewmodel.NodeListViewModel;
 import com.hyperether.getgoing.viewmodel.RouteViewModel;
 import com.hyperether.toolbox.HyperConst;
@@ -61,6 +62,7 @@ import java.util.Locale;
 import static android.provider.Settings.ACTION_LOCATION_SOURCE_SETTINGS;
 import static com.hyperether.getgoing.util.Constants.ACTIVITY_RIDE_ID;
 import static com.hyperether.getgoing.util.Constants.ACTIVITY_RUN_ID;
+import static com.hyperether.getgoing.util.Constants.ACTIVITY_STARTED;
 import static com.hyperether.getgoing.util.Constants.ACTIVITY_WALK_ID;
 import static com.hyperether.getgoing.util.Constants.OPENED_FROM_KEY;
 import static com.hyperether.getgoing.util.Constants.OPENED_FROM_LOCATION_ACT;
@@ -115,10 +117,13 @@ public class TrackingFragment extends Fragment implements OnMapReadyCallback {
                 onAnyBackButtonPressed();
             }
         };
-        profileID = getArguments().getInt(TRACKING_ACTIVITY_KEY);
+        if (getArguments().getInt(TRACKING_ACTIVITY_KEY) != ACTIVITY_STARTED)
+            profileID = getArguments().getInt(TRACKING_ACTIVITY_KEY);
         requireActivity().getOnBackPressedDispatcher().addCallback(this, callback);
         routeViewModel = new ViewModelProvider(this).get(RouteViewModel.class);
         nodeListViewModel = new ViewModelProvider(this).get(NodeListViewModel.class);
+        mLocTrackingRunning = ServiceUtil.isServiceActive(requireActivity().getApplicationContext());
+        trackingStarted = ServiceUtil.isServiceActive(requireActivity().getApplicationContext());
     }
 
     @Override
@@ -146,18 +151,9 @@ public class TrackingFragment extends Fragment implements OnMapReadyCallback {
         sdf = new SimpleDateFormat("dd.MM.yyyy.' 'HH:mm:ss", Locale.ENGLISH);
 
         clearData();
-    }
 
-    @Override
-    public void onDestroy() {
-        super.onDestroy();
-//        getActivity().stopService(new Intent(getActivity(), GPSTrackingService.class));
-//        if (!mRouteAlreadySaved) {
-//            routeViewModel.removeRouteById(currentRouteID);
-//        }
-//        if (mapFragment != null) {
-//            getActivity().getFragmentManager().beginTransaction().remove(mapFragment).commit();
-//        }
+        if (ServiceUtil.isServiceActive(requireContext()))
+            continueTracking();
     }
 
     private void setupVMObserver() {
@@ -346,6 +342,23 @@ public class TrackingFragment extends Fragment implements OnMapReadyCallback {
 
     }
 
+    private void continueTracking() {
+        trackingInProgressViewChanges();
+        long time = nodeListViewModel.getChronometerLastTime();
+        long backgroundStartTime = nodeListViewModel.getBackgroundStartTime();
+        showTime.setBase(SystemClock.elapsedRealtime() - time - (System.currentTimeMillis() - backgroundStartTime));
+        showTime.start();
+        nodeListViewModel.continueTracking(requireActivity());
+        routeViewModel.continueTracking(requireActivity());
+    }
+
+    @Override
+    public void onDestroy() {
+        nodeListViewModel.setChronometerLastTime(TimeUtils.chronometerToMills(showTime));
+        nodeListViewModel.setBackgroundStartTime(System.currentTimeMillis());
+        super.onDestroy();
+    }
+
     private void startTrackingService(Context context) {
         Intent intent = new Intent(context, GPSTrackingService.class);
         intent.putExtra(HyperConst.LOC_INTERVAL, Constants.UPDATE_INTERVAL);
@@ -353,11 +366,16 @@ public class TrackingFragment extends Fragment implements OnMapReadyCallback {
         intent.putExtra(HyperConst.LOC_DISTANCE, Constants.LOCATION_DISTANCE);
         getActivity().startService(intent);
 
-        getActivity().runOnUiThread(() -> {
+        trackingInProgressViewChanges();
 
+        mLocTrackingRunning = true;
+        mRouteAlreadySaved = false;
+    }
+
+    private void trackingInProgressViewChanges() {
+        getActivity().runOnUiThread(() -> {
             showTime.setBase(SystemClock.elapsedRealtime() + timeWhenStopped);
             showTime.start();
-
             button_start.setVisibility(View.GONE);
             button_pause.setVisibility(View.VISIBLE);
             if (mLocTrackingRunning) {
@@ -367,9 +385,6 @@ public class TrackingFragment extends Fragment implements OnMapReadyCallback {
                 button_rst.setClickable(false);
             }
         });
-
-        mLocTrackingRunning = true;
-        mRouteAlreadySaved = false;
     }
 
 
@@ -379,7 +394,7 @@ public class TrackingFragment extends Fragment implements OnMapReadyCallback {
     private void stopTracking() {
         getActivity().stopService(new Intent(getActivity(), GPSTrackingService.class));
 
-        timeWhenStopped4Storage = SystemClock.elapsedRealtime() - showTime.getBase();
+        timeWhenStopped4Storage = TimeUtils.chronometerToMills(showTime);
         timeWhenStopped = showTime.getBase() - SystemClock.elapsedRealtime();
         showTime.stop();
 
