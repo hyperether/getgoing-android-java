@@ -3,7 +3,6 @@ package com.hyperether.getgoing.service;
 import android.app.PendingIntent;
 import android.content.Intent;
 import android.location.Location;
-
 import com.hyperether.getgoing.GetGoingApp;
 import com.hyperether.getgoing.R;
 import com.hyperether.getgoing.SharedPref;

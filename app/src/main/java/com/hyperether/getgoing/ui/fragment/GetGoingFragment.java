@@ -35,12 +35,14 @@ import com.hyperether.getgoing.repository.room.entity.DbRoute;
 import com.hyperether.getgoing.ui.adapter.HorizontalListAdapter;
 import com.hyperether.getgoing.ui.formatter.TimeProgressFormatterInvisible;
 import com.hyperether.getgoing.util.Constants;
+import com.hyperether.getgoing.util.ServiceUtil;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import static com.hyperether.getgoing.util.Constants.ACTIVITY_RIDE_ID;
 import static com.hyperether.getgoing.util.Constants.ACTIVITY_RUN_ID;
+import static com.hyperether.getgoing.util.Constants.ACTIVITY_STARTED;
 import static com.hyperether.getgoing.util.Constants.ACTIVITY_WALK_ID;
 import static com.hyperether.getgoing.util.Constants.OPENED_FROM_GG_ACT;
 import static com.hyperether.getgoing.util.Constants.OPENED_FROM_KEY;
@@ -88,8 +90,12 @@ public class GetGoingFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         navigationController = Navigation.findNavController(view);
+        if (ServiceUtil.isServiceActive(requireContext())) {
+            callTrackingFragment(ACTIVITY_STARTED);
+        }
 
         mBinding.cpbAmKmgoal2.setProgressFormatter(new TimeProgressFormatterInvisible());
+
 
         actLabel = getView().findViewById(R.id.tv_ma_mainact);
         blueSentence = getView().findViewById(R.id.tv_am_burn);

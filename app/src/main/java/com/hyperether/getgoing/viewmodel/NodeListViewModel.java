@@ -1,11 +1,15 @@
 package com.hyperether.getgoing.viewmodel;
 
+import android.app.Activity;
+
 import androidx.arch.core.util.Function;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.Transformations;
 import androidx.lifecycle.ViewModel;
 
+import com.hyperether.getgoing.GetGoingApp;
+import com.hyperether.getgoing.SharedPref;
 import com.hyperether.getgoing.repository.room.GgRepository;
 import com.hyperether.getgoing.repository.room.entity.DbNode;
 
@@ -27,5 +31,34 @@ public class NodeListViewModel extends ViewModel {
 
     public LiveData<List<DbNode>> getNodeListById(long id) {
         return nodesByRouteId;
+    }
+
+    public void continueTracking(Activity activity) {
+        GetGoingApp.getInstance().getHandler().post(() -> {
+            long id = GgRepository.getInstance().getLastRoute().getId();
+            activity.runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    setRouteID(id);
+                    getNodeListById(id);
+                }
+            });
+        });
+    }
+
+    public long getChronometerLastTime() {
+        return SharedPref.getLastTime();
+    }
+
+    public void setChronometerLastTime(long time) {
+        SharedPref.setLastTime(time);
+    }
+
+    public long getBackgroundStartTime() {
+        return SharedPref.getBackgroundStartTime();
+    }
+
+    public void setBackgroundStartTime(long currentTimeMillis) {
+        SharedPref.setBackgroundStartTime(currentTimeMillis);
     }
 }
