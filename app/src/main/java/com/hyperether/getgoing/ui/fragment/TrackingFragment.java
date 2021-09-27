@@ -1,5 +1,14 @@
 package com.hyperether.getgoing.ui.fragment;
 
+import static android.provider.Settings.ACTION_LOCATION_SOURCE_SETTINGS;
+import static com.hyperether.getgoing.util.Constants.ACTIVITY_RIDE_ID;
+import static com.hyperether.getgoing.util.Constants.ACTIVITY_RUN_ID;
+import static com.hyperether.getgoing.util.Constants.ACTIVITY_STARTED;
+import static com.hyperether.getgoing.util.Constants.ACTIVITY_WALK_ID;
+import static com.hyperether.getgoing.util.Constants.OPENED_FROM_KEY;
+import static com.hyperether.getgoing.util.Constants.OPENED_FROM_LOCATION_ACT;
+import static com.hyperether.getgoing.util.Constants.TRACKING_ACTIVITY_KEY;
+
 import android.annotation.SuppressLint;
 import android.app.AlertDialog;
 import android.content.Context;
@@ -41,7 +50,6 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.PolylineOptions;
 import com.hyperether.getgoing.R;
 import com.hyperether.getgoing.SharedPref;
-import com.hyperether.getgoing.repository.room.DbRouteAddedCallback;
 import com.hyperether.getgoing.repository.room.GgRepository;
 import com.hyperether.getgoing.repository.room.entity.DbNode;
 import com.hyperether.getgoing.repository.room.entity.DbRoute;
@@ -58,15 +66,6 @@ import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
-
-import static android.provider.Settings.ACTION_LOCATION_SOURCE_SETTINGS;
-import static com.hyperether.getgoing.util.Constants.ACTIVITY_RIDE_ID;
-import static com.hyperether.getgoing.util.Constants.ACTIVITY_RUN_ID;
-import static com.hyperether.getgoing.util.Constants.ACTIVITY_STARTED;
-import static com.hyperether.getgoing.util.Constants.ACTIVITY_WALK_ID;
-import static com.hyperether.getgoing.util.Constants.OPENED_FROM_KEY;
-import static com.hyperether.getgoing.util.Constants.OPENED_FROM_LOCATION_ACT;
-import static com.hyperether.getgoing.util.Constants.TRACKING_ACTIVITY_KEY;
 
 
 public class TrackingFragment extends Fragment implements OnMapReadyCallback {
@@ -157,20 +156,14 @@ public class TrackingFragment extends Fragment implements OnMapReadyCallback {
     }
 
     private void setupVMObserver() {
-        nodeListViewModel.getNodeListById(currentRouteID).observe(getViewLifecycleOwner(), new Observer<List<DbNode>>() {
-            @Override
-            public void onChanged(List<DbNode> dbNodes) {
-                mMap.clear();
-                drawRoute(dbNodes);
-            }
+        nodeListViewModel.getNodeListById(currentRouteID).observe(getViewLifecycleOwner(), dbNodes -> {
+            mMap.clear();
+            drawRoute(dbNodes);
         });
 
-        routeViewModel.getRouteByIdAsLiveData(currentRouteID).observe(getViewLifecycleOwner(), new Observer<DbRoute>() {
-            @Override
-            public void onChanged(DbRoute dbRoute) {
-                if (dbRoute != null) {
-                    showData(dbRoute.getLength(), dbRoute.getEnergy(), dbRoute.getCurrentSpeed());
-                }
+        routeViewModel.getRouteByIdAsLiveData(currentRouteID).observe(getViewLifecycleOwner(), dbRoute -> {
+            if (dbRoute != null) {
+                showData(dbRoute.getLength(), dbRoute.getEnergy(), dbRoute.getCurrentSpeed());
             }
         });
     }
@@ -325,16 +318,13 @@ public class TrackingFragment extends Fragment implements OnMapReadyCallback {
     private void startTracking(Context context) {
         if (!trackingStarted) {
             trackingStarted = true;
-            GgRepository.getInstance().insertRoute(new DbRoute(0, 0, 0, 0, sdf.format(new Date()), 0, 0, profileID, goalStore), new DbRouteAddedCallback() {
-                @Override
-                public void onRouteAdded(long currentid) {
-                    currentRouteID = currentid;
-                    getActivity().runOnUiThread(() -> {
-                        nodeListViewModel.setRouteID(currentid);
-                        routeViewModel.setRouteID(currentid);
-                    });
-                    startTrackingService(context);
-                }
+            GgRepository.getInstance().insertRoute(new DbRoute(0, 0, 0, 0, sdf.format(new Date()), 0, 0, profileID, goalStore), currentid -> {
+                currentRouteID = currentid;
+                getActivity().runOnUiThread(() -> {
+                    nodeListViewModel.setRouteID(currentid);
+                    routeViewModel.setRouteID(currentid);
+                });
+                startTrackingService(context);
             });
         } else {
             startTrackingService(context);
@@ -402,6 +392,13 @@ public class TrackingFragment extends Fragment implements OnMapReadyCallback {
         button_pause.setVisibility(View.GONE);
 
         mLocTrackingRunning = false;
+        saveCurrentExerciseDuration();
+    }
+
+    private void saveCurrentExerciseDuration() {
+        GgRepository.getInstance().updateRoute(new DbRoute(
+                currentRouteID, timeWhenStopped4Storage, 0, 0, sdf.format(new Date()),
+                0, 0, profileID, goalStore));
     }
 
     /**
@@ -425,7 +422,7 @@ public class TrackingFragment extends Fragment implements OnMapReadyCallback {
     }
 
     @Override
-    public void onMapReady(GoogleMap googleMap) {
+    public void onMapReady(@NonNull GoogleMap googleMap) {
         if (ActivityCompat.checkSelfPermission(getActivity(), android.Manifest.permission
                 .ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED &&
                 ActivityCompat.checkSelfPermission(getActivity(), android.Manifest.permission
@@ -443,13 +440,7 @@ public class TrackingFragment extends Fragment implements OnMapReadyCallback {
                 dialog.setCancelable(false);
                 dialog.setTitle(R.string.alert_dialog_title);
                 dialog.setMessage(getString(R.string.alert_dialog_message));
-                dialog.setPositiveButton(R.string.alert_dialog_positive_button, new DialogInterface
-                        .OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface paramDialogInterface, int paramInt) {
-                        openGPSSettings();
-                    }
-                });
+                dialog.setPositiveButton(R.string.alert_dialog_positive_button, (paramDialogInterface, paramInt) -> openGPSSettings());
 
                 dialog.setNegativeButton(R.string.alert_dialog_negative_button, (paramDialogInterface, paramInt) -> getActivity().finish());
 
@@ -506,7 +497,7 @@ public class TrackingFragment extends Fragment implements OnMapReadyCallback {
      */
     private void drawRoute(List<DbNode> mRoute) {
         boolean drFirstPass = true;
-        DbNode firstNode = null;
+        DbNode firstNode;
         DbNode secondNode = null;
 
         // Redraw the whole route

@@ -209,7 +209,7 @@ public class ShowDataFragment extends Fragment implements GgOnClickListener, OnM
         mMap.clear();
         DbRoute route = binding.getVar();
         routeViewModel.getNodeListById(route.getId())
-                .observe(this, dbNodes -> {
+                .observe(getViewLifecycleOwner(), dbNodes -> {
 
                     if (!dbNodes.isEmpty()) {
 
@@ -302,7 +302,7 @@ public class ShowDataFragment extends Fragment implements GgOnClickListener, OnM
     }
 
     @Override
-    public void onMapReady(GoogleMap googleMap) {
+    public void onMapReady(@NonNull GoogleMap googleMap) {
         this.mMap = googleMap;
         mMap.getUiSettings().setZoomControlsEnabled(true);
     }
