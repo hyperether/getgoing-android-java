@@ -302,7 +302,7 @@ public class ShowDataFragment extends Fragment implements GgOnClickListener, OnM
     }
 
     @Override
-    public void onMapReady(@NonNull GoogleMap googleMap) {
+    public void onMapReady(GoogleMap googleMap) {
         this.mMap = googleMap;
         mMap.getUiSettings().setZoomControlsEnabled(true);
     }
