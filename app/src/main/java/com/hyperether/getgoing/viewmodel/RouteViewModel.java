@@ -4,11 +4,9 @@ import android.app.Activity;
 import android.app.Application;
 
 import androidx.annotation.NonNull;
-import androidx.arch.core.util.Function;
 import androidx.lifecycle.AndroidViewModel;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
-import androidx.lifecycle.Transformations;
 
 import com.hyperether.getgoing.GetGoingApp;
 import com.hyperether.getgoing.repository.room.GgRepository;
@@ -19,14 +17,9 @@ import java.util.List;
 
 public class RouteViewModel extends AndroidViewModel {
 
-    private LiveData<List<DbRoute>> routeList;
-    private MutableLiveData<Long> routeID = new MutableLiveData<Long>();
-    private LiveData<DbRoute> route = Transformations.switchMap(routeID, new Function<Long, LiveData<DbRoute>>() {
-        @Override
-        public LiveData<DbRoute> apply(Long input) {
-            return GgRepository.getInstance().getRouteByIdAsLiveData(input);
-        }
-    });
+    private final LiveData<List<DbRoute>> routeList;
+    private final MutableLiveData<Long> routeID = new MutableLiveData<>();
+    private final MutableLiveData<DbRoute> route = new MutableLiveData<>();
 
     public LiveData<DbRoute> getRouteByIdAsLiveData(long id) {
         return route;
@@ -34,6 +27,7 @@ public class RouteViewModel extends AndroidViewModel {
 
     public void setRouteID(long id) {
         routeID.setValue(id);
+        route.setValue(GgRepository.getInstance().getRouteByIdAsLiveData(id).getValue());
     }
 
     public RouteViewModel(@NonNull Application application) {

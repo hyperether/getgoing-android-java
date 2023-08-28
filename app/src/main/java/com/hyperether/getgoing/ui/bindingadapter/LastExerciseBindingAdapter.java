@@ -1,19 +1,19 @@
 package com.hyperether.getgoing.ui.bindingadapter;
 
+import static com.hyperether.getgoing.util.Constants.ACTIVITY_RIDE_ID;
+import static com.hyperether.getgoing.util.Constants.ACTIVITY_RUN_ID;
+import static com.hyperether.getgoing.util.Constants.ACTIVITY_WALK_ID;
+
 import android.graphics.drawable.Drawable;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.dinuscxj.progressbar.CircleProgressBar;
 import com.hyperether.getgoing.R;
 import com.hyperether.getgoing.repository.room.entity.DbRoute;
+import com.hyperether.getgoing.ui.dynamicview.CircleProgressBar;
 import com.hyperether.getgoing.ui.formatter.DistanceProgressFormatter;
 import com.hyperether.getgoing.ui.formatter.TimeProgressFormatter;
-
-import static com.hyperether.getgoing.util.Constants.ACTIVITY_RIDE_ID;
-import static com.hyperether.getgoing.util.Constants.ACTIVITY_RUN_ID;
-import static com.hyperether.getgoing.util.Constants.ACTIVITY_WALK_ID;
 
 public class LastExerciseBindingAdapter {
 
@@ -87,5 +87,4 @@ public class LastExerciseBindingAdapter {
     public static void displayTimeProgress(View view, long pDuration) {
         ((CircleProgressBar) view).setProgressFormatter(new TimeProgressFormatter(pDuration));
     }
-
 }

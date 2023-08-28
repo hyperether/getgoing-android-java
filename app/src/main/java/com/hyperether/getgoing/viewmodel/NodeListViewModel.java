@@ -2,10 +2,8 @@ package com.hyperether.getgoing.viewmodel;
 
 import android.app.Activity;
 
-import androidx.arch.core.util.Function;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
-import androidx.lifecycle.Transformations;
 import androidx.lifecycle.ViewModel;
 
 import com.hyperether.getgoing.GetGoingApp;
@@ -17,16 +15,12 @@ import java.util.List;
 
 public class NodeListViewModel extends ViewModel {
 
-    private MutableLiveData<Long> routeID = new MutableLiveData<Long>();
-    private LiveData<List<DbNode>> nodesByRouteId = Transformations.switchMap(routeID, new Function<Long, LiveData<List<DbNode>>>() {
-        @Override
-        public LiveData<List<DbNode>> apply(Long input) {
-            return GgRepository.getInstance().getAllNodesById(input);
-        }
-    });
+    private final MutableLiveData<Long> routeID = new MutableLiveData<>();
+    private final MutableLiveData<List<DbNode>> nodesByRouteId = new MutableLiveData<>();
 
     public void setRouteID(long id) {
         this.routeID.setValue(id);
+        nodesByRouteId.setValue(GgRepository.getInstance().getAllNodesById(id).getValue());
     }
 
     public LiveData<List<DbNode>> getNodeListById(long id) {

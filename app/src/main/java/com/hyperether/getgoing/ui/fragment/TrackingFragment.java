@@ -1,5 +1,14 @@
 package com.hyperether.getgoing.ui.fragment;
 
+import static android.provider.Settings.ACTION_LOCATION_SOURCE_SETTINGS;
+import static com.hyperether.getgoing.util.Constants.ACTIVITY_RIDE_ID;
+import static com.hyperether.getgoing.util.Constants.ACTIVITY_RUN_ID;
+import static com.hyperether.getgoing.util.Constants.ACTIVITY_STARTED;
+import static com.hyperether.getgoing.util.Constants.ACTIVITY_WALK_ID;
+import static com.hyperether.getgoing.util.Constants.OPENED_FROM_KEY;
+import static com.hyperether.getgoing.util.Constants.OPENED_FROM_LOCATION_ACT;
+import static com.hyperether.getgoing.util.Constants.TRACKING_ACTIVITY_KEY;
+
 import android.annotation.SuppressLint;
 import android.app.AlertDialog;
 import android.content.Context;
@@ -51,22 +60,13 @@ import com.hyperether.getgoing.util.ServiceUtil;
 import com.hyperether.getgoing.util.TimeUtils;
 import com.hyperether.getgoing.viewmodel.NodeListViewModel;
 import com.hyperether.getgoing.viewmodel.RouteViewModel;
-import com.hyperether.toolbox.HyperConst;
+import com.hyperether.toolbox.location.HyperLocationService;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
-
-import static android.provider.Settings.ACTION_LOCATION_SOURCE_SETTINGS;
-import static com.hyperether.getgoing.util.Constants.ACTIVITY_RIDE_ID;
-import static com.hyperether.getgoing.util.Constants.ACTIVITY_RUN_ID;
-import static com.hyperether.getgoing.util.Constants.ACTIVITY_STARTED;
-import static com.hyperether.getgoing.util.Constants.ACTIVITY_WALK_ID;
-import static com.hyperether.getgoing.util.Constants.OPENED_FROM_KEY;
-import static com.hyperether.getgoing.util.Constants.OPENED_FROM_LOCATION_ACT;
-import static com.hyperether.getgoing.util.Constants.TRACKING_ACTIVITY_KEY;
 
 
 public class TrackingFragment extends Fragment implements OnMapReadyCallback {
@@ -361,9 +361,9 @@ public class TrackingFragment extends Fragment implements OnMapReadyCallback {
 
     private void startTrackingService(Context context) {
         Intent intent = new Intent(context, GPSTrackingService.class);
-        intent.putExtra(HyperConst.LOC_INTERVAL, Constants.UPDATE_INTERVAL);
-        intent.putExtra(HyperConst.LOC_FASTEST_INTERVAL, Constants.FASTEST_INTERVAL);
-        intent.putExtra(HyperConst.LOC_DISTANCE, Constants.LOCATION_DISTANCE);
+        intent.putExtra(HyperLocationService.LOC_INTERVAL, Constants.UPDATE_INTERVAL);
+        intent.putExtra(HyperLocationService.LOC_FASTEST_INTERVAL, Constants.FASTEST_INTERVAL);
+        intent.putExtra(HyperLocationService.LOC_DISTANCE, Constants.LOCATION_DISTANCE);
         getActivity().startService(intent);
 
         trackingInProgressViewChanges();
