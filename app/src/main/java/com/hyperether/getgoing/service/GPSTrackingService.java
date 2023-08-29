@@ -1,8 +1,12 @@
 package com.hyperether.getgoing.service;
 
+import static android.content.pm.ServiceInfo.FOREGROUND_SERVICE_TYPE_LOCATION;
+
 import android.app.PendingIntent;
 import android.content.Intent;
 import android.location.Location;
+import android.os.Build;
+
 import com.hyperether.getgoing.GetGoingApp;
 import com.hyperether.getgoing.R;
 import com.hyperether.getgoing.SharedPref;
@@ -64,12 +68,22 @@ public class GPSTrackingService extends HyperLocationService {
         PendingIntent pendingIntent = PendingIntent.getActivity(this, 0, intent,
                 PendingIntent.FLAG_UPDATE_CURRENT | PendingIntent.FLAG_IMMUTABLE);
 
-        startForeground(1123, HyperNotification.getInstance().getForegroundServiceNotification(this,
-                getString(R.string.notification_title),
-                getString(R.string.notification_text),
-                R.drawable.ic_logo_light,
-                R.mipmap.ic_logo,
-                pendingIntent));
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+            startForeground(1123, HyperNotification.getInstance().getForegroundServiceNotification(this,
+                            getString(R.string.notification_title),
+                            getString(R.string.notification_text),
+                            R.drawable.ic_logo_light,
+                            R.mipmap.ic_logo,
+                            pendingIntent),
+                    FOREGROUND_SERVICE_TYPE_LOCATION);
+        } else {
+            startForeground(1123, HyperNotification.getInstance().getForegroundServiceNotification(this,
+                    getString(R.string.notification_title),
+                    getString(R.string.notification_text),
+                    R.drawable.ic_logo_light,
+                    R.mipmap.ic_logo,
+                    pendingIntent));
+        }
     }
 
     @Override
