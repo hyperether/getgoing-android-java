@@ -70,35 +70,23 @@ import java.util.Locale;
 
 
 public class TrackingFragment extends Fragment implements OnMapReadyCallback {
-
     private NavController navigationController;
-
     private GoogleMap mMap;
-
     private boolean mLocTrackingRunning = false;
     private boolean mRouteAlreadySaved = true;
     private boolean trackingStarted = false;
-
-    // U/I variables
     private Button set_goal;
     private TextView activity_id, labelDuration, labelVelocity, labelCalories;
     private ImageView button_start, button_pause;
     private ImageButton button_rst, button_save, button_back;
     private Chronometer showTime, showCalories, showDistance, showVelocity;
-
     long timeWhenStopped = 0;
     long timeWhenStopped4Storage = 0;
-
-    // Route storage variables
     private SimpleDateFormat sdf;
-
     private long goalStore;
     private int profileID;
-
     private Context classContext;
-
     SupportMapFragment mapFragment;
-
     private long currentRouteID;
     private RouteViewModel routeViewModel;
     private NodeListViewModel nodeListViewModel;
@@ -339,7 +327,6 @@ public class TrackingFragment extends Fragment implements OnMapReadyCallback {
         } else {
             startTrackingService(context);
         }
-
     }
 
     private void continueTracking() {
@@ -386,7 +373,6 @@ public class TrackingFragment extends Fragment implements OnMapReadyCallback {
             }
         });
     }
-
 
     /**
      * This method stops timer and disables visibility of start button.
@@ -467,7 +453,6 @@ public class TrackingFragment extends Fragment implements OnMapReadyCallback {
         }
     }
 
-
     /**
      * This method is used for init of map components
      *
@@ -505,6 +490,8 @@ public class TrackingFragment extends Fragment implements OnMapReadyCallback {
      * @param mRoute list of nodes
      */
     private void drawRoute(List<DbNode> mRoute) {
+        if (mRoute == null)
+            return;
         boolean drFirstPass = true;
         DbNode firstNode = null;
         DbNode secondNode = null;

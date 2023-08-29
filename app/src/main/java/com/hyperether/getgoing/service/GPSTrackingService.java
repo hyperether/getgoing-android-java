@@ -23,22 +23,18 @@ public class GPSTrackingService extends HyperLocationService {
 
     private static final String TAG = GPSTrackingService.class.getSimpleName();
     private static final double ACCURACY_MIN = 20.0;
-
     private int nodeIndex;
     private int profileID;
     private long routeID;
     private double weight = 0;
     private DbRoute currentRoute;
-
     private Location previousLocation;
     private long previousTimestamp = 0;
-
     private long timeCumulative = 0;
     private int secondsCumulative = 0;
     private double kcalCumulative = 0;
     private double distanceCumulative = 0;
     private double velocityAvg = 0;
-
     private CaloriesCalculation calcCal = new CaloriesCalculation();
 
     @Override
@@ -60,14 +56,13 @@ public class GPSTrackingService extends HyperLocationService {
         });
     }
 
-
     @Override
     protected void startForeground() {
         super.startForeground();
 
         Intent intent = new Intent(this, NavigationActivity.class);
         PendingIntent pendingIntent = PendingIntent.getActivity(this, 0, intent,
-                PendingIntent.FLAG_UPDATE_CURRENT);
+                PendingIntent.FLAG_UPDATE_CURRENT | PendingIntent.FLAG_IMMUTABLE);
 
         startForeground(1123, HyperNotification.getInstance().getForegroundServiceNotification(this,
                 getString(R.string.notification_title),

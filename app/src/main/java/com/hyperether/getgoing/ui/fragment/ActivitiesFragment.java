@@ -1,18 +1,14 @@
 package com.hyperether.getgoing.ui.fragment;
 
+import static com.hyperether.getgoing.ui.fragment.GetGoingFragment.ratio;
+import static com.hyperether.getgoing.util.Constants.DATA_DETAILS_LABEL;
+import static com.hyperether.getgoing.util.Constants.OPENED_FROM_KEY;
+import static com.hyperether.getgoing.util.Constants.OPENED_FROM_LOCATION_ACT;
+
 import android.annotation.SuppressLint;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.os.Bundle;
-
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.fragment.app.Fragment;
-import androidx.lifecycle.Observer;
-import androidx.lifecycle.ViewModelProvider;
-import androidx.navigation.NavController;
-import androidx.navigation.Navigation;
-
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -23,25 +19,27 @@ import android.widget.SeekBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.fragment.app.Fragment;
+import androidx.lifecycle.Observer;
+import androidx.lifecycle.ViewModelProvider;
+import androidx.navigation.NavController;
+import androidx.navigation.Navigation;
 
 import com.hyperether.getgoing.R;
 import com.hyperether.getgoing.SharedPref;
 import com.hyperether.getgoing.repository.room.entity.DbRoute;
 import com.hyperether.getgoing.util.Constants;
+import com.hyperether.getgoing.util.TimeUtils;
 import com.hyperether.getgoing.viewmodel.RouteViewModel;
 
 import java.text.DecimalFormat;
 import java.util.List;
-import static com.hyperether.getgoing.ui.fragment.GetGoingFragment.ratio;
-import static com.hyperether.getgoing.util.Constants.DATA_DETAILS_LABEL;
-import static com.hyperether.getgoing.util.Constants.OPENED_FROM_KEY;
-import static com.hyperether.getgoing.util.Constants.OPENED_FROM_LOCATION_ACT;
 
 
 public class ActivitiesFragment extends Fragment {
-
     private NavController navigationController;
-
     private View whiteView;
     private TextView goal, walkingLabel;
     private SeekBar seekBar;
@@ -105,7 +103,6 @@ public class ActivitiesFragment extends Fragment {
                 fillProgressBars(dbRoutes);
             }
         });
-
     }
 
     private void initScreenDimen() {
@@ -183,7 +180,7 @@ public class ActivitiesFragment extends Fragment {
                     high.setTextColor(getResources().getColor(R.color.light_theme_accent));
                 }
 
-                int[] timeEstimates = getTimeEstimates(i);
+                int[] timeEstimates = TimeUtils.getTimeEstimates(i);
 
                 minutesWalking.setText(timeEstimates[0] + " min");
                 minutesRunning.setText(timeEstimates[1] + " min");
@@ -208,7 +205,6 @@ public class ActivitiesFragment extends Fragment {
         openActivityDetails();
 
         saveChanges.setOnClickListener(view -> {
-
             if (seekBar.getProgress() == 0) {
                 AlertDialog.Builder dialog = new AlertDialog.Builder(view.getContext());
                 dialog.setCancelable(false)
@@ -222,11 +218,8 @@ public class ActivitiesFragment extends Fragment {
                                     }
                                 }).show();
             } else {
-
                 SharedPref.setGoal(seekBar.getProgress());
-
                 Toast.makeText(getContext(), "Your goal is updated", Toast.LENGTH_SHORT).show();
-
                 if (openedFrom == OPENED_FROM_LOCATION_ACT) {
                     getActivity().onBackPressed();
                 } else {
@@ -237,7 +230,6 @@ public class ActivitiesFragment extends Fragment {
     }
 
     private void openActivityDetails() {
-
         mileageWalk.setOnClickListener(view -> {
             if (SharedPref.doesWalkRouteExist()) {
                 Bundle bundle = new Bundle();
@@ -278,21 +270,11 @@ public class ActivitiesFragment extends Fragment {
                 .show();
     }
 
-    private int[] getTimeEstimates(int dist) {
-        int[] returnValues = new int[3];
-
-        returnValues[0] = (int) (dist / (Constants.AVG_SPEED_WALK * 60));
-        returnValues[1] = (int) (dist / (Constants.AVG_SPEED_RUN * 60));
-        returnValues[2] = (int) (dist / (Constants.AVG_SPEED_CYCLING * 60));
-
-        return returnValues;
-    }
-
     private void initLabels() {
         seekBar.setProgress(SharedPref.getGoal());
 
         int progress = seekBar.getProgress();
-        int[] timeEstimates = getTimeEstimates(progress);
+        int[] timeEstimates = TimeUtils.getTimeEstimates(progress);
 
         goal.setText(Integer.toString(progress));
 
@@ -305,7 +287,7 @@ public class ActivitiesFragment extends Fragment {
 
     private void fillProgressBars(List<DbRoute> allRoutes) {
         int goal = SharedPref.getGoal();
-        Double sumWalk = 0.0, sumRun = 0.0, sumRide = 0.0;
+        double sumWalk = 0.0, sumRun = 0.0, sumRide = 0.0;
         int walkPercentage = 0, runPercentage = 0, ridePercentage = 0;
 
         for (DbRoute route : allRoutes) {

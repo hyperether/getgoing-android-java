@@ -15,9 +15,7 @@ import java.util.List;
 import java.util.concurrent.atomic.AtomicLong;
 
 public class GgRepository {
-
     private static GgRepository instance;
-
     private AppDatabase db;
     private DbNodeDao nodeDao;
     private DbRouteDao routeDao;

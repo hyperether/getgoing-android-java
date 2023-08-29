@@ -4,13 +4,7 @@ import android.annotation.SuppressLint;
 
 import com.hyperether.getgoing.ui.dynamicview.CircleProgressBar;
 
-    /*
-     mData time in ms
-     return time in minutes
-     */
-
 public final class TimeProgressFormatter implements CircleProgressBar.ProgressFormatter {
-
     private long mData;
 
     public TimeProgressFormatter(long pData) {
@@ -20,7 +14,6 @@ public final class TimeProgressFormatter implements CircleProgressBar.ProgressFo
     @SuppressLint("DefaultLocale")
     @Override
     public CharSequence format(int progress, int max) {
-
         return String.valueOf(mData / 60000);
     }
 }

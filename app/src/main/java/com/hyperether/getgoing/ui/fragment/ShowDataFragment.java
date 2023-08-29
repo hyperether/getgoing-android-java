@@ -1,10 +1,20 @@
 package com.hyperether.getgoing.ui.fragment;
 
+import static com.hyperether.getgoing.util.Constants.ACTIVITY_RIDE_ID;
+import static com.hyperether.getgoing.util.Constants.ACTIVITY_RUN_ID;
+import static com.hyperether.getgoing.util.Constants.ACTIVITY_WALK_ID;
+import static com.hyperether.getgoing.util.Constants.BUNDLE_PARCELABLE;
+import static com.hyperether.getgoing.util.Constants.DATA_DETAILS_LABEL;
+
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.os.Bundle;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -14,11 +24,6 @@ import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
-
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
-import android.widget.Toast;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -42,36 +47,20 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
-import static com.hyperether.getgoing.util.Constants.ACTIVITY_RIDE_ID;
-import static com.hyperether.getgoing.util.Constants.ACTIVITY_RUN_ID;
-import static com.hyperether.getgoing.util.Constants.ACTIVITY_WALK_ID;
-import static com.hyperether.getgoing.util.Constants.BUNDLE_PARCELABLE;
-import static com.hyperether.getgoing.util.Constants.DATA_DETAILS_LABEL;
-
 public class ShowDataFragment extends Fragment implements GgOnClickListener, OnMapReadyCallback {
-
     private FragmentShowdataBinding binding;
-
     private GoogleMap mMap;
-
     private final List<DbRoute> routes = new ArrayList<>();
     private RecyclerView.Adapter recyclerAdapter;
-
     private String dataLabel;
     private boolean mapToogleDown;
     private int activityId;
     private RouteViewModel routeViewModel;
-
     private View rootView;
     private MapFragment mapFragment;
 
     public ShowDataFragment() {
         // Required empty public constructor
-    }
-
-    @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
     }
 
     @Override
@@ -172,7 +161,6 @@ public class ShowDataFragment extends Fragment implements GgOnClickListener, OnM
                 .setMessage(getResources().getString(R.string.alert_dialog_no_routes))
                 .setPositiveButton(R.string.alert_dialog_positive_button_save_btn,
                         (DialogInterface paramDialogInterface, int paramInt) -> {
-
                             switch (activityId) {
                                 case ACTIVITY_WALK_ID:
                                     SharedPref.setWalkRouteExisting(false);
@@ -184,7 +172,6 @@ public class ShowDataFragment extends Fragment implements GgOnClickListener, OnM
                                     SharedPref.setRideRouteExisting(false);
                                     break;
                             }
-
                             getActivity().onBackPressed();
                         })
                 .show();
@@ -208,61 +195,57 @@ public class ShowDataFragment extends Fragment implements GgOnClickListener, OnM
     private void drawSavedRoute() {
         mMap.clear();
         DbRoute route = binding.getVar();
-        routeViewModel.getNodeListById(route.getId())
-                .observe(this, dbNodes -> {
+        routeViewModel.getNodeListById(route.getId()).observe(getViewLifecycleOwner(), dbNodes -> {
+            if (dbNodes != null && !dbNodes.isEmpty()) {
+                Iterator<DbNode> it = dbNodes.iterator();
+                while (it.hasNext()) {
+                    PolylineOptions pOptions = new PolylineOptions();
+                    pOptions.width(10)
+                            .color(getResources().getColor(R.color.light_theme_accent))
+                            .geodesic(true);
 
-                    if (!dbNodes.isEmpty()) {
-
-                        Iterator<DbNode> it = dbNodes.iterator();
-                        while (it.hasNext()) {
-                            PolylineOptions pOptions = new PolylineOptions();
-                            pOptions.width(10)
-                                    .color(getResources().getColor(R.color.light_theme_accent))
-                                    .geodesic(true);
-
-                            boolean first = true;
-                            DbNode node = null;
-                            while (it.hasNext()) {
-                                node = it.next();
-                                if (first) {
-                                    mMap.addCircle(new CircleOptions()
-                                            .center(new LatLng(node.getLatitude(), node.getLongitude()))
-                                            .radius(5)
-                                            .fillColor(getResources().getColor(R.color.light_theme_accent))
-                                            .strokeColor(getResources().getColor(R.color.transparent_light_theme_accent))
-                                            .strokeWidth(20));
-                                    first = false;
-                                }
-                                pOptions.add(new LatLng(node.getLatitude(), node.getLongitude()));
-                                if (node.isLast()) break;
-                            }
-
-                            mMap.addPolyline(pOptions);
+                    boolean first = true;
+                    DbNode node = null;
+                    while (it.hasNext()) {
+                        node = it.next();
+                        if (first) {
                             mMap.addCircle(new CircleOptions()
                                     .center(new LatLng(node.getLatitude(), node.getLongitude()))
                                     .radius(5)
                                     .fillColor(getResources().getColor(R.color.light_theme_accent))
                                     .strokeColor(getResources().getColor(R.color.transparent_light_theme_accent))
                                     .strokeWidth(20));
+                            first = false;
                         }
-
-                        mMap.addCircle(new CircleOptions()
-                                .center(new LatLng(dbNodes.get(0).getLatitude(), dbNodes.get(0).getLongitude()))
-                                .radius(5)
-                                .fillColor(getResources().getColor(R.color.light_theme_accent))
-                                .strokeColor(getResources().getColor(R.color.transparent_light_theme_accent))
-                                .strokeWidth(20));
-                        mMap.addCircle(new CircleOptions()
-                                .center(new LatLng(dbNodes.get(dbNodes.size() - 1).getLatitude(), dbNodes.get(dbNodes.size() - 1).getLongitude()))
-                                .radius(5)
-                                .fillColor(getResources().getColor(R.color.light_theme_accent))
-                                .strokeColor(getResources().getColor(R.color.transparent_light_theme_accent))
-                                .strokeWidth(20));
-
-
-                        setCameraView(dbNodes);
+                        pOptions.add(new LatLng(node.getLatitude(), node.getLongitude()));
+                        if (node.isLast()) break;
                     }
-                });
+
+                    mMap.addPolyline(pOptions);
+                    mMap.addCircle(new CircleOptions()
+                            .center(new LatLng(node.getLatitude(), node.getLongitude()))
+                            .radius(5)
+                            .fillColor(getResources().getColor(R.color.light_theme_accent))
+                            .strokeColor(getResources().getColor(R.color.transparent_light_theme_accent))
+                            .strokeWidth(20));
+                }
+
+                mMap.addCircle(new CircleOptions()
+                        .center(new LatLng(dbNodes.get(0).getLatitude(), dbNodes.get(0).getLongitude()))
+                        .radius(5)
+                        .fillColor(getResources().getColor(R.color.light_theme_accent))
+                        .strokeColor(getResources().getColor(R.color.transparent_light_theme_accent))
+                        .strokeWidth(20));
+                mMap.addCircle(new CircleOptions()
+                        .center(new LatLng(dbNodes.get(dbNodes.size() - 1).getLatitude(), dbNodes.get(dbNodes.size() - 1).getLongitude()))
+                        .radius(5)
+                        .fillColor(getResources().getColor(R.color.light_theme_accent))
+                        .strokeColor(getResources().getColor(R.color.transparent_light_theme_accent))
+                        .strokeWidth(20));
+
+                setCameraView(dbNodes);
+            }
+        });
     }
 
     private void setCameraView(List<DbNode> routeNodes) {
@@ -288,12 +271,10 @@ public class ShowDataFragment extends Fragment implements GgOnClickListener, OnM
         binding.recyclerList.setAdapter(recyclerAdapter);
     }
 
-
     @Override
     public void onClick(Bundle bundle) {
         DbRoute route = bundle.getParcelable(BUNDLE_PARCELABLE);
         binding.setVar(route);
-
         if (route != null) {
             Bitmap bm = ProgressBarBitmap.getWidgetBitmap(getActivity().getApplicationContext(), route.getGoal(), route.getLength(), 400, 400, 160, 220, 20, 0);
             binding.progress.setImageBitmap(bm);

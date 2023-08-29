@@ -1,7 +1,24 @@
 package com.hyperether.getgoing.ui.fragment;
 
 
+import static com.hyperether.getgoing.util.Constants.ACTIVITY_RIDE_ID;
+import static com.hyperether.getgoing.util.Constants.ACTIVITY_RUN_ID;
+import static com.hyperether.getgoing.util.Constants.ACTIVITY_STARTED;
+import static com.hyperether.getgoing.util.Constants.ACTIVITY_WALK_ID;
+import static com.hyperether.getgoing.util.Constants.OPENED_FROM_GG_ACT;
+import static com.hyperether.getgoing.util.Constants.OPENED_FROM_KEY;
+import static com.hyperether.getgoing.util.Constants.TRACKING_ACTIVITY_KEY;
+
 import android.os.Bundle;
+import android.util.DisplayMetrics;
+import android.util.SparseIntArray;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.ImageView;
+import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -16,16 +33,6 @@ import androidx.recyclerview.widget.OrientationHelper;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.recyclerview.widget.SnapHelper;
 
-import android.util.DisplayMetrics;
-import android.util.SparseIntArray;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
-import android.widget.Button;
-import android.widget.ImageView;
-import android.widget.TextView;
-import android.widget.Toast;
-
 import com.hyperether.getgoing.R;
 import com.hyperether.getgoing.SharedPref;
 import com.hyperether.getgoing.databinding.FragmentGetgoingBindingImpl;
@@ -34,30 +41,15 @@ import com.hyperether.getgoing.repository.room.entity.DbNode;
 import com.hyperether.getgoing.repository.room.entity.DbRoute;
 import com.hyperether.getgoing.ui.adapter.HorizontalListAdapter;
 import com.hyperether.getgoing.ui.formatter.TimeProgressFormatterInvisible;
-import com.hyperether.getgoing.util.Constants;
 import com.hyperether.getgoing.util.ServiceUtil;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import static com.hyperether.getgoing.util.Constants.ACTIVITY_RIDE_ID;
-import static com.hyperether.getgoing.util.Constants.ACTIVITY_RUN_ID;
-import static com.hyperether.getgoing.util.Constants.ACTIVITY_STARTED;
-import static com.hyperether.getgoing.util.Constants.ACTIVITY_WALK_ID;
-import static com.hyperether.getgoing.util.Constants.OPENED_FROM_GG_ACT;
-import static com.hyperether.getgoing.util.Constants.OPENED_FROM_KEY;
-import static com.hyperether.getgoing.util.Constants.TRACKING_ACTIVITY_KEY;
-
 
 public class GetGoingFragment extends Fragment {
-
     private NavController navigationController;
-
     public static float ratio = (float) 0.0;
-
-    /*USER DATA VARIABLES*/
-    private int measureUnitId;
-
     private FragmentGetgoingBindingImpl mBinding;
     private SnapHelper snapHelper;
     private RecyclerView recyclerView;
@@ -71,11 +63,6 @@ public class GetGoingFragment extends Fragment {
 
     public GetGoingFragment() {
         // Required empty public constructor
-    }
-
-    @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
     }
 
     @Override
@@ -95,8 +82,6 @@ public class GetGoingFragment extends Fragment {
         }
 
         mBinding.cpbAmKmgoal2.setProgressFormatter(new TimeProgressFormatterInvisible());
-
-
         actLabel = getView().findViewById(R.id.tv_ma_mainact);
         blueSentence = getView().findViewById(R.id.tv_am_burn);
         selectorView = getView().findViewById(R.id.imageView2);
@@ -116,13 +101,11 @@ public class GetGoingFragment extends Fragment {
             roomStoreNodeZero(tmpRoute);
 
             SharedPref.setZeroNodeInit(true);
-
             // no saved routes yet
             SharedPref.setWalkRouteExisting(false);
             SharedPref.setRunRouteExisting(false);
             SharedPref.setRideRouteExisting(false);
         } else {
-
             GgRepository.getInstance().getLastRouteAsLiveData().observe(getActivity(), new Observer<DbRoute>() {
                 @Override
                 public void onChanged(DbRoute dbRoute) {
@@ -137,8 +120,7 @@ public class GetGoingFragment extends Fragment {
      * true: parameters are set false: settings required
      */
     private boolean getParametersStatus() {
-        return !((SharedPref.getAge() == 0)
-                || (SharedPref.getWeight() == 0));
+        return !((SharedPref.getAge() == 0) || (SharedPref.getWeight() == 0));
     }
 
     /**
@@ -198,7 +180,6 @@ public class GetGoingFragment extends Fragment {
         TextView tv_am_viewall = getView().findViewById(R.id.tv_am_viewall);
         ImageView iv_am_bluerectangle = getView().findViewById(R.id.iv_am_bluerectangle);
         Button startBtn = getView().findViewById(R.id.materialButton);
-
 
         ib_am_user.setOnClickListener(view -> {
             callProfileFragment();
@@ -364,5 +345,4 @@ public class GetGoingFragment extends Fragment {
         DbRoute dbRoute = new DbRoute(0, 0, 0, 0, "null", 0, 0, 1, 0);
         GgRepository.getInstance().insertRouteInit(dbRoute, nodeList);
     }
-
 }

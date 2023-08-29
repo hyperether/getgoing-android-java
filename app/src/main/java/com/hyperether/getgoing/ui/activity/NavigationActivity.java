@@ -20,14 +20,15 @@ public class NavigationActivity extends AppCompatActivity {
         setContentView(R.layout.activity_navigation);
         setTheme(R.style.AppTheme);
         ActivityCompat.requestPermissions(this, new String[]{
-                Manifest.permission.ACCESS_FINE_LOCATION,
-                Manifest.permission.ACCESS_COARSE_LOCATION}, Constants
-                .TAG_CODE_PERMISSION_LOCATION);
+                        Manifest.permission.ACCESS_FINE_LOCATION,
+                        Manifest.permission.ACCESS_COARSE_LOCATION},
+                Constants.TAG_CODE_PERMISSION_LOCATION);
     }
 
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions,
                                            @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
         if (requestCode == Constants.TAG_CODE_PERMISSION_LOCATION) {
             if (grantResults.length > 0 && grantResults[0] == PackageManager
                     .PERMISSION_GRANTED) {
@@ -36,5 +37,4 @@ public class NavigationActivity extends AppCompatActivity {
             }
         }
     }
-
 }

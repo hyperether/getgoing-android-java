@@ -10,7 +10,6 @@ public final class DistanceProgressFormatter implements CircleProgressBar.Progre
     private double mData;
     private DecimalFormat df = new DecimalFormat("#.##");
 
-
     public DistanceProgressFormatter(double pData) {
         mData = pData;
     }
