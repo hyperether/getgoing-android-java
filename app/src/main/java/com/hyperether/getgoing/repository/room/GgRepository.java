@@ -131,4 +131,14 @@ public class GgRepository {
         }
         return mHandler;
     }
+
+    public void updateRouteDuration(long id,long duration){
+        getRepoHandler().post(()->{
+            DbRoute route = routeDao.getRouteById(id);
+            if (route !=null){
+                route.setDuration(duration);
+                routeDao.updateRoute(route);
+            }
+        });
+    }
 }

@@ -7,6 +7,7 @@ import androidx.annotation.NonNull;
 import androidx.lifecycle.AndroidViewModel;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
+import androidx.lifecycle.Observer;
 
 import com.hyperether.getgoing.GetGoingApp;
 import com.hyperether.getgoing.repository.room.GgRepository;
@@ -21,13 +22,13 @@ public class RouteViewModel extends AndroidViewModel {
     private final MutableLiveData<Long> routeID = new MutableLiveData<>();
     private final MutableLiveData<DbRoute> route = new MutableLiveData<>();
 
-    public LiveData<DbRoute> getRouteByIdAsLiveData(long id) {
+    public LiveData<DbRoute> getRouteByIdAsLiveData() {
         return route;
     }
 
     public void setRouteID(long id) {
         routeID.setValue(id);
-        route.setValue(GgRepository.getInstance().getRouteByIdAsLiveData(id).getValue());
+        GgRepository.getInstance().getRouteByIdAsLiveData(id).observeForever(dbRoute -> route.postValue(dbRoute));
     }
 
     public RouteViewModel(@NonNull Application application) {
@@ -56,7 +57,7 @@ public class RouteViewModel extends AndroidViewModel {
                 public void run() {
                     setRouteID(id);
                     getNodeListById(id);
-                    getRouteByIdAsLiveData(id);
+                    getRouteByIdAsLiveData();
                 }
             });
         });

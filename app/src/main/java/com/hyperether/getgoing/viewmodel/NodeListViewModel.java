@@ -15,28 +15,23 @@ import java.util.List;
 
 public class NodeListViewModel extends ViewModel {
 
+
     private final MutableLiveData<Long> routeID = new MutableLiveData<>();
     private final MutableLiveData<List<DbNode>> nodesByRouteId = new MutableLiveData<>();
 
     public void setRouteID(long id) {
         this.routeID.setValue(id);
-        nodesByRouteId.setValue(GgRepository.getInstance().getAllNodesById(id).getValue());
+        GgRepository.getInstance().getAllNodesById(id).observeForever(dbNodes -> nodesByRouteId.postValue(dbNodes));
     }
 
-    public LiveData<List<DbNode>> getNodeListById(long id) {
+    public LiveData<List<DbNode>> getNodeListById() {
         return nodesByRouteId;
     }
 
     public void continueTracking(Activity activity) {
         GetGoingApp.getInstance().getHandler().post(() -> {
             long id = GgRepository.getInstance().getLastRoute().getId();
-            activity.runOnUiThread(new Runnable() {
-                @Override
-                public void run() {
-                    setRouteID(id);
-                    getNodeListById(id);
-                }
-            });
+            activity.runOnUiThread(() -> setRouteID(id));
         });
     }
 

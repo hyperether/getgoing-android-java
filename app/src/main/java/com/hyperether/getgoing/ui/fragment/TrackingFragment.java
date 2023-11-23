@@ -18,6 +18,7 @@ import android.content.pm.PackageManager;
 import android.graphics.Color;
 import android.location.Criteria;
 import android.location.Location;
+import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.Bundle;
 import android.os.SystemClock;
@@ -63,13 +64,14 @@ import com.hyperether.getgoing.viewmodel.RouteViewModel;
 import com.hyperether.toolbox.location.HyperLocationService;
 
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
 
 
-public class TrackingFragment extends Fragment implements OnMapReadyCallback {
+public class TrackingFragment extends Fragment implements OnMapReadyCallback, LocationListener {
     private NavController navigationController;
     private GoogleMap mMap;
     private boolean mLocTrackingRunning = false;
@@ -145,7 +147,8 @@ public class TrackingFragment extends Fragment implements OnMapReadyCallback {
     }
 
     private void setupVMObserver() {
-        nodeListViewModel.getNodeListById(currentRouteID).observe(getViewLifecycleOwner(), new Observer<List<DbNode>>() {
+
+        nodeListViewModel.getNodeListById().observe(getViewLifecycleOwner(), new Observer<List<DbNode>>() {
             @Override
             public void onChanged(List<DbNode> dbNodes) {
                 mMap.clear();
@@ -153,7 +156,7 @@ public class TrackingFragment extends Fragment implements OnMapReadyCallback {
             }
         });
 
-        routeViewModel.getRouteByIdAsLiveData(currentRouteID).observe(getViewLifecycleOwner(), new Observer<DbRoute>() {
+        routeViewModel.getRouteByIdAsLiveData().observe(getViewLifecycleOwner(), new Observer<DbRoute>() {
             @Override
             public void onChanged(DbRoute dbRoute) {
                 if (dbRoute != null) {
@@ -362,6 +365,8 @@ public class TrackingFragment extends Fragment implements OnMapReadyCallback {
     private void trackingInProgressViewChanges() {
         getActivity().runOnUiThread(() -> {
             showTime.setBase(SystemClock.elapsedRealtime() + timeWhenStopped);
+            showTime.setOnChronometerTickListener(chronometer ->
+                    updateDurationInDatabase());
             showTime.start();
             button_start.setVisibility(View.GONE);
             button_pause.setVisibility(View.VISIBLE);
@@ -372,6 +377,14 @@ public class TrackingFragment extends Fragment implements OnMapReadyCallback {
                 button_rst.setClickable(false);
             }
         });
+    }
+
+    private void updateDurationInDatabase(){
+        long elapsedMillis = SystemClock.elapsedRealtime() - showTime.getBase();
+        long elapseSeconds = elapsedMillis/1000;
+
+        long routeId = currentRouteID;
+        GgRepository.getInstance().updateRouteDuration(routeId,elapseSeconds);
     }
 
     /**
@@ -442,16 +455,36 @@ public class TrackingFragment extends Fragment implements OnMapReadyCallback {
                 dialog.show();
             }
 
+            // Enable the my-location layer
+            mMap.setMyLocationEnabled(true);
+
             Criteria criteria = new Criteria();
             criteria.setAccuracy(Criteria.ACCURACY_FINE);
             criteria.setPowerRequirement(Criteria.POWER_LOW);
             String bestProvider = locationManager.getBestProvider(criteria, false);
+            if (locationManager!=null){
+                locationManager.requestLocationUpdates(
+                        bestProvider,
+                        3,2,this);
+
+            }
             Location location = locationManager.getLastKnownLocation(bestProvider);
-            zoomOverCurrentLocation(mMap, location);
+
+            if (location != null) {
+                LatLng latLng = new LatLng(location.getLatitude(), location.getLongitude());
+
+                // Move the camera to the user's location
+                mMap.moveCamera(CameraUpdateFactory.newLatLng(latLng));
+
+                // Optionally, you can also zoom in
+                mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(latLng, 20));
+            }
+
         } else {
             getActivity().finish();
         }
     }
+
 
     /**
      * This method is used for init of map components
@@ -477,13 +510,6 @@ public class TrackingFragment extends Fragment implements OnMapReadyCallback {
      *
      * @param googleMap google map v2
      **/
-    private void zoomOverCurrentLocation(GoogleMap googleMap, Location location) {
-        if (location != null) {
-            LatLng latLng = new LatLng(location.getLatitude(), location.getLongitude());
-            googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(latLng, 15));
-        }
-    }
-
     /**
      * This method draws a route.
      *
@@ -593,6 +619,15 @@ public class TrackingFragment extends Fragment implements OnMapReadyCallback {
             getActivity().moveTaskToBack(true);
         } else {
             navigationController.popBackStack();
+        }
+    }
+
+    @Override
+    public void onLocationChanged(@NonNull Location location) {
+        if (location !=null){
+            LatLng latLng = new LatLng(location.getLatitude(), location.getLongitude());
+
+            mMap.moveCamera(CameraUpdateFactory.newLatLng(latLng));
         }
     }
 }

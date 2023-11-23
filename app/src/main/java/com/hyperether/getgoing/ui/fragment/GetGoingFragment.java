@@ -186,7 +186,6 @@ public class GetGoingFragment extends Fragment {
         });
 
         tv_am_viewall.setOnClickListener(view -> {
-            callActivitiesFragment();
         });
 
         iv_am_bluerectangle.setOnClickListener(view -> {
