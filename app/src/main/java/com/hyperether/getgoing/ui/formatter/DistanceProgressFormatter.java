@@ -2,14 +2,13 @@ package com.hyperether.getgoing.ui.formatter;
 
 import android.annotation.SuppressLint;
 
-import com.dinuscxj.progressbar.CircleProgressBar;
+import com.hyperether.getgoing.ui.dynamicview.CircleProgressBar;
 
 import java.text.DecimalFormat;
 
 public final class DistanceProgressFormatter implements CircleProgressBar.ProgressFormatter {
     private double mData;
     private DecimalFormat df = new DecimalFormat("#.##");
-
 
     public DistanceProgressFormatter(double pData) {
         mData = pData;

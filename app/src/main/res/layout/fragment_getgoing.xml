@@ -21,7 +21,6 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="16dp"
-            android:layout_marginLeft="16dp"
             android:layout_marginTop="8dp"
             android:contentDescription="@string/logo"
             app:layout_constraintStart_toStartOf="parent"
@@ -33,7 +32,6 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginEnd="16dp"
-            android:layout_marginRight="16dp"
             android:background="@android:color/transparent"
             android:contentDescription="@string/profile_icon"
             app:layout_constraintBottom_toBottomOf="@+id/iv_am_logo"
@@ -46,7 +44,6 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="19dp"
-            android:layout_marginLeft="19dp"
             android:layout_marginTop="8dp"
             android:text="@string/last_exercise"
             android:textColor="@color/mat_gray"
@@ -60,13 +57,13 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginEnd="16dp"
-            android:drawableEnd="@drawable/ic_light_chevron_icon"
             android:drawablePadding="8dp"
             android:padding="10dp"
             android:text="@string/view_all"
             android:textColor="@color/light_theme_accent"
             android:textSize="18sp"
             android:textStyle="bold"
+            app:drawableEndCompat="@drawable/ic_light_chevron_icon"
             app:layout_constraintBottom_toBottomOf="@+id/tv_am_lastexercise"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="@+id/tv_am_lastexercise" />
@@ -147,13 +144,12 @@
             app:layout_constraintStart_toStartOf="@+id/customBottomBar"
             app:layout_constraintTop_toTopOf="@+id/imageView2" />
 
-        <com.dinuscxj.progressbar.CircleProgressBar
+        <com.hyperether.getgoing.ui.dynamicview.CircleProgressBar
             android:id="@+id/cpb_am_kmgoal"
             progress_activity="@{lastRoute}"
             android:layout_width="115dp"
             android:layout_height="115dp"
             android:layout_marginStart="16dp"
-            android:layout_marginLeft="16dp"
             app:layout_constraintBottom_toBottomOf="@+id/iv_am_bluerectangle"
             app:layout_constraintStart_toStartOf="@+id/iv_am_bluerectangle"
             app:layout_constraintTop_toTopOf="@+id/iv_am_bluerectangle"
@@ -165,9 +161,9 @@
             app:progress_stroke_width="5dp"
             app:progress_text_color="@android:color/white"
             app:progress_text_size="18sp"
-            app:style="solid_line" />
+            app:progress_style="solid_line" />
 
-        <com.dinuscxj.progressbar.CircleProgressBar
+        <com.hyperether.getgoing.ui.dynamicview.CircleProgressBar
             android:id="@+id/cpb_am_kmgoal2"
             android:layout_width="115dp"
             android:layout_height="115dp"
@@ -182,9 +178,9 @@
             app:progress_stroke_width="5dp"
             app:progress_text_color="@android:color/white"
             app:progress_text_size="18sp"
-            app:style="solid_line" />
+            app:progress_style="solid_line" />
 
-        <com.dinuscxj.progressbar.CircleProgressBar
+        <com.hyperether.getgoing.ui.dynamicview.CircleProgressBar
             android:id="@+id/cpb_am_kmgoal1"
             progress_time="@{lastRoute.duration}"
             android:layout_width="115dp"
@@ -201,7 +197,7 @@
             app:progress_stroke_width="3dp"
             app:progress_text_color="@android:color/white"
             app:progress_text_size="18sp"
-            app:style="line" />
+            app:progress_style="line" />
 
         <TextView
             android:id="@+id/tv_am_kcal"
@@ -290,13 +286,13 @@
             android:layout_height="45dp"
             android:layout_marginBottom="16dp"
             android:background="@drawable/ic_button_layout"
+            android:outlineAmbientShadowColor="@color/getready_shadow"
+            android:outlineSpotShadowColor="@color/getready_shadow"
             android:text="@string/get_ready"
             android:textAlignment="center"
             android:textAllCaps="false"
             android:textColor="@android:color/white"
             android:textSize="18sp"
-            android:outlineSpotShadowColor="@color/getready_shadow"
-            android:outlineAmbientShadowColor="@color/getready_shadow"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.505"

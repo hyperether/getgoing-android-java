@@ -17,4 +17,14 @@ public class TimeUtils {
         }
         return currentMilliseconds;
     }
+
+    public static int[] getTimeEstimates(int dist) {
+        int[] returnValues = new int[3];
+
+        returnValues[0] = (int) (dist / (Constants.AVG_SPEED_WALK * 60));
+        returnValues[1] = (int) (dist / (Constants.AVG_SPEED_RUN * 60));
+        returnValues[2] = (int) (dist / (Constants.AVG_SPEED_CYCLING * 60));
+
+        return returnValues;
+    }
 }

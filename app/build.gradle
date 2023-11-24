@@ -1,11 +1,16 @@
 buildscript {
     repositories {
         maven { url "https://maven.google.com" }
+        mavenCentral()
     }
 }
-apply plugin: 'com.android.application'
-apply plugin: 'com.google.gms.google-services'
-apply plugin: 'com.google.firebase.crashlytics'
+
+plugins {
+    id 'com.android.application'
+    id 'com.google.firebase.crashlytics'
+    id 'com.google.gms.google-services'
+    id 'org.jetbrains.kotlin.android' version '1.8.10' apply false
+}
 
 repositories {
     mavenCentral()
@@ -53,58 +58,59 @@ android {
         sourceCompatibility = '1.8'
         targetCompatibility = '1.8'
     }
+    namespace 'com.hyperether.getgoing'
 }
 
 dependencies {
-    def lifecycle_version = "2.5.1"
-    def room_version = "2.4.3"
-    def nav_version = "2.5.2"
+    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk8:1.8.10"
+
+    def room_version = '2.5.2'
+    def nav_version = '2.5.3'
 
     // Navigation component
     implementation "androidx.navigation:navigation-fragment:$nav_version"
     implementation "androidx.navigation:navigation-ui:$nav_version"
 
-    implementation "androidx.lifecycle:lifecycle-viewmodel:$lifecycle_version"
-    implementation "androidx.lifecycle:lifecycle-livedata:2.5.1"
+    implementation "androidx.lifecycle:lifecycle-viewmodel:2.4.0"
+    implementation 'androidx.lifecycle:lifecycle-livedata:2.4.0'
     implementation "androidx.lifecycle:lifecycle-extensions:2.2.0"
 
     implementation 'androidx.legacy:legacy-support-core-utils:1.0.0'
-    implementation 'androidx.appcompat:appcompat:1.5.1'
+    implementation 'androidx.appcompat:appcompat:1.6.1'
     implementation 'androidx.cardview:cardview:1.0.0'
-    implementation 'androidx.browser:browser:1.4.0'
+    implementation 'androidx.browser:browser:1.5.0'
     implementation 'androidx.media:media:1.6.0'
     implementation 'androidx.legacy:legacy-support-v4:1.0.0'
-    implementation 'androidx.recyclerview:recyclerview:1.2.1'
+    implementation 'androidx.recyclerview:recyclerview:1.3.1'
     implementation 'androidx.constraintlayout:constraintlayout:2.1.4'
 
     implementation fileTree(dir: 'libs', include: ['*.jar'])
     implementation 'com.google.android.gms:play-services-maps:18.1.0'
-    implementation 'com.google.android.gms:play-services-location:20.0.0'
-    implementation 'com.google.android.material:material:1.6.1'
-    implementation 'com.google.firebase:firebase-crashlytics:18.2.13'
-    implementation 'com.google.firebase:firebase-analytics:21.1.1'
+    implementation 'com.google.android.gms:play-services-location:21.0.1'
+    implementation 'com.google.android.material:material:1.9.0'
+    implementation 'com.google.firebase:firebase-crashlytics:18.4.1'
+    implementation 'com.google.firebase:firebase-analytics:21.3.0'
 
-    implementation 'com.facebook.android:facebook-android-sdk:4.29.0'
+    implementation 'com.facebook.android:facebook-android-sdk:16.2.0'
     implementation 'com.github.PhilJay:MPAndroidChart:v2.2.4'
-    implementation 'com.dinuscxj:circleprogressbar:1.3.0'
 
     implementation "androidx.room:room-runtime:$room_version"
     annotationProcessor "androidx.room:room-compiler:$room_version"
     testImplementation "androidx.room:room-testing:$room_version"
     implementation "androidx.room:room-rxjava2:$room_version"
 
-    implementation('com.hyperether:android-toolbox:1.0.16@aar') {
+    implementation('com.hyperether:android-toolbox:1.0.17@aar') {
         transitive = true
     }
 
     testImplementation 'junit:junit:4.13.2'
-    androidTestImplementation 'androidx.test.espresso:espresso-intents:3.1.0', {
+    androidTestImplementation 'androidx.test.espresso:espresso-intents:3.5.1', {
         exclude group: 'com.android.support', module: 'support-annotations'
     }
-    androidTestImplementation 'androidx.test.espresso:espresso-core:3.1.0', {
+    androidTestImplementation 'androidx.test.espresso:espresso-core:3.5.1', {
         exclude group: 'com.android.support', module: 'support-annotations'
     }
-    androidTestImplementation 'androidx.test:runner:1.1.0', {
+    androidTestImplementation 'androidx.test:runner:1.5.2', {
         exclude group: 'com.android.support', module: 'support-annotations'
     }
 }

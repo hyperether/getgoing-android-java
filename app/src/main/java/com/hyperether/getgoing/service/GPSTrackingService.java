@@ -1,8 +1,12 @@
 package com.hyperether.getgoing.service;
 
+import static android.content.pm.ServiceInfo.FOREGROUND_SERVICE_TYPE_LOCATION;
+
 import android.app.PendingIntent;
 import android.content.Intent;
 import android.location.Location;
+import android.os.Build;
+
 import com.hyperether.getgoing.GetGoingApp;
 import com.hyperether.getgoing.R;
 import com.hyperether.getgoing.SharedPref;
@@ -23,22 +27,18 @@ public class GPSTrackingService extends HyperLocationService {
 
     private static final String TAG = GPSTrackingService.class.getSimpleName();
     private static final double ACCURACY_MIN = 20.0;
-
     private int nodeIndex;
     private int profileID;
     private long routeID;
     private double weight = 0;
     private DbRoute currentRoute;
-
     private Location previousLocation;
     private long previousTimestamp = 0;
-
     private long timeCumulative = 0;
     private int secondsCumulative = 0;
     private double kcalCumulative = 0;
     private double distanceCumulative = 0;
     private double velocityAvg = 0;
-
     private CaloriesCalculation calcCal = new CaloriesCalculation();
 
     @Override
@@ -60,21 +60,30 @@ public class GPSTrackingService extends HyperLocationService {
         });
     }
 
-
     @Override
     protected void startForeground() {
         super.startForeground();
 
         Intent intent = new Intent(this, NavigationActivity.class);
         PendingIntent pendingIntent = PendingIntent.getActivity(this, 0, intent,
-                PendingIntent.FLAG_UPDATE_CURRENT);
+                PendingIntent.FLAG_UPDATE_CURRENT | PendingIntent.FLAG_IMMUTABLE);
 
-        startForeground(1123, HyperNotification.getInstance().getForegroundServiceNotification(this,
-                getString(R.string.notification_title),
-                getString(R.string.notification_text),
-                R.drawable.ic_logo_light,
-                R.mipmap.ic_logo,
-                pendingIntent));
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+            startForeground(1123, HyperNotification.getInstance().getForegroundServiceNotification(this,
+                            getString(R.string.notification_title),
+                            getString(R.string.notification_text),
+                            R.drawable.ic_logo_light,
+                            R.mipmap.ic_logo,
+                            pendingIntent),
+                    FOREGROUND_SERVICE_TYPE_LOCATION);
+        } else {
+            startForeground(1123, HyperNotification.getInstance().getForegroundServiceNotification(this,
+                    getString(R.string.notification_title),
+                    getString(R.string.notification_text),
+                    R.drawable.ic_logo_light,
+                    R.mipmap.ic_logo,
+                    pendingIntent));
+        }
     }
 
     @Override

@@ -1,7 +1,6 @@
 package com.hyperether.getgoing.ui.adapter;
 
 import android.content.Context;
-import android.os.Build;
 import android.util.SparseIntArray;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -18,7 +17,6 @@ public class HorizontalListAdapter extends RecyclerView.Adapter<HorizontalListAd
     private SparseIntArray imgList;
     private LayoutInflater mInflater;
     private Context mContext;
-
     public ViewHolder mHolder;
 
     public HorizontalListAdapter(SparseIntArray data, Context pContext) {
@@ -53,12 +51,9 @@ public class HorizontalListAdapter extends RecyclerView.Adapter<HorizontalListAd
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         int positionInList = position % imgList.size();
         mHolder = holder;
-        Integer img = imgList.keyAt(positionInList);
-
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) { //sdk min?
-            holder.img.setImageDrawable(mContext.getDrawable(img));
-            holder.img.setTag(img);
-        }
+        int img = imgList.keyAt(positionInList);
+        holder.img.setImageDrawable(mContext.getDrawable(img));
+        holder.img.setTag(img);
     }
 
     @Override

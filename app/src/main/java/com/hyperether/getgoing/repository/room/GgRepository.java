@@ -15,9 +15,7 @@ import java.util.List;
 import java.util.concurrent.atomic.AtomicLong;
 
 public class GgRepository {
-
     private static GgRepository instance;
-
     private AppDatabase db;
     private DbNodeDao nodeDao;
     private DbRouteDao routeDao;
@@ -132,5 +130,15 @@ public class GgRepository {
             mHandler = new Handler(mThread.getLooper());
         }
         return mHandler;
+    }
+
+    public void updateRouteDuration(long id,long duration){
+        getRepoHandler().post(()->{
+            DbRoute route = routeDao.getRouteById(id);
+            if (route !=null){
+                route.setDuration(duration);
+                routeDao.updateRoute(route);
+            }
+        });
     }
 }

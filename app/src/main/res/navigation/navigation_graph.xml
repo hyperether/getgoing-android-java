@@ -3,7 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/navigation_graph"
-    app:startDestination="@id/getGoingFragment">
+    app:startDestination="@+id/getGoingFragment">
     <fragment
         android:id="@+id/getGoingFragment"
         android:name="com.hyperether.getgoing.ui.fragment.GetGoingFragment"
@@ -11,13 +11,16 @@
         tools:layout="@layout/fragment_getgoing" >
         <action
             android:id="@+id/action_getGoingFragment_to_activitiesFragment"
-            app:destination="@id/activitiesFragment" />
+            app:destination="@+id/activitiesFragment" />
         <action
             android:id="@+id/action_getGoingFragment_to_profileFragment"
-            app:destination="@id/profileFragment" />
+            app:destination="@+id/profileFragment" />
         <action
             android:id="@+id/action_getGoingFragment_to_trackingFragment"
-            app:destination="@id/trackingFragment" />
+            app:destination="@+id/trackingFragment" />
+        <action
+            android:id="@+id/action_getGoingFragment_to_viewAllFragment"
+            app:destination="@id/viewAllFragment" />
     </fragment>
     <fragment
         android:id="@+id/activitiesFragment"
@@ -29,7 +32,7 @@
             app:argType="integer"/>
         <action
             android:id="@+id/action_activitiesFragment_to_showDataFragment"
-            app:destination="@id/showDataFragment" />
+            app:destination="@+id/showDataFragment" />
     </fragment>
     <fragment
         android:id="@+id/profileFragment"
@@ -51,10 +54,14 @@
         tools:layout="@layout/fragment_tracking" >
 
         <argument
-            android:name="searchKey"
+            android:name="tracking_activity"
             app:argType="integer"/>
         <action
             android:id="@+id/action_trackingFragment_to_activitiesFragment"
-            app:destination="@id/activitiesFragment" />
+            app:destination="@+id/activitiesFragment" />
     </fragment>
+    <fragment
+        android:id="@+id/viewAllFragment"
+        android:name="com.hyperether.getgoing.ui.fragment.ViewAllFragment"
+        android:label="ViewAllFragment" />
 </navigation>
