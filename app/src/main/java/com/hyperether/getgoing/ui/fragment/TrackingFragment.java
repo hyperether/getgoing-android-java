@@ -64,7 +64,6 @@ import com.hyperether.getgoing.viewmodel.RouteViewModel;
 import com.hyperether.toolbox.location.HyperLocationService;
 
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
@@ -375,12 +374,12 @@ public class TrackingFragment extends Fragment implements OnMapReadyCallback, Lo
         });
     }
 
-    private void updateDurationInDatabase(){
+    private void updateDurationInDatabase() {
         long elapsedMillis = SystemClock.elapsedRealtime() - showTime.getBase();
-        long elapseSeconds = elapsedMillis/1000;
+        long elapseSeconds = elapsedMillis / 1000;
 
         long routeId = currentRouteID;
-        GgRepository.getInstance().updateRouteDuration(routeId,elapseSeconds);
+        GgRepository.getInstance().updateRouteDuration(routeId, elapseSeconds);
     }
 
     /**
@@ -458,10 +457,10 @@ public class TrackingFragment extends Fragment implements OnMapReadyCallback, Lo
             criteria.setAccuracy(Criteria.ACCURACY_FINE);
             criteria.setPowerRequirement(Criteria.POWER_LOW);
             String bestProvider = locationManager.getBestProvider(criteria, false);
-            if (locationManager!=null){
+            if (locationManager != null) {
                 locationManager.requestLocationUpdates(
                         bestProvider,
-                        3,2,this);
+                        3, 2, this);
 
             }
             Location location = locationManager.getLastKnownLocation(bestProvider);
@@ -620,7 +619,7 @@ public class TrackingFragment extends Fragment implements OnMapReadyCallback, Lo
 
     @Override
     public void onLocationChanged(@NonNull Location location) {
-        if (location !=null){
+        if (location != null) {
             LatLng latLng = new LatLng(location.getLatitude(), location.getLongitude());
 
             mMap.moveCamera(CameraUpdateFactory.newLatLng(latLng));

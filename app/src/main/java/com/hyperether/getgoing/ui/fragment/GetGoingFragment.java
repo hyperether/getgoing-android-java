@@ -5,15 +5,12 @@ import static com.hyperether.getgoing.util.Constants.ACTIVITY_RIDE_ID;
 import static com.hyperether.getgoing.util.Constants.ACTIVITY_RUN_ID;
 import static com.hyperether.getgoing.util.Constants.ACTIVITY_STARTED;
 import static com.hyperether.getgoing.util.Constants.ACTIVITY_WALK_ID;
-import static com.hyperether.getgoing.util.Constants.DATA_DETAILS_LABEL;
 import static com.hyperether.getgoing.util.Constants.OPENED_FROM_GG_ACT;
 import static com.hyperether.getgoing.util.Constants.OPENED_FROM_KEY;
 import static com.hyperether.getgoing.util.Constants.TRACKING_ACTIVITY_KEY;
 
-import android.content.res.Configuration;
 import android.os.Bundle;
 import android.util.DisplayMetrics;
-import android.util.Log;
 import android.util.SparseIntArray;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -36,7 +33,6 @@ import androidx.recyclerview.widget.OrientationHelper;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.recyclerview.widget.SnapHelper;
 
-import com.google.android.gms.dynamic.IFragmentWrapper;
 import com.hyperether.getgoing.R;
 import com.hyperether.getgoing.SharedPref;
 import com.hyperether.getgoing.databinding.FragmentGetgoingBindingImpl;
@@ -66,6 +62,7 @@ public class GetGoingFragment extends Fragment {
     private TextView actLabel, lastExeLabel;
 
     private long lastRoute;
+
     public GetGoingFragment() {
         // Required empty public constructor
     }
@@ -114,12 +111,13 @@ public class GetGoingFragment extends Fragment {
             GgRepository.getInstance().getLastRouteAsLiveData().observe(getActivity(), new Observer<DbRoute>() {
                 @Override
                 public void onChanged(DbRoute dbRoute) {
-                    //Toast.makeText(getContext(), dbRoute.getLength() + "", Toast.LENGTH_SHORT).show();
 
                     mBinding.setLastRoute(dbRoute);
-                    if (dbRoute==null){
+                    if (dbRoute == null) {
                         lastRoute = 0;
-                    }else lastRoute = dbRoute.getActivity_id();
+                    } else {
+                        lastRoute = dbRoute.getActivity_id();
+                    }
                 }
             });
         }
@@ -199,7 +197,6 @@ public class GetGoingFragment extends Fragment {
         });
 
         iv_am_bluerectangle.setOnClickListener(view -> {
-            // TODO: 27.11.23. Dodaj ovde da se na osnovu zadnje aktivnosti otvara ta zadnja aktivnsot a ne sve ostale aktivnosti  
             callActivitiesFragment();
         });
 

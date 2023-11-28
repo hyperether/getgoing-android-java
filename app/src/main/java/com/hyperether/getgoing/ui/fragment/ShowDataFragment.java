@@ -19,7 +19,6 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.databinding.DataBindingUtil;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.Observer;
@@ -29,7 +28,6 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
-import com.google.android.gms.maps.MapFragment;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.CircleOptions;
@@ -40,7 +38,6 @@ import com.hyperether.getgoing.R;
 import com.hyperether.getgoing.SharedPref;
 import com.hyperether.getgoing.databinding.FragmentShowdataBinding;
 import com.hyperether.getgoing.listeners.GgOnClickListener;
-import com.hyperether.getgoing.repository.room.GgRepository;
 import com.hyperether.getgoing.repository.room.entity.DbNode;
 import com.hyperether.getgoing.repository.room.entity.DbRoute;
 import com.hyperether.getgoing.ui.adapter.DbRecyclerAdapter;
@@ -96,6 +93,7 @@ public class ShowDataFragment extends Fragment implements GgOnClickListener, OnM
         mapFragment = (SupportMapFragment) getChildFragmentManager().findFragmentById(R.id.sd_map_view);
         mapFragment.getMapAsync(this);
     }
+
     private void initializeViewModel() {
         routeViewModel = new ViewModelProvider(this).get(RouteViewModel.class);
         routeViewModel.getAllRoutes().observe(getViewLifecycleOwner(), new Observer<List<DbRoute>>() {
@@ -189,7 +187,7 @@ public class ShowDataFragment extends Fragment implements GgOnClickListener, OnM
     private void drawSavedRoute() {
         mMap.clear();
         DbRoute route = binding.getDbRoute();
-        Log.d("Provera mapa",route.toString());
+        Log.d("Provera mapa", route.toString());
         routeViewModel.getNodeListById(route.getId()).observe(getViewLifecycleOwner(), dbNodes -> {
             if (dbNodes != null && !dbNodes.isEmpty()) {
                 Iterator<DbNode> it = dbNodes.iterator();
