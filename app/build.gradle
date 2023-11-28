@@ -49,6 +49,7 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
             buildConfigField "boolean", "FILE_LOG_ACTIVE", "false"
         }
+
     }
 
     lintOptions {
@@ -98,6 +99,8 @@ dependencies {
     annotationProcessor "androidx.room:room-compiler:$room_version"
     testImplementation "androidx.room:room-testing:$room_version"
     implementation "androidx.room:room-rxjava2:$room_version"
+
+    implementation "com.squareup.okhttp3:okhttp:4.9.1"
 
     implementation('com.hyperether:android-toolbox:1.0.17@aar') {
         transitive = true

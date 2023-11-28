@@ -1,14 +1,19 @@
 <resources>
 
     <!-- Base application theme. -->
-    <style name="AppTheme" parent="Theme.Design.Light.NoActionBar">
-        <item name="colorPrimaryDark">@color/light_theme_accent</item>
+    <style name="AppTheme" parent="Theme.AppCompat.Light.NoActionBar">
     </style>
 
-    <style name="AppTheme.Launcher">
-        <item name="android:windowBackground">@drawable/splashscreen</item>
-    </style>
+<!--    <style name="AppTheme.Launcher">-->
+<!--        <item name="android:windowBackground">@drawable/splashscreen</item>-->
+<!--    </style>-->
 
+
+    <style name="AppTheme.Dark" parent="Theme.AppCompat.DayNight.DarkActionBar">
+        <item name="android:statusBarColor">@color/black</item>
+        <item name="colorPrimary">@color/black</item>
+        <item name="android:windowBackground">@color/black</item>
+    </style>
     <style name="FullScreenDialogStyle" parent="Theme.MaterialComponents.Light.Dialog">
         <item name="android:windowNoTitle">true</item>
 
@@ -30,5 +35,42 @@
         <item name="android:minHeight">20dip</item>
         <item name="android:maxHeight">20dip</item>
     </style>
+
+
+    <style name="Title1Text">
+        <item name="android:textSize">24sp</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:fontFamily">sans-serif</item>
+    </style>
+
+    <style name="Title2Text">
+        <item name="android:textColor">@color/textTitleColor2</item>
+        <item name="android:textSize">22sp</item>
+        <item name="android:textStyle">bold</item>
+    </style>
+
+<!--    <style name="Subtitle1Text">-->
+<!--        <item name="android:textColor">@color/textLabelColor</item>-->
+<!--        <item name="android:textSize">22sp</item>-->
+<!--        <item name="android:textStyle">bold</item>-->
+<!--    </style>-->
+
+<!--    <style name="Body1Text">-->
+<!--        <item name="android:textColor">@color/textLabelColor</item>-->
+<!--        <item name="android:textSize">22sp</item>-->
+<!--        <item name="android:textStyle">bold</item>-->
+<!--    </style>-->
+
+<!--    <style name="Body2Text">-->
+<!--        <item name="android:textColor">@color/textLabelColor</item>-->
+<!--        <item name="android:textSize">22sp</item>-->
+<!--        <item name="android:textStyle">bold</item>-->
+<!--    </style>-->
+
+<!--    <style name="ButtonText">-->
+<!--        <item name="android:textColor">@color/textLabelColor</item>-->
+<!--        <item name="android:textSize">22sp</item>-->
+<!--        <item name="android:textStyle">bold</item>-->
+<!--    </style>-->
 
 </resources>

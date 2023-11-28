@@ -4,6 +4,6 @@
     <corners
         android:topLeftRadius="24dp"
         android:topRightRadius="24dp" />
-    <solid android:color="#FFF" />
+    <solid android:color="@color/my_goal_background" />
 
 </shape>

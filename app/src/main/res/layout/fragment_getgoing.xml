@@ -14,7 +14,7 @@
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@color/color_background_new">
+        android:background="@color/primaryBackgroundColor">
 
         <ImageView
             android:id="@+id/iv_am_logo"
@@ -46,11 +46,9 @@
             android:layout_marginStart="19dp"
             android:layout_marginTop="8dp"
             android:text="@string/last_exercise"
-            android:textColor="@color/mat_gray"
-            android:textSize="22sp"
-            android:textStyle="bold"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/iv_am_logo" />
+            app:layout_constraintTop_toBottomOf="@+id/iv_am_logo"
+            style="@style/Title2Text"/>
 
         <TextView
             android:id="@+id/tv_am_viewall"
@@ -74,7 +72,7 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="16dp"
             android:text="@string/choose_your_exercise"
-            android:textColor="@color/mat_gray"
+            android:textColor="@color/textTitleColor2"
             android:textSize="22sp"
             android:textStyle="bold"
             app:layout_constraintBottom_toTopOf="@+id/tv_am_burn"
@@ -99,7 +97,6 @@
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent" />
-
         <ImageView
             android:id="@+id/iv_am_bluerectangle"
             android:layout_width="match_parent"
@@ -217,6 +214,17 @@
             app:layout_constraintTop_toBottomOf="@+id/tv_am_kcalval" />
 
         <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/kcal"
+            android:textSize="18sp"
+            android:layout_marginBottom="6dp"
+            android:textColor="@color/color_background_new"
+            app:layout_constraintBottom_toTopOf="@+id/tv_am_kcalval"
+            app:layout_constraintEnd_toStartOf="@+id/cpb_am_kmgoal2"
+            app:layout_constraintStart_toEndOf="@+id/cpb_am_kmgoal">
+        </TextView>
+        <TextView
             android:id="@+id/tv_am_kcalval"
             displayKcal="@{lastRoute.energy}"
             android:layout_width="wrap_content"
@@ -280,7 +288,7 @@
             app:layout_constraintTop_toTopOf="@+id/cpb_am_kmgoal1"
             app:srcCompat="@drawable/ic_timer_icon" />
 
-        <Button
+        <androidx.appcompat.widget.AppCompatButton
             android:id="@+id/materialButton"
             android:layout_width="160dp"
             android:layout_height="45dp"
@@ -308,7 +316,7 @@
             android:layout_marginRight="8dp"
             android:layout_marginBottom="15dp"
             android:text="@string/placeholder_running"
-            android:textColor="@color/black"
+            android:textColor="@color/textTitleColor2"
             android:textSize="20sp"
             app:layout_constraintBottom_toTopOf="@+id/materialButton"
             app:layout_constraintEnd_toEndOf="parent"

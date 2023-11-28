@@ -20,7 +20,7 @@
         android:icon="@drawable/ic_logo_light"
         android:label="@string/app_name"
         android:logo="@mipmap/ic_logo"
-        android:theme="@style/AppTheme.Launcher">
+        android:theme="@style/Theme.GetGoing">
         <uses-library
             android:name="com.google.android.maps"
             android:required="true" />

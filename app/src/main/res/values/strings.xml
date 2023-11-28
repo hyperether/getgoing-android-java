@@ -110,6 +110,11 @@
     <string name="alert_dialog_delete_route">Delete permanently this route?</string>
     <string name="route_deleted_msg">Route deleted</string>
     <string name="alert_dialog_no_routes">No routes to display</string>
+    <string name="dark_mode">Dark mode</string>
+
+
+    <string name="key_last_route">key_last_route</string>
+    <string name="key_activity_type" />
 </resources>
 
 

@@ -5,12 +5,15 @@ import static com.hyperether.getgoing.util.Constants.ACTIVITY_RIDE_ID;
 import static com.hyperether.getgoing.util.Constants.ACTIVITY_RUN_ID;
 import static com.hyperether.getgoing.util.Constants.ACTIVITY_STARTED;
 import static com.hyperether.getgoing.util.Constants.ACTIVITY_WALK_ID;
+import static com.hyperether.getgoing.util.Constants.DATA_DETAILS_LABEL;
 import static com.hyperether.getgoing.util.Constants.OPENED_FROM_GG_ACT;
 import static com.hyperether.getgoing.util.Constants.OPENED_FROM_KEY;
 import static com.hyperether.getgoing.util.Constants.TRACKING_ACTIVITY_KEY;
 
+import android.content.res.Configuration;
 import android.os.Bundle;
 import android.util.DisplayMetrics;
+import android.util.Log;
 import android.util.SparseIntArray;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -33,6 +36,7 @@ import androidx.recyclerview.widget.OrientationHelper;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.recyclerview.widget.SnapHelper;
 
+import com.google.android.gms.dynamic.IFragmentWrapper;
 import com.hyperether.getgoing.R;
 import com.hyperether.getgoing.SharedPref;
 import com.hyperether.getgoing.databinding.FragmentGetgoingBindingImpl;
@@ -61,6 +65,7 @@ public class GetGoingFragment extends Fragment {
     private TextView blueSentence;
     private TextView actLabel, lastExeLabel;
 
+    private long lastRoute;
     public GetGoingFragment() {
         // Required empty public constructor
     }
@@ -110,7 +115,11 @@ public class GetGoingFragment extends Fragment {
                 @Override
                 public void onChanged(DbRoute dbRoute) {
                     //Toast.makeText(getContext(), dbRoute.getLength() + "", Toast.LENGTH_SHORT).show();
+
                     mBinding.setLastRoute(dbRoute);
+                    if (dbRoute==null){
+                        lastRoute = 0;
+                    }else lastRoute = dbRoute.getActivity_id();
                 }
             });
         }
@@ -160,6 +169,9 @@ public class GetGoingFragment extends Fragment {
         ((LinearLayoutManager) layoutManager).setOrientation(RecyclerView.HORIZONTAL);
         recyclerView.setLayoutManager(layoutManager);
 
+
+        // TODO: 28.11.23. Napravi ovde za promenu boje u dark modu
+
         SparseIntArray DRAWABLE_MAP = new SparseIntArray();
         DRAWABLE_MAP.append(R.drawable.ic_light_bicycling_icon_inactive, R.drawable.ic_light_bicycling_icon_active);
         DRAWABLE_MAP.append(R.drawable.ic_light_running_icon_inactive, R.drawable.ic_light_running_icon_active);
@@ -186,10 +198,28 @@ public class GetGoingFragment extends Fragment {
         });
 
         tv_am_viewall.setOnClickListener(view -> {
+            callActivitiesFragment();
         });
 
         iv_am_bluerectangle.setOnClickListener(view -> {
+            // TODO: 27.11.23. Dodaj ovde da se na osnovu zadnje aktivnosti otvara ta zadnja aktivnsot a ne sve ostale aktivnosti  
             callActivitiesFragment();
+//            Bundle bundle = new Bundle();
+//            Log.d("PROVERA_ID", String.valueOf(lastRoute));
+//            if (lastRoute == 1) {
+//                bundle.putInt(getString(R.string.key_last_route), 1);
+//                bundle.putString(getString(R.string.key_activity_type), "Walking");
+//            } else if (lastRoute == 2) {
+//                bundle.putInt(getString(R.string.key_last_route), 2);
+//                bundle.putString(getString(R.string.key_activity_type), "Running");
+//            } else if (lastRoute == 3) {
+//                bundle.putInt(getString(R.string.key_last_route), 3);
+//                bundle.putString(getString(R.string.key_activity_type), "SomeOtherActivity");
+//            } else {
+//                callActivitiesFragment();
+//            }
+
+
         });
 
         startBtn.setOnClickListener(view -> {
@@ -343,5 +373,10 @@ public class GetGoingFragment extends Fragment {
     private void roomStoreNodeZero(List<DbNode> nodeList) {
         DbRoute dbRoute = new DbRoute(0, 0, 0, 0, "null", 0, 0, 1, 0);
         GgRepository.getInstance().insertRouteInit(dbRoute, nodeList);
+    }
+
+    private boolean isNightModeEnabled() {
+        int nightMode = getResources().getConfiguration().uiMode & Configuration.UI_MODE_NIGHT_MASK;
+        return nightMode == Configuration.UI_MODE_NIGHT_YES;
     }
 }

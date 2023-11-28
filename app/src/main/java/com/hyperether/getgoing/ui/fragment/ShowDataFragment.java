@@ -11,6 +11,7 @@ import android.content.DialogInterface;
 import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -18,6 +19,7 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.databinding.DataBindingUtil;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.Observer;
@@ -29,6 +31,7 @@ import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapFragment;
 import com.google.android.gms.maps.OnMapReadyCallback;
+import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.CircleOptions;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.LatLngBounds;
@@ -37,6 +40,7 @@ import com.hyperether.getgoing.R;
 import com.hyperether.getgoing.SharedPref;
 import com.hyperether.getgoing.databinding.FragmentShowdataBinding;
 import com.hyperether.getgoing.listeners.GgOnClickListener;
+import com.hyperether.getgoing.repository.room.GgRepository;
 import com.hyperether.getgoing.repository.room.entity.DbNode;
 import com.hyperether.getgoing.repository.room.entity.DbRoute;
 import com.hyperether.getgoing.ui.adapter.DbRecyclerAdapter;
@@ -56,8 +60,10 @@ public class ShowDataFragment extends Fragment implements GgOnClickListener, OnM
     private boolean mapToogleDown;
     private int activityId;
     private RouteViewModel routeViewModel;
-    private View rootView;
-    private MapFragment mapFragment;
+    private View rootView,map_bg;
+    private SupportMapFragment mapFragment;
+
+    private ConstraintLayout constraintLayout;
 
     public ShowDataFragment() {
         // Required empty public constructor
@@ -67,6 +73,7 @@ public class ShowDataFragment extends Fragment implements GgOnClickListener, OnM
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         binding = DataBindingUtil.inflate(inflater, R.layout.fragment_showdata, container, false);
+//        binding.setDbRoute(GgRepository.getInstance().getLastRoute());
         rootView = binding.getRoot();
         return rootView;
     }
@@ -85,22 +92,23 @@ public class ShowDataFragment extends Fragment implements GgOnClickListener, OnM
             activityId = ACTIVITY_RIDE_ID;
         }
 
+
+
         initializeViewModel();
         initializeViews();
         populateListView();
 
-        mapFragment = (MapFragment) getActivity().getFragmentManager()
-                .findFragmentById(R.id.sd_map_view);
+        mapFragment = (SupportMapFragment) getChildFragmentManager().findFragmentById(R.id.sd_map_view);
         mapFragment.getMapAsync(this);
     }
 
-    @Override
-    public void onDestroy() {
-        super.onDestroy();
-        if (mapFragment != null) {
-            getActivity().getFragmentManager().beginTransaction().remove(mapFragment).commit();
-        }
-    }
+//    @Override
+//    public void onDestroy() {
+//        super.onDestroy();
+//        if (mapFragment != null) {
+//            getChildFragmentManager().beginTransaction().remove(mapFragment).commit();
+//        }
+//    }
 
     private void initializeViewModel() {
         routeViewModel = new ViewModelProvider(this).get(RouteViewModel.class);
@@ -121,7 +129,7 @@ public class ShowDataFragment extends Fragment implements GgOnClickListener, OnM
                     showNoRoutesDialog();
                 } else {
                     Bitmap bm = ProgressBarBitmap.getWidgetBitmap(getActivity().getApplicationContext(), routes.get(routes.size() - 1).getGoal(), routes.get(0).getLength(), 400, 400, 160, 220, 20, 0);
-                    binding.setVar(routes.get(routes.size() - 1));
+                    binding.setDbRoute(routes.get(routes.size() - 1));
                     binding.progress.setImageBitmap(bm);
                     binding.recyclerList.smoothScrollToPosition(routes.size() - 1);
                 }
@@ -135,8 +143,8 @@ public class ShowDataFragment extends Fragment implements GgOnClickListener, OnM
         binding.tvSdLabel.setText(dataLabel);
         binding.ibSdBackBtn.setOnClickListener(v -> getActivity().onBackPressed());
         binding.btnToggleMap.setOnClickListener(v -> toogleMap());
-        binding.mapFragmentHolder.animate().scaleYBy(-1);
         binding.ibSdDeleteBtn.setOnClickListener(v -> deleteRoute());
+        binding.mapFragmentHolder.setVisibility(View.GONE);
     }
 
     private void deleteRoute() {
@@ -145,7 +153,7 @@ public class ShowDataFragment extends Fragment implements GgOnClickListener, OnM
         dialog.setMessage(getResources().getString(R.string.alert_dialog_delete_route));
         dialog.setPositiveButton(R.string.alert_dialog_positive_button_save_btn,
                 (DialogInterface paramDialogInterface, int paramInt) -> {
-                    routeViewModel.removeRouteById(binding.getVar().getId());
+                    routeViewModel.removeRouteById(binding.getDbRoute().getId());
                     Toast.makeText(getActivity(), "Route deleted", Toast.LENGTH_SHORT).show();
                 });
 
@@ -194,7 +202,8 @@ public class ShowDataFragment extends Fragment implements GgOnClickListener, OnM
 
     private void drawSavedRoute() {
         mMap.clear();
-        DbRoute route = binding.getVar();
+        DbRoute route = binding.getDbRoute();
+        Log.d("Provera mapa",route.toString());
         routeViewModel.getNodeListById(route.getId()).observe(getViewLifecycleOwner(), dbNodes -> {
             if (dbNodes != null && !dbNodes.isEmpty()) {
                 Iterator<DbNode> it = dbNodes.iterator();
@@ -274,11 +283,14 @@ public class ShowDataFragment extends Fragment implements GgOnClickListener, OnM
     @Override
     public void onClick(Bundle bundle) {
         DbRoute route = bundle.getParcelable(BUNDLE_PARCELABLE);
-        binding.setVar(route);
+        binding.setDbRoute(route);
         if (route != null) {
             Bitmap bm = ProgressBarBitmap.getWidgetBitmap(getActivity().getApplicationContext(), route.getGoal(), route.getLength(), 400, 400, 160, 220, 20, 0);
             binding.progress.setImageBitmap(bm);
             drawSavedRoute();
+            binding.progress.setVisibility(View.GONE);
+            binding.goalImg.setVisibility(View.GONE);
+            binding.mapFragmentHolder.setVisibility(View.VISIBLE);
         }
     }
 

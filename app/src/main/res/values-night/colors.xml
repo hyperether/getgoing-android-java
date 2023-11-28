@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="primaryBackgroundColor">#211c30</color>
+    <color name="textTitleColor">#2D2DAA</color>
+    <color name="textTitleColor2">#FFFFFF</color>
+    <color name="primaryButton">#45a8fc</color>
+    <color name="primaryButton2">#b721ff</color>
+    <color name="textGradient1">#45a8fc</color>
+    <color name="textGradient2">#b721ff</color>
+    <color name="my_profile_icon1">#FFFFFF</color>
+    <color name="my_profile_icon2">#FFFFFF</color>
+    <color name="my_profile_icon1_circle">#b721ff</color>
+    <color name="my_profile_icon2_circle">#20b9ff</color>
+    <color name="progress_bar_back">#3c334e</color>
+    <color name="startButton1Trans">#80B721FF</color>
+    <color name="startButton2Trans">#8020B9FF</color>
+    <color name="my_goal_background">#1b132a</color>
+    <color name="my_goal_icons1">#b721ff</color>
+    <color name="my_goal_icons2">#20b9ff</color>
+</resources>
