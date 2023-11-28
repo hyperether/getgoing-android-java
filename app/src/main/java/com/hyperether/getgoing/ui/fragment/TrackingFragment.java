@@ -64,7 +64,6 @@ import com.hyperether.getgoing.viewmodel.RouteViewModel;
 import com.hyperether.toolbox.location.HyperLocationService;
 
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
@@ -199,8 +198,6 @@ public class TrackingFragment extends Fragment implements OnMapReadyCallback, Lo
         } else {
             goalStore = SharedPref.getGoal();
             set_goal.setVisibility(View.GONE);
-//            button_save.setVisibility(View.VISIBLE);
-//            button_save.setClickable(false);
             button_rst.setVisibility(View.VISIBLE);
             button_rst.setClickable(false);
             button_start.setClickable(true);
@@ -233,8 +230,6 @@ public class TrackingFragment extends Fragment implements OnMapReadyCallback, Lo
         @Override
         public void onClick(View v) {
             stopTracking();
-//            button_save.setClickable(true);
-//            button_save.setImageDrawable(getResources().getDrawable(R.drawable.ic_light_save_icon));
             button_rst.setClickable(true);
             button_rst.setImageDrawable(getResources().getDrawable(R.drawable.ic_light_replay_icon));
             saveRoute();
@@ -278,8 +273,6 @@ public class TrackingFragment extends Fragment implements OnMapReadyCallback, Lo
                         mRouteAlreadySaved = true;
                         trackingStarted = false;
 
-//                        button_save.setClickable(false);
-//                        button_save.setImageDrawable(getResources().getDrawable(R.drawable.ic_light_save_icon_disabled));
                         button_rst.setClickable(false);
                         button_rst.setImageDrawable(getResources().getDrawable(R.drawable.ic_light_replay_icon_disabled));
                     });
@@ -462,7 +455,7 @@ public class TrackingFragment extends Fragment implements OnMapReadyCallback, Lo
             criteria.setAccuracy(Criteria.ACCURACY_FINE);
             criteria.setPowerRequirement(Criteria.POWER_LOW);
             String bestProvider = locationManager.getBestProvider(criteria, false);
-            if (locationManager!=null){
+            if (locationManager!=null) {
                 locationManager.requestLocationUpdates(
                         bestProvider,
                         3,2,this);
@@ -624,7 +617,7 @@ public class TrackingFragment extends Fragment implements OnMapReadyCallback, Lo
 
     @Override
     public void onLocationChanged(@NonNull Location location) {
-        if (location !=null){
+        if (location!=null) {
             LatLng latLng = new LatLng(location.getLatitude(), location.getLongitude());
 
             mMap.moveCamera(CameraUpdateFactory.newLatLng(latLng));

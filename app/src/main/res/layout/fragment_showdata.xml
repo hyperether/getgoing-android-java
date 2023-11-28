@@ -6,7 +6,7 @@
     <data>
 
         <variable
-            name="var"
+            name="dbRoute"
             type="com.hyperether.getgoing.repository.room.entity.DbRoute" />
     </data>
 
@@ -14,7 +14,7 @@
         android:id="@+id/sd_root_layout"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@color/color_background_new">
+        android:background="@color/primaryBackgroundColor">
 
         <!-- screen label -->
 
@@ -53,8 +53,7 @@
             app:layout_constraintDimensionRatio="1:1"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            app:srcCompat="@drawable/ic_material_delete_outline"
-            android:tint="@color/light_theme_accent"/>
+            app:srcCompat="@drawable/ic_material_delete_outline" />
 
         <!-- goal progress bar -->
 
@@ -110,7 +109,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="100dp"
                 android:layout_marginTop="24dp"
-                android:background="@color/color_background_new"
+                android:background="@color/primaryBackgroundColor"
                 app:layout_constraintBottom_toBottomOf="@id/tv_sd_dist_unit"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
@@ -121,6 +120,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:gravity="center"
+                android:textColor="@color/my_profile_icon1"
                 android:text="@string/calories"
                 android:textSize="16sp"
                 app:layout_constraintEnd_toEndOf="@id/show_data_cds_info"
@@ -135,6 +135,7 @@
                 android:layout_height="wrap_content"
                 android:gravity="center"
                 android:text="@string/distance"
+                android:textColor="@color/my_profile_icon1"
                 android:textSize="16sp"
                 app:layout_constraintEnd_toStartOf="@+id/tv_sd_speed"
                 app:layout_constraintHorizontal_bias="0.5"
@@ -147,6 +148,7 @@
                 android:layout_height="wrap_content"
                 android:gravity="center"
                 android:text="@string/speed"
+                android:textColor="@color/my_profile_icon1"
                 android:textSize="16sp"
                 app:layout_constraintEnd_toEndOf="@id/show_data_cds_info"
                 app:layout_constraintHorizontal_bias="0.5"
@@ -158,7 +160,8 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:gravity="center"
-                displayKcal="@{var.energy}"
+                displayKcal="@{dbRoute.energy}"
+                android:textColor="@color/my_goal_icons2"
                 android:textSize="22sp"
                 android:textStyle="bold"
                 app:layout_constraintEnd_toEndOf="@id/show_data_cds_info"
@@ -172,7 +175,8 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:gravity="center"
-                displayDistance="@{var.length}"
+                displayDistance="@{dbRoute.length}"
+                android:textColor="@color/my_goal_icons2"
                 android:textSize="22sp"
                 android:textStyle="bold"
                 app:layout_constraintEnd_toStartOf="@+id/tv_sd_speed"
@@ -184,7 +188,8 @@
                 android:id="@+id/tv_sd_speed"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text='@{String.format("%.2f", var.avgSpeed)}'
+                android:text='@{String.format("%.2f", dbRoute.avgSpeed)}'
+                android:textColor="@color/my_goal_icons2"
                 android:gravity="center"
                 android:textSize="22sp"
                 android:textStyle="bold"
@@ -200,6 +205,7 @@
                 android:gravity="center"
                 android:text="@string/energy_unit"
                 android:textSize="14sp"
+                android:textColor="@color/my_profile_icon1"
                 app:layout_constraintEnd_toStartOf="@+id/tv_sd_dist"
                 app:layout_constraintHorizontal_bias="0.5"
                 app:layout_constraintStart_toStartOf="@id/show_data_cds_info"
@@ -210,7 +216,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:gravity="center"
-                displayDistanceUnit="@{var.length}"
+                displayDistanceUnit="@{dbRoute.length}"
                 android:textSize="14sp"
                 app:layout_constraintEnd_toStartOf="@+id/tv_sd_speed"
                 app:layout_constraintHorizontal_bias="0.5"
@@ -223,12 +229,12 @@
                 android:layout_height="wrap_content"
                 android:gravity="center"
                 android:text="@string/speed_unit"
+                android:textColor="@color/my_profile_icon1"
                 android:textSize="14sp"
                 app:layout_constraintEnd_toEndOf="@id/show_data_cds_info"
                 app:layout_constraintHorizontal_bias="0.5"
                 app:layout_constraintStart_toEndOf="@+id/tv_sd_dist"
                 app:layout_constraintTop_toBottomOf="@id/tv_sd_speed" />
-
 
             <!-- progress chart data -->
 
@@ -244,7 +250,6 @@
                 app:layout_constraintStart_toEndOf="@+id/sd_chart_bg"
                 app:layout_constraintTop_toTopOf="@id/sd_chart_bg"
                 app:srcCompat="@drawable/ic_gray_angle_up_icon" />
-
 
             <View
                 android:id="@+id/sd_chart_bg"
@@ -262,6 +267,7 @@
                 android:id="@+id/recyclerList"
                 android:layout_width="wrap_content"
                 android:layout_height="0dp"
+                android:textColor="@color/my_profile_icon1"
                 android:layout_marginTop="8dp"
                 android:layout_marginBottom="8dp"
                 android:paddingStart="32dp"
@@ -274,13 +280,13 @@
 
             </androidx.recyclerview.widget.RecyclerView>
 
-
             <TextView
                 android:id="@+id/tv_goal"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="16dp"
                 android:text="@string/goal"
+                android:textColor="@color/my_profile_icon1"
                 android:textSize="12sp"
                 app:layout_constraintBottom_toTopOf="@+id/sd_dashed_line"
                 app:layout_constraintStart_toStartOf="parent"
@@ -298,11 +304,12 @@
                 app:layout_constraintEnd_toStartOf="@+id/tv_goal_value"
                 app:layout_constraintHorizontal_bias="0.453"
                 app:layout_constraintStart_toEndOf="@+id/tv_goal"
-                app:layout_constraintTop_toTopOf="@+id/recyclerList"/>
+                app:layout_constraintTop_toTopOf="@+id/recyclerList" />
 
             <TextView
                 android:id="@+id/tv_goal_value"
-                goal="@{var.goal}"
+                goal="@{dbRoute.goal}"
+                android:textColor="@color/my_profile_icon1"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginEnd="16dp"
@@ -311,53 +318,26 @@
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/sd_dashed_line"/>
 
-
-        </androidx.constraintlayout.widget.ConstraintLayout>
-
-
-        <!-- map display -->
-
-        <View
-            android:id="@+id/map_bg"
-            android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:background="@android:color/white"
-            android:elevation="0dp"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toStartOf="parent"
-            app:layout_constraintStart_toEndOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/barrier2" />
-
-
-        <androidx.cardview.widget.CardView
-            android:id="@+id/map_fragment_holder"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:elevation="0dp"
-            app:cardCornerRadius="12dp"
-            app:cardElevation="0dp"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintDimensionRatio="w,1:1"
-            app:layout_constraintEnd_toEndOf="@+id/tv_sd_label"
-            app:layout_constraintStart_toStartOf="@+id/tv_sd_label"
-            app:layout_constraintTop_toTopOf="@id/map_bg"
-            app:layout_constraintVertical_bias="0.75">
-
-            <fragment
-                android:id="@+id/sd_map_view"
-                class="com.google.android.gms.maps.MapFragment"
-                android:layout_width="250dp"
-                android:layout_height="250dp"
-                app:layout_constraintBottom_toTopOf="@+id/map_bg"
+            <androidx.cardview.widget.CardView
+                android:id="@+id/map_fragment_holder"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                app:cardCornerRadius="12dp"
+                android:layout_marginTop="140dp"
                 app:layout_constraintDimensionRatio="w,1:1"
-                app:layout_constraintEnd_toStartOf="parent"
-                app:layout_constraintHorizontal_bias="0.5"
-                app:layout_constraintStart_toEndOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/map_bg" />
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/sd_dashed_line">
 
-        </androidx.cardview.widget.CardView>
-
-
+                <fragment
+                    android:id="@+id/sd_map_view"
+                    class="com.google.android.gms.maps.SupportMapFragment"
+                    android:layout_width="250dp"
+                    android:layout_height="250dp"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/ib_sd_back_btn" />
+            </androidx.cardview.widget.CardView>
+        </androidx.constraintlayout.widget.ConstraintLayout>
     </androidx.constraintlayout.widget.ConstraintLayout>
-
 </layout>

@@ -1,5 +1,21 @@
-<vector android:height="80dp" android:viewportHeight="90"
-    android:viewportWidth="90" android:width="80dp" xmlns:android="http://schemas.android.com/apk/res/android">
-    <path android:fillAlpha="1" android:fillColor="#fff"
-        android:pathData="M45,45m-45,0a45,45 0,1 1,90 0a45,45 0,1 1,-90 0" android:strokeAlpha="0.4"/>
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:aapt="http://schemas.android.com/aapt"
+    android:width="80dp"
+    android:height="80dp"
+    android:viewportWidth="200"
+    android:viewportHeight="200">
+    <path
+        android:pathData="M100,100m-100,0a100,100 0,1 1,200 0a100,100 0,1 1,-200 0">
+        <aapt:attr name="android:fillColor">
+            <gradient
+                android:startX="100"
+                android:startY="10"
+                android:endX="100"
+                android:endY="200"
+                android:type="linear">
+                <item android:offset="0" android:color="@color/my_profile_icon2_circle"/>
+                <item android:offset="1" android:color="@color/my_profile_icon1_circle"/>
+            </gradient>
+        </aapt:attr>
+    </path>
 </vector>

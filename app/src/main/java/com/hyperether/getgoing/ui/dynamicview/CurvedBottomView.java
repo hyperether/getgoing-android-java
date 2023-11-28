@@ -1,6 +1,7 @@
 package com.hyperether.getgoing.ui.dynamicview;
 
 import android.content.Context;
+import android.content.res.Resources;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
@@ -9,6 +10,7 @@ import android.graphics.Point;
 import android.util.AttributeSet;
 import android.view.View;
 
+import com.hyperether.getgoing.R;
 public class CurvedBottomView extends View {
 
     private Path mPath;
@@ -31,25 +33,30 @@ public class CurvedBottomView extends View {
 
     public CurvedBottomView(Context context) {
         super(context);
-        init();
+        init(context);
     }
 
     public CurvedBottomView(Context context, AttributeSet attrs) {
         super(context, attrs);
-        init();
+        init(context);
     }
 
     public CurvedBottomView(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
-        init();
+        init(context);
     }
 
-    private void init() {
+    private void init(Context context) {
         mPath = new Path();
         mPaint = new Paint();
 
+        Resources resources = context.getResources();
+        int backgroundColor = Color.WHITE;
+        if (isDarkModeEnabled(context)) {
+            backgroundColor = resources.getColor(R.color.curved_bottom_view);
+        }
         mPaint.setStyle(Paint.Style.FILL_AND_STROKE);
-        mPaint.setColor(Color.WHITE);
+        mPaint.setColor(backgroundColor);
         setBackgroundColor(Color.TRANSPARENT);
     }
 
@@ -89,5 +96,9 @@ public class CurvedBottomView extends View {
     protected void onDraw(Canvas canvas) {
         super.onDraw(canvas);
         canvas.drawPath(mPath, mPaint);
+    }
+    private boolean isDarkModeEnabled(Context context) {
+        int nightModeFlags = context.getResources().getConfiguration().uiMode & android.content.res.Configuration.UI_MODE_NIGHT_MASK;
+        return nightModeFlags == android.content.res.Configuration.UI_MODE_NIGHT_YES;
     }
 }

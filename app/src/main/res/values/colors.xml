@@ -3,8 +3,27 @@
     <color name="mat_gray">#424242</color>
     <color name="light_theme_accent">#20baff</color>
     <color name="color_background_new">#EDF1F1</color>
-    <color name="color_button_background">#CDDDDD</color>
-
+    <color name="color_button_background">#20b9ff</color>
     <color name="transparent_light_theme_accent">#8020BAFF</color>
-
+    <color name="dark_theme_accent">#20baff</color>
+    <color name="text_light_primary">#2e2f30</color>
+    <color name="dark_background_primary">#221d30</color>
+    <color name="curved_bottom_view">#1b132a</color>
+    <color name="primaryBackgroundColor">#f0f4f7</color>
+    <color name="textTitleColor">#2f2f2f</color>
+    <color name="textTitleColor2">#2f2f2f</color>
+    <color name="primaryButton">#20b9ff</color>
+    <color name="primaryButton2">#20b9ff</color>
+    <color name="textGradient1">#fffeff</color>
+    <color name="textGradient2">#fffeff</color>
+    <color name="my_profile_icon1">#474747</color>
+    <color name="my_profile_icon2">#20b9ff</color>
+    <color name="my_profile_icon1_circle">#ffffff</color>
+    <color name="my_profile_icon2_circle">#ffffff</color>
+    <color name="progress_bar_back">#ffffff</color>
+    <color name="startButton1Trans">#80FFFEFF</color>
+    <color name="startButton2Trans">#80FFFEFF</color>
+    <color name="my_goal_background">#FFFFFF</color>
+    <color name="my_goal_icons1">#474747</color>
+    <color name="my_goal_icons2">#474747</color>
 </resources>

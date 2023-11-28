@@ -8,8 +8,8 @@
             android:endY="150"
             android:endX="160"
             android:type="linear"
-            android:startColor="#FF20BAFF"
-            android:endColor="#FF6BD1FF"
+            android:startColor="@color/primaryButton"
+            android:endColor="@color/primaryButton2"
             android:angle="270">
         </gradient>
         <corners

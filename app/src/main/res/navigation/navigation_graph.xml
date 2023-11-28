@@ -19,8 +19,8 @@
             android:id="@+id/action_getGoingFragment_to_trackingFragment"
             app:destination="@+id/trackingFragment" />
         <action
-            android:id="@+id/action_getGoingFragment_to_viewAllFragment"
-            app:destination="@id/viewAllFragment" />
+            android:id="@+id/action_getGoingFragment_to_showDataFragment"
+            app:destination="@id/showDataFragment" />
     </fragment>
     <fragment
         android:id="@+id/activitiesFragment"
@@ -60,8 +60,4 @@
             android:id="@+id/action_trackingFragment_to_activitiesFragment"
             app:destination="@+id/activitiesFragment" />
     </fragment>
-    <fragment
-        android:id="@+id/viewAllFragment"
-        android:name="com.hyperether.getgoing.ui.fragment.ViewAllFragment"
-        android:label="ViewAllFragment" />
 </navigation>

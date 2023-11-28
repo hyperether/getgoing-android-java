@@ -8,13 +8,14 @@
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@color/color_background_new">
+        android:backgroundTint="@color/primaryBackgroundColor">
 
         <ImageButton
             android:id="@+id/ib_fp_backbutton"
             android:layout_width="62dp"
             android:layout_height="62dp"
             android:layout_marginTop="8dp"
+            android:backgroundTint="?attr/colorSecondary"
             android:background="@android:color/transparent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
@@ -27,7 +28,7 @@
             android:layout_marginStart="8dp"
             android:layout_marginLeft="8dp"
             android:text="@string/my_profile"
-            android:textColor="@color/mat_gray"
+            android:textColor="?android:textColorSecondary"
             android:textSize="24sp"
             app:layout_constraintBottom_toBottomOf="@+id/ib_fp_backbutton"
             app:layout_constraintStart_toEndOf="@+id/ib_fp_backbutton"
@@ -41,7 +42,7 @@
             android:layout_marginLeft="16dp"
             android:layout_marginTop="8dp"
             android:text="@string/my_data"
-            android:textColor="@color/mat_gray"
+            android:textColor="@color/textTitleColor"
             android:textSize="24sp"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/ib_fp_backbutton" />
@@ -101,7 +102,7 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="6dp"
             android:text="@string/placeholder_male"
-            android:textColor="@color/mat_gray"
+            android:textColor="@color/textTitleColor2"
             app:layout_constraintEnd_toEndOf="@+id/ib_fp_gender"
             app:layout_constraintStart_toStartOf="@+id/ib_fp_gender"
             app:layout_constraintTop_toBottomOf="@+id/ib_fp_gender" />
@@ -112,7 +113,7 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="6dp"
             android:text="@string/placeholder_21_year"
-            android:textColor="@color/mat_gray"
+            android:textColor="@color/textTitleColor2"
             app:layout_constraintEnd_toEndOf="@+id/ib_fp_age"
             app:layout_constraintHorizontal_bias="0.485"
             app:layout_constraintStart_toStartOf="@+id/ib_fp_age"
@@ -124,7 +125,7 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="6dp"
             android:text="@string/placeholder_185cm"
-            android:textColor="@color/mat_gray"
+            android:textColor="@color/textTitleColor2"
             app:layout_constraintEnd_toEndOf="@+id/ib_fp_height"
             app:layout_constraintHorizontal_bias="0.485"
             app:layout_constraintStart_toStartOf="@+id/ib_fp_height"
@@ -136,7 +137,7 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="6dp"
             android:text="@string/placeholder_85kg"
-            android:textColor="@color/mat_gray"
+            android:textColor="@color/textTitleColor2"
             app:layout_constraintEnd_toEndOf="@+id/ib_fp_weight"
             app:layout_constraintHorizontal_bias="0.485"
             app:layout_constraintStart_toStartOf="@+id/ib_fp_weight"
@@ -235,7 +236,7 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="8dp"
             android:text="@string/totalkm_0km"
-            android:textColor="@color/mat_gray"
+            android:textColor="@color/textTitleColor2"
             app:layout_constraintEnd_toEndOf="@+id/iv_fp_road"
             app:layout_constraintStart_toStartOf="@+id/iv_fp_road"
             app:layout_constraintTop_toBottomOf="@+id/iv_fp_road" />
@@ -246,10 +247,9 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="8dp"
             android:text="@string/totalkcal_0kcal"
-            android:textColor="@color/mat_gray"
+            android:textColor="@color/textTitleColor2"
             app:layout_constraintEnd_toEndOf="@+id/iv_fp_calories"
             app:layout_constraintStart_toStartOf="@+id/iv_fp_calories"
             app:layout_constraintTop_toBottomOf="@+id/iv_fp_calories" />
-
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

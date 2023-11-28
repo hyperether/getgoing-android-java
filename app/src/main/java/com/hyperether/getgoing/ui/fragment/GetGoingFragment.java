@@ -61,6 +61,7 @@ public class GetGoingFragment extends Fragment {
     private TextView blueSentence;
     private TextView actLabel, lastExeLabel;
 
+    private long lastRoute;
     public GetGoingFragment() {
         // Required empty public constructor
     }
@@ -109,8 +110,13 @@ public class GetGoingFragment extends Fragment {
             GgRepository.getInstance().getLastRouteAsLiveData().observe(getActivity(), new Observer<DbRoute>() {
                 @Override
                 public void onChanged(DbRoute dbRoute) {
-                    //Toast.makeText(getContext(), dbRoute.getLength() + "", Toast.LENGTH_SHORT).show();
+
                     mBinding.setLastRoute(dbRoute);
+                    if (dbRoute == null) {
+                        lastRoute = 0;
+                    } else {
+                        lastRoute = dbRoute.getActivity_id();
+                    }
                 }
             });
         }
@@ -141,7 +147,6 @@ public class GetGoingFragment extends Fragment {
             bundle.putInt(TRACKING_ACTIVITY_KEY, id);
             navigationController.navigate(R.id.action_getGoingFragment_to_trackingFragment, bundle);
         } else {
-            Toast.makeText(getActivity(), "You must enter your data first!", Toast.LENGTH_LONG).show();
             callProfileFragment();
         }
     }
@@ -186,6 +191,7 @@ public class GetGoingFragment extends Fragment {
         });
 
         tv_am_viewall.setOnClickListener(view -> {
+            callActivitiesFragment();
         });
 
         iv_am_bluerectangle.setOnClickListener(view -> {
