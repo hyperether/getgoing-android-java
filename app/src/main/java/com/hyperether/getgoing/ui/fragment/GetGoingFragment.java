@@ -169,9 +169,6 @@ public class GetGoingFragment extends Fragment {
         ((LinearLayoutManager) layoutManager).setOrientation(RecyclerView.HORIZONTAL);
         recyclerView.setLayoutManager(layoutManager);
 
-
-        // TODO: 28.11.23. Napravi ovde za promenu boje u dark modu
-
         SparseIntArray DRAWABLE_MAP = new SparseIntArray();
         DRAWABLE_MAP.append(R.drawable.ic_light_bicycling_icon_inactive, R.drawable.ic_light_bicycling_icon_active);
         DRAWABLE_MAP.append(R.drawable.ic_light_running_icon_inactive, R.drawable.ic_light_running_icon_active);
@@ -204,22 +201,6 @@ public class GetGoingFragment extends Fragment {
         iv_am_bluerectangle.setOnClickListener(view -> {
             // TODO: 27.11.23. Dodaj ovde da se na osnovu zadnje aktivnosti otvara ta zadnja aktivnsot a ne sve ostale aktivnosti  
             callActivitiesFragment();
-//            Bundle bundle = new Bundle();
-//            Log.d("PROVERA_ID", String.valueOf(lastRoute));
-//            if (lastRoute == 1) {
-//                bundle.putInt(getString(R.string.key_last_route), 1);
-//                bundle.putString(getString(R.string.key_activity_type), "Walking");
-//            } else if (lastRoute == 2) {
-//                bundle.putInt(getString(R.string.key_last_route), 2);
-//                bundle.putString(getString(R.string.key_activity_type), "Running");
-//            } else if (lastRoute == 3) {
-//                bundle.putInt(getString(R.string.key_last_route), 3);
-//                bundle.putString(getString(R.string.key_activity_type), "SomeOtherActivity");
-//            } else {
-//                callActivitiesFragment();
-//            }
-
-
         });
 
         startBtn.setOnClickListener(view -> {
@@ -373,10 +354,5 @@ public class GetGoingFragment extends Fragment {
     private void roomStoreNodeZero(List<DbNode> nodeList) {
         DbRoute dbRoute = new DbRoute(0, 0, 0, 0, "null", 0, 0, 1, 0);
         GgRepository.getInstance().insertRouteInit(dbRoute, nodeList);
-    }
-
-    private boolean isNightModeEnabled() {
-        int nightMode = getResources().getConfiguration().uiMode & Configuration.UI_MODE_NIGHT_MASK;
-        return nightMode == Configuration.UI_MODE_NIGHT_YES;
     }
 }

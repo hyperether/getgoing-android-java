@@ -40,7 +40,6 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/ib_al_backbutton" />
 
-
     <com.hyperether.getgoing.ui.dynamicview.CurvedBottomView
         android:id="@+id/al_customBottomBar"
         android:layout_width="match_parent"

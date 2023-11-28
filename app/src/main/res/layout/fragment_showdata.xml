@@ -218,7 +218,6 @@
                 android:gravity="center"
                 displayDistanceUnit="@{dbRoute.length}"
                 android:textSize="14sp"
-
                 app:layout_constraintEnd_toStartOf="@+id/tv_sd_speed"
                 app:layout_constraintHorizontal_bias="0.5"
                 app:layout_constraintStart_toEndOf="@+id/tv_sd_kcal"
@@ -237,7 +236,6 @@
                 app:layout_constraintStart_toEndOf="@+id/tv_sd_dist"
                 app:layout_constraintTop_toBottomOf="@id/tv_sd_speed" />
 
-
             <!-- progress chart data -->
 
             <ImageButton
@@ -252,7 +250,6 @@
                 app:layout_constraintStart_toEndOf="@+id/sd_chart_bg"
                 app:layout_constraintTop_toTopOf="@id/sd_chart_bg"
                 app:srcCompat="@drawable/ic_gray_angle_up_icon" />
-
 
             <View
                 android:id="@+id/sd_chart_bg"
@@ -282,7 +279,6 @@
                 android:elevation="1dp">
 
             </androidx.recyclerview.widget.RecyclerView>
-
 
             <TextView
                 android:id="@+id/tv_goal"
@@ -343,7 +339,5 @@
                     app:layout_constraintTop_toBottomOf="@+id/ib_sd_back_btn" />
             </androidx.cardview.widget.CardView>
         </androidx.constraintlayout.widget.ConstraintLayout>
-
     </androidx.constraintlayout.widget.ConstraintLayout>
-
 </layout>

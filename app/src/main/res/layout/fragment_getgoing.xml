@@ -224,6 +224,7 @@
             app:layout_constraintEnd_toStartOf="@+id/cpb_am_kmgoal2"
             app:layout_constraintStart_toEndOf="@+id/cpb_am_kmgoal">
         </TextView>
+
         <TextView
             android:id="@+id/tv_am_kcalval"
             displayKcal="@{lastRoute.energy}"

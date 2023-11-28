@@ -98,7 +98,6 @@ public class ProfileFragment extends Fragment {
                 initTotals(dbRoutes);
             }
         });
-        isNightModeEnabled();
     }
 
     private void initScreenDimen() {
@@ -322,9 +321,5 @@ public class ProfileFragment extends Fragment {
                 totalCalories.setText(totalKcal[0] + "kcal");
             });
         });
-    }
-    private boolean isNightModeEnabled() {
-        int nightMode = getResources().getConfiguration().uiMode & Configuration.UI_MODE_NIGHT_MASK;
-        return nightMode == Configuration.UI_MODE_NIGHT_YES;
     }
 }

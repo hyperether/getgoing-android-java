@@ -60,10 +60,8 @@ public class ShowDataFragment extends Fragment implements GgOnClickListener, OnM
     private boolean mapToogleDown;
     private int activityId;
     private RouteViewModel routeViewModel;
-    private View rootView,map_bg;
+    private View rootView;
     private SupportMapFragment mapFragment;
-
-    private ConstraintLayout constraintLayout;
 
     public ShowDataFragment() {
         // Required empty public constructor
@@ -73,7 +71,6 @@ public class ShowDataFragment extends Fragment implements GgOnClickListener, OnM
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         binding = DataBindingUtil.inflate(inflater, R.layout.fragment_showdata, container, false);
-//        binding.setDbRoute(GgRepository.getInstance().getLastRoute());
         rootView = binding.getRoot();
         return rootView;
     }
@@ -92,8 +89,6 @@ public class ShowDataFragment extends Fragment implements GgOnClickListener, OnM
             activityId = ACTIVITY_RIDE_ID;
         }
 
-
-
         initializeViewModel();
         initializeViews();
         populateListView();
@@ -101,15 +96,6 @@ public class ShowDataFragment extends Fragment implements GgOnClickListener, OnM
         mapFragment = (SupportMapFragment) getChildFragmentManager().findFragmentById(R.id.sd_map_view);
         mapFragment.getMapAsync(this);
     }
-
-//    @Override
-//    public void onDestroy() {
-//        super.onDestroy();
-//        if (mapFragment != null) {
-//            getChildFragmentManager().beginTransaction().remove(mapFragment).commit();
-//        }
-//    }
-
     private void initializeViewModel() {
         routeViewModel = new ViewModelProvider(this).get(RouteViewModel.class);
         routeViewModel.getAllRoutes().observe(getViewLifecycleOwner(), new Observer<List<DbRoute>>() {

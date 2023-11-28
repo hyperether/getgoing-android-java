@@ -233,8 +233,6 @@ public class TrackingFragment extends Fragment implements OnMapReadyCallback, Lo
         @Override
         public void onClick(View v) {
             stopTracking();
-//            button_save.setClickable(true);
-//            button_save.setImageDrawable(getResources().getDrawable(R.drawable.ic_light_save_icon));
             button_rst.setClickable(true);
             button_rst.setImageDrawable(getResources().getDrawable(R.drawable.ic_light_replay_icon));
             saveRoute();
@@ -278,8 +276,6 @@ public class TrackingFragment extends Fragment implements OnMapReadyCallback, Lo
                         mRouteAlreadySaved = true;
                         trackingStarted = false;
 
-//                        button_save.setClickable(false);
-//                        button_save.setImageDrawable(getResources().getDrawable(R.drawable.ic_light_save_icon_disabled));
                         button_rst.setClickable(false);
                         button_rst.setImageDrawable(getResources().getDrawable(R.drawable.ic_light_replay_icon_disabled));
                     });

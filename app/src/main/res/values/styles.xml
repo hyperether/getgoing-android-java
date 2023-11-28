@@ -49,28 +49,5 @@
         <item name="android:textStyle">bold</item>
     </style>
 
-<!--    <style name="Subtitle1Text">-->
-<!--        <item name="android:textColor">@color/textLabelColor</item>-->
-<!--        <item name="android:textSize">22sp</item>-->
-<!--        <item name="android:textStyle">bold</item>-->
-<!--    </style>-->
-
-<!--    <style name="Body1Text">-->
-<!--        <item name="android:textColor">@color/textLabelColor</item>-->
-<!--        <item name="android:textSize">22sp</item>-->
-<!--        <item name="android:textStyle">bold</item>-->
-<!--    </style>-->
-
-<!--    <style name="Body2Text">-->
-<!--        <item name="android:textColor">@color/textLabelColor</item>-->
-<!--        <item name="android:textSize">22sp</item>-->
-<!--        <item name="android:textStyle">bold</item>-->
-<!--    </style>-->
-
-<!--    <style name="ButtonText">-->
-<!--        <item name="android:textColor">@color/textLabelColor</item>-->
-<!--        <item name="android:textSize">22sp</item>-->
-<!--        <item name="android:textStyle">bold</item>-->
-<!--    </style>-->
-
 </resources>
+

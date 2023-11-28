@@ -4,20 +4,11 @@
     <color name="light_theme_accent">#20baff</color>
     <color name="color_background_new">#EDF1F1</color>
     <color name="color_button_background">#20b9ff</color>
-
     <color name="transparent_light_theme_accent">#8020BAFF</color>
-
-
     <color name="dark_theme_accent">#20baff</color>
-
     <color name="text_light_primary">#2e2f30</color>
-
-
     <color name="dark_background_primary">#221d30</color>
     <color name="curved_bottom_view">#1b132a</color>
-
-
-
     <color name="primaryBackgroundColor">#f0f4f7</color>
     <color name="textTitleColor">#2f2f2f</color>
     <color name="textTitleColor2">#2f2f2f</color>
