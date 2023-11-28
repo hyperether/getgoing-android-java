@@ -187,7 +187,6 @@ public class ShowDataFragment extends Fragment implements GgOnClickListener, OnM
     private void drawSavedRoute() {
         mMap.clear();
         DbRoute route = binding.getDbRoute();
-        Log.d("Provera mapa", route.toString());
         routeViewModel.getNodeListById(route.getId()).observe(getViewLifecycleOwner(), dbNodes -> {
             if (dbNodes != null && !dbNodes.isEmpty()) {
                 Iterator<DbNode> it = dbNodes.iterator();

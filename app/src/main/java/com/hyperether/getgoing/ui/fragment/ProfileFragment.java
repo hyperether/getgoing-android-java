@@ -33,9 +33,7 @@ public class ProfileFragment extends Fragment {
     private TextView tvAge, tvGender, tvHeight, tvWeight;
     private TextView totalMileage, totalCalories;
     private TextView dataLabel;
-
     private ImageView genderImg;
-
     private RouteViewModel routeViewModel;
 
     public ProfileFragment() {

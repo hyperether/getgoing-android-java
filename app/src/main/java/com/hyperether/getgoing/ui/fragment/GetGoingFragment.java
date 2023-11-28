@@ -62,7 +62,6 @@ public class GetGoingFragment extends Fragment {
     private TextView actLabel, lastExeLabel;
 
     private long lastRoute;
-
     public GetGoingFragment() {
         // Required empty public constructor
     }
@@ -148,7 +147,6 @@ public class GetGoingFragment extends Fragment {
             bundle.putInt(TRACKING_ACTIVITY_KEY, id);
             navigationController.navigate(R.id.action_getGoingFragment_to_trackingFragment, bundle);
         } else {
-            Toast.makeText(getActivity(), "You must enter your data first!", Toast.LENGTH_LONG).show();
             callProfileFragment();
         }
     }

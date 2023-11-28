@@ -8,7 +8,7 @@
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:backgroundTint="?attr/colorPrimary">
+        android:backgroundTint="@color/primaryBackgroundColor">
 
         <ImageButton
             android:id="@+id/ib_fp_backbutton"

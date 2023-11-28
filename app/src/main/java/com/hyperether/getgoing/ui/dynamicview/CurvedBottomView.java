@@ -11,7 +11,6 @@ import android.util.AttributeSet;
 import android.view.View;
 
 import com.hyperether.getgoing.R;
-
 public class CurvedBottomView extends View {
 
     private Path mPath;
@@ -56,7 +55,6 @@ public class CurvedBottomView extends View {
         if (isDarkModeEnabled(context)) {
             backgroundColor = resources.getColor(R.color.curved_bottom_view);
         }
-
         mPaint.setStyle(Paint.Style.FILL_AND_STROKE);
         mPaint.setColor(backgroundColor);
         setBackgroundColor(Color.TRANSPARENT);
@@ -99,7 +97,6 @@ public class CurvedBottomView extends View {
         super.onDraw(canvas);
         canvas.drawPath(mPath, mPaint);
     }
-
     private boolean isDarkModeEnabled(Context context) {
         int nightModeFlags = context.getResources().getConfiguration().uiMode & android.content.res.Configuration.UI_MODE_NIGHT_MASK;
         return nightModeFlags == android.content.res.Configuration.UI_MODE_NIGHT_YES;
