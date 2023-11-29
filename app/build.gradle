@@ -51,14 +51,14 @@ android {
         }
     }
 
-    lintOptions {
-        abortOnError false
-    }
     compileOptions {
         sourceCompatibility = '1.8'
         targetCompatibility = '1.8'
     }
     namespace 'com.hyperether.getgoing'
+    lint {
+        abortOnError false
+    }
 }
 
 dependencies {
