@@ -1,14 +1,14 @@
 <resources>
 
     <!-- Base application theme. -->
-    <style name="AppTheme" parent="Theme.AppCompat.Light.NoActionBar">
-    </style>
+    <style name="AppTheme" parent="Theme.AppCompat.Light.NoActionBar"></style>
 
     <style name="AppTheme.Dark" parent="Theme.AppCompat.DayNight.DarkActionBar">
         <item name="android:statusBarColor">@color/black</item>
         <item name="colorPrimary">@color/black</item>
         <item name="android:windowBackground">@color/black</item>
     </style>
+
     <style name="FullScreenDialogStyle" parent="Theme.MaterialComponents.Light.Dialog">
         <item name="android:windowNoTitle">true</item>
 
@@ -42,6 +42,18 @@
         <item name="android:textColor">@color/textTitleColor2</item>
         <item name="android:textSize">22sp</item>
         <item name="android:textStyle">bold</item>
+    </style>
+
+    <style name="Widget.App.Button" parent="Widget.Material3.Button.TextButton.Dialog">
+        <item name="android:textColor">@color/primaryButton</item>
+    </style>
+
+    <style name="MaterialAlertDialog.App.Title.Text" parent="MaterialAlertDialog.Material3.Title.Text">
+        <item name="android:textColor">#4CAF50</item>
+    </style>
+
+    <style name="MaterialAlertDialog.App" parent="MaterialAlertDialog.Material3">
+
     </style>
 
 </resources>

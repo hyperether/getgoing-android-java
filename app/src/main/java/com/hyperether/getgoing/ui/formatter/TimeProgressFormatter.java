@@ -14,6 +14,10 @@ public final class TimeProgressFormatter implements CircleProgressBar.ProgressFo
     @SuppressLint("DefaultLocale")
     @Override
     public CharSequence format(int progress, int max) {
-        return String.valueOf(mData / 60000);
+        if (mData < 60) {
+            return String.valueOf(mData).concat(" sec");
+        } else {
+            return String.valueOf(mData / 60).concat(" min");
+        }
     }
 }

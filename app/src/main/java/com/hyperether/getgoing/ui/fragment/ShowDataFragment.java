@@ -6,12 +6,10 @@ import static com.hyperether.getgoing.util.Constants.ACTIVITY_WALK_ID;
 import static com.hyperether.getgoing.util.Constants.BUNDLE_PARCELABLE;
 import static com.hyperether.getgoing.util.Constants.DATA_DETAILS_LABEL;
 
-import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -34,6 +32,7 @@ import com.google.android.gms.maps.model.CircleOptions;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.LatLngBounds;
 import com.google.android.gms.maps.model.PolylineOptions;
+import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.hyperether.getgoing.R;
 import com.hyperether.getgoing.SharedPref;
 import com.hyperether.getgoing.databinding.FragmentShowdataBinding;
@@ -132,7 +131,7 @@ public class ShowDataFragment extends Fragment implements GgOnClickListener, OnM
     }
 
     private void deleteRoute() {
-        AlertDialog.Builder dialog = new AlertDialog.Builder(getActivity());
+        MaterialAlertDialogBuilder dialog = new MaterialAlertDialogBuilder(getActivity());
         dialog.setCancelable(false);
         dialog.setMessage(getResources().getString(R.string.alert_dialog_delete_route));
         dialog.setPositiveButton(R.string.alert_dialog_positive_button_save_btn,
@@ -148,7 +147,7 @@ public class ShowDataFragment extends Fragment implements GgOnClickListener, OnM
     }
 
     private void showNoRoutesDialog() {
-        new AlertDialog.Builder(getActivity())
+        new MaterialAlertDialogBuilder(getActivity())
                 .setCancelable(false)
                 .setMessage(getResources().getString(R.string.alert_dialog_no_routes))
                 .setPositiveButton(R.string.alert_dialog_positive_button_save_btn,

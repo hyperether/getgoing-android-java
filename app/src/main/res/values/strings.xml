@@ -111,6 +111,7 @@
     <string name="route_deleted_msg">Route deleted</string>
     <string name="alert_dialog_no_routes">No routes to display</string>
     <string name="dark_mode">Dark mode</string>
+    <string name="time">time</string>
 </resources>
 
 
