@@ -1,12 +1,10 @@
 package com.hyperether.getgoing.ui.fragment;
 
-import static com.hyperether.getgoing.ui.fragment.GetGoingFragment.ratio;
 import static com.hyperether.getgoing.util.Constants.DATA_DETAILS_LABEL;
 import static com.hyperether.getgoing.util.Constants.OPENED_FROM_KEY;
 import static com.hyperether.getgoing.util.Constants.OPENED_FROM_LOCATION_ACT;
 
 import android.annotation.SuppressLint;
-import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -27,6 +25,7 @@ import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 
+import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.hyperether.getgoing.R;
 import com.hyperether.getgoing.SharedPref;
 import com.hyperether.getgoing.repository.room.entity.DbRoute;
@@ -93,7 +92,6 @@ public class ActivitiesFragment extends Fragment {
         mileageRun = getView().findViewById(R.id.tv_fa_pb_mileage_run);
         mileageRide = getView().findViewById(R.id.tv_fa_pb_mileage_ride);
 
-        initScreenDimen();
         initLabels();
         initProgressStringColor();
         initListeners();
@@ -105,27 +103,6 @@ public class ActivitiesFragment extends Fragment {
         });
     }
 
-    private void initScreenDimen() {
-        if (ratio >= 1.8) {
-            whiteView = getView().findViewById(R.id.view);
-            goal = getView().findViewById(R.id.tv_fa_goal);
-            walkingLabel = getView().findViewById(R.id.tv_fa_pb_walking);
-
-            whiteView.getLayoutParams().height = 900;
-
-            ViewGroup.MarginLayoutParams params = (ViewGroup.MarginLayoutParams) goal.getLayoutParams();
-            ViewGroup.MarginLayoutParams params1 = (ViewGroup.MarginLayoutParams) seekBar.getLayoutParams();
-            ViewGroup.MarginLayoutParams params2 = (ViewGroup.MarginLayoutParams) walkingLabel.getLayoutParams();
-
-            params.topMargin = 90;
-            params1.topMargin = 70;
-            params2.topMargin = 80;
-
-            walkingLabel.setLayoutParams(params2);
-            goal.setLayoutParams(params);
-            seekBar.setLayoutParams(params1);
-        }
-    }
 
     private void initProgressStringColor() {
         int progress = seekBar.getProgress();
@@ -206,7 +183,7 @@ public class ActivitiesFragment extends Fragment {
 
         saveChanges.setOnClickListener(view -> {
             if (seekBar.getProgress() == 0) {
-                AlertDialog.Builder dialog = new AlertDialog.Builder(view.getContext());
+                MaterialAlertDialogBuilder dialog = new MaterialAlertDialogBuilder(view.getContext());
                 dialog.setCancelable(false)
                         .setTitle(getResources().getString(R.string.alert_dialog_title_incorrect_value))
                         .setMessage(getResources().getString(R.string.alert_dialog_goal_0))
@@ -262,7 +239,7 @@ public class ActivitiesFragment extends Fragment {
     }
 
     private void openAlertDialog() {
-        new AlertDialog.Builder(getActivity())
+        new MaterialAlertDialogBuilder(getActivity())
                 .setTitle(R.string.alert_dialog_empty_title)
                 .setPositiveButton(R.string.confirm,
                         (DialogInterface dialog, int whichButton) -> dialog.dismiss())

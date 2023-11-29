@@ -29,11 +29,11 @@ public class ProgressBarBitmap {
         Canvas canvas = new Canvas(bitmap);
 
         //draw full arc as background.
-        paint.setColor(context.getResources().getColor(R.color.color_button_background));
+        paint.setColor(context.getResources().getColor(R.color.progress_bar_back));
         canvas.drawArc(arc, startAngle, sweepAngle, false, paint);
 
         //draw arc progress with actual value.
-        paint.setColor(context.getResources().getColor(R.color.light_theme_accent));
+        paint.setColor(context.getResources().getColor(R.color.color_button_background));
 
         float temp = 0;
         if (scale <= 1 && scale >= 0) {

@@ -5,5 +5,10 @@
          <item name="colorPrimary">@color/dark_background_primary</item>
         <item name="colorButtonNormal">@color/getready_shadow</item>
         <item name="android:textColorSecondary">@color/light_theme_accent</item>
+        <item name="materialAlertDialogTheme">@style/ThemeOverlay.App.MaterialAlertDialog</item>
+    </style>
+
+    <style name="ThemeOverlay.App.MaterialAlertDialog" parent="ThemeOverlay.Material3.MaterialAlertDialog">
+        <item name="colorPrimary">@color/primaryButton</item>
     </style>
 </resources>

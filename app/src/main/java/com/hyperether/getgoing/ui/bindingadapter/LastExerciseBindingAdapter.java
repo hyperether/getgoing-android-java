@@ -84,7 +84,18 @@ public class LastExerciseBindingAdapter {
     }
 
     @androidx.databinding.BindingAdapter("progress_time")
-    public static void displayTimeProgress(View view, long pDuration) {
-        ((CircleProgressBar) view).setProgressFormatter(new TimeProgressFormatter(pDuration));
+    public static void displayTimeProgress(View view, DbRoute lastRoute) {
+        long duration = 0;
+        int progress = 0;
+        if (lastRoute != null) {
+            if (lastRoute.getDuration() >= 0) {
+                duration = lastRoute.getDuration();
+                progress = (int) duration;
+            } else {
+                progress = 20;
+            }
+        }
+        ((CircleProgressBar) view).setProgressFormatter(new TimeProgressFormatter(duration));
+        ((CircleProgressBar) view).setProgress(progress);
     }
 }

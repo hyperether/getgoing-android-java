@@ -3,7 +3,6 @@ package com.hyperether.getgoing.ui.fragment;
 import static com.hyperether.getgoing.ui.fragment.GetGoingFragment.ratio;
 
 import android.annotation.SuppressLint;
-import android.app.AlertDialog;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -18,6 +17,7 @@ import androidx.fragment.app.Fragment;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 
+import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.hyperether.getgoing.GetGoingApp;
 import com.hyperether.getgoing.R;
 import com.hyperether.getgoing.SharedPref;
@@ -118,7 +118,7 @@ public class ProfileFragment extends Fragment {
 
         genderBtn.setOnClickListener(view -> {
             String id = "gender";
-            AlertDialog.Builder builder = createDialog(id, view);
+            MaterialAlertDialogBuilder builder = creteMaterialDialog(id, view);
             if (builder != null) {
                 builder.show();
             }
@@ -126,7 +126,7 @@ public class ProfileFragment extends Fragment {
 
         ageBtn.setOnClickListener(view -> {
             String id = "age";
-            AlertDialog.Builder builder = createDialog(id, view);
+            MaterialAlertDialogBuilder builder = creteMaterialDialog(id, view);
             if (builder != null) {
                 builder.show();
             }
@@ -134,7 +134,7 @@ public class ProfileFragment extends Fragment {
 
         weightBtn.setOnClickListener(view -> {
             String id = "weight";
-            AlertDialog.Builder builder = createDialog(id, view);
+            MaterialAlertDialogBuilder builder = creteMaterialDialog(id, view);
             if (builder != null) {
                 builder.show();
             }
@@ -142,7 +142,7 @@ public class ProfileFragment extends Fragment {
 
         heightBtn.setOnClickListener(view -> {
             String id = "height";
-            AlertDialog.Builder builder = createDialog(id, view);
+            MaterialAlertDialogBuilder builder = creteMaterialDialog(id, view);
             if (builder != null) {
                 builder.show();
             }
@@ -153,16 +153,15 @@ public class ProfileFragment extends Fragment {
         });
     }
 
-    private AlertDialog.Builder createDialog(String pID, View pView) {
-        AlertDialog.Builder genderBuilder, ageBuilder,
-                weightBuilder, heightBuilder;
 
-        switch (pID) {
+    private MaterialAlertDialogBuilder creteMaterialDialog(String pId, View view) {
+        MaterialAlertDialogBuilder genderBuilder, ageBuilder, heightBuilder, weightBuilder;
+
+        switch (pId) {
             case "gender": {
-                genderBuilder = new AlertDialog.Builder(pView.getContext(), R.style.AlertDialogTheme);
+                genderBuilder = new MaterialAlertDialogBuilder(view.getContext(), R.style.MaterialAlertDialog_Material3);
                 final String[] newText = new String[1];
                 newText[0] = "Male";
-
                 genderBuilder
                         .setSingleChoiceItems(R.array.genders, SharedPref.getGender(), (dialog, which) -> {
                             if (which == 0) {
@@ -201,14 +200,12 @@ public class ProfileFragment extends Fragment {
                 for (int i = 1; i <= 120; i++) {
                     ageList.add(Integer.toString(i));
                 }
-
-                ageBuilder = new AlertDialog.Builder(pView.getContext(), R.style.AlertDialogTheme);
-
+                ageBuilder = new MaterialAlertDialogBuilder(view.getContext(), R.style.MaterialAlertDialog_Material3);
                 View toInflate = getActivity().getLayoutInflater().inflate(R.layout.alertdialog_age, null);
                 ageBuilder.setView(toInflate);
 
                 Spinner ageSpinner = toInflate.findViewById(R.id.dialog_spinner_age);
-                ArrayAdapter<String> adapter = new ArrayAdapter<String>(pView.getContext(), android.R.layout.simple_list_item_1, ageList);
+                ArrayAdapter<String> adapter = new ArrayAdapter<String>(view.getContext(), android.R.layout.simple_list_item_1, ageList);
                 ageSpinner.setAdapter(adapter);
                 ageSpinner.setSelection(SharedPref.getAge() - 1);
 
@@ -228,13 +225,13 @@ public class ProfileFragment extends Fragment {
                     weightList.add(Integer.toString(i));
                 }
 
-                weightBuilder = new AlertDialog.Builder(pView.getContext(), R.style.AlertDialogTheme);
+                weightBuilder = new MaterialAlertDialogBuilder(view.getContext(), R.style.MaterialAlertDialog_Material3);
 
                 View toInflate = getActivity().getLayoutInflater().inflate(R.layout.alertdialog_weight, null);
                 weightBuilder.setView(toInflate);
 
                 Spinner weightSpinner = toInflate.findViewById(R.id.dialog_spinner_weight);
-                ArrayAdapter<String> adapter = new ArrayAdapter<String>(pView.getContext(), android.R.layout.simple_list_item_1, weightList);
+                ArrayAdapter<String> adapter = new ArrayAdapter<String>(view.getContext(), android.R.layout.simple_list_item_1, weightList);
                 weightSpinner.setAdapter(adapter);
                 weightSpinner.setSelection(SharedPref.getWeight() - 40);
 
@@ -255,13 +252,13 @@ public class ProfileFragment extends Fragment {
                     heightList.add(Integer.toString(i));
                 }
 
-                heightBuilder = new AlertDialog.Builder(pView.getContext(), R.style.AlertDialogTheme);
+                heightBuilder = new MaterialAlertDialogBuilder(view.getContext(), R.style.MaterialAlertDialog_Material3);
 
                 View toInflate = getActivity().getLayoutInflater().inflate(R.layout.alertdialog_height, null);
                 heightBuilder.setView(toInflate);
 
                 Spinner heightSpinner = toInflate.findViewById(R.id.dialog_spinner_height);
-                ArrayAdapter<String> adapter = new ArrayAdapter<String>(pView.getContext(), android.R.layout.simple_list_item_1, heightList);
+                ArrayAdapter<String> adapter = new ArrayAdapter<String>(view.getContext(), android.R.layout.simple_list_item_1, heightList);
                 heightSpinner.setAdapter(adapter);
                 heightSpinner.setSelection(SharedPref.getHeight() - 110);
 
@@ -277,7 +274,6 @@ public class ProfileFragment extends Fragment {
                 return heightBuilder;
             }
         }
-
         return null;
     }
 

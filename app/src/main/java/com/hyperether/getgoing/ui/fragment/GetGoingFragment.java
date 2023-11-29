@@ -18,7 +18,6 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -62,6 +61,7 @@ public class GetGoingFragment extends Fragment {
     private TextView actLabel, lastExeLabel;
 
     private long lastRoute;
+
     public GetGoingFragment() {
         // Required empty public constructor
     }
