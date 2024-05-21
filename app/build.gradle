@@ -99,7 +99,7 @@ dependencies {
     testImplementation "androidx.room:room-testing:$room_version"
     implementation "androidx.room:room-rxjava2:$room_version"
 
-    implementation('com.hyperether:android-toolbox:1.0.17@aar') {
+    implementation('com.hyperether:android-toolbox:1.0.18@aar') {
         transitive = true
     }
 
