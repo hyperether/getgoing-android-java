@@ -61,12 +61,12 @@
         android:id="@+id/tv_fa_pb_mileage_walk"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:drawableEnd="@drawable/ic_light_angle_icon"
         android:drawablePadding="5dp"
         android:padding="10dp"
         android:text="0km"
         android:textColor="@color/my_profile_icon1"
         android:textSize="18sp"
+        app:drawableEndCompat="@drawable/ic_light_angle_icon"
         app:layout_constraintBottom_toBottomOf="@+id/tv_fa_pb_walking"
         app:layout_constraintEnd_toEndOf="@+id/progressBar"
         app:layout_constraintTop_toTopOf="@+id/tv_fa_pb_walking" />
@@ -111,10 +111,10 @@
         android:text="0km"
         android:textColor="@color/my_profile_icon1"
         android:textSize="18sp"
+        app:drawableEndCompat="@drawable/ic_light_angle_icon"
         app:layout_constraintBottom_toBottomOf="@+id/tv_fa_pb_running"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="@+id/tv_fa_pb_running"
-        android:drawableEnd="@drawable/ic_light_angle_icon"
         android:drawablePadding="5dp"
         android:padding="10dp"/>
 
@@ -156,10 +156,10 @@
         android:text="0km"
         android:textColor="@color/my_profile_icon1"
         android:textSize="18sp"
+        app:drawableEndCompat="@drawable/ic_light_angle_icon"
         app:layout_constraintBottom_toBottomOf="@+id/tv_fa_pb_cycling"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="@+id/tv_fa_pb_cycling"
-        android:drawableEnd="@drawable/ic_light_angle_icon"
         android:drawablePadding="5dp"
         android:padding="10dp"/>
 

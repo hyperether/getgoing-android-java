@@ -1,7 +1,5 @@
 package com.hyperether.getgoing.service;
 
-import static android.content.pm.ServiceInfo.FOREGROUND_SERVICE_TYPE_LOCATION;
-
 import android.app.PendingIntent;
 import android.content.Intent;
 import android.location.Location;
@@ -17,6 +15,8 @@ import com.hyperether.getgoing.ui.activity.NavigationActivity;
 import com.hyperether.getgoing.util.CaloriesCalculation;
 import com.hyperether.toolbox.HyperNotification;
 import com.hyperether.toolbox.location.HyperLocationService;
+
+import static android.content.pm.ServiceInfo.FOREGROUND_SERVICE_TYPE_LOCATION;
 
 
 /**
@@ -72,16 +72,16 @@ public class GPSTrackingService extends HyperLocationService {
             startForeground(1123, HyperNotification.getInstance().getForegroundServiceNotification(this,
                             getString(R.string.notification_title),
                             getString(R.string.notification_text),
-                            R.drawable.ic_logo_light,
-                            R.mipmap.ic_logo,
+                            R.drawable.ic_notification,
+                            R.drawable.ic_notification,
                             pendingIntent),
                     FOREGROUND_SERVICE_TYPE_LOCATION);
         } else {
             startForeground(1123, HyperNotification.getInstance().getForegroundServiceNotification(this,
                     getString(R.string.notification_title),
                     getString(R.string.notification_text),
-                    R.drawable.ic_logo_light,
-                    R.mipmap.ic_logo,
+                    R.drawable.ic_notification,
+                    R.drawable.ic_notification,
                     pendingIntent));
         }
     }
