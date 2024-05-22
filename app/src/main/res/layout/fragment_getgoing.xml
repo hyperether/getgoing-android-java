@@ -8,7 +8,7 @@
 
         <variable
             name="lastRoute"
-            type="com.hyperether.getgoing.repository.room.entity.DbRoute" />
+            type="com.hyperether.getgoing.repository.room.entity.Route" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout

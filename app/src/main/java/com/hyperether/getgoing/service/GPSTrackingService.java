@@ -9,8 +9,8 @@ import com.hyperether.getgoing.GetGoingApp;
 import com.hyperether.getgoing.R;
 import com.hyperether.getgoing.SharedPref;
 import com.hyperether.getgoing.repository.room.GgRepository;
-import com.hyperether.getgoing.repository.room.entity.DbNode;
-import com.hyperether.getgoing.repository.room.entity.DbRoute;
+import com.hyperether.getgoing.repository.room.entity.Node;
+import com.hyperether.getgoing.repository.room.entity.Route;
 import com.hyperether.getgoing.ui.activity.NavigationActivity;
 import com.hyperether.getgoing.util.CaloriesCalculation;
 import com.hyperether.toolbox.HyperNotification;
@@ -31,7 +31,7 @@ public class GPSTrackingService extends HyperLocationService {
     private int profileID;
     private long routeID;
     private double weight = 0;
-    private DbRoute currentRoute;
+    private Route currentRoute;
     private Location previousLocation;
     private long previousTimestamp = 0;
     private long timeCumulative = 0;
@@ -122,9 +122,9 @@ public class GPSTrackingService extends HyperLocationService {
         }
     }
 
-    private DbNode createNode(Location location) {
+    private Node createNode(Location location) {
         // node and route database _ids are intentionally 0
-        return new DbNode(0, location.getLatitude(), location.getLongitude(),
+        return new Node(0, location.getLatitude(), location.getLongitude(),
                 location.getSpeed(), nodeIndex++, routeID);
     }
 

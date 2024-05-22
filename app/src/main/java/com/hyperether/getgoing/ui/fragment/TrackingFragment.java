@@ -51,10 +51,10 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.PolylineOptions;
 import com.hyperether.getgoing.R;
 import com.hyperether.getgoing.SharedPref;
-import com.hyperether.getgoing.repository.room.DbRouteAddedCallback;
+import com.hyperether.getgoing.repository.room.RouteAddedListener;
 import com.hyperether.getgoing.repository.room.GgRepository;
-import com.hyperether.getgoing.repository.room.entity.DbNode;
-import com.hyperether.getgoing.repository.room.entity.DbRoute;
+import com.hyperether.getgoing.repository.room.entity.Node;
+import com.hyperether.getgoing.repository.room.entity.Route;
 import com.hyperether.getgoing.service.GPSTrackingService;
 import com.hyperether.getgoing.util.Constants;
 import com.hyperether.getgoing.util.ServiceUtil;
@@ -147,19 +147,19 @@ public class TrackingFragment extends Fragment implements OnMapReadyCallback, Lo
 
     private void setupVMObserver() {
 
-        nodeListViewModel.getNodeListById().observe(getViewLifecycleOwner(), new Observer<List<DbNode>>() {
+        nodeListViewModel.getNodeListById().observe(getViewLifecycleOwner(), new Observer<List<Node>>() {
             @Override
-            public void onChanged(List<DbNode> dbNodes) {
+            public void onChanged(List<Node> nodes) {
                 mMap.clear();
-                drawRoute(dbNodes);
+                drawRoute(nodes);
             }
         });
 
-        routeViewModel.getRouteByIdAsLiveData().observe(getViewLifecycleOwner(), new Observer<DbRoute>() {
+        routeViewModel.getRouteByIdAsLiveData().observe(getViewLifecycleOwner(), new Observer<Route>() {
             @Override
-            public void onChanged(DbRoute dbRoute) {
-                if (dbRoute != null) {
-                    showData(dbRoute.getLength(), dbRoute.getEnergy(), dbRoute.getCurrentSpeed());
+            public void onChanged(Route route) {
+                if (route != null) {
+                    showData(route.getLength(), route.getEnergy(), route.getCurrentSpeed());
                 }
             }
         });
@@ -309,7 +309,7 @@ public class TrackingFragment extends Fragment implements OnMapReadyCallback, Lo
     private void startTracking(Context context) {
         if (!trackingStarted) {
             trackingStarted = true;
-            GgRepository.getInstance().insertRoute(new DbRoute(0, 0, 0, 0, sdf.format(new Date()), 0, 0, profileID, goalStore), new DbRouteAddedCallback() {
+            GgRepository.getInstance().insertRoute(new Route(0, 0, 0, 0, sdf.format(new Date()), 0, 0, profileID, goalStore), new RouteAddedListener() {
                 @Override
                 public void onRouteAdded(long currentid) {
                     currentRouteID = currentid;
@@ -508,15 +508,15 @@ public class TrackingFragment extends Fragment implements OnMapReadyCallback, Lo
      *
      * @param mRoute list of nodes
      */
-    private void drawRoute(List<DbNode> mRoute) {
+    private void drawRoute(List<Node> mRoute) {
         if (mRoute == null)
             return;
         boolean drFirstPass = true;
-        DbNode firstNode = null;
-        DbNode secondNode = null;
+        Node firstNode = null;
+        Node secondNode = null;
 
         // Redraw the whole route
-        Iterator<DbNode> it = mRoute.iterator();
+        Iterator<Node> it = mRoute.iterator();
         while (it.hasNext()) {
             if (drFirstPass) {
                 firstNode = secondNode = it.next();
@@ -540,7 +540,7 @@ public class TrackingFragment extends Fragment implements OnMapReadyCallback, Lo
      * @param firstNode  first point of the rout
      * @param secondNode second point of the rout
      */
-    private void drawSegment(DbNode firstNode, DbNode secondNode) {
+    private void drawSegment(Node firstNode, Node secondNode) {
 
         // Different speed spans are represented with different colors: green, yellow, orange, red
         if (secondNode.getVelocity() <= 1) {

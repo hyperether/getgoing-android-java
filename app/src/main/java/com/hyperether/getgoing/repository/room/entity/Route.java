@@ -8,7 +8,7 @@ import androidx.room.Entity;
 import androidx.room.PrimaryKey;
 
 @Entity
-public class DbRoute implements Parcelable {
+public class Route implements Parcelable {
     @PrimaryKey(autoGenerate = true)
     private long id;
     @ColumnInfo
@@ -28,8 +28,8 @@ public class DbRoute implements Parcelable {
     @ColumnInfo
     private long goal;
 
-    public DbRoute(long id, long duration, double energy, double length,
-                   String date, double avgSpeed, double currentSpeed, int activity_id, long goal) {
+    public Route(long id, long duration, double energy, double length,
+                 String date, double avgSpeed, double currentSpeed, int activity_id, long goal) {
         super();
         this.id = id;
         this.duration = duration;
@@ -42,7 +42,7 @@ public class DbRoute implements Parcelable {
         this.goal = goal;
     }
 
-    protected DbRoute(Parcel in) {
+    protected Route(Parcel in) {
         id = in.readLong();
         duration = in.readLong();
         energy = in.readDouble();
@@ -54,15 +54,15 @@ public class DbRoute implements Parcelable {
         goal = in.readLong();
     }
 
-    public static final Creator<DbRoute> CREATOR = new Creator<DbRoute>() {
+    public static final Creator<Route> CREATOR = new Creator<Route>() {
         @Override
-        public DbRoute createFromParcel(Parcel in) {
-            return new DbRoute(in);
+        public Route createFromParcel(Parcel in) {
+            return new Route(in);
         }
 
         @Override
-        public DbRoute[] newArray(int size) {
-            return new DbRoute[size];
+        public Route[] newArray(int size) {
+            return new Route[size];
         }
     };
 

@@ -37,8 +37,8 @@ import com.hyperether.getgoing.R;
 import com.hyperether.getgoing.SharedPref;
 import com.hyperether.getgoing.databinding.FragmentShowdataBinding;
 import com.hyperether.getgoing.listeners.GgOnClickListener;
-import com.hyperether.getgoing.repository.room.entity.DbNode;
-import com.hyperether.getgoing.repository.room.entity.DbRoute;
+import com.hyperether.getgoing.repository.room.entity.Node;
+import com.hyperether.getgoing.repository.room.entity.Route;
 import com.hyperether.getgoing.ui.adapter.DbRecyclerAdapter;
 import com.hyperether.getgoing.util.ProgressBarBitmap;
 import com.hyperether.getgoing.viewmodel.RouteViewModel;
@@ -50,7 +50,7 @@ import java.util.List;
 public class ShowDataFragment extends Fragment implements GgOnClickListener, OnMapReadyCallback {
     private FragmentShowdataBinding binding;
     private GoogleMap mMap;
-    private final List<DbRoute> routes = new ArrayList<>();
+    private final List<Route> routes = new ArrayList<>();
     private RecyclerView.Adapter recyclerAdapter;
     private String dataLabel;
     private boolean mapToogleDown;
@@ -95,26 +95,26 @@ public class ShowDataFragment extends Fragment implements GgOnClickListener, OnM
 
     private void initializeViewModel() {
         routeViewModel = new ViewModelProvider(this).get(RouteViewModel.class);
-        routeViewModel.getAllRoutes().observe(getViewLifecycleOwner(), new Observer<List<DbRoute>>() {
+        routeViewModel.getAllRoutes().observe(getViewLifecycleOwner(), new Observer<List<Route>>() {
             @Override
-            public void onChanged(List<DbRoute> dbRoutes) {
-                routes.clear();
-                if (dbRoutes.size() > 1) {
-                    dbRoutes.remove(0); // remove 0th node
-                    for (DbRoute route : dbRoutes) {
+            public void onChanged(List<Route> routes) {
+                ShowDataFragment.this.routes.clear();
+                if (routes.size() > 1) {
+                    routes.remove(0); // remove 0th node
+                    for (Route route : routes) {
                         if (route.getActivity_id() == activityId) {
-                            routes.add(route);
+                            ShowDataFragment.this.routes.add(route);
                         }
                     }
                 }
 
-                if (routes.size() == 0) {
+                if (ShowDataFragment.this.routes.size() == 0) {
                     showNoRoutesDialog();
                 } else {
-                    Bitmap bm = ProgressBarBitmap.getWidgetBitmap(getActivity().getApplicationContext(), routes.get(routes.size() - 1).getGoal(), routes.get(0).getLength(), 400, 400, 160, 220, 20, 0);
-                    binding.setDbRoute(routes.get(routes.size() - 1));
+                    Bitmap bm = ProgressBarBitmap.getWidgetBitmap(getActivity().getApplicationContext(), ShowDataFragment.this.routes.get(ShowDataFragment.this.routes.size() - 1).getGoal(), ShowDataFragment.this.routes.get(0).getLength(), 400, 400, 160, 220, 20, 0);
+                    binding.setRoute(ShowDataFragment.this.routes.get(ShowDataFragment.this.routes.size() - 1));
                     binding.progress.setImageBitmap(bm);
-                    binding.recyclerList.smoothScrollToPosition(routes.size() - 1);
+                    binding.recyclerList.smoothScrollToPosition(ShowDataFragment.this.routes.size() - 1);
                 }
 
                 recyclerAdapter.notifyDataSetChanged();
@@ -136,7 +136,7 @@ public class ShowDataFragment extends Fragment implements GgOnClickListener, OnM
         dialog.setMessage(getResources().getString(R.string.alert_dialog_delete_route));
         dialog.setPositiveButton(R.string.alert_dialog_positive_button_save_btn,
                 (DialogInterface paramDialogInterface, int paramInt) -> {
-                    routeViewModel.removeRouteById(binding.getDbRoute().getId());
+                    routeViewModel.removeRouteById(binding.getRoute().getId());
                     Toast.makeText(getActivity(), "Route deleted", Toast.LENGTH_SHORT).show();
                 });
 
@@ -185,10 +185,10 @@ public class ShowDataFragment extends Fragment implements GgOnClickListener, OnM
 
     private void drawSavedRoute() {
         mMap.clear();
-        DbRoute route = binding.getDbRoute();
+        Route route = binding.getRoute();
         routeViewModel.getNodeListById(route.getId()).observe(getViewLifecycleOwner(), dbNodes -> {
             if (dbNodes != null && !dbNodes.isEmpty()) {
-                Iterator<DbNode> it = dbNodes.iterator();
+                Iterator<Node> it = dbNodes.iterator();
                 while (it.hasNext()) {
                     PolylineOptions pOptions = new PolylineOptions();
                     pOptions.width(10)
@@ -196,7 +196,7 @@ public class ShowDataFragment extends Fragment implements GgOnClickListener, OnM
                             .geodesic(true);
 
                     boolean first = true;
-                    DbNode node = null;
+                    Node node = null;
                     while (it.hasNext()) {
                         node = it.next();
                         if (first) {
@@ -239,9 +239,9 @@ public class ShowDataFragment extends Fragment implements GgOnClickListener, OnM
         });
     }
 
-    private void setCameraView(List<DbNode> routeNodes) {
+    private void setCameraView(List<Node> routeNodes) {
         LatLngBounds.Builder builder = new LatLngBounds.Builder();
-        for (DbNode node : routeNodes) {
+        for (Node node : routeNodes) {
             builder.include(new LatLng(node.getLatitude(), node.getLongitude()));
         }
 
@@ -264,8 +264,8 @@ public class ShowDataFragment extends Fragment implements GgOnClickListener, OnM
 
     @Override
     public void onClick(Bundle bundle) {
-        DbRoute route = bundle.getParcelable(BUNDLE_PARCELABLE);
-        binding.setDbRoute(route);
+        Route route = bundle.getParcelable(BUNDLE_PARCELABLE);
+        binding.setRoute(route);
         if (route != null) {
             Bitmap bm = ProgressBarBitmap.getWidgetBitmap(getActivity().getApplicationContext(), route.getGoal(), route.getLength(), 400, 400, 160, 220, 20, 0);
             binding.progress.setImageBitmap(bm);

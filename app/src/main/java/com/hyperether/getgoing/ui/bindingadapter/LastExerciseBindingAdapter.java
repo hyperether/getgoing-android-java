@@ -10,7 +10,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.hyperether.getgoing.R;
-import com.hyperether.getgoing.repository.room.entity.DbRoute;
+import com.hyperether.getgoing.repository.room.entity.Route;
 import com.hyperether.getgoing.ui.dynamicview.CircleProgressBar;
 import com.hyperether.getgoing.ui.formatter.DistanceProgressFormatter;
 import com.hyperether.getgoing.ui.formatter.TimeProgressFormatter;
@@ -61,7 +61,7 @@ public class LastExerciseBindingAdapter {
     }
 
     @androidx.databinding.BindingAdapter("progress_activity")
-    public static void displayActivityProgress(View view, DbRoute lastRoute) {
+    public static void displayActivityProgress(View view, Route lastRoute) {
 
         int progress = 0;
         double distance = 0;
@@ -84,7 +84,7 @@ public class LastExerciseBindingAdapter {
     }
 
     @androidx.databinding.BindingAdapter("progress_time")
-    public static void displayTimeProgress(View view, DbRoute lastRoute) {
+    public static void displayTimeProgress(View view, Route lastRoute) {
         long duration = 0;
         int progress = 0;
         if (lastRoute != null) {

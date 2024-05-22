@@ -36,8 +36,8 @@ import com.hyperether.getgoing.R;
 import com.hyperether.getgoing.SharedPref;
 import com.hyperether.getgoing.databinding.FragmentGetgoingBindingImpl;
 import com.hyperether.getgoing.repository.room.GgRepository;
-import com.hyperether.getgoing.repository.room.entity.DbNode;
-import com.hyperether.getgoing.repository.room.entity.DbRoute;
+import com.hyperether.getgoing.repository.room.entity.Node;
+import com.hyperether.getgoing.repository.room.entity.Route;
 import com.hyperether.getgoing.ui.adapter.HorizontalListAdapter;
 import com.hyperether.getgoing.ui.formatter.TimeProgressFormatterInvisible;
 import com.hyperether.getgoing.util.ServiceUtil;
@@ -96,8 +96,8 @@ public class GetGoingFragment extends Fragment {
     private void zeroNodeInit() {
         if (!SharedPref.isZeroNodeInit()) {
             /*route init*/
-            List<DbNode> tmpRoute = new ArrayList<>();
-            DbNode tmpNode = new DbNode(0, 0, 0, 0, 0, 0);
+            List<Node> tmpRoute = new ArrayList<>();
+            Node tmpNode = new Node(0, 0, 0, 0, 0, 0);
             tmpRoute.add(tmpNode);
             roomStoreNodeZero(tmpRoute);
 
@@ -107,15 +107,15 @@ public class GetGoingFragment extends Fragment {
             SharedPref.setRunRouteExisting(false);
             SharedPref.setRideRouteExisting(false);
         } else {
-            GgRepository.getInstance().getLastRouteAsLiveData().observe(getActivity(), new Observer<DbRoute>() {
+            GgRepository.getInstance().getLastRouteAsLiveData().observe(getActivity(), new Observer<Route>() {
                 @Override
-                public void onChanged(DbRoute dbRoute) {
+                public void onChanged(Route route) {
 
-                    mBinding.setLastRoute(dbRoute);
-                    if (dbRoute == null) {
+                    mBinding.setLastRoute(route);
+                    if (route == null) {
                         lastRoute = 0;
                     } else {
-                        lastRoute = dbRoute.getActivity_id();
+                        lastRoute = route.getActivity_id();
                     }
                 }
             });
@@ -346,8 +346,8 @@ public class GetGoingFragment extends Fragment {
         return closestChild;
     }
 
-    private void roomStoreNodeZero(List<DbNode> nodeList) {
-        DbRoute dbRoute = new DbRoute(0, 0, 0, 0, "null", 0, 0, 1, 0);
-        GgRepository.getInstance().insertRouteInit(dbRoute, nodeList);
+    private void roomStoreNodeZero(List<Node> nodeList) {
+        Route route = new Route(0, 0, 0, 0, "null", 0, 0, 1, 0);
+        GgRepository.getInstance().insertRouteInit(route, nodeList);
     }
 }

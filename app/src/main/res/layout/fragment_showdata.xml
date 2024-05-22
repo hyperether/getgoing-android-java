@@ -6,8 +6,8 @@
     <data>
 
         <variable
-            name="dbRoute"
-            type="com.hyperether.getgoing.repository.room.entity.DbRoute" />
+            name="route"
+            type="com.hyperether.getgoing.repository.room.entity.Route" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -160,7 +160,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:gravity="center"
-                displayKcal="@{dbRoute.energy}"
+                displayKcal="@{route.energy}"
                 android:textColor="@color/my_goal_icons2"
                 android:textSize="22sp"
                 android:textStyle="bold"
@@ -175,7 +175,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:gravity="center"
-                displayDistance="@{dbRoute.length}"
+                displayDistance="@{route.length}"
                 android:textColor="@color/my_goal_icons2"
                 android:textSize="22sp"
                 android:textStyle="bold"
@@ -188,7 +188,7 @@
                 android:id="@+id/tv_sd_speed"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text='@{String.format("%.2f", dbRoute.avgSpeed)}'
+                android:text='@{String.format("%.2f", route.avgSpeed)}'
                 android:textColor="@color/my_goal_icons2"
                 android:gravity="center"
                 android:textSize="22sp"
@@ -216,7 +216,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:gravity="center"
-                displayDistanceUnit="@{dbRoute.length}"
+                displayDistanceUnit="@{route.length}"
                 android:textSize="14sp"
                 app:layout_constraintEnd_toStartOf="@+id/tv_sd_speed"
                 app:layout_constraintHorizontal_bias="0.5"
@@ -308,7 +308,7 @@
 
             <TextView
                 android:id="@+id/tv_goal_value"
-                goal="@{dbRoute.goal}"
+                goal="@{route.goal}"
                 android:textColor="@color/my_profile_icon1"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"

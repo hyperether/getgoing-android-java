@@ -21,7 +21,7 @@ import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.hyperether.getgoing.GetGoingApp;
 import com.hyperether.getgoing.R;
 import com.hyperether.getgoing.SharedPref;
-import com.hyperether.getgoing.repository.room.entity.DbRoute;
+import com.hyperether.getgoing.repository.room.entity.Route;
 import com.hyperether.getgoing.viewmodel.RouteViewModel;
 
 import java.util.ArrayList;
@@ -86,10 +86,10 @@ public class ProfileFragment extends Fragment {
         initScreenDimen();
         initLabels();
         initDialogs();
-        routeViewModel.getAllRoutes().observe(this, new Observer<List<DbRoute>>() {
+        routeViewModel.getAllRoutes().observe(this, new Observer<List<Route>>() {
             @Override
-            public void onChanged(List<DbRoute> dbRoutes) {
-                initTotals(dbRoutes);
+            public void onChanged(List<Route> routes) {
+                initTotals(routes);
             }
         });
     }
@@ -293,7 +293,7 @@ public class ProfileFragment extends Fragment {
     }
 
     @SuppressLint("DefaultLocale")
-    private void initTotals(List<DbRoute> dbRoutes) {
+    private void initTotals(List<Route> routes) {
         final float[] totalRoute = new float[1];
         final int[] totalKcal = new int[1];
 
@@ -301,7 +301,7 @@ public class ProfileFragment extends Fragment {
             totalRoute[0] = 0;
             totalKcal[0] = 0;
 
-            for (DbRoute route : dbRoutes) {
+            for (Route route : routes) {
                 totalRoute[0] += (route.getLength() / 1000);
                 totalKcal[0] += route.getEnergy();
             }

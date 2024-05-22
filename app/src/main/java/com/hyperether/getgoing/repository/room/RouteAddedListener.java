@@ -1,5 +1,5 @@
 package com.hyperether.getgoing.repository.room;
 
-public interface DbRouteAddedCallback {
+public interface RouteAddedListener {
     void onRouteAdded(long id);
 }

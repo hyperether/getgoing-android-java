@@ -7,22 +7,21 @@ import androidx.annotation.NonNull;
 import androidx.lifecycle.AndroidViewModel;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
-import androidx.lifecycle.Observer;
 
 import com.hyperether.getgoing.GetGoingApp;
 import com.hyperether.getgoing.repository.room.GgRepository;
-import com.hyperether.getgoing.repository.room.entity.DbNode;
-import com.hyperether.getgoing.repository.room.entity.DbRoute;
+import com.hyperether.getgoing.repository.room.entity.Node;
+import com.hyperether.getgoing.repository.room.entity.Route;
 
 import java.util.List;
 
 public class RouteViewModel extends AndroidViewModel {
 
-    private final LiveData<List<DbRoute>> routeList;
+    private final LiveData<List<Route>> routeList;
     private final MutableLiveData<Long> routeID = new MutableLiveData<>();
-    private final MutableLiveData<DbRoute> route = new MutableLiveData<>();
+    private final MutableLiveData<Route> route = new MutableLiveData<>();
 
-    public LiveData<DbRoute> getRouteByIdAsLiveData() {
+    public LiveData<Route> getRouteByIdAsLiveData() {
         return route;
     }
 
@@ -36,11 +35,11 @@ public class RouteViewModel extends AndroidViewModel {
         routeList = GgRepository.getInstance().getAllRoutes();
     }
 
-    public LiveData<List<DbRoute>> getAllRoutes() {
+    public LiveData<List<Route>> getAllRoutes() {
         return routeList;
     }
 
-    public LiveData<List<DbNode>> getNodeListById(long id) {
+    public LiveData<List<Node>> getNodeListById(long id) {
         return GgRepository.getInstance().getAllNodesById(id);
     }
 

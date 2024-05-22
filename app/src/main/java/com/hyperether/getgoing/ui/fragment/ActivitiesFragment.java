@@ -28,7 +28,7 @@ import androidx.navigation.Navigation;
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.hyperether.getgoing.R;
 import com.hyperether.getgoing.SharedPref;
-import com.hyperether.getgoing.repository.room.entity.DbRoute;
+import com.hyperether.getgoing.repository.room.entity.Route;
 import com.hyperether.getgoing.util.Constants;
 import com.hyperether.getgoing.util.TimeUtils;
 import com.hyperether.getgoing.viewmodel.RouteViewModel;
@@ -95,10 +95,10 @@ public class ActivitiesFragment extends Fragment {
         initLabels();
         initProgressStringColor();
         initListeners();
-        routeViewModel.getAllRoutes().observe(getViewLifecycleOwner(), new Observer<List<DbRoute>>() {
+        routeViewModel.getAllRoutes().observe(getViewLifecycleOwner(), new Observer<List<Route>>() {
             @Override
-            public void onChanged(List<DbRoute> dbRoutes) {
-                fillProgressBars(dbRoutes);
+            public void onChanged(List<Route> routes) {
+                fillProgressBars(routes);
             }
         });
     }
@@ -262,12 +262,12 @@ public class ActivitiesFragment extends Fragment {
         kcal.setText("About " + (int) (progress * 0.00112 * SharedPref.getWeight()) + "kcal");
     }
 
-    private void fillProgressBars(List<DbRoute> allRoutes) {
+    private void fillProgressBars(List<Route> allRoutes) {
         int goal = SharedPref.getGoal();
         double sumWalk = 0.0, sumRun = 0.0, sumRide = 0.0;
         int walkPercentage = 0, runPercentage = 0, ridePercentage = 0;
 
-        for (DbRoute route : allRoutes) {
+        for (Route route : allRoutes) {
             if (route.getActivity_id() == 1)
                 sumWalk += route.getLength();
             else if (route.getActivity_id() == 2)

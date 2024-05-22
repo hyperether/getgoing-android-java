@@ -11,13 +11,13 @@ import androidx.room.PrimaryKey;
 
 import static androidx.room.ForeignKey.CASCADE;
 
-@Entity(foreignKeys = @ForeignKey(entity = DbRoute.class,
+@Entity(foreignKeys = @ForeignKey(entity = Route.class,
         parentColumns = "id",
         childColumns = "routeId",
         onDelete = CASCADE),
         indices = {@Index(value = "routeId")
         })
-public class DbNode implements Parcelable {
+public class Node implements Parcelable {
     @PrimaryKey(autoGenerate = true)
     private long id;
 
@@ -34,8 +34,8 @@ public class DbNode implements Parcelable {
 
     private long routeId; // foreign key
 
-    public DbNode(long id, double latitude, double longitude, float velocity,
-                  long index, long routeId) {
+    public Node(long id, double latitude, double longitude, float velocity,
+                long index, long routeId) {
         super();
         this.id = id;
         this.latitude = latitude;
@@ -117,7 +117,7 @@ public class DbNode implements Parcelable {
         out.writeLong(id);
     }
 
-    private DbNode(Parcel in) {
+    private Node(Parcel in) {
         latitude = in.readDouble();
         longitude = in.readDouble();
         velocity = in.readFloat();
@@ -126,16 +126,16 @@ public class DbNode implements Parcelable {
         id = in.readLong();
     }
 
-    public static final Parcelable.Creator<DbNode> CREATOR
-            = new Parcelable.Creator<DbNode>() {
+    public static final Parcelable.Creator<Node> CREATOR
+            = new Parcelable.Creator<Node>() {
         @Override
-        public DbNode createFromParcel(Parcel in) {
-            return new DbNode(in);
+        public Node createFromParcel(Parcel in) {
+            return new Node(in);
         }
 
         @Override
-        public DbNode[] newArray(int size) {
-            return new DbNode[size];
+        public Node[] newArray(int size) {
+            return new Node[size];
         }
     };
 }

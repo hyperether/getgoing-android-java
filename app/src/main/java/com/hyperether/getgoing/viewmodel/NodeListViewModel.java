@@ -9,7 +9,7 @@ import androidx.lifecycle.ViewModel;
 import com.hyperether.getgoing.GetGoingApp;
 import com.hyperether.getgoing.SharedPref;
 import com.hyperether.getgoing.repository.room.GgRepository;
-import com.hyperether.getgoing.repository.room.entity.DbNode;
+import com.hyperether.getgoing.repository.room.entity.Node;
 
 import java.util.List;
 
@@ -17,14 +17,14 @@ public class NodeListViewModel extends ViewModel {
 
 
     private final MutableLiveData<Long> routeID = new MutableLiveData<>();
-    private final MutableLiveData<List<DbNode>> nodesByRouteId = new MutableLiveData<>();
+    private final MutableLiveData<List<Node>> nodesByRouteId = new MutableLiveData<>();
 
     public void setRouteID(long id) {
         this.routeID.setValue(id);
         GgRepository.getInstance().getAllNodesById(id).observeForever(dbNodes -> nodesByRouteId.postValue(dbNodes));
     }
 
-    public LiveData<List<DbNode>> getNodeListById() {
+    public LiveData<List<Node>> getNodeListById() {
         return nodesByRouteId;
     }
 

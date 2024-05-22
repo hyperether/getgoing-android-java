@@ -15,16 +15,16 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.hyperether.getgoing.R;
 import com.hyperether.getgoing.listeners.GgOnClickListener;
-import com.hyperether.getgoing.repository.room.entity.DbRoute;
+import com.hyperether.getgoing.repository.room.entity.Route;
 
 import java.util.List;
 
 
 public class DbRecyclerAdapter extends RecyclerView.Adapter<DbRecyclerAdapter.ViewHolder> {
-    private List<DbRoute> routes;
+    private List<Route> routes;
     private GgOnClickListener listener;
 
-    public DbRecyclerAdapter(Fragment fragment, List<DbRoute> routes) {
+    public DbRecyclerAdapter(Fragment fragment, List<Route> routes) {
         this.routes = routes;
         listener = (GgOnClickListener) fragment;
     }
@@ -39,7 +39,7 @@ public class DbRecyclerAdapter extends RecyclerView.Adapter<DbRecyclerAdapter.Vi
 
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
-        DbRoute route = routes.get(position);
+        Route route = routes.get(position);
         if (!"null".equals(route.getDate()) || route.getDate() != null) {
             holder.chartProgress.setMax((int) route.getGoal());
             holder.chartProgress.setProgress((int) route.getLength());

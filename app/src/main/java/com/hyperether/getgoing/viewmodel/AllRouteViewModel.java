@@ -4,12 +4,11 @@ import android.app.Application;
 
 import androidx.annotation.NonNull;
 import androidx.lifecycle.LiveData;
-import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
 import com.hyperether.getgoing.repository.room.GgRepository;
-import com.hyperether.getgoing.repository.room.entity.DbNode;
-import com.hyperether.getgoing.repository.room.entity.DbRoute;
+import com.hyperether.getgoing.repository.room.entity.Node;
+import com.hyperether.getgoing.repository.room.entity.Route;
 
 import java.util.List;
 
@@ -18,17 +17,17 @@ public class AllRouteViewModel extends ViewModel{
 
     }
 
-    private LiveData<List<DbRoute>> allRoutes;
+    private LiveData<List<Route>> allRoutes;
 
     public AllRouteViewModel(@NonNull Application application) {
         allRoutes = GgRepository.getInstance().getAllRoutes();
     }
 
-    public LiveData<List<DbRoute>> getAllRoutes() {
+    public LiveData<List<Route>> getAllRoutes() {
         return allRoutes;
     }
 
-    public LiveData<List<DbNode>> getNodeListById(long id) {
+    public LiveData<List<Node>> getNodeListById(long id) {
         return GgRepository.getInstance().getAllNodesById(id);
     }
 
