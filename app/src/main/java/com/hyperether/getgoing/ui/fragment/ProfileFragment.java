@@ -1,7 +1,5 @@
 package com.hyperether.getgoing.ui.fragment;
 
-import static com.hyperether.getgoing.ui.fragment.GetGoingFragment.ratio;
-
 import android.annotation.SuppressLint;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -13,10 +11,6 @@ import android.widget.ImageView;
 import android.widget.Spinner;
 import android.widget.TextView;
 
-import androidx.fragment.app.Fragment;
-import androidx.lifecycle.Observer;
-import androidx.lifecycle.ViewModelProvider;
-
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.hyperether.getgoing.GetGoingApp;
 import com.hyperether.getgoing.R;
@@ -26,6 +20,12 @@ import com.hyperether.getgoing.viewmodel.RouteViewModel;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import androidx.fragment.app.Fragment;
+import androidx.lifecycle.Observer;
+import androidx.lifecycle.ViewModelProvider;
+
+import static com.hyperether.getgoing.ui.fragment.GetGoingFragment.ratio;
 
 
 public class ProfileFragment extends Fragment {
@@ -61,11 +61,11 @@ public class ProfileFragment extends Fragment {
 
         int genderSel = SharedPref.getGender();
         if (genderSel == 0) {
-            genderImg.setImageDrawable(getResources().getDrawable(R.drawable.ic_gendersign_male));
+            genderImg.setImageDrawable(getResources().getDrawable(R.drawable.ic_gender_male));
         } else if (genderSel == 1) {
-            genderImg.setImageDrawable(getResources().getDrawable(R.drawable.ic_light_gender_female_icon));
+            genderImg.setImageDrawable(getResources().getDrawable(R.drawable.ic_gender_female));
         } else if (genderSel == 2) {
-            genderImg.setImageDrawable(getResources().getDrawable(R.drawable.ic_light_gender_icon_trans));
+            genderImg.setImageDrawable(getResources().getDrawable(R.drawable.ic_gender_trans));
         }
 
         return rootView;
@@ -180,13 +180,13 @@ public class ProfileFragment extends Fragment {
 
                             switch (newText[0]) {
                                 case "Male":
-                                    genderImg.setImageDrawable(getResources().getDrawable(R.drawable.ic_gendersign_male));
+                                    genderImg.setImageDrawable(getResources().getDrawable(R.drawable.ic_gender_male));
                                     break;
                                 case "Female":
-                                    genderImg.setImageDrawable(getResources().getDrawable(R.drawable.ic_light_gender_female_icon));
+                                    genderImg.setImageDrawable(getResources().getDrawable(R.drawable.ic_gender_female));
                                     break;
                                 case "Other":
-                                    genderImg.setImageDrawable(getResources().getDrawable(R.drawable.ic_light_gender_icon_trans));
+                                    genderImg.setImageDrawable(getResources().getDrawable(R.drawable.ic_gender_trans));
                                     break;
                             }
                         })

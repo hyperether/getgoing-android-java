@@ -1,14 +1,6 @@
 package com.hyperether.getgoing.ui.fragment;
 
 
-import static com.hyperether.getgoing.util.Constants.ACTIVITY_RIDE_ID;
-import static com.hyperether.getgoing.util.Constants.ACTIVITY_RUN_ID;
-import static com.hyperether.getgoing.util.Constants.ACTIVITY_STARTED;
-import static com.hyperether.getgoing.util.Constants.ACTIVITY_WALK_ID;
-import static com.hyperether.getgoing.util.Constants.OPENED_FROM_GG_ACT;
-import static com.hyperether.getgoing.util.Constants.OPENED_FROM_KEY;
-import static com.hyperether.getgoing.util.Constants.TRACKING_ACTIVITY_KEY;
-
 import android.os.Bundle;
 import android.util.DisplayMetrics;
 import android.util.SparseIntArray;
@@ -18,6 +10,19 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
+
+import com.hyperether.getgoing.R;
+import com.hyperether.getgoing.SharedPref;
+import com.hyperether.getgoing.databinding.FragmentGetgoingBindingImpl;
+import com.hyperether.getgoing.repository.room.GgRepository;
+import com.hyperether.getgoing.repository.room.entity.Node;
+import com.hyperether.getgoing.repository.room.entity.Route;
+import com.hyperether.getgoing.ui.adapter.ModeListAdapter;
+import com.hyperether.getgoing.ui.formatter.TimeProgressFormatterInvisible;
+import com.hyperether.getgoing.util.ServiceUtil;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -32,18 +37,13 @@ import androidx.recyclerview.widget.OrientationHelper;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.recyclerview.widget.SnapHelper;
 
-import com.hyperether.getgoing.R;
-import com.hyperether.getgoing.SharedPref;
-import com.hyperether.getgoing.databinding.FragmentGetgoingBindingImpl;
-import com.hyperether.getgoing.repository.room.GgRepository;
-import com.hyperether.getgoing.repository.room.entity.Node;
-import com.hyperether.getgoing.repository.room.entity.Route;
-import com.hyperether.getgoing.ui.adapter.HorizontalListAdapter;
-import com.hyperether.getgoing.ui.formatter.TimeProgressFormatterInvisible;
-import com.hyperether.getgoing.util.ServiceUtil;
-
-import java.util.ArrayList;
-import java.util.List;
+import static com.hyperether.getgoing.util.Constants.ACTIVITY_RIDE_ID;
+import static com.hyperether.getgoing.util.Constants.ACTIVITY_RUN_ID;
+import static com.hyperether.getgoing.util.Constants.ACTIVITY_STARTED;
+import static com.hyperether.getgoing.util.Constants.ACTIVITY_WALK_ID;
+import static com.hyperether.getgoing.util.Constants.OPENED_FROM_GG_ACT;
+import static com.hyperether.getgoing.util.Constants.OPENED_FROM_KEY;
+import static com.hyperether.getgoing.util.Constants.TRACKING_ACTIVITY_KEY;
 
 
 public class GetGoingFragment extends Fragment {
@@ -53,7 +53,7 @@ public class GetGoingFragment extends Fragment {
     private SnapHelper snapHelper;
     private RecyclerView recyclerView;
     private RecyclerView.LayoutManager layoutManager;
-    private HorizontalListAdapter mAdapter;
+    private ModeListAdapter mAdapter;
     private ImageView blueRectangle;
     private ImageView selectorView;
     private ImageView centralImg;
@@ -165,12 +165,12 @@ public class GetGoingFragment extends Fragment {
         ((LinearLayoutManager) layoutManager).setOrientation(RecyclerView.HORIZONTAL);
         recyclerView.setLayoutManager(layoutManager);
 
-        SparseIntArray DRAWABLE_MAP = new SparseIntArray();
-        DRAWABLE_MAP.append(R.drawable.ic_light_bicycling_icon_inactive, R.drawable.ic_light_bicycling_icon_active);
-        DRAWABLE_MAP.append(R.drawable.ic_light_running_icon_inactive, R.drawable.ic_light_running_icon_active);
-        DRAWABLE_MAP.append(R.drawable.ic_light_walking_icon, R.drawable.ic_light_walking_icon_active);
+        SparseIntArray modesList = new SparseIntArray();
+        modesList.append(R.drawable.ic_bicycling_gray, R.drawable.ic_bicycling_blue);
+        modesList.append(R.drawable.ic_light_running_gray, R.drawable.ic_light_running_blue);
+        modesList.append(R.drawable.ic_walking_gray, R.drawable.ic_walking_blue);
 
-        mAdapter = new HorizontalListAdapter(DRAWABLE_MAP, getActivity().getApplicationContext());
+        mAdapter = new ModeListAdapter(modesList, getActivity().getApplicationContext());
         recyclerView.setAdapter(mAdapter);
 
         snapHelper = new LinearSnapHelper();
@@ -199,11 +199,11 @@ public class GetGoingFragment extends Fragment {
         });
 
         startBtn.setOnClickListener(view -> {
-            if (centralImg.getTag().equals(R.drawable.ic_light_walking_icon_active))
+            if (centralImg.getTag().equals(R.drawable.ic_walking_blue))
                 callTrackingFragment(ACTIVITY_WALK_ID);
-            else if (centralImg.getTag().equals(R.drawable.ic_light_running_icon_active))
+            else if (centralImg.getTag().equals(R.drawable.ic_light_running_blue))
                 callTrackingFragment(ACTIVITY_RUN_ID);
-            else if (centralImg.getTag().equals(R.drawable.ic_light_bicycling_icon_active))
+            else if (centralImg.getTag().equals(R.drawable.ic_bicycling_blue))
                 callTrackingFragment(ACTIVITY_RIDE_ID);
         });
 
@@ -220,11 +220,11 @@ public class GetGoingFragment extends Fragment {
                 centralImg = centralLayout.findViewById(R.id.iv_ri_pic);
                 int k1 = layoutManager.getPosition(centralLayout);
 
-                if (centralImg.getTag().equals(R.drawable.ic_light_bicycling_icon_inactive))
+                if (centralImg.getTag().equals(R.drawable.ic_bicycling_gray))
                     actLabel.setText(getString(R.string.cycling));
-                else if (centralImg.getTag().equals(R.drawable.ic_light_running_icon_inactive))
+                else if (centralImg.getTag().equals(R.drawable.ic_light_running_gray))
                     actLabel.setText(getString(R.string.running));
-                else if (centralImg.getTag().equals(R.drawable.ic_light_walking_icon))
+                else if (centralImg.getTag().equals(R.drawable.ic_walking_gray))
                     actLabel.setText(getString(R.string.walking));
 
                 centralImg.getLocationOnScreen(centralImgPos);
@@ -236,15 +236,15 @@ public class GetGoingFragment extends Fragment {
                 int centralImgWidthParam = centralImg.getLayoutParams().width / 2;
 
                 if (centralImgPos[0] > selectorViewPos[0] - centralImgWidthParam && centralImgPos[0] < selectorViewPos[0] + centralImgWidthParam) {
-                    if (centralImg.getTag().equals(R.drawable.ic_light_bicycling_icon_inactive)) {
-                        centralImg.setImageDrawable(getActivity().getApplicationContext().getResources().getDrawable(R.drawable.ic_light_bicycling_icon_active));
-                        centralImg.setTag(R.drawable.ic_light_bicycling_icon_active);
-                    } else if (centralImg.getTag().equals(R.drawable.ic_light_running_icon_inactive)) {
-                        centralImg.setImageDrawable(getActivity().getApplicationContext().getResources().getDrawable(R.drawable.ic_light_running_icon_active));
-                        centralImg.setTag(R.drawable.ic_light_running_icon_active);
-                    } else if (centralImg.getTag().equals(R.drawable.ic_light_walking_icon)) {
-                        centralImg.setImageDrawable(getActivity().getApplicationContext().getResources().getDrawable(R.drawable.ic_light_walking_icon_active));
-                        centralImg.setTag(R.drawable.ic_light_walking_icon_active);
+                    if (centralImg.getTag().equals(R.drawable.ic_bicycling_gray)) {
+                        centralImg.setImageDrawable(getActivity().getApplicationContext().getResources().getDrawable(R.drawable.ic_bicycling_blue));
+                        centralImg.setTag(R.drawable.ic_bicycling_blue);
+                    } else if (centralImg.getTag().equals(R.drawable.ic_light_running_gray)) {
+                        centralImg.setImageDrawable(getActivity().getApplicationContext().getResources().getDrawable(R.drawable.ic_light_running_blue));
+                        centralImg.setTag(R.drawable.ic_light_running_blue);
+                    } else if (centralImg.getTag().equals(R.drawable.ic_walking_gray)) {
+                        centralImg.setImageDrawable(getActivity().getApplicationContext().getResources().getDrawable(R.drawable.ic_walking_blue));
+                        centralImg.setTag(R.drawable.ic_walking_blue);
                     }
                 }
 
@@ -253,15 +253,15 @@ public class GetGoingFragment extends Fragment {
                 try {
                     leftImg = layoutManager.findViewByPosition(k1 - 1).findViewById(R.id.iv_ri_pic);
 
-                    if (leftImg.getTag().equals(R.drawable.ic_light_bicycling_icon_active)) {
-                        leftImg.setImageDrawable(getActivity().getApplicationContext().getResources().getDrawable(R.drawable.ic_light_bicycling_icon_inactive));
-                        leftImg.setTag(R.drawable.ic_light_bicycling_icon_inactive);
-                    } else if (leftImg.getTag().equals(R.drawable.ic_light_running_icon_active)) {
-                        leftImg.setImageDrawable(getActivity().getApplicationContext().getResources().getDrawable(R.drawable.ic_light_running_icon_inactive));
-                        leftImg.setTag(R.drawable.ic_light_running_icon_inactive);
-                    } else if (leftImg.getTag().equals(R.drawable.ic_light_walking_icon_active)) {
-                        leftImg.setImageDrawable(getActivity().getApplicationContext().getResources().getDrawable(R.drawable.ic_light_walking_icon));
-                        leftImg.setTag(R.drawable.ic_light_walking_icon);
+                    if (leftImg.getTag().equals(R.drawable.ic_bicycling_blue)) {
+                        leftImg.setImageDrawable(getActivity().getApplicationContext().getResources().getDrawable(R.drawable.ic_bicycling_gray));
+                        leftImg.setTag(R.drawable.ic_bicycling_gray);
+                    } else if (leftImg.getTag().equals(R.drawable.ic_light_running_blue)) {
+                        leftImg.setImageDrawable(getActivity().getApplicationContext().getResources().getDrawable(R.drawable.ic_light_running_gray));
+                        leftImg.setTag(R.drawable.ic_light_running_gray);
+                    } else if (leftImg.getTag().equals(R.drawable.ic_walking_blue)) {
+                        leftImg.setImageDrawable(getActivity().getApplicationContext().getResources().getDrawable(R.drawable.ic_walking_gray));
+                        leftImg.setTag(R.drawable.ic_walking_gray);
                     }
                 } catch (NullPointerException e) {
                     e.printStackTrace();
@@ -270,15 +270,15 @@ public class GetGoingFragment extends Fragment {
                 try {
                     rightImg = layoutManager.findViewByPosition(k1 + 1).findViewById(R.id.iv_ri_pic);
 
-                    if (rightImg.getTag().equals(R.drawable.ic_light_bicycling_icon_active)) {
-                        rightImg.setImageDrawable(getActivity().getApplicationContext().getResources().getDrawable(R.drawable.ic_light_bicycling_icon_inactive));
-                        rightImg.setTag(R.drawable.ic_light_bicycling_icon_inactive);
-                    } else if (rightImg.getTag().equals(R.drawable.ic_light_running_icon_active)) {
-                        rightImg.setImageDrawable(getActivity().getApplicationContext().getResources().getDrawable(R.drawable.ic_light_running_icon_inactive));
-                        rightImg.setTag(R.drawable.ic_light_running_icon_inactive);
-                    } else if (rightImg.getTag().equals(R.drawable.ic_light_walking_icon_active)) {
-                        rightImg.setImageDrawable(getActivity().getApplicationContext().getResources().getDrawable(R.drawable.ic_light_walking_icon));
-                        rightImg.setTag(R.drawable.ic_light_walking_icon);
+                    if (rightImg.getTag().equals(R.drawable.ic_bicycling_blue)) {
+                        rightImg.setImageDrawable(getActivity().getApplicationContext().getResources().getDrawable(R.drawable.ic_bicycling_gray));
+                        rightImg.setTag(R.drawable.ic_bicycling_gray);
+                    } else if (rightImg.getTag().equals(R.drawable.ic_light_running_blue)) {
+                        rightImg.setImageDrawable(getActivity().getApplicationContext().getResources().getDrawable(R.drawable.ic_light_running_gray));
+                        rightImg.setTag(R.drawable.ic_light_running_gray);
+                    } else if (rightImg.getTag().equals(R.drawable.ic_walking_blue)) {
+                        rightImg.setImageDrawable(getActivity().getApplicationContext().getResources().getDrawable(R.drawable.ic_walking_gray));
+                        rightImg.setTag(R.drawable.ic_walking_gray);
                     }
                 } catch (NullPointerException e) {
                     e.printStackTrace();

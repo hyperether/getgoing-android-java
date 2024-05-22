@@ -3,17 +3,17 @@ package com.hyperether.getgoing.viewmodel;
 import android.app.Activity;
 import android.app.Application;
 
-import androidx.annotation.NonNull;
-import androidx.lifecycle.AndroidViewModel;
-import androidx.lifecycle.LiveData;
-import androidx.lifecycle.MutableLiveData;
-
 import com.hyperether.getgoing.GetGoingApp;
 import com.hyperether.getgoing.repository.room.GgRepository;
 import com.hyperether.getgoing.repository.room.entity.Node;
 import com.hyperether.getgoing.repository.room.entity.Route;
 
 import java.util.List;
+
+import androidx.annotation.NonNull;
+import androidx.lifecycle.AndroidViewModel;
+import androidx.lifecycle.LiveData;
+import androidx.lifecycle.MutableLiveData;
 
 public class RouteViewModel extends AndroidViewModel {
 

@@ -29,7 +29,7 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintVertical_bias="0.49"
-            app:srcCompat="@drawable/ic_light_back_icon" />
+            app:srcCompat="@drawable/ic_light_back" />
 
         <TextView
             android:id="@+id/tv_sd_label"
@@ -53,7 +53,7 @@
             app:layout_constraintDimensionRatio="1:1"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            app:srcCompat="@drawable/ic_material_delete_outline" />
+            app:srcCompat="@drawable/ic_trash" />
 
         <!-- goal progress bar -->
 
@@ -75,7 +75,7 @@
             android:layout_height="wrap_content"
             android:layout_marginEnd="16dp"
             android:contentDescription="@string/progress_bar_goal_img"
-            android:src="@drawable/ic_light_goal_icon"
+            android:src="@drawable/ic_light_goal"
             app:layout_constraintBottom_toTopOf="@+id/progress"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.0"
@@ -249,7 +249,7 @@
                 app:layout_constraintEnd_toStartOf="@+id/sd_chart_bg"
                 app:layout_constraintStart_toEndOf="@+id/sd_chart_bg"
                 app:layout_constraintTop_toTopOf="@id/sd_chart_bg"
-                app:srcCompat="@drawable/ic_gray_angle_up_icon" />
+                app:srcCompat="@drawable/ic_gray_angle_up" />
 
             <View
                 android:id="@+id/sd_chart_bg"

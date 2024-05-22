@@ -2,16 +2,16 @@ package com.hyperether.getgoing.viewmodel;
 
 import android.app.Activity;
 
-import androidx.lifecycle.LiveData;
-import androidx.lifecycle.MutableLiveData;
-import androidx.lifecycle.ViewModel;
-
 import com.hyperether.getgoing.GetGoingApp;
 import com.hyperether.getgoing.SharedPref;
 import com.hyperether.getgoing.repository.room.GgRepository;
 import com.hyperether.getgoing.repository.room.entity.Node;
 
 import java.util.List;
+
+import androidx.lifecycle.LiveData;
+import androidx.lifecycle.MutableLiveData;
+import androidx.lifecycle.ViewModel;
 
 public class NodeListViewModel extends ViewModel {
 

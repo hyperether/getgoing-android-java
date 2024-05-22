@@ -19,7 +19,7 @@
             android:background="@android:color/transparent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            app:srcCompat="@drawable/ic_light_back_icon" />
+            app:srcCompat="@drawable/ic_light_back" />
 
         <TextView
             android:id="@+id/tv_fp_profile"
@@ -57,7 +57,7 @@
             app:layout_constraintHorizontal_bias="0.5"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/tv_fp_mydata"
-            app:srcCompat="@drawable/ic_ellipse_2" />
+            app:srcCompat="@drawable/ic_ellipse" />
 
         <ImageButton
             android:id="@+id/ib_fp_age"
@@ -72,7 +72,7 @@
             app:layout_constraintStart_toEndOf="@+id/tv_fp_mydata"
             app:layout_constraintTop_toTopOf="@+id/ib_fp_gender"
             app:layout_constraintVertical_bias="0.0"
-            app:srcCompat="@drawable/ic_ellipse_2" />
+            app:srcCompat="@drawable/ic_ellipse" />
 
         <ImageButton
             android:id="@+id/ib_fp_height"
@@ -83,7 +83,7 @@
             app:layout_constraintEnd_toEndOf="@+id/ib_fp_gender"
             app:layout_constraintStart_toStartOf="@+id/ib_fp_gender"
             app:layout_constraintTop_toBottomOf="@+id/tv_fp_gender"
-            app:srcCompat="@drawable/ic_ellipse_2" />
+            app:srcCompat="@drawable/ic_ellipse" />
 
         <ImageButton
             android:id="@+id/ib_fp_weight"
@@ -94,7 +94,7 @@
             app:layout_constraintEnd_toEndOf="@+id/ib_fp_age"
             app:layout_constraintStart_toStartOf="@+id/ib_fp_age"
             app:layout_constraintTop_toTopOf="@+id/ib_fp_height"
-            app:srcCompat="@drawable/ic_ellipse_2" />
+            app:srcCompat="@drawable/ic_ellipse" />
 
         <TextView
             android:id="@+id/tv_fp_gender"
@@ -151,7 +151,7 @@
             app:layout_constraintEnd_toEndOf="@+id/ib_fp_gender"
             app:layout_constraintStart_toStartOf="@+id/ib_fp_gender"
             app:layout_constraintTop_toTopOf="@+id/ib_fp_gender"
-            app:srcCompat="@drawable/ic_gendersign_male" />
+            app:srcCompat="@drawable/ic_gender_male" />
 
         <ImageView
             android:id="@+id/iv_fp_age"
@@ -215,7 +215,7 @@
             app:layout_constraintEnd_toEndOf="@+id/ib_fp_height"
             app:layout_constraintStart_toStartOf="@+id/ib_fp_height"
             app:layout_constraintTop_toTopOf="@+id/iv_fp_calories"
-            app:srcCompat="@drawable/ic_road_" />
+            app:srcCompat="@drawable/ic_road" />
 
         <ImageButton
             android:id="@+id/iv_fp_calories"

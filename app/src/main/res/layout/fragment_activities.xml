@@ -14,7 +14,7 @@
         android:background="@android:color/transparent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:srcCompat="@drawable/ic_light_back_icon" />
+        app:srcCompat="@drawable/ic_light_back" />
 
     <TextView
         android:id="@+id/textView2"
@@ -66,7 +66,7 @@
         android:text="0km"
         android:textColor="@color/my_profile_icon1"
         android:textSize="18sp"
-        app:drawableEndCompat="@drawable/ic_light_angle_icon"
+        app:drawableEndCompat="@drawable/ic_gray_angle_right"
         app:layout_constraintBottom_toBottomOf="@+id/tv_fa_pb_walking"
         app:layout_constraintEnd_toEndOf="@+id/progressBar"
         app:layout_constraintTop_toTopOf="@+id/tv_fa_pb_walking" />
@@ -111,7 +111,7 @@
         android:text="0km"
         android:textColor="@color/my_profile_icon1"
         android:textSize="18sp"
-        app:drawableEndCompat="@drawable/ic_light_angle_icon"
+        app:drawableEndCompat="@drawable/ic_gray_angle_right"
         app:layout_constraintBottom_toBottomOf="@+id/tv_fa_pb_running"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="@+id/tv_fa_pb_running"
@@ -156,7 +156,7 @@
         android:text="0km"
         android:textColor="@color/my_profile_icon1"
         android:textSize="18sp"
-        app:drawableEndCompat="@drawable/ic_light_angle_icon"
+        app:drawableEndCompat="@drawable/ic_gray_angle_right"
         app:layout_constraintBottom_toBottomOf="@+id/tv_fa_pb_cycling"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="@+id/tv_fa_pb_cycling"
@@ -181,7 +181,7 @@
             android:layout_marginTop="24dp"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            app:srcCompat="@drawable/ic_light_goal_icon" />
+            app:srcCompat="@drawable/ic_light_goal" />
 
         <TextView
             android:id="@+id/tv_fa_mygoal"
@@ -323,7 +323,7 @@
             app:layout_constraintHorizontal_chainStyle="packed"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="@+id/tv_fa_minutes"
-            app:srcCompat="@drawable/ic_light_walking_icon" />
+            app:srcCompat="@drawable/ic_walking_gray" />
 
         <TextView
             android:id="@+id/tv_fa_minutes"
@@ -364,7 +364,7 @@
             app:layout_constraintStart_toEndOf="@id/tv_fa_or1"
             app:layout_constraintTop_toTopOf="@+id/tv_fa_min2"
             app:layout_constraintVertical_bias="0.888"
-            app:srcCompat="@drawable/ic_light_run_icon" />
+            app:srcCompat="@drawable/ic_light_run" />
 
         <TextView
             android:id="@+id/tv_fa_min2"
@@ -404,7 +404,7 @@
             app:layout_constraintStart_toEndOf="@id/tv_fa_or2"
             app:layout_constraintTop_toTopOf="@+id/tv_fa_min3"
             app:layout_constraintVertical_bias="0.944"
-            app:srcCompat="@drawable/ic_light_cycling_icon" />
+            app:srcCompat="@drawable/ic_light_cycling" />
 
         <TextView
             android:id="@+id/tv_fa_min3"
@@ -428,7 +428,7 @@
             android:layout_marginEnd="8dp"
             android:layout_marginRight="8dp"
             android:layout_marginBottom="24dp"
-            android:background="@drawable/ic_button_savechanges"
+            android:background="@drawable/ic_button_bgd"
             android:text="Save changes"
             android:textAlignment="center"
             android:textAllCaps="false"

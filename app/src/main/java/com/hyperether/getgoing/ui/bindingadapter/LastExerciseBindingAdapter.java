@@ -25,15 +25,15 @@ public class LastExerciseBindingAdapter {
 
         switch (pAcId) {
             case ACTIVITY_WALK_ID:
-                drawable = view.getResources().getDrawable(R.drawable.ic_light_walking_icon_white);
+                drawable = view.getResources().getDrawable(R.drawable.ic_walking_white);
                 ((ImageView) view).setImageDrawable(drawable);
                 break;
             case ACTIVITY_RUN_ID:
-                drawable = view.getResources().getDrawable(R.drawable.ic_light_running_icon_white);
+                drawable = view.getResources().getDrawable(R.drawable.ic_light_running_white);
                 ((ImageView) view).setImageDrawable(drawable);
                 break;
             case ACTIVITY_RIDE_ID:
-                drawable = view.getResources().getDrawable(R.drawable.ic_light_bicycling_icon);
+                drawable = view.getResources().getDrawable(R.drawable.ic_bicycling_white);
                 ((ImageView) view).setImageDrawable(drawable);
                 break;
             default:

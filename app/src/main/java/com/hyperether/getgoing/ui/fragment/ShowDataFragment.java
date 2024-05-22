@@ -1,11 +1,5 @@
 package com.hyperether.getgoing.ui.fragment;
 
-import static com.hyperether.getgoing.util.Constants.ACTIVITY_RIDE_ID;
-import static com.hyperether.getgoing.util.Constants.ACTIVITY_RUN_ID;
-import static com.hyperether.getgoing.util.Constants.ACTIVITY_WALK_ID;
-import static com.hyperether.getgoing.util.Constants.BUNDLE_PARCELABLE;
-import static com.hyperether.getgoing.util.Constants.DATA_DETAILS_LABEL;
-
 import android.content.DialogInterface;
 import android.content.res.Resources;
 import android.graphics.Bitmap;
@@ -14,15 +8,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
-
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.databinding.DataBindingUtil;
-import androidx.fragment.app.Fragment;
-import androidx.lifecycle.Observer;
-import androidx.lifecycle.ViewModelProvider;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -39,7 +24,7 @@ import com.hyperether.getgoing.databinding.FragmentShowdataBinding;
 import com.hyperether.getgoing.listeners.GgOnClickListener;
 import com.hyperether.getgoing.repository.room.entity.Node;
 import com.hyperether.getgoing.repository.room.entity.Route;
-import com.hyperether.getgoing.ui.adapter.DbRecyclerAdapter;
+import com.hyperether.getgoing.ui.adapter.RouteListAdapter;
 import com.hyperether.getgoing.util.ProgressBarBitmap;
 import com.hyperether.getgoing.viewmodel.RouteViewModel;
 
@@ -47,11 +32,26 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.databinding.DataBindingUtil;
+import androidx.fragment.app.Fragment;
+import androidx.lifecycle.Observer;
+import androidx.lifecycle.ViewModelProvider;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+
+import static com.hyperether.getgoing.util.Constants.ACTIVITY_RIDE_ID;
+import static com.hyperether.getgoing.util.Constants.ACTIVITY_RUN_ID;
+import static com.hyperether.getgoing.util.Constants.ACTIVITY_WALK_ID;
+import static com.hyperether.getgoing.util.Constants.BUNDLE_PARCELABLE;
+import static com.hyperether.getgoing.util.Constants.DATA_DETAILS_LABEL;
+
 public class ShowDataFragment extends Fragment implements GgOnClickListener, OnMapReadyCallback {
     private FragmentShowdataBinding binding;
     private GoogleMap mMap;
     private final List<Route> routes = new ArrayList<>();
-    private RecyclerView.Adapter recyclerAdapter;
+    private RouteListAdapter routeListAdapter;
     private String dataLabel;
     private boolean mapToogleDown;
     private int activityId;
@@ -117,7 +117,7 @@ public class ShowDataFragment extends Fragment implements GgOnClickListener, OnM
                     binding.recyclerList.smoothScrollToPosition(ShowDataFragment.this.routes.size() - 1);
                 }
 
-                recyclerAdapter.notifyDataSetChanged();
+                routeListAdapter.notifyDataSetChanged();
             }
         });
     }
@@ -255,11 +255,11 @@ public class ShowDataFragment extends Fragment implements GgOnClickListener, OnM
      * This method is for populating list view
      */
     private void populateListView() {
-        recyclerAdapter = new DbRecyclerAdapter(this, routes);
+        routeListAdapter = new RouteListAdapter(this, routes);
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getActivity());
         linearLayoutManager.setOrientation(RecyclerView.HORIZONTAL);
         binding.recyclerList.setLayoutManager(linearLayoutManager);
-        binding.recyclerList.setAdapter(recyclerAdapter);
+        binding.recyclerList.setAdapter(routeListAdapter);
     }
 
     @Override

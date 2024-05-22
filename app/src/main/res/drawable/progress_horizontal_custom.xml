@@ -4,7 +4,7 @@
     <item android:id="@android:id/background">
         <shape>
             <corners android:radius="5dip" />
-            <solid android:color="@color/progress_bar_back"/>
+            <solid android:color="@color/progress_bar_back" />
         </shape>
     </item>
 
@@ -17,8 +17,7 @@
                     android:centerColor="@color/primaryButton"
                     android:centerY="0.75"
                     android:endColor="@color/primaryButton"
-                    android:angle="270"
-                    />
+                    android:angle="270" />
             </shape>
         </clip>
     </item>
@@ -32,8 +31,7 @@
                     android:centerColor="@color/primaryButton"
                     android:centerY="0.75"
                     android:endColor="@color/primaryButton"
-                    android:angle="270"
-                    />
+                    android:angle="270" />
             </shape>
         </clip>
     </item>

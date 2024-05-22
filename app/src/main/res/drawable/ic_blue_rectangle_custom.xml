@@ -2,17 +2,15 @@
 
 <shape android:shape="rectangle"
     xmlns:android="http://schemas.android.com/apk/res/android">
-        <gradient
-            android:startY="0"
-            android:startX="160"
-            android:endY="150"
-            android:endX="160"
-            android:type="linear"
-            android:startColor="@color/primaryButton"
-            android:endColor="@color/primaryButton2"
-            android:angle="270">
-        </gradient>
-        <corners
-            android:radius="10dp"/>
+    <gradient
+        android:startY="0"
+        android:startX="160"
+        android:endY="150"
+        android:endX="160"
+        android:type="linear"
+        android:startColor="@color/primaryButton"
+        android:endColor="@color/primaryButton2"
+        android:angle="270"></gradient>
+    <corners android:radius="10dp" />
 </shape>
 

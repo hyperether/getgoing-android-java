@@ -2,6 +2,8 @@
 <shape xmlns:android="http://schemas.android.com/apk/res/android"
     android:shape="oval">
 
-    <gradient android:startColor="@color/startButton1Trans" android:endColor="@color/startButton2Trans" />
+    <gradient
+        android:endColor="@color/startButton2Trans"
+        android:startColor="@color/startButton1Trans" />
 
 </shape>

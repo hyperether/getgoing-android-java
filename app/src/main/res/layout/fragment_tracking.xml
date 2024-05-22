@@ -15,7 +15,7 @@
         android:contentDescription="@string/back_button"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:srcCompat="@drawable/ic_light_back_icon" />
+        app:srcCompat="@drawable/ic_light_back" />
 
     <TextView
         android:id="@+id/tv_al_activity"
@@ -85,7 +85,7 @@
         app:layout_constraintHorizontal_bias="0.55"
         app:layout_constraintStart_toStartOf="@id/al_button"
         app:layout_constraintTop_toTopOf="@id/al_button"
-        app:srcCompat="@drawable/ic_light_start_icon" />
+        app:srcCompat="@drawable/ic_light_start" />
 
     <ImageView
         android:id="@+id/al_btn_pause"
@@ -99,7 +99,7 @@
         app:layout_constraintEnd_toEndOf="@id/al_button"
         app:layout_constraintStart_toStartOf="@id/al_button"
         app:layout_constraintTop_toTopOf="@id/al_button"
-        app:srcCompat="@drawable/ic_light_stop_icon" />
+        app:srcCompat="@drawable/ic_light_stop" />
 
     <Chronometer
         android:id="@+id/chr_al_meters"
@@ -212,7 +212,7 @@
         app:layout_constraintEnd_toEndOf="@id/tv_al_duration"
         app:layout_constraintStart_toStartOf="@id/tv_al_duration"
         app:layout_constraintTop_toTopOf="@id/al_customBottomBar"
-        app:srcCompat="@drawable/ic_light_save_icon_disabled" />
+        app:srcCompat="@drawable/ic_light_save_disabled" />
 
     <ImageButton
         android:id="@+id/ib_al_reset"
@@ -225,7 +225,7 @@
         app:layout_constraintEnd_toEndOf="@id/tv_al_kcal"
         app:layout_constraintStart_toStartOf="@id/tv_al_kcal"
         app:layout_constraintTop_toTopOf="@id/al_customBottomBar"
-        app:srcCompat="@drawable/ic_light_replay_icon_disabled" />
+        app:srcCompat="@drawable/ic_light_replay_disabled" />
 
     <Button
         android:id="@+id/al_btn_setgoal"

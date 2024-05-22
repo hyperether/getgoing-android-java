@@ -1,9 +1,5 @@
 package com.hyperether.getgoing.ui.fragment;
 
-import static com.hyperether.getgoing.util.Constants.DATA_DETAILS_LABEL;
-import static com.hyperether.getgoing.util.Constants.OPENED_FROM_KEY;
-import static com.hyperether.getgoing.util.Constants.OPENED_FROM_LOCATION_ACT;
-
 import android.annotation.SuppressLint;
 import android.content.DialogInterface;
 import android.os.Bundle;
@@ -17,14 +13,6 @@ import android.widget.SeekBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.fragment.app.Fragment;
-import androidx.lifecycle.Observer;
-import androidx.lifecycle.ViewModelProvider;
-import androidx.navigation.NavController;
-import androidx.navigation.Navigation;
-
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.hyperether.getgoing.R;
 import com.hyperether.getgoing.SharedPref;
@@ -35,6 +23,18 @@ import com.hyperether.getgoing.viewmodel.RouteViewModel;
 
 import java.text.DecimalFormat;
 import java.util.List;
+
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.fragment.app.Fragment;
+import androidx.lifecycle.Observer;
+import androidx.lifecycle.ViewModelProvider;
+import androidx.navigation.NavController;
+import androidx.navigation.Navigation;
+
+import static com.hyperether.getgoing.util.Constants.DATA_DETAILS_LABEL;
+import static com.hyperether.getgoing.util.Constants.OPENED_FROM_KEY;
+import static com.hyperether.getgoing.util.Constants.OPENED_FROM_LOCATION_ACT;
 
 
 public class ActivitiesFragment extends Fragment {

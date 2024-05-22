@@ -1,14 +1,5 @@
 package com.hyperether.getgoing.ui.fragment;
 
-import static android.provider.Settings.ACTION_LOCATION_SOURCE_SETTINGS;
-import static com.hyperether.getgoing.util.Constants.ACTIVITY_RIDE_ID;
-import static com.hyperether.getgoing.util.Constants.ACTIVITY_RUN_ID;
-import static com.hyperether.getgoing.util.Constants.ACTIVITY_STARTED;
-import static com.hyperether.getgoing.util.Constants.ACTIVITY_WALK_ID;
-import static com.hyperether.getgoing.util.Constants.OPENED_FROM_KEY;
-import static com.hyperether.getgoing.util.Constants.OPENED_FROM_LOCATION_ACT;
-import static com.hyperether.getgoing.util.Constants.TRACKING_ACTIVITY_KEY;
-
 import android.annotation.SuppressLint;
 import android.app.AlertDialog;
 import android.content.Context;
@@ -33,16 +24,6 @@ import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import androidx.activity.OnBackPressedCallback;
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.core.app.ActivityCompat;
-import androidx.fragment.app.Fragment;
-import androidx.lifecycle.Observer;
-import androidx.lifecycle.ViewModelProvider;
-import androidx.navigation.NavController;
-import androidx.navigation.Navigation;
-
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
@@ -51,8 +32,8 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.PolylineOptions;
 import com.hyperether.getgoing.R;
 import com.hyperether.getgoing.SharedPref;
-import com.hyperether.getgoing.repository.room.RouteAddedListener;
 import com.hyperether.getgoing.repository.room.GgRepository;
+import com.hyperether.getgoing.repository.room.RouteAddedListener;
 import com.hyperether.getgoing.repository.room.entity.Node;
 import com.hyperether.getgoing.repository.room.entity.Route;
 import com.hyperether.getgoing.service.GPSTrackingService;
@@ -68,6 +49,25 @@ import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
+
+import androidx.activity.OnBackPressedCallback;
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.core.app.ActivityCompat;
+import androidx.fragment.app.Fragment;
+import androidx.lifecycle.Observer;
+import androidx.lifecycle.ViewModelProvider;
+import androidx.navigation.NavController;
+import androidx.navigation.Navigation;
+
+import static android.provider.Settings.ACTION_LOCATION_SOURCE_SETTINGS;
+import static com.hyperether.getgoing.util.Constants.ACTIVITY_RIDE_ID;
+import static com.hyperether.getgoing.util.Constants.ACTIVITY_RUN_ID;
+import static com.hyperether.getgoing.util.Constants.ACTIVITY_STARTED;
+import static com.hyperether.getgoing.util.Constants.ACTIVITY_WALK_ID;
+import static com.hyperether.getgoing.util.Constants.OPENED_FROM_KEY;
+import static com.hyperether.getgoing.util.Constants.OPENED_FROM_LOCATION_ACT;
+import static com.hyperether.getgoing.util.Constants.TRACKING_ACTIVITY_KEY;
 
 
 public class TrackingFragment extends Fragment implements OnMapReadyCallback, LocationListener {
@@ -231,7 +231,7 @@ public class TrackingFragment extends Fragment implements OnMapReadyCallback, Lo
         public void onClick(View v) {
             stopTracking();
             button_rst.setClickable(true);
-            button_rst.setImageDrawable(getResources().getDrawable(R.drawable.ic_light_replay_icon));
+            button_rst.setImageDrawable(getResources().getDrawable(R.drawable.ic_light_replay));
             saveRoute();
         }
     };
@@ -274,7 +274,7 @@ public class TrackingFragment extends Fragment implements OnMapReadyCallback, Lo
                         trackingStarted = false;
 
                         button_rst.setClickable(false);
-                        button_rst.setImageDrawable(getResources().getDrawable(R.drawable.ic_light_replay_icon_disabled));
+                        button_rst.setImageDrawable(getResources().getDrawable(R.drawable.ic_light_replay_disabled));
                     });
 
             dialog.setNegativeButton(getString(R.string.alert_dialog_negative_reset_save_btn),
@@ -364,9 +364,9 @@ public class TrackingFragment extends Fragment implements OnMapReadyCallback, Lo
             button_start.setVisibility(View.GONE);
             button_pause.setVisibility(View.VISIBLE);
             if (mLocTrackingRunning) {
-                button_save.setImageDrawable(getResources().getDrawable(R.drawable.ic_light_save_icon_disabled));
+                button_save.setImageDrawable(getResources().getDrawable(R.drawable.ic_light_save_disabled));
                 button_save.setClickable(false);
-                button_rst.setImageDrawable(getResources().getDrawable(R.drawable.ic_light_replay_icon_disabled));
+                button_rst.setImageDrawable(getResources().getDrawable(R.drawable.ic_light_replay_disabled));
                 button_rst.setClickable(false);
             }
         });
