@@ -4,14 +4,19 @@ import android.Manifest;
 import android.content.pm.PackageManager;
 import android.os.Build;
 import android.os.Bundle;
+import android.view.View;
+
+import com.hyperether.getgoing.R;
+import com.hyperether.getgoing.util.Constants;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
-
-import com.hyperether.getgoing.R;
-import com.hyperether.getgoing.util.Constants;
+import androidx.core.graphics.Insets;
+import androidx.core.view.OnApplyWindowInsetsListener;
+import androidx.core.view.ViewCompat;
+import androidx.core.view.WindowInsetsCompat;
 
 public class NavigationActivity extends AppCompatActivity {
 
@@ -32,6 +37,24 @@ public class NavigationActivity extends AppCompatActivity {
                             Manifest.permission.ACCESS_COARSE_LOCATION},
                     Constants.TAG_CODE_PERMISSION_LOCATION);
         }
+
+        ViewCompat.setOnApplyWindowInsetsListener(
+                findViewById(android.R.id.content),
+                new OnApplyWindowInsetsListener() {
+                    @NonNull
+                    @Override
+                    public WindowInsetsCompat onApplyWindowInsets(@NonNull View v, @NonNull WindowInsetsCompat insets) {
+                        Insets bars = insets.getInsets(
+                                WindowInsetsCompat.Type.systemBars()
+                                        | WindowInsetsCompat.Type.displayCutout()
+                        );
+
+                        v.setPadding(bars.left, bars.top, bars.right, bars.bottom);
+
+                        return WindowInsetsCompat.CONSUMED;
+                    }
+                }
+        );
     }
 
     @Override
